@@ -1,0 +1,50 @@
+*.iml
+.settings
+target
+.project
+.classpath
+dist
+
+# Numerous always-ignore extensions
+*.bak
+*.patch
+*.diff
+*.err
+
+# temp file for git conflict merging
+*.orig
+*.log
+*.rej
+*.swo
+*.swp
+*.zip
+*.vi
+*~
+*.sass-cache
+*.tmp.html
+*.dump
+
+# OS or Editor folders
+.DS_Store
+._*
+.cache
+.tmproj
+*.esproj
+*.sublime-project
+*.sublime-workspace
+nbproject
+thumbs.db
+
+# Folders to ignore
+.idea
+.hg
+.svn
+.CVS
+node_modules/
+jscoverage_lib/
+src/main/webapp/WEB-INF/ftl/rsrc/
+src/main/webapp/rsrc/dist/
+src/main/resources/application-local.properties
+webpack-assets.json
+
+.metadata
