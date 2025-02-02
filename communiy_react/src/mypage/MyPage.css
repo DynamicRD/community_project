@@ -1,0 +1,60 @@
+body {
+  background-color: #f4f7fa;
+}
+.container {
+  max-width: 960px;
+}
+.profile-header {
+  background: linear-gradient(
+    135deg,
+    #80d0c7,
+    #4caf50
+  ); /* 더 밝은 그라데이션 */
+  color: white;
+  padding: 30px;
+  border-radius: 8px;
+}
+.profile-header img {
+  border: 4px solid white;
+  padding: 5px;
+}
+.profile-header h3 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-top: 15px;
+}
+.btn-custom {
+  background-color: #4caf50;
+  color: white;
+  border-radius: 25px;
+  border: none;
+}
+.btn-custom:hover {
+  background-color: #388e3c;
+}
+.table th,
+.table td {
+  text-align: center;
+}
+.table td {
+  vertical-align: middle;
+}
+.pagination .page-link {
+  background-color: #007bff;
+  color: white;
+}
+.pagination .page-link:hover {
+  background-color: #0056b3;
+  color: white;
+}
+.panel-body ul li {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+.border-section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
