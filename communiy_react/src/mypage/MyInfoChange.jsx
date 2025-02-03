@@ -101,8 +101,8 @@ export default function MyInfoChange() {
 
   // 패턴 조건 설정
   const patterns = {
-    id: /^[a-z0-9_]{4,20}$/, // 아이디: 4~20자, 소문자/숫자/밑줄만 허용
-    nickname: /^[a-zA-Z0-9가-힣]{2,15}$/, // 닉네임: 2~15자, 한글/영문/숫자만 허용
+    id: /^[a-z0-9_]{4,10}$/, // 아이디: 4~20자, 소문자/숫자/밑줄만 허용
+    nickname: /^[a-zA-Z0-9가-힣]{2,10}$/, // 닉네임: 2~10자, 한글/영문/숫자만 허용
     pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/, // 비밀번호: 대소문자, 숫자, 특수문자 포함
     repass: (value) => value === formData.pass, // 비밀번호 확인: 비밀번호와 일치
     name: /^[가-힣a-zA-Z]{2,5}$/, // 이름: 2~5자, 한글/영문
@@ -129,7 +129,7 @@ export default function MyInfoChange() {
               break;
             case 'nickname':
               errorMessage =
-                '닉네임은 2자 이상 15자 이하, 한글/영문/숫자만 사용 가능합니다.';
+                '닉네임은 2자 이상 10자 이하, 한글/영문/숫자만 사용 가능합니다.';
               break;
             case 'pass':
               errorMessage =
