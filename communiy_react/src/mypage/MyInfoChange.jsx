@@ -438,21 +438,6 @@ export default function MyInfoChange() {
           </Col>
         </Form.Group>
 
-        {/* 자기소개 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            간단한 자기소개
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              as="textarea"
-              name="pr"
-              value={formData.pr}
-              onChange={handleChange}
-            />
-          </Col>
-        </Form.Group>
-
         {/* 버튼들 */}
         <Form.Group as={Row} className="mb-3 text-center">
           <Col sm={12}>
