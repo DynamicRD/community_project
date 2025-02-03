@@ -4,7 +4,7 @@ import './App.css';
 import MyPage from './mypage/mypage';
 import Home from './Home';
 import MyInfoChange from './mypage/MyInfoChange';
-import ChatRoom from './chatroom/chatroom';
+import MyProfileChange from './mypage/MyProfileChange';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -17,8 +17,8 @@ function App() {
           {/* 김동욱 mypage 컴포넌트 추가 */}
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/mypage/infochange" element={<MyInfoChange />} />
+          <Route path="/mypage/profilechange" element={<MyProfileChange />} />
           {/* 김동욱 chatroom*/}
-          <Route path="/chatroom" element={<ChatRoom />} />
         </Routes>
       </BrowserRouter>
     </>

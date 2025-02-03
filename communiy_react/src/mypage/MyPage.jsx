@@ -146,7 +146,9 @@ function MyPage() {
         <hr />
         <div className="container bg-light text-dark p-4">
           <div className="text-end">
-            <Button variant="custom">프로필 수정하기</Button>
+            <Link to="/mypage/profilechange">
+              <Button variant="custom">프로필 수정하기</Button>
+            </Link>
           </div>
           <div className="text-center mt-3">
             <p>자기소개가 없습니다.</p>
@@ -156,7 +158,7 @@ function MyPage() {
           <Link to="/mypage/infochange">
             <Button variant="light m-3">개인 정보 수정</Button>
           </Link>
-          <Button variant="light m-3">결재 내역 확인</Button>
+          <Button variant="light m-3">거래 내역 확인</Button>
           <Button variant="light m-3">작성 리뷰 확인</Button>
         </div>
       </div>
