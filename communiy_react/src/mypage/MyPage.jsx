@@ -158,7 +158,9 @@ function MyPage() {
           <Link to="/mypage/infochange">
             <Button variant="light m-3">개인 정보 수정</Button>
           </Link>
-          <Button variant="light m-3">거래 내역 확인</Button>
+          <Link to="/mypage/amounthis">
+            <Button variant="light m-3">거래 내역 확인</Button>
+          </Link>
           <Button variant="light m-3">작성 리뷰 확인</Button>
         </div>
       </div>
@@ -170,7 +172,9 @@ function MyPage() {
             <h5>보유금액</h5>
             <div className="h3">₩ 500,000</div>
             <div className="mt-3">
-              <Button variant="warning">충전하기</Button>
+              <Link to="/mypage/charge">
+                <Button variant="warning">충전하기</Button>
+              </Link>
             </div>
           </div>
         </Col>
@@ -234,9 +238,11 @@ function MyPage() {
           <Pagination.Item>{3}</Pagination.Item>
           <Pagination.Next />
         </Pagination>
-        <Button variant="danger" block className="mt-3">
-          회원탈퇴
-        </Button>
+        <Link to="/mypage/infodelete">
+          <Button variant="danger" block className="mt-3">
+            회원탈퇴
+          </Button>
+        </Link>
       </div>
     </Container>
   );
