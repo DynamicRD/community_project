@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './myInfoChange.css'; // 작성한 CSS 파일 임포트
+import './myInfoChange.css';
 import {
   Container,
   Form,
@@ -15,197 +15,71 @@ import { useNavigate } from 'react-router-dom';
 export default function MyProfileChange() {
   const [formData, setFormData] = useState({
     id: '',
-    nickname: '',
-    pass: '',
-    repass: '',
-    name: '',
-    gender: '',
-    phone1: '02',
-    phone2: '',
-    phone3: '',
-    birth: '',
-    email: '',
-    addcode: '',
-    address01: '',
-    address02: '',
     pr: '',
-  });
-
-  const [errors, setErrors] = useState({
-    id: '',
-    nickname: '',
-    pass: '',
-    repass: '',
-    name: '',
-    phone2: '',
-    phone3: '',
-    birth: '',
-    email: '',
-    addcode: '',
+    profileImage: null, // 이미지 파일을 추가
   });
 
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === 'checkbox' ? checked : value,
-    });
-    validateField(name, value); // 입력 시 바로 검증
-  };
+    const { name, value, type, files } = e.target;
 
-  const handleGenderChange = (e) => {
-    setFormData({
-      ...formData,
-      gender: e.target.value,
-    });
+    if (type === 'file') {
+      setFormData({
+        ...formData,
+        profileImage: files[0], // 파일을 상태에 저장
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
 
   const handleReset = () => {
     setFormData({
       id: '',
-      nickname: '',
-      pass: '',
-      repass: '',
-      name: '',
-      gender: '',
-      phone1: '02',
-      phone2: '',
-      phone3: '',
-      birth: '',
-      email: '',
-      addcode: '',
-      address01: '',
-      address02: '',
       pr: '',
-    });
-    setErrors({
-      id: '',
-      nickname: '',
-      pass: '',
-      repass: '',
-      name: '',
-      phone2: '',
-      phone3: '',
-      birth: '',
-      email: '',
-      addcode: '',
+      profileImage: null, // 이미지 초기화
     });
   };
 
   const handleGoBack = () => {
-    // 돌아가기 버튼 클릭 시 /mypage로 이동
     navigate('/mypage');
   };
 
-  // 패턴 조건 설정
-  const patterns = {
-    id: /^[a-z0-9_]{4,10}$/, // 아이디: 4~20자, 소문자/숫자/밑줄만 허용
-    nickname: /^[a-zA-Z0-9가-힣]{2,10}$/, // 닉네임: 2~10자, 한글/영문/숫자만 허용
-    pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/, // 비밀번호: 대소문자, 숫자, 특수문자 포함
-    repass: (value) => value === formData.pass, // 비밀번호 확인: 비밀번호와 일치
-    name: /^[가-힣a-zA-Z]{2,5}$/, // 이름: 2~5자, 한글/영문
-    phone2: /^[0-9]{3,4}$/, // 전화번호: 3~4자리 숫자
-    phone3: /^[0-9]{4}$/, // 전화번호: 4자리 숫자
-    birth: /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, // 생년월일: YYYY-MM-DD 형식
-    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // 이메일: 일반적인 이메일 형식
-    addcode: /^[0-9]{5}$/, // 우편번호: 5자리 숫자
-  };
-
-  // 유효성 검사 함수
-  const validateField = (name, value) => {
-    let errorMessage = '';
-    if (patterns[name]) {
-      if (typeof patterns[name] === 'function') {
-        errorMessage = !patterns[name](value)
-          ? '비밀번호가 일치하지 않습니다.'
-          : '';
-      } else {
-        if (!patterns[name].test(value)) {
-          switch (name) {
-            case 'id':
-              errorMessage = '아이디는 4자 이상 20자 이하로 입력해주세요.';
-              break;
-            case 'nickname':
-              errorMessage =
-                '닉네임은 2자 이상 10자 이하, 한글/영문/숫자만 사용 가능합니다.';
-              break;
-            case 'pass':
-              errorMessage =
-                '비밀번호는 대소문자, 숫자, 특수문자가 포함되어야 하며, 8자 이상 20자 이하로 입력해주세요.';
-              break;
-            case 'repass':
-              errorMessage = '비밀번호 확인이 비밀번호와 일치하지 않습니다.';
-              break;
-            case 'name':
-              errorMessage =
-                '이름은 2자 이상 5자 이하로 한글 또는 영문만 가능합니다.';
-              break;
-            case 'phone2':
-              errorMessage = '전화번호는 3~4자리 숫자로 입력해주세요.';
-              break;
-            case 'phone3':
-              errorMessage = '전화번호는 4자리 숫자로 입력해주세요.';
-              break;
-            case 'birth':
-              errorMessage = '생년월일은 YYYY-MM-DD 형식으로 입력해주세요.';
-              break;
-            case 'email':
-              errorMessage = '이메일 형식이 올바르지 않습니다.';
-              break;
-            case 'addcode':
-              errorMessage = '우편번호는 5자리 숫자로 입력해주세요.';
-              break;
-            default:
-              errorMessage = '형식이 올바르지 않습니다.';
-          }
-        }
-      }
-    }
-
-    setErrors({
-      ...errors,
-      [name]: errorMessage,
-    });
-  };
-
-  // 전체 폼 유효성 검사
-  const validateForm = () => {
-    let isValid = true;
-    let newErrors = { ...errors };
-
-    // 각 필드를 검사하고, 유효하지 않은 필드는 에러 메시지를 추가
-    for (const field in formData) {
-      validateField(field, formData[field]);
-      if (errors[field]) {
-        isValid = false;
-      }
-    }
-
-    setErrors(newErrors); // 최종 에러 상태 설정
-    return isValid;
-  };
-
   const handleSubmit = (e) => {
-    e.preventDefault(); // 폼 제출을 막고 유효성 검사 진행
+    e.preventDefault();
 
-    if (validateForm()) {
-      // 유효성 검사를 통과한 경우 제출
-      console.log(formData);
-      window.alert('수정되었습니다.');
-      navigate('/mypage');
-    } else {
-      // 유효성 검사를 실패한 경우
-      window.alert('조건이 위배되어 회원정보 수정에 실패하였습니다.');
-    }
+    // FormData 객체를 만들어 서버로 이미지와 데이터를 전송
+    const formDataToSend = new FormData();
+    formDataToSend.append('id', formData.id);
+    formDataToSend.append('pr', formData.pr);
+    formDataToSend.append('profileImage', formData.profileImage); // 이미지 추가
+
+    // 서버로 FormData 전송 (Spring Boot 서버 주소로 요청)
+    fetch('http://localhost:8080/mypage/fileupload', {
+      method: 'POST',
+      body: formDataToSend,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Profile updated:', data);
+        window.alert('수정되었습니다.');
+        navigate('/mypage');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+        window.alert('오류가 발생했습니다.');
+      });
   };
 
   return (
     <Container className="mt-5">
-      <h2 className="text-center">회원 가입 정보 입력</h2>
+      <h2 className="text-center">프로필 정보 수정</h2>
       <Form onSubmit={handleSubmit}>
-        {/* 아이디 입력 */}
+        {/* 프로필 사진 업로드 */}
         <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={3}>
             프로필 사진 업로드
@@ -213,19 +87,35 @@ export default function MyProfileChange() {
           <Col sm={9}>
             <InputGroup>
               <FormControl
-                type="text"
-                name="id"
-                value={formData.id}
+                type="file"
+                name="profileImage"
                 onChange={handleChange}
               />
-              <Button
-                variant="outline-secondary"
-                onClick={() => alert('중복 확인')}
-              >
-                파일 선택
-              </Button>
             </InputGroup>
-            {errors.id && <div className="text-danger">{errors.id}</div>}
+            {formData.profileImage && (
+              <div className="mt-3">
+                <img
+                  src={URL.createObjectURL(formData.profileImage)}
+                  alt="Profile Preview"
+                  style={{ width: '100px', height: '100px' }}
+                />
+              </div>
+            )}
+          </Col>
+        </Form.Group>
+
+        {/* 자기소개 입력 */}
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column sm={2}>
+            자기소개
+          </Form.Label>
+          <Col sm={10}>
+            <Form.Control
+              as="textarea"
+              name="pr"
+              value={formData.pr}
+              onChange={handleChange}
+            />
           </Col>
         </Form.Group>
 
