@@ -161,7 +161,9 @@ function MyPage() {
           <Link to="/mypage/amounthis">
             <Button variant="light m-3">거래 내역 확인</Button>
           </Link>
-          <Button variant="light m-3">작성 리뷰 확인</Button>
+          <Link to="/mypage/reviews">
+            <Button variant="light m-3">작성 리뷰 확인</Button>
+          </Link>
         </div>
       </div>
 
