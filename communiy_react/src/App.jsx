@@ -8,6 +8,10 @@ import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
 import MyAmountHistory from './mypage/MyAmountHistory';
 import MyReviews from './mypage/MyReviews';
+import MyAmountCharge from './mypage/MyAmountCharge';
+import Checkout from './mypage/tosspay/Checkout';
+import SuccessPage from './mypage/tosspay/Success';
+import FailPage from './mypage/tosspay/Fail';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -24,6 +28,10 @@ function App() {
           <Route path="/mypage/infodelete" element={<MyInfoDelete />} />
           <Route path="/mypage/amounthis" element={<MyAmountHistory />} />
           <Route path="/mypage/reviews" element={<MyReviews />} />
+          <Route path="/mypage/charge" element={<MyAmountCharge />} />
+          <Route path="/mypage/checkout" element={<Checkout />} />
+          <Route path="/mypage/checkout/success" element={<SuccessPage />} />
+          <Route path="/mypage/checkout/fail" element={<FailPage />} />
           {/* 김동욱 chatroom*/}
         </Routes>
       </BrowserRouter>

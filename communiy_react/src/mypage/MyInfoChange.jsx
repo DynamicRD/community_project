@@ -19,7 +19,7 @@ export default function MyInfoChange() {
     pass: '',
     repass: '',
     name: '',
-    gender: '',
+    gender: '', // 성별 추가
     phone1: '02',
     phone2: '',
     phone3: '',
@@ -58,7 +58,7 @@ export default function MyInfoChange() {
   const handleGenderChange = (e) => {
     setFormData({
       ...formData,
-      gender: e.target.value,
+      gender: e.target.value, // 성별 변경
     });
   };
 
@@ -69,7 +69,7 @@ export default function MyInfoChange() {
       pass: '',
       repass: '',
       name: '',
-      gender: '',
+      gender: '', // 성별 리셋
       phone1: '02',
       phone2: '',
       phone3: '',
@@ -95,25 +95,23 @@ export default function MyInfoChange() {
   };
 
   const handleGoBack = () => {
-    // 돌아가기 버튼 클릭 시 /mypage로 이동
     navigate('/mypage');
   };
 
   // 패턴 조건 설정
   const patterns = {
-    id: /^[a-z0-9_]{4,10}$/, // 아이디: 4~20자, 소문자/숫자/밑줄만 허용
-    nickname: /^[a-zA-Z0-9가-힣]{2,10}$/, // 닉네임: 2~10자, 한글/영문/숫자만 허용
-    pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/, // 비밀번호: 대소문자, 숫자, 특수문자 포함
-    repass: (value) => value === formData.pass, // 비밀번호 확인: 비밀번호와 일치
-    name: /^[가-힣a-zA-Z]{2,5}$/, // 이름: 2~5자, 한글/영문
-    phone2: /^[0-9]{3,4}$/, // 전화번호: 3~4자리 숫자
-    phone3: /^[0-9]{4}$/, // 전화번호: 4자리 숫자
-    birth: /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/, // 생년월일: YYYY-MM-DD 형식
-    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // 이메일: 일반적인 이메일 형식
-    addcode: /^[0-9]{5}$/, // 우편번호: 5자리 숫자
+    id: /^[a-z0-9_]{4,10}$/,
+    nickname: /^[a-zA-Z0-9가-힣]{2,10}$/,
+    pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/,
+    repass: (value) => value === formData.pass,
+    name: /^[가-힣a-zA-Z]{2,5}$/,
+    phone2: /^[0-9]{3,4}$/,
+    phone3: /^[0-9]{4}$/,
+    birth: /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
+    email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+    addcode: /^[0-9]{5}$/,
   };
 
-  // 유효성 검사 함수
   const validateField = (name, value) => {
     let errorMessage = '';
     if (patterns[name]) {
@@ -170,12 +168,10 @@ export default function MyInfoChange() {
     });
   };
 
-  // 전체 폼 유효성 검사
   const validateForm = () => {
     let isValid = true;
     let newErrors = { ...errors };
 
-    // 각 필드를 검사하고, 유효하지 않은 필드는 에러 메시지를 추가
     for (const field in formData) {
       validateField(field, formData[field]);
       if (errors[field]) {
@@ -183,27 +179,25 @@ export default function MyInfoChange() {
       }
     }
 
-    setErrors(newErrors); // 최종 에러 상태 설정
+    setErrors(newErrors);
     return isValid;
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // 폼 제출을 막고 유효성 검사 진행
+    e.preventDefault();
 
     if (validateForm()) {
-      // 유효성 검사를 통과한 경우 제출
       console.log(formData);
       window.alert('수정되었습니다.');
       navigate('/mypage');
     } else {
-      // 유효성 검사를 실패한 경우
       window.alert('조건이 위배되어 회원정보 수정에 실패하였습니다.');
     }
   };
 
   return (
-    <Container className="mt-5">
-      <h2 className="text-center">회원 가입 정보 입력</h2>
+    <Container className="mt-5 bg-light">
+      <h2 className="text-center">개인 정보 수정</h2>
       <Form onSubmit={handleSubmit}>
         {/* 아이디 입력 */}
         <Form.Group as={Row} className="mb-3">
@@ -302,6 +296,40 @@ export default function MyInfoChange() {
               onChange={handleChange}
             />
             {errors.name && <div className="text-danger">{errors.name}</div>}
+          </Col>
+        </Form.Group>
+
+        {/* 성별 입력 */}
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column sm={2}>
+            성별
+          </Form.Label>
+          <Col sm={10}>
+            <Row>
+              <Col sm="auto">
+                <Form.Check
+                  type="radio"
+                  label="남자"
+                  name="gender"
+                  value="남자"
+                  checked={formData.gender === '남자'}
+                  onChange={handleGenderChange}
+                />
+              </Col>
+              <Col sm="auto">
+                <Form.Check
+                  type="radio"
+                  label="여자"
+                  name="gender"
+                  value="여자"
+                  checked={formData.gender === '여자'}
+                  onChange={handleGenderChange}
+                />
+              </Col>
+            </Row>
+            {errors.gender && (
+              <div className="text-danger">{errors.gender}</div>
+            )}
           </Col>
         </Form.Group>
 

@@ -240,11 +240,14 @@ function MyPage() {
           <Pagination.Item>{3}</Pagination.Item>
           <Pagination.Next />
         </Pagination>
-        <Link to="/mypage/infodelete">
-          <Button variant="danger" block className="mt-3">
-            회원탈퇴
-          </Button>
-        </Link>
+        <div className="text-center">
+          {' '}
+          <Link to="/mypage/infodelete">
+            <Button variant="danger" block className="mt-3">
+              회원탈퇴
+            </Button>
+          </Link>
+        </div>
       </div>
     </Container>
   );
