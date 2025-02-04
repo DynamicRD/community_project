@@ -10,9 +10,11 @@ import {
   FormControl,
   Button,
 } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import AddressInput from './daumAPI/AddressInput';
 
 export default function MyInfoChange() {
+  const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
   const [formData, setFormData] = useState({
     id: '',
     nickname: '',
@@ -53,6 +55,15 @@ export default function MyInfoChange() {
       [name]: type === 'checkbox' ? checked : value,
     });
     validateField(name, value); // 입력 시 바로 검증
+  };
+
+  const handlePostcodeComplete = (zonecode, address) => {
+    setFormData((prev) => ({
+      ...prev,
+      addcode: zonecode,
+      address01: address,
+    }));
+    setIsAddressInputVisible((prevState) => !prevState);
   };
 
   const handleGenderChange = (e) => {
@@ -193,6 +204,10 @@ export default function MyInfoChange() {
     } else {
       window.alert('조건이 위배되어 회원정보 수정에 실패하였습니다.');
     }
+  };
+  // 버튼 클릭 시 AddressInput 활성화/비활성화
+  const handleButtonClick = () => {
+    setIsAddressInputVisible((prevState) => !prevState); // 상태를 반전시킴
   };
 
   return (
@@ -413,7 +428,7 @@ export default function MyInfoChange() {
           <Form.Label column sm={2}>
             우편번호
           </Form.Label>
-          <Col sm={10}>
+          <Col sm={4}>
             <InputGroup>
               <FormControl
                 type="text"
@@ -421,12 +436,15 @@ export default function MyInfoChange() {
                 value={formData.addcode}
                 onChange={handleChange}
               />
-              <Button
-                variant="outline-secondary"
-                onClick={() => alert('우편번호 찾기')}
-              >
+
+              <Button variant="outline-secondary" onClick={handleButtonClick}>
                 찾기
               </Button>
+
+              {/* isAddressInputVisible가 true일 때만 AddressInput을 렌더링 */}
+              {isAddressInputVisible && (
+                <AddressInput onComplete={handlePostcodeComplete} />
+              )}
             </InputGroup>
             {errors.addcode && (
               <div className="text-danger">{errors.addcode}</div>

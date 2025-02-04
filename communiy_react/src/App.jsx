@@ -12,6 +12,7 @@ import MyAmountCharge from './mypage/MyAmountCharge';
 import Checkout from './mypage/tosspay/Checkout';
 import SuccessPage from './mypage/tosspay/Success';
 import FailPage from './mypage/tosspay/Fail';
+import AddressInput from './mypage/daumAPI/AddressInput';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -32,6 +33,7 @@ function App() {
           <Route path="/mypage/checkout" element={<Checkout />} />
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
+          <Route path="/mypage/infochange/address" element={<AddressInput />} />
           {/* 김동욱 chatroom*/}
         </Routes>
       </BrowserRouter>
