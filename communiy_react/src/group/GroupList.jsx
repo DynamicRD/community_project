@@ -3,6 +3,7 @@ import './GroupList.css';
 import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
+import { Link } from 'react-router';
 
 function GroupList() {
   const [open, setOpen] = useState(false);
@@ -49,7 +50,6 @@ function GroupList() {
               &nbsp;제주
             </div>
           </Collapse>
-          
         </div>
         <div className="d-flex justify-content-between">
           <div>
@@ -71,17 +71,19 @@ function GroupList() {
         <div>
           <div className="row row-cols-1 row-cols-md-3 g-4">
             <div className="col">
-              <div className="card">
-                <img src="..." className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">모임제목</h5>
-                  <p className="card-text">
-                    This is a longer card with supporting text below as a
-                    natural lead-in to additional content. This content is a
-                    little bit longer.
-                  </p>
+              <Link to="/group/detail">
+                <div className="card">
+                  <img src="..." className="card-img-top" alt="..." />
+                  <div className="card-body">
+                    <h5 className="card-title">모임제목</h5>
+                    <p className="card-text">
+                      This is a longer card with supporting text below as a
+                      natural lead-in to additional content. This content is a
+                      little bit longer.
+                    </p>
+                  </div>
                 </div>
-              </div>
+              </Link>
             </div>
             <div className="col">
               <div className="card">

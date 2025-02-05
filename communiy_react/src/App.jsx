@@ -96,12 +96,6 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-
-          {/* 모임페이지-해원 */}
-          <Route path="/group/detail" element={<GroupDetail />} />
-          <Route path="/group/list" element={<GroupList />} />
-          <Route path="/group/regist" element={<GroupRegist />} />
-
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
           {/* 김동욱 mypage 컴포넌트 추가 */}
@@ -116,6 +110,13 @@ function App() {
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
+
+          {/* 모임페이지-해원 */}
+          <Route path="/group/detail" element={<GroupDetail />} />
+          <Route path="/group/list" element={<GroupList />} />
+          <Route path="/group/regist" element={<GroupRegist />} />
+
+          {/* 리뷰게시판 - 문정배*/}
           <Route
             path="/review"
             element={<Review reviewData={[...reviewData]} />}
@@ -129,8 +130,6 @@ function App() {
           {/* 로그인-신지호 */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-
-
         </Routes>
         <Footer />
       </BrowserRouter>

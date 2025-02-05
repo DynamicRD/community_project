@@ -11,6 +11,10 @@
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-regular-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
     "@tosspayments/payment-widget-sdk": "^0.12.0",
     "bootstrap": "^5.3.3",
     "bootstrap-icons": "^1.11.3",
