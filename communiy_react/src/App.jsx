@@ -15,6 +15,7 @@ import Checkout from './mypage/tosspay/Checkout';
 import SuccessPage from './mypage/tosspay/Success';
 import FailPage from './mypage/tosspay/Fail';
 import AddressInput from './mypage/daumAPI/AddressInput';
+import Login from './login/login';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -38,6 +39,8 @@ function App() {
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
+          {/* 로그인-신지호 */}
+          <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
       <Footer />

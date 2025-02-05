@@ -34,13 +34,18 @@ const Navbar = () => (
           ))}
         </ul>
         <div className="icon-links d-flex align-items-center">
-          {['box-arrow-in-right', 'person', 'suit-heart', 'cart2'].map(
-            (icon, index) => (
-              <a key={index} href="#" className="ms-3">
-                <i className={`bi bi-${icon} middle-icon`}></i>
-              </a>
-            )
-          )}
+          <a href="#" className="ms-3">
+            <i className="bi bi-box-arrow-in-right middle-icon"></i>
+          </a>
+          <a href="#" className="ms-3">
+            <i className="bi bi-person middle-icon"></i>
+          </a>
+          <a href="#" className="ms-3">
+            <i className="bi bi-suit-heart middle-icon"></i>
+          </a>
+          <a href="#" className="ms-3">
+            <i className="bi bi-cart2 middle-icon"></i>
+          </a>
         </div>
       </div>
     </div>
