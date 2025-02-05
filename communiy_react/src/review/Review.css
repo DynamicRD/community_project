@@ -1,0 +1,62 @@
+.review_board {
+  display: flex;
+  justify-content: center;
+}
+
+.review_img {
+  width: 350px;
+  height: 250px;
+  border-radius: 30px;
+}
+
+.page ul {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  margin: 16px 0px;
+  align-items: center;
+}
+
+.page ul li {
+  font-size: 13px;
+  padding: 5px 10px;
+  margin: 0px;
+  color: black;
+}
+
+.page ul li:hover {
+  background-color: rgba(114, 114, 114, 0.61);
+}
+
+.page_num {
+  list-style: none;
+}
+
+.review_regist {
+  position: relative;
+  left: 0px;
+}
+
+.reviewRegist {
+  position: absolute;
+  right: 420px;
+}
+
+.reviewRegist span {
+  padding: 7px 10px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  color: black;
+  font-size: small;
+}
+
+.reviewRegist:hover,
+.reviewRegist span:hover {
+  background-color: #f8f9fa;
+  color: black;
+}
+
+.text1 {
+  margin: 15px 15px 15px 0px;
+}
