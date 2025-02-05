@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Container } from 'react-bootstrap';
+import { Link } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
 
 export default function Login() {
   const [id, setId] = useState('');
@@ -96,35 +97,39 @@ export default function Login() {
               marginTop: '10px',
             }}
           >
-            <img
-              src="/images/google.png"
-              alt="Google Login"
-              style={{ width: '50px', marginRight: '20px' }}
-            />
-            <img
-              src="/images/kakao.png"
-              alt="Kakao Login"
-              style={{ width: '50px' }}
-            />
+            <Link to="/find-id" style={{ color: 'blue' }}>
+              <img
+                src="/images/google.png"
+                alt="Google Login"
+                style={{ width: '50px', marginRight: '20px' }}
+              />
+            </Link>
+            <Link to="/find-id" style={{ color: 'blue' }}>
+              <img
+                src="/images/kakao.png"
+                alt="Kakao Login"
+                style={{ width: '50px' }}
+              />
+            </Link>
           </div>
           <div
             style={{ textAlign: 'center', marginTop: '15px', fontSize: '14px' }}
           >
             <p>
               아이디를 잊어버리셨나요?{' '}
-              <a href="#" style={{ color: 'blue' }}>
+              <Link to="/find-id" style={{ color: 'blue' }}>
                 아이디 찾기
-              </a>
+              </Link>
               <br />
               비밀번호를 잊어버리셨나요?{' '}
-              <a href="#" style={{ color: 'blue' }}>
+              <Link to="/find-password" style={{ color: 'blue' }}>
                 비밀번호 찾기
-              </a>
+              </Link>
               <br />
               아직 회원이 아니신가요?{' '}
-              <a href="#" style={{ color: 'blue' }}>
+              <Link to="/signup" style={{ color: 'blue' }}>
                 회원가입
-              </a>
+              </Link>
             </p>
           </div>
         </div>

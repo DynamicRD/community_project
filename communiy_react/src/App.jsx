@@ -15,6 +15,7 @@ import Checkout from './mypage/tosspay/Checkout';
 import SuccessPage from './mypage/tosspay/Success';
 import FailPage from './mypage/tosspay/Fail';
 import AddressInput from './mypage/daumAPI/AddressInput';
+import Signup from './login/Signup';
 import Login from './login/login';
 
 function App() {
@@ -22,8 +23,8 @@ function App() {
 
   return (
     <>
-      <Navbar />
       <BrowserRouter>
+        <Navbar />
         <Routes>
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
@@ -41,9 +42,10 @@ function App() {
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
           {/* 로그인-신지호 */}
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
+        <Footer />
       </BrowserRouter>
-      <Footer />
     </>
   );
 }

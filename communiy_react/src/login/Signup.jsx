@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './myInfoChange.css'; // 작성한 CSS 파일 임포트
+import '../mypage/MyInfoChange.css'; // 작성한 CSS 파일 임포트
 import {
   Container,
   Form,
@@ -11,11 +11,12 @@ import {
   Button,
 } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
-import AddressInput from './daumAPI/AddressInput';
+import AddressInput from '../mypage/daumAPI/AddressInput';
 
-export default function MyInfoChange() {
+export default function Signup() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
   const [formData, setFormData] = useState({
+    id: '',
     nickname: '',
     pass: '',
     repass: '',
@@ -33,6 +34,7 @@ export default function MyInfoChange() {
   });
 
   const [errors, setErrors] = useState({
+    id: '',
     nickname: '',
     pass: '',
     repass: '',
@@ -73,6 +75,7 @@ export default function MyInfoChange() {
 
   const handleReset = () => {
     setFormData({
+      id: '',
       nickname: '',
       pass: '',
       repass: '',
@@ -89,6 +92,7 @@ export default function MyInfoChange() {
       pr: '',
     });
     setErrors({
+      id: '',
       nickname: '',
       pass: '',
       repass: '',
@@ -102,11 +106,12 @@ export default function MyInfoChange() {
   };
 
   const handleGoBack = () => {
-    navigate('/mypage');
+    navigate('/login');
   };
 
   // 패턴 조건 설정
   const patterns = {
+    id: /^[a-z0-9_]{4,10}$/,
     nickname: /^[a-zA-Z0-9가-힣]{2,10}$/,
     pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/,
     repass: (value) => value === formData.pass,
@@ -128,6 +133,9 @@ export default function MyInfoChange() {
       } else {
         if (!patterns[name].test(value)) {
           switch (name) {
+            case 'id':
+              errorMessage = '아이디는 4자 이상 20자 이하로 입력해주세요.';
+              break;
             case 'nickname':
               errorMessage =
                 '닉네임은 2자 이상 10자 이하, 한글/영문/숫자만 사용 가능합니다.';
@@ -191,10 +199,10 @@ export default function MyInfoChange() {
 
     if (validateForm()) {
       console.log(formData);
-      window.alert('수정되었습니다.');
-      navigate('/mypage');
+      window.alert('가입되었습니다.');
+      navigate('/');
     } else {
-      window.alert('조건이 위배되어 회원정보 수정에 실패하였습니다.');
+      window.alert('조건이 위배되어 회원가입에 실패하였습니다.');
     }
   };
   // 버튼 클릭 시 AddressInput 활성화/비활성화
@@ -203,9 +211,33 @@ export default function MyInfoChange() {
   };
 
   return (
-    <Container className="mt-5 bg-light p-5">
-      <h2 className="text-center">개인 정보 수정</h2>
+    <Container className="mt-5 mb-5 bg-light p-5">
+      <h2 className="text-center">회원가입</h2>
       <Form onSubmit={handleSubmit}>
+        {/* 아이디 입력 */}
+        <Form.Group as={Row} className="mb-3">
+          <Form.Label column sm={2}>
+            아이디
+          </Form.Label>
+          <Col sm={10}>
+            <InputGroup>
+              <FormControl
+                type="text"
+                name="id"
+                value={formData.id}
+                onChange={handleChange}
+              />
+              <Button
+                variant="outline-secondary"
+                onClick={() => alert('중복 확인')}
+              >
+                중복확인
+              </Button>
+            </InputGroup>
+            {errors.id && <div className="text-danger">{errors.id}</div>}
+          </Col>
+        </Form.Group>
+
         {/* 닉네임 입력 */}
         <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={2}>
@@ -456,7 +488,7 @@ export default function MyInfoChange() {
         <Form.Group as={Row} className="mb-3 text-center">
           <Col sm={12}>
             <Button variant="primary" type="submit">
-              정보수정
+              가입하기
             </Button>
             &nbsp;&nbsp;
             <Button variant="secondary" type="reset" onClick={handleReset}>
