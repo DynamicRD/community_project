@@ -37,8 +37,3 @@
 .group_list input[type="checkbox"]{
   margin-left: 10px;
 }
-
-header,
-footer {
-  height: 200px;
-}

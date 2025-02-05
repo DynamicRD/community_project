@@ -19,7 +19,7 @@ function GroupList() {
           >
             Filter
           </Button>
-          <Collapse in={open}>
+          <Collapse in={open} className='mt-2'>
             <div id="example-collapse-text">
               <h5>카테고리</h5>
               <input type="checkbox" value="culture_art" name="category" />

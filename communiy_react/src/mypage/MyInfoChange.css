@@ -1,7 +1,7 @@
 @charset "UTF-8";
 
 /* 제목 스타일 */
-h2 {
+.infochange h2 {
   text-align: center;
   margin-bottom: 30px;
   font-weight: bold;
@@ -10,10 +10,10 @@ h2 {
 }
 
 /* 각 입력 필드 스타일 */
-input[type='text'],
-input[type='password'],
-select,
-textarea {
+.infochange input[type='text'],
+.infochange input[type='password'],
+.infochange select,
+.infochange textarea {
   padding: 5px;
   font-size: 14px;
   width: 70%;
@@ -21,7 +21,7 @@ textarea {
   margin-bottom: 15px;
 }
 
-textarea {
+.infochange textarea {
   height: 100px;
 }
 
@@ -64,33 +64,13 @@ textarea {
   margin: 0 5px;
 }
 
-/* 버튼 스타일 */
-button,
-input[type='button'],
-input[type='reset'] {
-  padding: 10px 20px;
-  font-size: 14px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: rgba(113, 255, 120, 0.719);
-  color: white;
-  margin: 5px;
-}
-
-button:hover,
-input[type='button']:hover,
-input[type='reset']:hover {
-  background-color: rgba(10, 209, 20, 0.726);
-}
-
 /* 라디오 버튼(성별 선택) 스타일 */
 .form-check {
   margin-bottom: 10px;
 }
 
 /* 폼의 레이블 스타일 */
-label {
+.infochange label {
   font-weight: bold;
   font-size: 14px;
 }

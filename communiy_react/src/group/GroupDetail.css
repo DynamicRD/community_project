@@ -104,8 +104,3 @@
   display: flex;
   gap: 20px;
 }
-
-header,
-footer {
-  height: 200px;
-}
