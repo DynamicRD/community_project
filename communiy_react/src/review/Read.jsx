@@ -89,7 +89,7 @@ export default function Read({ reviewData }) {
             </div>
 
             <Button
-              className="register_btn ms-3"
+              className="review_register_btn ms-3"
               onClick={() => {
                 const form = new FormData();
                 form.append('content', content);

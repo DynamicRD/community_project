@@ -72,7 +72,7 @@ const reviewList = [
   },
   {
     no: 6,
-    title: '안녕하세요13',
+    title: '안녕하세요6',
     writer: '문정배6',
     img: '/images/review1.png',
     content:

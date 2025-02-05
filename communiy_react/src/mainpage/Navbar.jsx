@@ -6,7 +6,7 @@ const Navbar = () => (
   <nav className="navbar navbar-expand-lg navbar-light bg-white navbar-custom">
     <div className="container d-flex justify-content-center">
       <a className="navbar-brand navbar-logo" href="#">
-        W CONCEPT
+        모樂모락
       </a>
       <button
         className="navbar-toggler"
