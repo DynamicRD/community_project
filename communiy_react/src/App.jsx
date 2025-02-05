@@ -1,6 +1,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
 import './App.css';
+import GroupList from './group/GroupList';
+import GroupDetail from './group/GroupDetail';
+import GroupRegist from './group/GroupRegist';
 import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
@@ -18,6 +21,7 @@ import AddressInput from './mypage/daumAPI/AddressInput';
 import Signup from './login/Signup';
 import Login from './login/login';
 
+
 function App() {
   const [count, setCount] = useState(0);
 
@@ -26,6 +30,12 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
+
+          {/* 모임페이지-해원 */}
+          <Route path="/group/detail" element={<GroupDetail />} />
+          <Route path="/group/list" element={<GroupList />} />
+          <Route path="/group/regist" element={<GroupRegist />} />
+
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
           {/* 김동욱 mypage 컴포넌트 추가 */}
@@ -43,6 +53,7 @@ function App() {
           {/* 로그인-신지호 */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+
         </Routes>
         <Footer />
       </BrowserRouter>
