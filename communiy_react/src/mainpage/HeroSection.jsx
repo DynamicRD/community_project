@@ -7,7 +7,9 @@ const HeroSection = () => (
     <div className="overlay"></div>
     <div className="hero-content">
       <h1 className="hero-title">
-        업무에 필요한 건<br />잘 만들어진 환경과 집중도.
+        우리는
+        <br />
+        다양한 사람들과의 소통을 추구합니다.
       </h1>
       <p className="hero-subtitle">Designer Agent Platform</p>
       <a href="#" className="hero-button">
