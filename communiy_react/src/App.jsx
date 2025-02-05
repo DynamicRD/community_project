@@ -7,7 +7,7 @@ import GroupRegist from './group/GroupRegist';
 import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
-import MyPage from './mypage/mypage';
+
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
@@ -23,6 +23,8 @@ import Review from './review/Review';
 import Regist from './review/Regist';
 import Signup from './login/Signup';
 import Login from './login/login';
+import MyPage from './mypage/MyPage';
+import ChatRoom from './chatroom/chatroom';
 
 const reviewList = [
   {
@@ -77,7 +79,7 @@ const reviewList = [
   },
   {
     no: 6,
-    title: '안녕하세요6',
+    title: '안녕하세요13',
     writer: '문정배6',
     img: '/images/review1.png',
     content:
@@ -96,12 +98,6 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-
-          {/* 모임페이지-해원 */}
-          <Route path="/group/detail" element={<GroupDetail />} />
-          <Route path="/group/list" element={<GroupList />} />
-          <Route path="/group/regist" element={<GroupRegist />} />
-
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
           {/* 김동욱 mypage 컴포넌트 추가 */}
@@ -116,6 +112,14 @@ function App() {
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
+          <Route path="/chatroom" element={<ChatRoom />} />
+
+          {/* 모임페이지-해원 */}
+          <Route path="/group/detail" element={<GroupDetail />} />
+          <Route path="/group/list" element={<GroupList />} />
+          <Route path="/group/regist" element={<GroupRegist />} />
+
+          {/* 리뷰게시판 - 문정배*/}
           <Route
             path="/review"
             element={<Review reviewData={[...reviewData]} />}
@@ -129,8 +133,6 @@ function App() {
           {/* 로그인-신지호 */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-
-
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -28,7 +28,7 @@ export default function Review({ reviewData }) {
           <ul id="board_list" className="list-unstyled">
             {groupedReviews.map((group, index) => (
               <div
-                className="d-flex justify-content-start gap-3 mt-4"
+                className="d-flex justify-content-start gap-3 mb-4"
                 key={index}
               >
                 {group.map((object) => (
@@ -54,7 +54,7 @@ export default function Review({ reviewData }) {
         </div>
       </Container>
       <Container>
-        <div className="d-flex justify-content-center ">
+        <div className="d-flex justify-content-center align-items-center">
           <Pagination size="sm">{item}</Pagination>
           <Nav.Link href="/review/Regist" className="reviewRegist">
             <span>작성 하기</span>

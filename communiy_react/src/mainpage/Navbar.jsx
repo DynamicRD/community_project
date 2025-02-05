@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'; // Link 컴포넌트를 가져옵니다
 const Navbar = () => (
   <nav className="navbar navbar-expand-lg navbar-light bg-white navbar-custom">
     <div className="container d-flex justify-content-center">
-      <Link className="navbar-brand navbar-logo" href="#">
-        모樂모락
+      <Link className="navbar-brand navbar-logo" to="/">
+        W CONCEPT
       </Link>
       <button
         className="navbar-toggler"
@@ -18,9 +18,9 @@ const Navbar = () => (
         <ul className="navbar-nav mx-auto">
           {[
             { name: '홈', path: '/' },
-            { name: '정기모임', path: '/regular-meeting' },
-            { name: '동행ㆍ소모임', path: '/group-meeting' },
-            { name: '모임후기', path: '/reviews' },
+            { name: '정기모임', path: '/group/list' },
+            { name: '동행ㆍ소모임', path: '/group/list' },
+            { name: '모임후기', path: '/review' },
             { name: '공지사항', path: '/announcements' },
             { name: 'FAQ', path: '/faq' },
           ].map((item, index) => (

@@ -192,7 +192,6 @@ function GroupDetail() {
           <button>참가 신청하기</button>
         </div>
       </div>
-      <footer></footer>
     </Container>
   );
 }

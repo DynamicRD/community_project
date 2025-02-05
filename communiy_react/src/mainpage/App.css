@@ -1,10 +1,8 @@
-* {
-}
-
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   display: block;
+  background-color: #f0f6f0;
 }
 
 /* Navbar */
@@ -55,7 +53,6 @@ body {
 }
 
 .carousel-image {
-  background-color: rgb(201, 182, 158, 0.2);
   margin-top: 30px;
   margin-bottom: 40px;
   border-radius: 15px;
@@ -106,7 +103,7 @@ body {
 
 /* Introduction Section */
 .introduction-section {
-  background-color: rgb(201, 182, 158, 0.2);
+  background-color: #f9f9f9;
   padding: 50px 20px;
   text-align: center;
 }
