@@ -1,0 +1,19 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './App.css';
+
+const HeroSection = () => (
+  <div className="hero-section">
+    <div className="overlay"></div>
+    <div className="hero-content">
+      <h1 className="hero-title">
+        업무에 필요한 건<br />잘 만들어진 환경과 집중도.
+      </h1>
+      <p className="hero-subtitle">Designer Agent Platform</p>
+      <a href="#" className="hero-button">
+        모임 참여 →
+      </a>
+    </div>
+  </div>
+);
+
+export default HeroSection;

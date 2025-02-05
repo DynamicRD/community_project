@@ -1,0 +1,101 @@
+@charset "UTF-8";
+
+/* 제목 스타일 */
+h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #333;
+}
+
+/* 각 입력 필드 스타일 */
+input[type='text'],
+input[type='password'],
+select,
+textarea {
+  padding: 5px;
+  font-size: 14px;
+  width: 70%;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+textarea {
+  height: 100px;
+}
+
+/* 입력 그룹 (아이디, 닉네임 등) 레이아웃 */
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.input-group input[type='text'],
+.input-group input[type='password'] {
+  width: 70%;
+  margin-right: 10px;
+}
+
+.input-group input[type='button'] {
+  width: 28%;
+}
+
+/* 전화번호 입력 그룹 스타일 */
+/* 전화번호 입력 필드를 한 줄로 배치 */
+.phone-input-group {
+  display: flex;
+  align-items: center;
+}
+
+.phone-select {
+  width: 100px; /* 국가 코드나 앞자리 번호를 입력하는 셀의 너비 */
+}
+
+.phone-input {
+  width: 80px; /* 전화번호 두 번째, 세 번째 부분의 입력 셀 너비 */
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.phone-input-group span {
+  font-size: 18px;
+  margin: 0 5px;
+}
+
+/* 버튼 스타일 */
+button,
+input[type='button'],
+input[type='reset'] {
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: rgba(113, 255, 120, 0.719);
+  color: white;
+  margin: 5px;
+}
+
+button:hover,
+input[type='button']:hover,
+input[type='reset']:hover {
+  background-color: rgba(10, 209, 20, 0.726);
+}
+
+/* 라디오 버튼(성별 선택) 스타일 */
+.form-check {
+  margin-bottom: 10px;
+}
+
+/* 폼의 레이블 스타일 */
+label {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* 성별 선택 레이아웃 조정 */
+.form-check-inline {
+  margin-right: 20px;
+}
