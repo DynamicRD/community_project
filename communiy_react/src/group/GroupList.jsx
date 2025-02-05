@@ -3,9 +3,11 @@ import './GroupList.css';
 import { Container } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
+import GroupItem from './GroupItem';
 
-function GroupList() {
+function GroupList({groupList}) {
   const [open, setOpen] = useState(false);
+  const [items, setGroupList] = useState([]);
 
   return (
     <Container>
@@ -70,32 +72,25 @@ function GroupList() {
         <hr />
         <div>
           <div className="row row-cols-1 row-cols-md-3 g-4">
+            {items.map(({groupList})=>{
+              <GroupItem
+                g_title={groupList.g_title}
+                comment1={groupList.comment1}
+                start_date={groupList.start_date}
+                />
+            })}
             <div className="col">
               <div className="card">
                 <img src="..." className="card-img-top" alt="..." />
                 <div className="card-body">
-                  <h5 className="card-title">모임제목</h5>
+                  <h5 className="card-title">{groupList[1].g_title}</h5>
                   <p className="card-text">
-                    This is a longer card with supporting text below as a
-                    natural lead-in to additional content. This content is a
-                    little bit longer.
+                  {groupList[1].comment1}
                   </p>
                 </div>
               </div>
             </div>
-            <div className="col">
-              <div className="card">
-                <img src="..." className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">모임제목</h5>
-                  <p className="card-text">
-                    This is a longer card with supporting text below as a
-                    natural lead-in to additional content. This content is a
-                    little bit longer.
-                  </p>
-                </div>
-              </div>
-            </div>
+            {/*
             <div className="col">
               <div className="card">
                 <img src="..." className="card-img-top" alt="..." />
@@ -120,7 +115,7 @@ function GroupList() {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
         <ul className="pagination pagination-sm justify-content-center m-5">
