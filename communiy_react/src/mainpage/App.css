@@ -1,5 +1,4 @@
 body {
-  background-color: #f0f6f0;
   margin: 0;
   font-family: Arial, sans-serif;
   display: block;
@@ -215,7 +214,7 @@ body {
 
 /* Footer */
 footer {
-  background-color: #538c2b9a;
+  background-color: #000;
   color: #fff;
   padding: 20px 0;
 }
@@ -223,7 +222,7 @@ footer {
 .footer-links a {
   text-decoration: none;
   margin-right: 15px;
-  color: #3e6820;
+  color: #000;
 }
 
 .footer-links a:hover {
