@@ -1,6 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
+import Navbar from './mainpage/Navbar';
+import Footer from './mainpage/Footer';
+import Home from './mainpage/Home';
 import MyPage from './mypage/mypage';
 import Home from './Home';
 import MyInfoChange from './mypage/MyInfoChange';
@@ -14,13 +18,16 @@ import SuccessPage from './mypage/tosspay/Success';
 import FailPage from './mypage/tosspay/Fail';
 import AddressInput from './mypage/daumAPI/AddressInput';
 
+
 function App() {
   const [count, setCount] = useState(0);
 
   return (
     <>
+      <Navbar />
       <BrowserRouter>
         <Routes>
+          {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
           {/* 김동욱 mypage 컴포넌트 추가 */}
           <Route path="/mypage" element={<MyPage />} />
@@ -34,9 +41,9 @@ function App() {
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
-          {/* 김동욱 chatroom*/}
         </Routes>
       </BrowserRouter>
+      <Footer />
     </>
   );
 }
