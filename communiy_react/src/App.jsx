@@ -7,7 +7,7 @@ import GroupRegist from './group/GroupRegist';
 import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
-import MyPage from './mypage/mypage';
+
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
@@ -23,6 +23,9 @@ import Review from './review/Review';
 import Regist from './review/Regist';
 import Signup from './login/Signup';
 import Login from './login/login';
+import MyPage from './mypage/MyPage';
+import ChatRoom from './chatroom/chatroom';
+import GoogleLoginCheck from './login/GoogleLoginCheck';
 
 const reviewList = [
   {
@@ -110,6 +113,8 @@ function App() {
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
+          <Route path="/chatroom" element={<ChatRoom />} />
+          <Route path="/login/googlecheck" element={<GoogleLoginCheck />} />
 
           {/* 모임페이지-해원 */}
           <Route path="/group/detail" element={<GroupDetail />} />

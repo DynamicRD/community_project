@@ -15,51 +15,50 @@ export default function Review({ reviewData }) {
     );
   }
 
+  // Group reviews into sets of 3 items per row
+  const groupedReviews = [];
+  for (let i = 0; i < reviewData.length; i += 3) {
+    groupedReviews.push(reviewData.slice(i, i + 3));
+  }
+
   return (
     <>
       <Container>
-        <div className="review_board">
+        <div className="review_board mt-5">
           <ul id="board_list" className="list-unstyled">
-            <div className="d-flex mt-5">
-              <div className="text1">
-                <table>
-                  <thead className="d-flex gap-5">
-                    {reviewData.map((object) => (
-                      <tr key={object.no} className="d-flex flex-column">
-                        <td>
-                          <li>
-                            <Nav.Link href="/review/Read">
-                              <img
-                                src={object.img}
-                                alt="review"
-                                className="review_img"
-                              />
-                            </Nav.Link>
-                          </li>
-                        </td>
-                        <td className="d-flex justify-content-between align-content-centner m-3">
-                          <li>
-                            <Nav.Link href="/review/Read">
-                              {object.title}
-                            </Nav.Link>
-                          </li>
-                          <li style={{ fontSize: '12px' }}>
-                            평점: {object.rating}
-                          </li>
-                        </td>
-                      </tr>
-                    ))}
-                  </thead>
-                </table>
+            {groupedReviews.map((group, index) => (
+              <div
+                className="d-flex justify-content-start gap-3 mb-4"
+                key={index}
+              >
+                {group.map((object) => (
+                  <div className="review_item" key={object.no}>
+                    <Nav.Link href="/review/Read">
+                      <img
+                        src={object.img}
+                        alt="review"
+                        className="review_img"
+                      />
+                    </Nav.Link>
+                    <div className="d-flex justify-content-between align-items-center mt-2">
+                      <Nav.Link href="/review/Read">{object.title}</Nav.Link>
+                      <span style={{ fontSize: '12px' }}>
+                        평점: {object.rating}
+                      </span>
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
-            <div className="d-flex justify-content-center align-content-center">
-              <Pagination size="sm">{item}</Pagination>
-              <Nav.Link href="/review/Regist" className="reviewRegist">
-                <span>작성 하기</span>
-              </Nav.Link>
-            </div>
+            ))}
           </ul>
+        </div>
+      </Container>
+      <Container className="mb-5">
+        <div className="d-flex justify-content-center align-items-center">
+          <Pagination size="sm">{item}</Pagination>
+          <Nav.Link href="/review/Regist" className="reviewRegist">
+            <span>작성 하기</span>
+          </Nav.Link>
         </div>
       </Container>
     </>

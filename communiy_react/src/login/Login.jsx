@@ -11,6 +11,20 @@ export default function Login() {
     console.log('ID:', id, 'Password:', password, 'Remember Me:', rememberMe);
   };
 
+  const doGoogleLogin = () => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientPass = import.meta.env.VITE_GOOGLE_CLIENT_PASS;
+    const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
+
+    console.log(clientId);
+    console.log(redirectUrl);
+
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=email profile`;
+
+    // 팝업 창 띄우기
+    window.open(url, 'google-login', 'width=600,height=600');
+  };
+
   return (
     <Container>
       <div
@@ -97,13 +111,13 @@ export default function Login() {
               marginTop: '10px',
             }}
           >
-            <Link to="/find-id" style={{ color: 'blue' }}>
-              <img
-                src="/images/google.png"
-                alt="Google Login"
-                style={{ width: '50px', marginRight: '20px' }}
-              />
-            </Link>
+            <img
+              src="/images/google.png"
+              alt="Google Login"
+              style={{ width: '50px', marginRight: '20px' }}
+              onClick={doGoogleLogin}
+            />
+
             <Link to="/find-id" style={{ color: 'blue' }}>
               <img
                 src="/images/kakao.png"
