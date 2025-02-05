@@ -24,7 +24,7 @@ export default function Review({ reviewData }) {
   return (
     <>
       <Container>
-        <div className="review_board">
+        <div className="review_board mt-5">
           <ul id="board_list" className="list-unstyled">
             {groupedReviews.map((group, index) => (
               <div
@@ -53,7 +53,7 @@ export default function Review({ reviewData }) {
           </ul>
         </div>
       </Container>
-      <Container>
+      <Container className="mb-5">
         <div className="d-flex justify-content-center align-items-center">
           <Pagination size="sm">{item}</Pagination>
           <Nav.Link href="/review/Regist" className="reviewRegist">

@@ -25,6 +25,7 @@ import Signup from './login/Signup';
 import Login from './login/login';
 import MyPage from './mypage/MyPage';
 import ChatRoom from './chatroom/chatroom';
+import GoogleLoginCheck from './login/GoogleLoginCheck';
 
 const reviewList = [
   {
@@ -113,6 +114,7 @@ function App() {
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
           <Route path="/chatroom" element={<ChatRoom />} />
+          <Route path="/login/googlecheck" element={<GoogleLoginCheck />} />
 
           {/* 모임페이지-해원 */}
           <Route path="/group/detail" element={<GroupDetail />} />
