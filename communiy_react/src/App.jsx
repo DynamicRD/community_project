@@ -1,5 +1,10 @@
 import { useState } from 'react';
 import './App.css';
+import { BrowserRouter, Routes } from 'react-router';
+import { Route } from 'react-router';
+import GroupList from './group/GroupList';
+import GroupDetail from './group/GroupDetail';
+import GroupRegist from './group/GroupRegist';
 
 function App() {
   const [count, setCount] = useState(0);
@@ -8,10 +13,10 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
-          {/* 예시
-          기초문법-길동팀원
-          <Route path="/test" element={<Syntax />} />*/}
+          {/* 모임페이지-해원 */}
+          <Route path="/group/detail" element={<GroupDetail />} />
+          <Route path="/group/list" element={<GroupList />} />
+          <Route path="/group/regist" element={<GroupRegist />} />
         </Routes>
       </BrowserRouter>
     </>
