@@ -1,12 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
 import MyPage from './mypage/mypage';
-import Home from './Home';
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
@@ -17,10 +15,76 @@ import Checkout from './mypage/tosspay/Checkout';
 import SuccessPage from './mypage/tosspay/Success';
 import FailPage from './mypage/tosspay/Fail';
 import AddressInput from './mypage/daumAPI/AddressInput';
+import Read from './review/Read';
+import Review from './review/Review';
+import Regist from './review/Regist';
 
+const reviewList = [
+  {
+    no: 1,
+    title: '안녕하세요',
+    writer: '문정배',
+    img: '/images/review1.png',
+    content:
+      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
+    rating: 2,
+    tag: 'culture',
+  },
+  {
+    no: 2,
+    title: '안녕하세요2',
+    writer: '문정배2',
+    img: '/images/review1.png',
+    content:
+      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
+    rating: 2,
+    tag: 'culture2',
+  },
+  {
+    no: 3,
+    title: '안녕하세요3',
+    writer: '문정배3',
+    img: '/images/review1.png',
+    content:
+      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
+    rating: 2,
+    tag: 'culture3',
+  },
+  {
+    no: 4,
+    title: '안녕하세요4',
+    writer: '문정배4',
+    img: '/images/review1.png',
+    content:
+      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...4',
+    rating: 2,
+    tag: 'culture4',
+  },
+  {
+    no: 5,
+    title: '안녕하세요5',
+    writer: '문정배5',
+    img: '/images/review1.png',
+    content:
+      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...5',
+    rating: 2,
+    tag: 'culture5',
+  },
+  {
+    no: 6,
+    title: '안녕하세요13',
+    writer: '문정배6',
+    img: '/images/review1.png',
+    content:
+      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...6',
+    rating: 2,
+    tag: 'culture6',
+  },
+];
 
 function App() {
   const [count, setCount] = useState(0);
+  const [reviewData, setReviewData] = useState(reviewList);
 
   return (
     <>
@@ -41,6 +105,15 @@ function App() {
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
           <Route path="/mypage/checkout/fail" element={<FailPage />} />
           <Route path="/mypage/infochange/address" element={<AddressInput />} />
+          <Route
+            path="/review"
+            element={<Review reviewData={[...reviewData]} />}
+          />
+          <Route
+            path="/review/Read"
+            element={<Read reviewData={[...reviewData]} />}
+          />
+          <Route path="/review/Regist" element={<Regist />} />
         </Routes>
       </BrowserRouter>
       <Footer />

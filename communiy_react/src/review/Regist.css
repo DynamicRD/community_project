@@ -1,0 +1,70 @@
+.review_register {
+  margin-top: 50px;
+  width: 100%;
+}
+.review_register_category {
+  display: inline-block;
+}
+
+#review_category {
+  width: 150px;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  background-color: #f8f9fa;
+}
+
+#review_category:focus {
+  outline: none;
+  background-color: #fff;
+}
+
+#rating > option {
+  padding: 10px;
+}
+
+.review_register_button {
+  display: flex;
+  margin-top: 20px;
+  justify-content: space-between;
+}
+
+.review_register_btn {
+  margin-top: 5px;
+  position: relative;
+  text-align: center;
+  right: 10px;
+  font-size: 13px;
+}
+
+.review_register_btn span {
+  margin: 0 5px;
+  padding: 7px 13px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  width: 200px;
+}
+
+.review_register_btn span:hover {
+  background-color: #f8f9fa;
+}
+
+.review_input_title {
+  border: none;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  width: 150px;
+}
+
+.review_input_title:focus {
+  outline: none;
+}
+
+.review_input_title:focus {
+  outline: none;
+}
+
+#review_rating > .star1 {
+  background-image: url(halfStar.png);
+}
