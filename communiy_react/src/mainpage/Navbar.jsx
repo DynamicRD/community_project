@@ -3,15 +3,9 @@ import { Link } from 'react-router-dom'; // Link 컴포넌트를 가져옵니다
 const Navbar = () => (
   <nav className="navbar navbar-expand-lg navbar-light bg-white navbar-custom">
     <div className="container d-flex justify-content-center">
-<<<<<<< HEAD
-      <a className="navbar-brand navbar-logo" href="#">
+      <Link className="navbar-brand navbar-logo" href="#">
         모樂모락
-      </a>
-=======
-      <Link className="navbar-brand navbar-logo" to="/">
-        W CONCEPT
       </Link>
->>>>>>> eb1ebdcdefb177b00ac2ae33357fb975c8476243
       <button
         className="navbar-toggler"
         type="button"
