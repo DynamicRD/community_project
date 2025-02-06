@@ -1,7 +1,8 @@
 .review_header {
   margin-top: 50px;
   position: relative;
-  width: 100%;
+  width: 85%;
+  margin-left: 120px;
 }
 
 .review_title {
@@ -21,7 +22,13 @@
 
 .reviewBoardLink {
   display: black;
-  font-size: 12px;
+  font-size: 13px;
+  width: 80px;
+  color: rgba(0, 0, 0, 0.5);
+}
+.reviewBoardLink:hover {
+  color: black;
+  font-size: 13px;
 }
 
 .review_main {
@@ -34,10 +41,10 @@
 
 .review_list {
   position: relative;
-  text-align: center;
+  text-align: start;
   margin: 20px 0;
-  right: 445px;
   font-size: 13px;
+  width: 75px;
 }
 
 .review_list span {
@@ -56,7 +63,6 @@
   width: 8%;
   margin-top: 20px;
   position: relative;
-  right: 10px;
   font-size: 13px;
 }
 
@@ -75,4 +81,13 @@
 #review_date {
   font-size: 10px;
   color: rgba(0, 0, 0, 0.5);
+}
+
+.register_btn {
+  position: relative;
+  right: 10px;
+}
+
+.reply_hr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }

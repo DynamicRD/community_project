@@ -51,10 +51,7 @@ export default function Read({ reviewData }) {
         </div>
         <HorizonLine />
         <div className="review_body ">
-          <Nav.Link
-            href="/review"
-            className="reviewBoardLink mt-3 mb-3 text-black-50 w-25"
-          >
+          <Nav.Link href="/review" className="reviewBoardLink m-3">
             {'>'} 리뷰게시판
           </Nav.Link>
           <div className="review_image">
@@ -75,7 +72,12 @@ export default function Read({ reviewData }) {
         <div className="mt-3">
           <form action="#">
             <div className="mb-2 mt-3">
-              <label htmlFor="comment" className="mb-3">
+              <Container>
+                <div className="d-flex flex-column justify-content-between">
+                  <span className="reply_hr mt-3 mb-3"></span>
+                </div>
+              </Container>
+              <label htmlFor="comment" className="mb-3 ms-2">
                 댓글
               </label>
               <textarea

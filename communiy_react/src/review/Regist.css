@@ -2,9 +2,6 @@
   margin-top: 50px;
   width: 100%;
 }
-.review_register_category {
-  display: inline-block;
-}
 
 #review_category {
   width: 150px;
@@ -20,7 +17,7 @@
   background-color: #fff;
 }
 
-#rating > option {
+#review_rating > option {
   padding: 10px;
 }
 
@@ -52,6 +49,7 @@
 }
 
 .review_input_title {
+  background-color: #f0f6f0;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   width: 150px;
@@ -61,10 +59,16 @@
   outline: none;
 }
 
-.review_input_title:focus {
-  outline: none;
+#review_rating {
+  width: 120px;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  border-radius: 5px;
+  background-color: #f8f9fa;
 }
 
-#review_rating > .star1 {
-  background-image: url(halfStar.png);
+#review_rating:focus {
+  outline: none;
+  background-color: #fff;
 }
