@@ -25,8 +25,17 @@ import Signup from './login/Signup';
 import Login from './login/login';
 import MyPage from './mypage/MyPage';
 import ChatRoom from './chatroom/chatroom';
+import Announcements_notice from './announcements/Announcements_notice';
+import Announcements_faq from './announcements/Announcements_faq';
+import Announcements_notice_read from './announcements/Announcements_notice_read';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import Test from './login/Test';
+
+const today = new Date();
+const formattedDate = `${today.getFullYear()}년 ${
+  today.getMonth() + 1
+}월 ${today.getDate()}일`;
+
 
 const reviewList = [
   {
@@ -90,10 +99,44 @@ const reviewList = [
     tag: 'culture6',
   },
 ];
+const announcementList = [
+  {
+    no: 1,
+    title: '문정배에 대한 고찰',
+    content: '문정배 최고라고 생각합니다1',
+    date: formattedDate,
+  },
+  {
+    no: 2,
+    title: '문정배에 대한 고찰',
+    content:
+      ' 문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배   ',
+    date: formattedDate,
+  },
+  {
+    no: 3,
+    title: '문정배에 대한 고찰',
+    content: '문정배 최고라고 생각합니다3',
+    date: formattedDate,
+  },
+  {
+    no: 4,
+    title: '문정배에 대한 고찰',
+    content: '문정배 최고라고 생각합니다4',
+    date: formattedDate,
+  },
+  {
+    no: 5,
+    title: '문정배에 대한 고찰',
+    content: '문정배 최고라고 생각합니다5',
+    date: formattedDate,
+  },
+];
 
 function App() {
   const [count, setCount] = useState(0);
   const [reviewData, setReviewData] = useState(reviewList);
+  const [announcementData, setAnnouncementData] = useState(announcementList);
 
   return (
     <>
@@ -118,6 +161,7 @@ function App() {
           <Route path="/login/googlecheck" element={<GoogleLoginCheck />} />
           <Route path="/test" element={<Test />} />
 
+
           {/* 모임페이지-해원 */}
           <Route path="/group/detail" element={<GroupDetail />} />
           <Route path="/group/list" element={<GroupList />} />
@@ -133,6 +177,28 @@ function App() {
             element={<Read reviewData={[...reviewData]} />}
           />
           <Route path="/review/Regist" element={<Regist />} />
+          {/* 공지사항 - 문정배 */}
+
+          <Route
+            path="/announcements"
+            element={
+              <Announcements_notice announcementData={[...announcementData]} />
+            }
+          />
+          <Route
+            path="/announcements/faq"
+            element={
+              <Announcements_faq announcementData={[...announcementData]} />
+            }
+          />
+          <Route
+            path="/announcements/read"
+            element={
+              <Announcements_notice_read
+                announcementData={[...announcementData]}
+              />
+            }
+          />
 
           {/* 로그인-신지호 */}
           <Route path="/login" element={<Login />} />
