@@ -20,27 +20,11 @@ import FailPage from './mypage/tosspay/Fail';
 import AddressInput from './mypage/daumAPI/AddressInput';
 import Signup from './login/Signup';
 import Login from './login/login';
+import GroupUpdate from './group/GroupUpdate';
 
 
 function App() {
   const [count, setCount] = useState(0);
-  const groupList = [
-    {
-      g_title:'title',
-      comment1:'소개',
-      start_date:'시작일',
-    },
-    {
-      g_title:'title2',
-      comment1:'소개2',
-      start_date:'시작일2',
-    },
-    {
-      g_title:'title3',
-      comment1:'소개3',
-      start_date:'시작일3',
-    }
-  ]
 
   return (
     <>
@@ -50,8 +34,9 @@ function App() {
 
           {/* 모임페이지-해원 */}
           <Route path="/group/detail" element={<GroupDetail />} />
-          <Route path="/group/list" element={<GroupList groupList={groupList}/>} />
+          <Route path="/group/list" element={<GroupList/>} />
           <Route path="/group/regist" element={<GroupRegist />} />
+          <Route path="/group/update" element={<GroupUpdate />} />
 
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />

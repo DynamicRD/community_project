@@ -1,4 +1,4 @@
-import { Container } from 'react-bootstrap';
+import { Container, Form } from 'react-bootstrap';
 import './GroupDetail.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -19,6 +19,7 @@ import {
 </style>
 
 function GroupDetail() {
+
   return (
     <Container>
       <div className="group_detail">
@@ -192,7 +193,12 @@ function GroupDetail() {
             <FontAwesomeIcon icon={faHeart} />
             &nbsp;찜하기
           </button>
-          <button>참가 신청하기</button>
+          <button onClick={()=>{
+            fetch('http://localhost:8080/멤버업데이트?',{
+              method: 'post',
+              body:Form,
+            });
+          }}>참가 신청하기</button>
         </div>
       </div>
       <footer></footer>

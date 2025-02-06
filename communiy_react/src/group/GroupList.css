@@ -22,11 +22,6 @@
   color: rgb(57, 57, 57);
 }
 
-.group_list img {
-  width: 500px;
-  height: 200px;
-}
-
 .group_list select,
 .group_list input {
   padding: 5px 10px;

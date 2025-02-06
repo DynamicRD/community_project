@@ -5,9 +5,95 @@ import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import GroupItem from './GroupItem';
 
-function GroupList({groupList}) {
+function GroupList() {
+  //목업데이터
+  const items = [
+    {
+      groupList: {
+        g_title: 'Title 1',
+        comment1: 'Comment 1',
+        img_url: '/images/card01.png',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 2',
+        comment1: 'Comment 2',
+        img_url: '/images/slide01.png',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 3',
+        comment1: 'Comment 3',
+        img_url: '/images/card01.png',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 4',
+        comment1: 'Comment 4',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 5',
+        comment1: 'Comment 4',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 6',
+        comment1: 'Comment 4',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 7',
+        comment1: 'Comment 4',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 8',
+        comment1: 'Comment 4',
+      },
+    },
+    {
+      groupList: {
+        g_title: 'Title 9',
+        comment1: 'Comment 4',
+      },
+    },
+  ];
+
+  //필터기능
   const [open, setOpen] = useState(false);
-  const [items, setGroupList] = useState([]);
+  const [rdo, setRdo] = useState([]);
+  const [rdo2, setRdo2] = useState([]);
+  const handelCategoryChange = (e) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      setRdo((prev) => [...prev, value]);
+    } else {
+      // 체크박스를 해제했을 때 선택된 값 배열에서 제거
+      setRdo((prev) => prev.filter((item) => item !== value));
+    }
+    console.log('category change');
+    console.log(rdo);
+  };
+  const handelAreaChange = (e) => {
+    const { value, checked } = e.target;
+
+    if (checked) {
+      setRdo2((prev) => [...prev, value]);
+    } else {
+      setRdo2((prev) => prev.filter((item) => item !== value));
+    }
+    console.log('area change');
+    console.log(rdo2);
+  };
 
   return (
     <Container>
@@ -21,37 +107,42 @@ function GroupList({groupList}) {
           >
             Filter
           </Button>
-          <Collapse in={open} className='mt-2'>
+          <Collapse in={open} className="mt-2">
             <div id="example-collapse-text">
               <h5>카테고리</h5>
-              <input type="checkbox" value="culture_art" name="category" />
-              &nbsp;문화/예술
-              <input type="checkbox" value="food_drink" name="category" />
-              &nbsp;푸드/드링크
-              <input type="checkbox" value="hobby" name="category" />
-              &nbsp;취미
-              <input type="checkbox" value="education" name="category" />
-              교육
+              <div onChange={handelCategoryChange}>
+                <input type="checkbox" value="culture" name="category" />
+                &nbsp;문화/예술
+                <input type="checkbox" value="food" name="category" />
+                &nbsp;푸드/드링크
+                <input type="checkbox" value="hobby" name="category" />
+                &nbsp;취미
+                <input type="checkbox" value="travel" name="category" />
+                &nbsp;여행
+                <input type="checkbox" value="edu" name="category" />
+                &nbsp;교육
+              </div>
               <h5>지역</h5>
-              <input type="checkbox" value="seoul" name="area" />
-              &nbsp;서울
-              <input type="checkbox" value="gyeong-gi" name="area" />
-              &nbsp;경기
-              <input type="checkbox" value="incheon" name="area" />
-              &nbsp;인천
-              <input type="checkbox" value="gangwon" name="area" />
-              &nbsp;강원
-              <input type="checkbox" value="chungcheong" name="area" />
-              &nbsp;충청
-              <input type="checkbox" value="jeolla" name="area" />
-              &nbsp;전라
-              <input type="checkbox" value="gyeongsang" name="area" />
-              &nbsp;경상
-              <input type="checkbox" value="jeju" name="area" />
-              &nbsp;제주
+              <div onChange={handelAreaChange}>
+                <input type="checkbox" value="seoul" name="area" />
+                &nbsp;서울
+                <input type="checkbox" value="gyeong-gi" name="area" />
+                &nbsp;경기
+                <input type="checkbox" value="incheon" name="area" />
+                &nbsp;인천
+                <input type="checkbox" value="gangwon" name="area" />
+                &nbsp;강원
+                <input type="checkbox" value="chungcheong" name="area" />
+                &nbsp;충청
+                <input type="checkbox" value="jeolla" name="area" />
+                &nbsp;전라
+                <input type="checkbox" value="gyeongsang" name="area" />
+                &nbsp;경상
+                <input type="checkbox" value="jeju" name="area" />
+                &nbsp;제주
+              </div>
             </div>
           </Collapse>
-          
         </div>
         <div className="d-flex justify-content-between">
           <div>
@@ -61,7 +152,14 @@ function GroupList({groupList}) {
                 placeholder="검색어를 입력하세요"
                 className="m-2"
               />
-              <button className="btn btn-primary">search</button>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  // getList(`http://localhost:8080/group/list?category=${rdo}&area=${rdo2}`);
+                }}
+              >
+                search
+              </button>
             </form>
           </div>
           <select>
@@ -72,50 +170,15 @@ function GroupList({groupList}) {
         <hr />
         <div>
           <div className="row row-cols-1 row-cols-md-3 g-4">
-            {items.map(({groupList})=>{
+            {items.map(({ groupList }) => (
               <GroupItem
                 g_title={groupList.g_title}
+                img_url={groupList.img_url}
                 comment1={groupList.comment1}
                 start_date={groupList.start_date}
-                />
-            })}
-            <div className="col">
-              <div className="card">
-                <img src="..." className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">{groupList[1].g_title}</h5>
-                  <p className="card-text">
-                  {groupList[1].comment1}
-                  </p>
-                </div>
-              </div>
-            </div>
-            {/*
-            <div className="col">
-              <div className="card">
-                <img src="..." className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">모임제목</h5>
-                  <p className="card-text">
-                    This is a longer card with supporting text below as a
-                    natural lead-in to additional content.
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <img src="..." className="card-img-top" alt="..." />
-                <div className="card-body">
-                  <h5 className="card-title">모임제목</h5>
-                  <p className="card-text">
-                    This is a longer card with supporting text below as a
-                    natural lead-in to additional content. This content is a
-                    little bit longer.
-                  </p>
-                </div>
-              </div>
-            </div> */}
+                key={groupList.g_title}
+              />
+            ))}
           </div>
         </div>
         <ul className="pagination pagination-sm justify-content-center m-5">
