@@ -37,11 +37,7 @@ export default function Regist() {
             </div>
             <div className="d-flex justify-content-between">
               <div>
-                <select
-                  name="category"
-                  id="review_review_category"
-                  ref={selectRef}
-                >
+                <select name="category" id="review_category" ref={selectRef}>
                   <option value="culture">문화/예술</option>
                   <option value="food">푸드/드링크</option>
                   <option value="hobby">취미</option>
@@ -50,12 +46,7 @@ export default function Regist() {
                 </select>
               </div>
               <div>
-                <select
-                  name="rating"
-                  id="review_rating"
-                  className="text-center"
-                  ref={ratingRef}
-                >
+                <select name="rating" id="review_rating" ref={ratingRef}>
                   <option value="0">☆☆☆☆☆</option>
                   <option value="1">★☆☆☆☆</option>
                   <option value="2">★★☆☆☆</option>
@@ -85,7 +76,7 @@ export default function Regist() {
                 </div>
                 <div>
                   <Button
-                    className="review_register_btn ms-3 justify-content-end"
+                    className="review_register_btn ms-3 justify-content-end me-2"
                     onClick={() => {
                       const form = new FormData();
                       form.append('category', selectRef.current.value);

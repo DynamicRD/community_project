@@ -24,11 +24,19 @@ export default function Review({ reviewData }) {
   return (
     <>
       <Container>
-        <div className="review_board">
+        <div className=" d-flex m-5">
+          <span
+            className="nav_notice"
+            style={{ fontSize: '33px', marginLeft: '65px' }}
+          >
+            모임 후기
+          </span>
+        </div>
+        <div className="review_board mt-4">
           <ul id="board_list" className="list-unstyled">
             {groupedReviews.map((group, index) => (
               <div
-                className="d-flex justify-content-start gap-3 mb-4"
+                className="d-flex justify-content-start gap-5 mb-4"
                 key={index}
               >
                 {group.map((object) => (
@@ -40,7 +48,7 @@ export default function Review({ reviewData }) {
                         className="review_img"
                       />
                     </Nav.Link>
-                    <div className="d-flex justify-content-between align-items-center mt-2">
+                    <div className="d-flex justify-content-between align-items-center mt-3 me-4 ms-4">
                       <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                       <span style={{ fontSize: '12px' }}>
                         평점: {object.rating}
@@ -54,7 +62,7 @@ export default function Review({ reviewData }) {
         </div>
       </Container>
       <Container>
-        <div className="d-flex justify-content-center align-items-center">
+        <div className="d-flex justify-content-center align-content-center">
           <Pagination size="sm">{item}</Pagination>
           <Nav.Link href="/review/Regist" className="reviewRegist">
             <span>작성 하기</span>
