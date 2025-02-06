@@ -51,7 +51,8 @@ export default function Login() {
     console.log(clientId);
     console.log(redirectUrl);
 
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=openid%20profile%20email&access_type=offline&prompt=consent`;
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=openid%20profile%20email`;
+    //refresh 토큰 발급은 &access_type=offline&prompt=consent추가
 
     // 팝업 창 띄우기
     window.open(url, 'google-login', 'width=600,height=600');
