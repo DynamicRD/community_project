@@ -5,11 +5,12 @@ import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
 import GroupItem from './GroupItem';
 
-function GroupList() {
+function GroupList({type}) {
   //목업데이터
   const items = [
     {
       groupList: {
+        g_id:'1',
         g_title: 'Title 1',
         comment1: 'Comment 1',
         img_url: '/images/card01.png',
@@ -17,6 +18,7 @@ function GroupList() {
     },
     {
       groupList: {
+        g_id:'2',
         g_title: 'Title 2',
         comment1: 'Comment 2',
         img_url: '/images/slide01.png',
@@ -24,6 +26,7 @@ function GroupList() {
     },
     {
       groupList: {
+        g_id:'3',
         g_title: 'Title 3',
         comment1: 'Comment 3',
         img_url: '/images/card01.png',
@@ -31,36 +34,42 @@ function GroupList() {
     },
     {
       groupList: {
+        g_id:'4',
         g_title: 'Title 4',
         comment1: 'Comment 4',
       },
     },
     {
       groupList: {
+        g_id:'5',
         g_title: 'Title 5',
         comment1: 'Comment 4',
       },
     },
     {
       groupList: {
+        g_id:'6',
         g_title: 'Title 6',
         comment1: 'Comment 4',
       },
     },
     {
       groupList: {
+        g_id:'7',
         g_title: 'Title 7',
         comment1: 'Comment 4',
       },
     },
     {
       groupList: {
+        g_id:'8',
         g_title: 'Title 8',
         comment1: 'Comment 4',
       },
     },
     {
       groupList: {
+        g_id:'9',
         g_title: 'Title 9',
         comment1: 'Comment 4',
       },
@@ -98,7 +107,7 @@ function GroupList() {
   return (
     <Container>
       <div className="group_list">
-        <h1 className="p-2">정기모임 전체 보기</h1>
+        <h1 className="p-2">{type==='regular' ? `정기모임` : "동행ㆍ소모임"}</h1>
         <div className="filter m-2">
           <Button
             onClick={() => setOpen(!open)}
@@ -155,7 +164,7 @@ function GroupList() {
               <button
                 className="btn btn-primary"
                 onClick={() => {
-                  // getList(`http://localhost:8080/group/list?category=${rdo}&area=${rdo2}`);
+                  // getList(`http://localhost:8080/group/list?type={type}$category=${rdo}&area=${rdo2}`);
                 }}
               >
                 search
@@ -172,11 +181,12 @@ function GroupList() {
           <div className="row row-cols-1 row-cols-md-3 g-4">
             {items.map(({ groupList }) => (
               <GroupItem
+                g_id={groupList.g_id}
                 g_title={groupList.g_title}
                 img_url={groupList.img_url}
                 comment1={groupList.comment1}
                 start_date={groupList.start_date}
-                key={groupList.g_title}
+                key={groupList.g_id}
               />
             ))}
           </div>

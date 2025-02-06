@@ -34,7 +34,8 @@ function App() {
 
           {/* 모임페이지-해원 */}
           <Route path="/group/detail" element={<GroupDetail />} />
-          <Route path="/group/list" element={<GroupList/>} />
+          <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
+          <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
 

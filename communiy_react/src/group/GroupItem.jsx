@@ -1,12 +1,14 @@
 import React from 'react';
 import { Button, Card } from 'react-bootstrap';
+import { Link } from 'react-router';
 
-export default function GroupItem({ g_title, comment1, img_url }) {
+export default function GroupItem({ g_id, g_title, comment1, img_url }) {
   let loading = false;
   if (loading) {
     return <div>loading</div>;
   } else {
     return (
+      <Link to={`/group/detail?g_id=${g_id}`}>
       <div className="col">
         <div className="card h-100">
           <img src={img_url} className="card-img-top h-100" alt="..." />
@@ -16,6 +18,7 @@ export default function GroupItem({ g_title, comment1, img_url }) {
           </div>
         </div>
       </div>
+      </Link>
     );
   }
 }
