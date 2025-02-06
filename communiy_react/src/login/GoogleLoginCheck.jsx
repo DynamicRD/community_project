@@ -5,40 +5,44 @@ export default function GoogleLoginCheck() {
     const handleGoogleLogin = async () => {
       const queryParams = new URLSearchParams(window.location.search);
       const accessToken = queryParams.get('access_token');
-      const idToken = queryParams.get('id');
       const isNewUser = queryParams.get('is_new_user');
+      const googleIdCode = queryParams.get('sub');
+      const googleName = queryParams.get('name');
+      const googleEmail = queryParams.get('email');
 
-      console.log(idToken);
       console.log(accessToken);
 
-      //isNewUser가 true면 회원가입으로이동
-      if (accessToken && idToken && isNewUser == true) {
+      // isNewUser가 'true'이면 회원가입으로 이동
+      if (accessToken && isNewUser === 'true') {
         // 토큰과 ID가 성공적으로 받은 경우
-        const tokenData = { access_token: accessToken, id: idToken };
+        const tokenData = {
+          accessToken: accessToken,
+          googleIdCode: googleIdCode,
+          googleName: googleName,
+          googleEmail: googleEmail,
+        };
 
         // 부모 창에 데이터를 전달하고, /test 경로로 이동
         if (window.opener) {
-          // 부모 창의 URL을 /test로 변경하면서 쿼리 파라미터로 데이터 전달
-          const redirectUrl = `/test?access_token=${accessToken}&id=${idToken}`;
+          //const redirectUrl = `/google/signup?access_token=${accessToken}&id=${idToken}`;
 
           // 부모 창 URL 변경 (이동)
-          window.opener.location.href = window.location.origin + redirectUrl;
+          //window.opener.location.href = window.location.origin + redirectUrl;
 
-          window.close(); // 팝업 창 닫기
+          // 팝업 창을 닫기 전에 부모 창을 이동하도록 잠시 기다리기
+          setTimeout(() => {
+            window.close(); // 팝업 창 닫기
+          }, 500); // 500ms 후 닫기 (대기 시간 조정 가능)
         }
-      } else if (accessToken && idToken && isNewUser == false) {
-        // 토큰과 ID가 성공적으로 받은 경우
-        const tokenData = { access_token: accessToken, id: idToken };
-
-        // 부모 창에 데이터를 전달하고, /test 경로로 이동
+      } else if (accessToken && isNewUser === 'false') {
+        // 기존 사용자가 있을 때 처리
         if (window.opener) {
-          // 부모 창의 URL을 /test로 변경하면서 쿼리 파라미터로 데이터 전달
-          const redirectUrl = `/test?access_token=${accessToken}&id=${idToken}`;
+          //const redirectUrl = `/test?access_token=${accessToken}&id=${idToken}`;
+          //window.opener.location.href = window.location.origin + redirectUrl;
 
-          // 부모 창 URL 변경 (이동)
-          window.opener.location.href = window.location.origin + redirectUrl;
-
-          window.close(); // 팝업 창 닫기
+          setTimeout(() => {
+            window.close(); // 팝업 창 닫기
+          }, 500); // 대기 후 닫기
         }
       }
     };
