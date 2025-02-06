@@ -3,6 +3,7 @@ import './GroupRegist.css';
 import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
+import GoogleMap from './component/GoogleMap';
 
 export default function GroupRegist() {
   const [open, setOpen] = useState(false);
@@ -123,8 +124,8 @@ export default function GroupRegist() {
                   </Col>
                   <Collapse in={open}>
                     <div>
-                      map
                       {/* map 리턴해서 받아오기 */}
+                      <GoogleMap/>
                     </div>
                   </Collapse>
                 </Form.Group>

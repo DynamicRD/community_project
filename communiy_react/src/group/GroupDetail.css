@@ -6,7 +6,7 @@
 .group_detail {
   /* font-family: 'IBM Plex Sans KR', serif;
   font-style: normal; */
-  /* width: 1000px; */
+  width: 1000px;
   border-radius: 10px;
   padding: 50px 0px;
   display: flex;
