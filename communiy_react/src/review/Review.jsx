@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Nav } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import Pagination from 'react-bootstrap/Pagination';
 
 import './Review.css';
