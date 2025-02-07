@@ -5,14 +5,14 @@ export default function GoogleMap({address, lat, lng}) {
   useEffect(() => {
     // Google Maps API 로드
     const loader = new Loader({
-      apiKey: "YOUR_API_KEY",  
+      apiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY,  
       version: "weekly",       
     });
 
     loader.load().then(() => {
       // API가 로드된 후에 google 객체 사용 가능
-      const mapLat = parseFloat(lat) || 37.5665; // lat 값이 없다면 기본 서울 위도
-      const mapLng = parseFloat(lng) || 126.9780; // lng 값이 없다면 기본 서울 경도
+      const mapLat = parseFloat(lat) || 37.5007861; // lat 값이 없다면 기본 서울 위도
+      const mapLng = parseFloat(lng) || 127.0368861; // lng 값이 없다면 기본 서울 경도
 
       // google 객체를 사용하려면 window.google로 접근
       const map = new window.google.maps.Map(document.getElementById("map"), {

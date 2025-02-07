@@ -21,6 +21,8 @@ import AddressInput from './mypage/daumAPI/AddressInput';
 import Signup from './login/Signup';
 import Login from './login/login';
 import GroupUpdate from './group/GroupUpdate';
+import GroupManage from './group/GroupManagement';
+import GroupManagement from './group/GroupManagement';
 
 
 function App() {
@@ -38,6 +40,7 @@ function App() {
           <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
+          <Route path="/group/management" element={<GroupManagement />} />
 
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
