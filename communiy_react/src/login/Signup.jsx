@@ -445,7 +445,7 @@ export default function Signup() {
               type="text"
               name="valid"
               ref={valid}
-              className="validCode"
+              className="validCode me-4"
               style={{ width: '100px' }}
               onChange={handleChange}
             />
