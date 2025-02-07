@@ -22,7 +22,6 @@ const Navbar = () => (
             { name: '동행ㆍ소모임', path: '/group/list' },
             { name: '모임후기', path: '/review' },
             { name: '공지사항', path: '/announcements' },
-            { name: 'FAQ', path: '/faq' },
           ].map((item, index) => (
             <li key={index} className="nav-item">
               <Link className="nav-link" to={item.path}>

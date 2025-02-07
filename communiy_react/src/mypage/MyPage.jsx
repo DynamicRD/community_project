@@ -1,3 +1,4 @@
+import './MyPage.css';
 import React, { useState } from 'react';
 import {
   Container,
@@ -9,7 +10,6 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './MyPage.css';
 
 function MyPage() {
   // 상태 관리: 알림 펼침 여부
@@ -171,7 +171,7 @@ function MyPage() {
         {/* Balance Section */}
         <Row className="mt-4">
           <Col md={12}>
-            <div className="border-section text-center">
+            <div className="mainpage border-section text-center ">
               <h5>보유금액</h5>
               <div className="h3">₩ 500,000</div>
               <div className="mt-3">

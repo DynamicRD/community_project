@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../mypage/MyInfoChange.css'; // 작성한 CSS 파일 임포트
 import {
@@ -15,6 +15,11 @@ import AddressInput from '../mypage/daumAPI/AddressInput';
 
 export default function Signup() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
+
+  //인증번호 값 받는 Ref함수 추가
+  const valid = useRef();
+  const [randomNumber, setRandomNumber] = useState();
+
   const [formData, setFormData] = useState({
     id: '',
     nickname: '',
@@ -31,6 +36,7 @@ export default function Signup() {
     address01: '',
     address02: '',
     pr: '',
+    valid: '',
   });
 
   const [errors, setErrors] = useState({
@@ -44,6 +50,7 @@ export default function Signup() {
     birth: '',
     email: '',
     addcode: '',
+    valid: '', // 인증번호 추가
   });
 
   const navigate = useNavigate();
@@ -121,10 +128,12 @@ export default function Signup() {
     birth: /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     addcode: /^[0-9]{5}$/,
+    valid: /^[0-9]{6}$/,
   };
 
   const validateField = (name, value) => {
     let errorMessage = '';
+    console.log(value + '' + name + '' + randomNumber);
     if (patterns[name]) {
       if (typeof patterns[name] === 'function') {
         errorMessage = !patterns[name](value)
@@ -166,6 +175,10 @@ export default function Signup() {
             case 'addcode':
               errorMessage = '우편번호는 5자리 숫자로 입력해주세요.';
               break;
+            case 'valid':
+              errorMessage = '인증번호는 6자리 숫자로 입력해주세요.';
+              break;
+
             default:
               errorMessage = '형식이 올바르지 않습니다.';
           }
@@ -209,6 +222,10 @@ export default function Signup() {
   const handleButtonClick = () => {
     setIsAddressInputVisible((prevState) => !prevState); // 상태를 반전시킴
   };
+
+  useEffect(() => {
+    console.log(randomNumber);
+  });
 
   return (
     <Container className="mt-5 mb-5 bg-light p-5">
@@ -378,10 +395,38 @@ export default function Signup() {
                   type="text"
                   name="phone3"
                   value={formData.phone3}
-                  onChange={handleChange}
+                  onChzange={handleChange}
                   className="phone-input"
                 />
+                {/* 인증번호 전송 버튼 */}
+                <Button
+                  variant="outline-secondary"
+                  style={{
+                    width: '270px',
+                  }}
+                  onClick={() => {
+                    const form = new FormData();
+                    form.append('number1', formData.phone1);
+                    form.append('number2', formData.phone2);
+                    form.append('number3', formData.phone3);
+                    fetch('http://localhost:8080/send-one', {
+                      method: 'post',
+                      body: form,
+                    }).then(() => {
+                      alert('인증번호가 발송 되었습니다');
+                    });
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '15px',
+                    }}
+                  >
+                    인증번호발송
+                  </span>
+                </Button>
               </div>
+
               {errors.phone2 && (
                 <div className="text-danger">{errors.phone2}</div>
               )}
@@ -390,6 +435,43 @@ export default function Signup() {
               )}
             </Col>
           </Form.Group>
+
+          {/* 인증번호 체크 버튼 */}
+          <div>
+            <Form.Label column sm={2}>
+              인증번호입력
+            </Form.Label>
+            <input
+              type="text"
+              name="valid"
+              ref={valid}
+              className="validCode"
+              style={{ width: '100px' }}
+              onChange={handleChange}
+            />
+            <Button
+              variant="outline-secondary"
+              onClick={() => {
+                fetch('http://localhost:8080/send-one/number')
+                  .then((response) => {
+                    return response.json();
+                  })
+                  .then((data) => {
+                    if (Number(valid.current.value) === data) {
+                      alert('인증이 완료 되었습니다');
+                    } else {
+                      alert('인증에 실패하였습니다');
+                      valid.current.value = '';
+                      valid.current.focus();
+                    }
+                  });
+              }}
+            >
+              인증확인
+            </Button>
+            {errors.valid && <div className="text-danger">{errors.valid}</div>}
+            {errors.wrong && <div className="text-danger">{errors.wrong}</div>}
+          </div>
 
           {/* 생년월일 입력 */}
           <Form.Group as={Row} className="mb-3">
