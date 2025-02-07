@@ -17,14 +17,19 @@ export default function GoogleSignup() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
   const [tokenData, setTokenData] = useState(null);
   useEffect(() => {
-    const queryParams = new URLSearchParams(window.location.search);
-    const accessToken = queryParams.get('access_token');
-    const idToken = queryParams.get('id');
-
-    if (accessToken && idToken) {
-      setTokenData({ access_token: accessToken, id: idToken });
-    }
+    const handleSignup = async () => {
+      const response = await fetch('http://localhost:8080/login/getinfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(),
+        credentials: 'include', // 쿠키 포함하여 요청 보내기
+      });
+    };
+    handleSignup();
   }, []);
+
   const [formData, setFormData] = useState({
     id: '',
     nickname: '',
@@ -456,3 +461,32 @@ export default function GoogleSignup() {
     </Container>
   );
 }
+
+// useEffect(() => {
+//   // JWT를 쿠키에서 추출하는 함수
+//   const getCookie = (name) => {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+//     return null;
+//   };
+//   const jwtToken = getCookie('jwtToken');
+//   if (!jwtToken) {
+//     console.log('JWT 토큰이 없습니다. 회원가입에 실패하였습니다.');
+//     navigate('/login');
+//     return;
+//   } else {
+//     const fetchUserData = async (jwtToken) => {
+//       const response = await fetch('http://localhost:8080/api/user/data', {
+//         method: 'GET',
+//         headers: {
+//           Authorization: `Bearer ${jwtToken}`,
+//         },
+//         credentials: 'include', // 쿠키를 포함하여 요청
+//       });
+
+//       const data = await response.json();
+//       console.log(data); // 사용자 데이터 확인
+//     };
+//   }
+// }, []);
