@@ -22,10 +22,12 @@ import Read from './review/Read';
 import Review from './review/Review';
 import Regist from './review/Regist';
 import Signup from './login/Signup';
+
 import Login from './login/login';
 import GroupUpdate from './group/GroupUpdate';
 import GroupManage from './group/GroupManagement';
 import GroupManagement from './group/GroupManagement';
+
 
 import MyPage from './mypage/MyPage';
 import ChatRoom from './chatroom/chatroom';
@@ -34,13 +36,15 @@ import Announcements_faq from './announcements/Announcements_faq';
 import Announcements_notice_read from './announcements/Announcements_notice_read';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import Test from './login/Test';
+
+import { ContactUs } from './review/test';
 import GoogleSignup from './login/GoogleSignup';
+
 
 const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
   today.getMonth() + 1
 }월 ${today.getDate()}일`;
-
 
 
 const reviewList = [
@@ -168,7 +172,10 @@ function App() {
           <Route path="/mypage/profilechange" element={<MyProfileChange />} />
           <Route path="/mypage/infodelete" element={<MyInfoDelete />} />
           <Route path="/mypage/amounthis" element={<MyAmountHistory />} />
-          <Route path="/mypage/reviews" element={<MyReviews />} />
+          <Route
+            path="/mypage/reviews"
+            element={<MyReviews reviewData={[...reviewData]} />}
+          />
           <Route path="/mypage/charge" element={<MyAmountCharge />} />
           <Route path="/mypage/checkout" element={<Checkout />} />
           <Route path="/mypage/checkout/success" element={<SuccessPage />} />
@@ -180,11 +187,11 @@ function App() {
 
           <Route path="/test" element={<Test />} />
 
-
           {/* 모임페이지-해원 */}
           <Route path="/group/detail" element={<GroupDetail />} />
           <Route path="/group/list" element={<GroupList />} />
           <Route path="/group/regist" element={<GroupRegist />} />
+          <Route path="/testFile" element={<ContactUs />} />
 
           {/* 리뷰게시판 - 문정배*/}
           <Route
@@ -196,8 +203,8 @@ function App() {
             element={<Read reviewData={[...reviewData]} />}
           />
           <Route path="/review/Regist" element={<Regist />} />
-          {/* 공지사항 - 문정배 */}
 
+          {/* 공지사항 - 문정배 */}
           <Route
             path="/announcements"
             element={

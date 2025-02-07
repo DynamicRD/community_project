@@ -11,6 +11,37 @@ export default function Regist() {
   const selectRef = useRef();
   const ratingRef = useRef();
 
+  const completedMeetings = [
+    {
+      name: '테크 세미나',
+      date: '2025-01-10',
+      endDate: '2025-01-10',
+      role: '참석자',
+      cost: '₩ 30,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+  ];
+
   return (
     <Container>
       <div className="review_register">
@@ -37,13 +68,7 @@ export default function Regist() {
             </div>
             <div className="d-flex justify-content-between">
               <div>
-                <select name="category" id="review_category" ref={selectRef}>
-                  <option value="culture">문화/예술</option>
-                  <option value="food">푸드/드링크</option>
-                  <option value="hobby">취미</option>
-                  <option value="travel">여행</option>
-                  <option value="edu">교육</option>
-                </select>
+                내 참여 모임 : <span>{completedMeetings[0].name}</span>
               </div>
               <div>
                 <select name="rating" id="review_rating" ref={ratingRef}>
