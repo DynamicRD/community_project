@@ -49,6 +49,11 @@ export default function Regist() {
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
               <b>리뷰 작성하기</b>
+              <div>
+                <span className="meetingsName">
+                  {completedMeetings[0].name}
+                </span>
+              </div>
             </p>
           </div>
           <HorizonLine />
@@ -67,9 +72,6 @@ export default function Regist() {
               </div>
             </div>
             <div className="d-flex justify-content-between">
-              <div>
-                내 참여 모임 : <span>{completedMeetings[0].name}</span>
-              </div>
               <div>
                 <select name="rating" id="review_rating" ref={ratingRef}>
                   <option value="0">☆☆☆☆☆</option>
