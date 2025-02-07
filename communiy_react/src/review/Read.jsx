@@ -18,6 +18,44 @@ export default function Read({ reviewData }) {
     today.getMonth() + 1
   }월 ${today.getDate()}일`;
 
+  const getStarImages = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(i <= rating ? '/images/star.png' : '/images/emptyStar.png');
+    }
+    return stars;
+  };
+  const completedMeetings = [
+    {
+      name: '테크 세미나',
+      date: '2025-01-10',
+      endDate: '2025-01-10',
+      role: '참석자',
+      cost: '₩ 30,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+  ];
+
   const replyList = [
     {
       reply_title: '문정배1',
@@ -41,27 +79,42 @@ export default function Read({ reviewData }) {
     <Container>
       <div className="review_header">
         <div className="review_title">
-          <p style={{ fontSize: '25px' }}>
-            <b>{reviewData[0].title}</b>
+          <p style={{ fontSize: '33px' }}>
+            <b>{reviewData[5].title}</b>
+            <span
+              style={{ fontSize: '13px' }}
+              className="mt-2 ms-2 text-black-50"
+            >
+              {completedMeetings[0].name}
+            </span>
           </p>
-          <div className="review_writer">
-            <span>{reviewData[0].writer}</span>
+
+          <div className="review_writer ms-2">
+            <span>{reviewData[5].writer}</span>
             <span> 조회수 : {count}</span>
           </div>
         </div>
         <HorizonLine />
         <div className="review_body ">
-          <Nav.Link href="/review" className="reviewBoardLink m-3">
-            {'>'} 리뷰게시판
-          </Nav.Link>
+          <div className="d-flex justify-content-between m-3">
+            <Nav.Link href="/review" className="reviewBoardLink">
+              {'>'} 리뷰게시판
+            </Nav.Link>
+            <span style={{ fontSize: '12px' }}>
+              평점&nbsp;:&nbsp;
+              {getStarImages(reviewData[5].rating).map((star, index) => (
+                <img key={index} src={star} alt="star" className="star" />
+              ))}
+            </span>
+          </div>
           <div className="review_image">
             <img
-              src={reviewData[0].img}
+              src={reviewData[5].img}
               alt="detail"
               className="review_image mb-4"
             />
           </div>
-          <div className="review_main">{reviewData[0].content}</div>
+          <div className="review_main">{reviewData[5].content}</div>
           <div className="review_list">
             <Nav.Link href="/review">
               <span>목록</span>

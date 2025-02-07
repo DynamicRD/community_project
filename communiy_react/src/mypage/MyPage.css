@@ -1,8 +1,8 @@
 .myPage .profile-header {
   background: linear-gradient(
     135deg,
-    #80d0c7,
-    #4caf50
+    rgb(255, 151, 128),
+    #fe4116d4
   ); /* 더 밝은 그라데이션 */
   color: white;
   padding: 30px;
@@ -18,13 +18,13 @@
   margin-top: 15px;
 }
 .myPage .btn-custom {
-  background-color: #4caf50;
+  background-color: #FF2D00;
   color: white;
   border-radius: 25px;
   border: none;
 }
 .myPage .btn-custom:hover {
-  background-color: #388e3c;
+  background-color: #FF2D00;
 }
 .myPage .table th,
 .myPage .table td {
@@ -34,11 +34,11 @@
   vertical-align: middle;
 }
 .myPage .pagination .page-link {
-  background-color: #007bff;
+  background-color: #FF2D00;
   color: white;
 }
 .myPage .pagination .page-link:hover {
-  background-color: #0056b3;
+  background-color: #ff2f00cd;
   color: white;
 }
 .myPage .panel-body ul li {

@@ -72,3 +72,12 @@
   outline: none;
   background-color: #fff;
 }
+
+.meetingsName {
+  font-size: 15px;
+  margin-left: 10px;
+}
+
+.star {
+  width: 11px;
+}
