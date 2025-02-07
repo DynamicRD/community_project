@@ -118,7 +118,6 @@ function GroupDetail() {
           <h4>투썸플레이스 역삼역점</h4>
           <p>서울특별시 강남구 테헤란로27길 16</p>
           <GoogleMap address={'역삼역'}/>
-          <img src="/images/map.png" alt="모임 장소 지도" />
         </div>
 
         <div>
