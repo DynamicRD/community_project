@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../mypage/MyInfoChange.css'; // 작성한 CSS 파일 임포트
 import {
@@ -13,8 +13,23 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import AddressInput from '../mypage/daumAPI/AddressInput';
 
-export default function Signup() {
+export default function GoogleSignup() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
+  const [tokenData, setTokenData] = useState(null);
+  useEffect(() => {
+    const handleSignup = async () => {
+      const response = await fetch('http://localhost:8080/login/getinfo', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(),
+        credentials: 'include', // 쿠키 포함하여 요청 보내기
+      });
+    };
+    handleSignup();
+  }, []);
+
   const [formData, setFormData] = useState({
     id: '',
     nickname: '',
@@ -111,10 +126,7 @@ export default function Signup() {
 
   // 패턴 조건 설정
   const patterns = {
-    id: /^[a-z0-9_]{4,10}$/,
     nickname: /^[a-zA-Z0-9가-힣]{2,10}$/,
-    pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/,
-    repass: (value) => value === formData.pass,
     name: /^[가-힣a-zA-Z]{2,5}$/,
     phone2: /^[0-9]{3,4}$/,
     phone3: /^[0-9]{4}$/,
@@ -133,9 +145,6 @@ export default function Signup() {
       } else {
         if (!patterns[name].test(value)) {
           switch (name) {
-            case 'id':
-              errorMessage = '아이디는 4자 이상 20자 이하로 입력해주세요.';
-              break;
             case 'nickname':
               errorMessage =
                 '닉네임은 2자 이상 10자 이하, 한글/영문/숫자만 사용 가능합니다.';
@@ -215,30 +224,6 @@ export default function Signup() {
       <div className="infochange">
         <h2 className="text-center">회원가입</h2>
         <Form onSubmit={handleSubmit}>
-          {/* 아이디 입력 */}
-          <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm={2}>
-              아이디
-            </Form.Label>
-            <Col sm={10}>
-              <InputGroup>
-                <FormControl
-                  type="text"
-                  name="id"
-                  value={formData.id}
-                  onChange={handleChange}
-                />
-                <Button
-                  variant="outline-secondary"
-                  onClick={() => alert('중복 확인')}
-                >
-                  중복확인
-                </Button>
-              </InputGroup>
-              {errors.id && <div className="text-danger">{errors.id}</div>}
-            </Col>
-          </Form.Group>
-
           {/* 닉네임 입력 */}
           <Form.Group as={Row} className="mb-3">
             <Form.Label column sm={2}>
@@ -261,40 +246,6 @@ export default function Signup() {
               </InputGroup>
               {errors.nickname && (
                 <div className="text-danger">{errors.nickname}</div>
-              )}
-            </Col>
-          </Form.Group>
-
-          {/* 비밀번호 입력 */}
-          <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm={2}>
-              비밀번호
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="password"
-                name="pass"
-                value={formData.pass}
-                onChange={handleChange}
-              />
-              {errors.pass && <div className="text-danger">{errors.pass}</div>}
-            </Col>
-          </Form.Group>
-
-          {/* 비밀번호 확인 */}
-          <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm={2}>
-              비밀번호 확인
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="password"
-                name="repass"
-                value={formData.repass}
-                onChange={handleChange}
-              />
-              {errors.repass && (
-                <div className="text-danger">{errors.repass}</div>
               )}
             </Col>
           </Form.Group>
@@ -510,3 +461,32 @@ export default function Signup() {
     </Container>
   );
 }
+
+// useEffect(() => {
+//   // JWT를 쿠키에서 추출하는 함수
+//   const getCookie = (name) => {
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; ${name}=`);
+//     if (parts.length === 2) return parts.pop().split(';').shift();
+//     return null;
+//   };
+//   const jwtToken = getCookie('jwtToken');
+//   if (!jwtToken) {
+//     console.log('JWT 토큰이 없습니다. 회원가입에 실패하였습니다.');
+//     navigate('/login');
+//     return;
+//   } else {
+//     const fetchUserData = async (jwtToken) => {
+//       const response = await fetch('http://localhost:8080/api/user/data', {
+//         method: 'GET',
+//         headers: {
+//           Authorization: `Bearer ${jwtToken}`,
+//         },
+//         credentials: 'include', // 쿠키를 포함하여 요청
+//       });
+
+//       const data = await response.json();
+//       console.log(data); // 사용자 데이터 확인
+//     };
+//   }
+// }, []);

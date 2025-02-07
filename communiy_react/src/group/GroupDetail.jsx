@@ -13,12 +13,9 @@ import {
 import GoogleMap from './component/GoogleMap';
 import { Link } from 'react-router';
 <style>
-  .group_detail(
-    box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
-    border-radius: 10px;
-    padding: 50px 30px;
-  )
-</style>
+  .group_detail( box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; border-radius:
+  10px; padding: 50px 30px; )
+</style>;
 
 function GroupDetail() {
   const groupedReviews = [];
@@ -238,7 +235,6 @@ function GroupDetail() {
           }}>참가 신청하기</button>
         </div>
       </div>
-      <footer></footer>
     </Container>
   );
 }

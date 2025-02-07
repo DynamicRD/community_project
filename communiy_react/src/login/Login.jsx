@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
 
@@ -9,6 +10,52 @@ export default function Login() {
 
   const handleLogin = () => {
     console.log('ID:', id, 'Password:', password, 'Remember Me:', rememberMe);
+  };
+
+  useEffect(() => {
+    // 팝업에서 데이터를 받을 리스너 설정
+    const handleMessage = (event) => {
+      if (event.origin !== window.location.origin) return; // 보안: 올바른 출처 확인
+
+      const tokenData = event.data;
+      if (tokenData && tokenData.code) {
+        // 로그인 코드나 토큰을 받은 후 처리
+        console.log('Received token data: ', tokenData.code);
+        // 예: API 호출로 액세스 토큰을 가져오고 상태 업데이트
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    // 컴포넌트 언마운트 시 이벤트 리스너 제거
+    return () => {
+      window.removeEventListener('message', handleMessage);
+    };
+  }, []);
+  const doKakaoLogin = () => {
+    const kakaoRestApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
+    const kakaoRedirectUrl = import.meta.env.VITE_KAKAO_REDIRECT_URL;
+
+    console.log(kakaoRestApiKey);
+    console.log(kakaoRedirectUrl);
+
+    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code`;
+
+    window.open(kakaoUrl, 'kakao-login', 'width=600,height=600');
+  };
+  const doGoogleLogin = () => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientPass = import.meta.env.VITE_GOOGLE_CLIENT_PASS;
+    const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
+
+    console.log(clientId);
+    console.log(redirectUrl);
+
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=openid%20profile%20email`;
+    //refresh 토큰 발급은 &access_type=offline&prompt=consent추가
+
+    // 팝업 창 띄우기
+    window.open(url, 'google-login', 'width=600,height=600');
   };
 
   return (
@@ -97,20 +144,19 @@ export default function Login() {
               marginTop: '10px',
             }}
           >
-            <Link to="/find-id" style={{ color: 'blue' }}>
-              <img
-                src="/images/google.png"
-                alt="Google Login"
-                style={{ width: '50px', marginRight: '20px' }}
-              />
-            </Link>
-            <Link to="/find-id" style={{ color: 'blue' }}>
-              <img
-                src="/images/kakao.png"
-                alt="Kakao Login"
-                style={{ width: '50px' }}
-              />
-            </Link>
+            <img
+              src="/images/google.png"
+              alt="Google Login"
+              style={{ width: '50px', marginRight: '20px' }}
+              onClick={doGoogleLogin}
+            />
+
+            <img
+              src="/images/kakao.png"
+              alt="Kakao Login"
+              style={{ width: '50px' }}
+              onClick={doKakaoLogin}
+            />
           </div>
           <div
             style={{ textAlign: 'center', marginTop: '15px', fontSize: '14px' }}

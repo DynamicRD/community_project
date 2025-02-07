@@ -1,9 +1,10 @@
-import React, { useState, useRef } from 'react';
-import { Button, Container, Nav, Pagination } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
-import HorizonLine from './HorizonLine';
+import React from 'react';
+import { Container, Nav } from 'react-bootstrap';
+import Pagination from 'react-bootstrap/Pagination';
 
-export default function MyReviews(reviewData) {
+import './Review.css';
+
+export default function Review({ reviewData }) {
   let item = [];
   for (let number = 1; number <= 5; number++) {
     item.push(
@@ -22,11 +23,19 @@ export default function MyReviews(reviewData) {
   return (
     <>
       <Container>
-        <div className="review_board mt-5">
+        <div className=" d-flex m-5">
+          <span
+            className="nav_notice"
+            style={{ fontSize: '33px', marginLeft: '65px' }}
+          >
+            모임 후기
+          </span>
+        </div>
+        <div className="review_board mt-4">
           <ul id="board_list" className="list-unstyled">
             {groupedReviews.map((group, index) => (
               <div
-                className="d-flex justify-content-start gap-3 mb-4"
+                className="d-flex justify-content-start gap-5 mb-4"
                 key={index}
               >
                 {group.map((object) => (
@@ -38,7 +47,7 @@ export default function MyReviews(reviewData) {
                         className="review_img"
                       />
                     </Nav.Link>
-                    <div className="d-flex justify-content-between align-items-center mt-2">
+                    <div className="d-flex justify-content-between align-items-center mt-3 me-4 ms-4">
                       <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                       <span style={{ fontSize: '12px' }}>
                         평점: {object.rating}
@@ -51,8 +60,8 @@ export default function MyReviews(reviewData) {
           </ul>
         </div>
       </Container>
-      <Container className="mb-5">
-        <div className="d-flex justify-content-center align-items-center">
+      <Container>
+        <div className="d-flex justify-content-center align-content-center">
           <Pagination size="sm">{item}</Pagination>
           <Nav.Link href="/review/Regist" className="reviewRegist">
             <span>작성 하기</span>
