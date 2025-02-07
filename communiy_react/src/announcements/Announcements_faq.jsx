@@ -30,7 +30,12 @@ export default function Announcements_notice({ announcementData }) {
         <Container>
           <Accordion defaultActiveKey="0">
             {announcementData.map((object) => (
-              <Accordion.Item eventKey={object.no} flush key={object.no}>
+              <Accordion.Item
+                eventKey={object.no}
+                flush
+                key={object.no}
+                className="mb-3"
+              >
                 <Accordion.Header>
                   <span
                     className="faq_accordion_title"

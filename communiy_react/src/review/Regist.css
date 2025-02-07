@@ -45,11 +45,11 @@
 }
 
 .review_register_btn span:hover {
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
 .review_input_title {
-  background-color: #f0f6f0;
+  background-color: #ffffff;
   border: none;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   width: 150px;
@@ -65,7 +65,7 @@
   font-size: 16px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
-  background-color: #f8f9fa;
+  background-color: #ffffff;
 }
 
 #review_rating:focus {

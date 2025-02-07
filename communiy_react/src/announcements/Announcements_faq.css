@@ -50,22 +50,17 @@
   margin-left: 20px;
 }
 
-.accordion-button {
-  background-color: #f0f6f0;
-  border-radius: 10px;
-}
-
-.accordion-button:focus,
 .accordion-button.active,
 .accordion-body:focus,
 .accordion-body.active {
-  background-color: #f0f6f0;
+  background-color: rgba(197, 0, 0, 0.692);
   color: rgb(0, 0, 0);
 }
 .accordion-button:not(:focus),
 .accordion-button:not(:focus),
 .accordion-body:not(:focus),
 .accordion-body:not(:focus) {
-  background-color: #f0f6f0;
+  border-radius: 10px;
+  background-color: rgba(46, 46, 46, 0.03);
   color: rgb(0, 0, 0);
 }
