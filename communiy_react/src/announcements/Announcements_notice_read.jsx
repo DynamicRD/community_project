@@ -9,15 +9,15 @@ export default function Announcements_notice_read({ announcementData }) {
         <div className="notice_read">
           <div className="notice_head d-flex flex-column justify-content-between">
             <span className="notice_title mb-3">
-              {announcementData[announcementData[0].no].title}
+              {announcementData[announcementData[1].no].title}
             </span>
             <span className="notice_date mb-4">
-              {announcementData[announcementData[0].no].date}
+              {announcementData[announcementData[1].no].date}
             </span>
             <span className="notice_hr mb-5"></span>
           </div>
-          <span className="notice_content ms-2 me-2">
-            {announcementData[announcementData[0].no].content}
+          <span className="notice_content ms-4 me-2">
+            {announcementData[announcementData[1].no].content}
           </span>
         </div>
       </Container>

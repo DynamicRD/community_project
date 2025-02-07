@@ -14,6 +14,37 @@ export default function Review({ reviewData }) {
     );
   }
 
+  const completedMeetings = [
+    {
+      name: '테크 세미나',
+      date: '2025-01-10',
+      endDate: '2025-01-10',
+      role: '참석자',
+      cost: '₩ 30,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+  ];
+
   // Group reviews into sets of 3 items per row
   const groupedReviews = [];
   for (let i = 0; i < reviewData.length; i += 3) {
@@ -47,11 +78,20 @@ export default function Review({ reviewData }) {
                         className="review_img"
                       />
                     </Nav.Link>
-                    <div className="d-flex justify-content-between align-items-center mt-3 me-4 ms-4">
+
+                    <div className="d-flex justify-content-between align-content-center mt-1 me-4 ms-4">
                       <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                       <span style={{ fontSize: '12px' }}>
                         평점: {object.rating}
                       </span>
+                    </div>
+                    <div
+                      className="club_name d-flex align-content-center"
+                      style={{
+                        fontSize: '14px',
+                      }}
+                    >
+                      {completedMeetings[0].name}
                     </div>
                   </div>
                 ))}
@@ -61,9 +101,9 @@ export default function Review({ reviewData }) {
         </div>
       </Container>
       <Container>
-        <div className="d-flex justify-content-center align-content-center">
+        <div className="d-flex justify-content-center align-content-center mb-3">
           <Pagination size="sm">{item}</Pagination>
-          <Nav.Link href="/review/Regist" className="reviewRegist">
+          <Nav.Link href="/mypage/reviews" className="reviewRegist">
             <span>작성 하기</span>
           </Nav.Link>
         </div>

@@ -1,3 +1,4 @@
+import './MyPage.css';
 import React, { useState } from 'react';
 import {
   Container,
@@ -9,7 +10,6 @@ import {
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './MyPage.css';
 
 function MyPage() {
   // 상태 관리: 알림 펼침 여부
@@ -171,12 +171,12 @@ function MyPage() {
         {/* Balance Section */}
         <Row className="mt-4">
           <Col md={12}>
-            <div className="border-section text-center">
+            <div className="mainpage border-section text-center ">
               <h5>보유금액</h5>
               <div className="h3">₩ 500,000</div>
               <div className="mt-3">
                 <Link to="/mypage/charge">
-                  <Button variant="warning">충전하기</Button>
+                  <Button>충전하기</Button>
                 </Link>
               </div>
             </div>
@@ -209,21 +209,18 @@ function MyPage() {
         <div className="border-section mt-4">
           <div className="btn-group m-2">
             <Button
-              variant="primary"
               className="m-2"
               onClick={() => setActiveTab('ongoing')}
             >
               진행중인 모임
             </Button>
             <Button
-              variant="primary"
               className="m-2"
               onClick={() => setActiveTab('completed')}
             >
               종료된 모임
             </Button>
             <Button
-              variant="primary"
               className="m-2"
               onClick={() => setActiveTab('saved')}
             >

@@ -1,12 +1,28 @@
 body {
+  font-family: 'Pretendard-Regular';
   margin: 0;
-  font-family: Arial, sans-serif;
   display: block;
-  background-color: #f0f6f0;
+  background-color: white;
 }
 
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+
+}
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
 /* Navbar */
 .navbar {
+  /* background-color: #ec6e43; */
   margin: 0 auto;
   border-bottom: 1px solid #ddd;
   width: 100vw;
