@@ -32,7 +32,17 @@ export default function Login() {
       window.removeEventListener('message', handleMessage);
     };
   }, []);
+  const doKakaoLogin = () => {
+    const kakaoRestApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
+    const kakaoRedirectUrl = import.meta.env.VITE_KAKAO_REDIRECT_URL;
 
+    console.log(kakaoRestApiKey);
+    console.log(kakaoRedirectUrl);
+
+    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code`;
+
+    window.open(kakaoUrl, 'kakao-login', 'width=600,height=600');
+  };
   const doGoogleLogin = () => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     const clientPass = import.meta.env.VITE_GOOGLE_CLIENT_PASS;
@@ -41,7 +51,8 @@ export default function Login() {
     console.log(clientId);
     console.log(redirectUrl);
 
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=openid%20profile%20email&access_type=offline&prompt=consent`;
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=openid%20profile%20email`;
+    //refresh 토큰 발급은 &access_type=offline&prompt=consent추가
 
     // 팝업 창 띄우기
     window.open(url, 'google-login', 'width=600,height=600');
@@ -140,13 +151,12 @@ export default function Login() {
               onClick={doGoogleLogin}
             />
 
-            <Link to="/find-id" style={{ color: 'blue' }}>
-              <img
-                src="/images/kakao.png"
-                alt="Kakao Login"
-                style={{ width: '50px' }}
-              />
-            </Link>
+            <img
+              src="/images/kakao.png"
+              alt="Kakao Login"
+              style={{ width: '50px' }}
+              onClick={doKakaoLogin}
+            />
           </div>
           <div
             style={{ textAlign: 'center', marginTop: '15px', fontSize: '14px' }}
