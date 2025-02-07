@@ -176,7 +176,7 @@ function MyPage() {
               <div className="h3">₩ 500,000</div>
               <div className="mt-3">
                 <Link to="/mypage/charge">
-                  <Button variant="warning">충전하기</Button>
+                  <Button>충전하기</Button>
                 </Link>
               </div>
             </div>
@@ -209,21 +209,18 @@ function MyPage() {
         <div className="border-section mt-4">
           <div className="btn-group m-2">
             <Button
-              variant="primary"
               className="m-2"
               onClick={() => setActiveTab('ongoing')}
             >
               진행중인 모임
             </Button>
             <Button
-              variant="primary"
               className="m-2"
               onClick={() => setActiveTab('completed')}
             >
               종료된 모임
             </Button>
             <Button
-              variant="primary"
               className="m-2"
               onClick={() => setActiveTab('saved')}
             >
