@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
@@ -8,8 +9,34 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     console.log('ID:', id, 'Password:', password, 'Remember Me:', rememberMe);
+
+    // 로그인 요청을 백엔드로 보냅니다
+    try {
+      const response = await axios.post('http://localhost:8080/login', {
+        username: id,
+        password: password,
+      });
+
+      // 로그인 성공 시 JWT 토큰을 로컬 스토리지나 세션 스토리지에 저장
+      if (response.data.token) {
+        localStorage.setItem('jwtToken', response.data.token);
+
+        // Remember Me 체크가 true라면, 로컬 스토리지에 저장
+        if (rememberMe) {
+          localStorage.setItem('rememberMe', 'true');
+        } else {
+          localStorage.removeItem('rememberMe');
+        }
+
+        console.log('로그인 성공');
+        // 이후, 로그인 성공 후 처리할 로직 추가
+      }
+    } catch (error) {
+      console.error('로그인 실패', error);
+      alert('로그인에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   useEffect(() => {
