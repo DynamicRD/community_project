@@ -23,6 +23,10 @@ import Review from './review/Review';
 import Regist from './review/Regist';
 import Signup from './login/Signup';
 import Login from './login/login';
+import GroupUpdate from './group/GroupUpdate';
+import GroupManage from './group/GroupManagement';
+import GroupManagement from './group/GroupManagement';
+
 import MyPage from './mypage/MyPage';
 import ChatRoom from './chatroom/chatroom';
 import Announcements_notice from './announcements/Announcements_notice';
@@ -36,6 +40,7 @@ const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
   today.getMonth() + 1
 }월 ${today.getDate()}일`;
+
 
 
 const reviewList = [
@@ -144,6 +149,17 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
+
+
+          {/* 모임페이지-해원 */}
+          <Route path="/group/detail" element={<GroupDetail />} />
+          <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
+          <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
+          <Route path="/group/regist" element={<GroupRegist />} />
+          <Route path="/group/update" element={<GroupUpdate />} />
+          <Route path="/group/management" element={<GroupManagement />} />
+
+
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
           {/* 김동욱 mypage 컴포넌트 추가 */}

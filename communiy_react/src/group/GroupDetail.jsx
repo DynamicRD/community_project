@@ -1,4 +1,4 @@
-import { Container } from 'react-bootstrap';
+import { Container, Form, Nav } from 'react-bootstrap';
 import './GroupDetail.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -10,20 +10,27 @@ import {
   faSackDollar,
   faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
+import GoogleMap from './component/GoogleMap';
+import { Link } from 'react-router';
 <style>
   .group_detail( box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; border-radius:
   10px; padding: 50px 30px; )
 </style>;
 
 function GroupDetail() {
+  const groupedReviews = [];
+  
+  // link 테스트
+  const type = 'regular';
+
   return (
     <Container>
       <div className="group_detail">
         <div className="information col">
           <div>
-            <a href="#">
+            <Link to={`/group/${type}_list`}>
               <h4>동행, 소모임&gt;</h4>
-            </a>
+            </Link>
             <img
               className="img-fluid"
               src="/images/group_image1.jpg"
@@ -110,11 +117,42 @@ function GroupDetail() {
           </h2>
           <h4>투썸플레이스 역삼역점</h4>
           <p>서울특별시 강남구 테헤란로27길 16</p>
+          <GoogleMap address={'역삼역'}/>
           <img src="/images/map.png" alt="모임 장소 지도" />
         </div>
+
         <div>
           <h2>모임 후기</h2>
+          <div className="review_board mt-5">
+          <ul id="board_list" className="list-unstyled">
+            {groupedReviews.map((group, index) => (
+              <div
+                className="d-flex justify-content-start gap-3 mb-4"
+                key={index}
+              >
+                {group.map((object) => (
+                  <div className="review_item" key={object.no}>
+                    <Nav.Link href="/review/Read">
+                      <img
+                        src={object.img}
+                        alt="review"
+                        className="review_img"
+                      />
+                    </Nav.Link>
+                    <div className="d-flex justify-content-between align-items-center mt-2">
+                      <Nav.Link href="/review/Read">{object.title}</Nav.Link>
+                      <span style={{ fontSize: '12px' }}>
+                        평점: {object.rating}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </ul>
         </div>
+        </div>
+
         <div>
           <h4>환불 규정</h4>
           <table className="table table-bordered">
@@ -189,7 +227,12 @@ function GroupDetail() {
             <FontAwesomeIcon icon={faHeart} />
             &nbsp;찜하기
           </button>
-          <button>참가 신청하기</button>
+          <button onClick={()=>{
+            fetch('http://localhost:8080/멤버업데이트?',{
+              method: 'post',
+              body:Form,
+            });
+          }}>참가 신청하기</button>
         </div>
       </div>
     </Container>

@@ -1,6 +1,16 @@
+
+* {
+margin: 0;
+padding: 0;
+}
+
+Link{
+  text-decoration: none;
+}
+
 .group_list {
   /* font-family: 'IBM Plex Sans KR', serif;
-  font-style: normal; */
+  font-style: normal; /
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   border-radius: 10px;
   padding: 50px 30px;
@@ -17,11 +27,6 @@
   color: rgb(57, 57, 57);
 }
 
-.group_list img {
-  width: 500px;
-  height: 200px;
-}
-
 .group_list select,
 .group_list input {
   padding: 5px 10px;
@@ -29,6 +34,50 @@
   border-radius: 10px;
 }
 
-.group_list input[type='checkbox'] {
+.group_list input[type="checkbox"]{
   margin-left: 10px;
+}
+
+.group_list .btn1 {
+  background-color: #FF2D00;
+  color: white;
+  border: 0px;
+  padding: 8px 15px;
+  border-radius: 10px;
+}
+
+.group_banner {
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  background-color: #ff3a0dee;
+  height: 60px;
+  font-size: 20px;
+}
+
+.group_banner .btn {
+  font-size: 1.25rem;
+  background-color: white;
+  color: black;
+}
+
+.group_list .page-item .page-link {
+  color: #fff; / 텍스트 색상 /
+  background-color: #FF2D00; / 기본 배경색 /
+}
+
+.group_list .pagination .page-item.active .page-link {
+  background-color: #FF2D00; / 활성 페이지 배경색 /
+  color: white; / 활성 페이지 텍스트 색상 /
+}
+
+.group_list .pagination .page-item:hover .page-link {
+  background-color: rgb(226, 41, 0); / 마우스 오버 시 배경색 /
+  color: rgb(255, 255, 255); / 마우스 오버 시 텍스트 색상 /
+}
+
+.group_list .pagination .page-item.disabled .page-link {
+  color: #6c757d; / 비활성 페이지 텍스트 색상 /
+  background-color: #e9ecef; / 비활성 페이지 배경색 /
+  border-color: #ddd; / 비활성 페이지 테두리 색상 */
 }
