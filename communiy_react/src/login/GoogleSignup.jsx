@@ -15,18 +15,44 @@ import AddressInput from '../mypage/daumAPI/AddressInput';
 
 export default function GoogleSignup() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
-  const [tokenData, setTokenData] = useState(null);
+  const [googleInfo, setGoogleInfo] = useState({
+    sub: '',
+    name: '',
+    givenName: '',
+    familyName: '',
+    picture: '',
+    email: '',
+    emailVerified: '',
+  });
+
+  // useEffect에서 바로 handleSignup 호출
   useEffect(() => {
     const handleSignup = async () => {
-      const response = await fetch('http://localhost:8080/login/getinfo', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(),
-        credentials: 'include', // 쿠키 포함하여 요청 보내기
-      });
+      console.log('handleSignup 실행됨');
+      try {
+        const response = await fetch('http://localhost:8080/login/getinfo', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include', // 쿠키 포함하여 요청 보내기
+        });
+
+        // 응답 상태 코드 확인
+        if (!response.ok) {
+          console.log('서버에서 오류가 발생했습니다:', response.statusText);
+          return;
+        }
+
+        const data = await response.json();
+        console.log(data); // 데이터 확인
+        setGoogleInfo(data); // 받은 데이터를 상태에 저장
+      } catch (error) {
+        console.error('에러 발생:', error);
+      }
     };
+
+    // handleSignup을 바로 실행
     handleSignup();
   }, []);
 
@@ -234,7 +260,7 @@ export default function GoogleSignup() {
                 <FormControl
                   type="text"
                   name="nickname"
-                  value={formData.nickname}
+                  value={googleInfo.name}
                   onChange={handleChange}
                 />
                 <Button
@@ -370,7 +396,7 @@ export default function GoogleSignup() {
               <Form.Control
                 type="text"
                 name="email"
-                value={formData.email}
+                value={googleInfo.email}
                 onChange={handleChange}
               />
               {errors.email && (
