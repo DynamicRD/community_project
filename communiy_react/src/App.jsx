@@ -1,12 +1,10 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
 import MyPage from './mypage/mypage';
-import Home from './Home';
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
@@ -17,7 +15,6 @@ import Checkout from './mypage/tosspay/Checkout';
 import SuccessPage from './mypage/tosspay/Success';
 import FailPage from './mypage/tosspay/Fail';
 import AddressInput from './mypage/daumAPI/AddressInput';
-
 
 function App() {
   const [count, setCount] = useState(0);
