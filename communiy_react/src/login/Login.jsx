@@ -12,26 +12,36 @@ export default function Login() {
   const handleLogin = async () => {
     console.log('ID:', id, 'Password:', password, 'Remember Me:', rememberMe);
 
-    // 로그인 요청을 백엔드로 보냅니다
     try {
-      const response = await axios.post('http://localhost:8080/login', {
-        username: id,
-        password: password,
-      });
+      const response = await axios.post(
+        'http://localhost:8080/member/login',
+        {
+          id: id, // 백엔드에서 요구하는 필드명 사용
+          pw: password, // 백엔드에 맞춰 필드명 변경
+          //provider: 'local', // 기본 로그인 방식 (소셜 로그인이 아니라면 "local" 사용)
+        },
+        {
+          withCredentials: true, // 쿠키 전송 허용
+        }
+      );
 
-      // 로그인 성공 시 JWT 토큰을 로컬 스토리지나 세션 스토리지에 저장
-      if (response.data.token) {
-        localStorage.setItem('jwtToken', response.data.token);
+      // 로그인 성공
+      if (response.data.success) {
+        console.log('로그인 성공');
 
-        // Remember Me 체크가 true라면, 로컬 스토리지에 저장
+        // JSON 응답에서 액세스 토큰이 포함되어 있다면 저장
+        if (response.data.accessToken) {
+          localStorage.setItem('jwtToken', response.data.accessToken);
+        }
+
+        // Remember Me 체크 시 로컬 스토리지 저장
         if (rememberMe) {
           localStorage.setItem('rememberMe', 'true');
         } else {
           localStorage.removeItem('rememberMe');
         }
-
-        console.log('로그인 성공');
-        // 이후, 로그인 성공 후 처리할 로직 추가
+      } else {
+        alert(response.data.message || '로그인에 실패했습니다.');
       }
     } catch (error) {
       console.error('로그인 실패', error);
