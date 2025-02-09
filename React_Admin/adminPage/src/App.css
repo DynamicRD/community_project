@@ -6,6 +6,9 @@ body {
   margin: 0;
   padding: 0;
 }
+a {
+  text-decoration: none;
+}
 
 /* 사이드바 고정 */
 .sidebar {
@@ -200,4 +203,9 @@ body {
   margin-left: 25px;
   margin-top: 70px;
   min-width: 1365px;
+}
+
+.container-text {
+  margin-left: 25px;
+  margin-top: 70px;
 }

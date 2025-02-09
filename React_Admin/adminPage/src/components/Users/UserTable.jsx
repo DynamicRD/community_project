@@ -158,7 +158,7 @@ const UserTable = () => {
   const [search, setSearch] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // ✅ 한 페이지당 5명 표시
+  const itemsPerPage = 10; // ✅ 한 페이지당 10명 표시
 
   // ✅ 검색 기능 (이름, 이메일, 전화번호 포함)
   const filteredUsers = usersData.filter((user) =>

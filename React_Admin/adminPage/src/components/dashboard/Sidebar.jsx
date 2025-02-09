@@ -13,7 +13,9 @@ const Sidebar = () => {
         <Nav.Link as={NavLink} to="/users">
           회원관리
         </Nav.Link>
-        <Nav.Link href="#">모임관리</Nav.Link>
+        <Nav.Link as={NavLink} to="/community">
+          모임관리
+        </Nav.Link>
         <Nav.Link href="#">게시판관리</Nav.Link>
         <Nav.Link href="#">통계관리</Nav.Link>
       </Nav>
