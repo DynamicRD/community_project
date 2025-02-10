@@ -3,47 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <!-- <script
-      src="https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAPS_API_KEY}&libraries=places"
-      async
-      defer
-    ></script> -->
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + React</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script>
-      $(function () {
-        $('#btn1').click(function () {
-          $.ajax({
-            url: 'air.do',
-            data: {
-              location: $('#location').val(),
-            },
-            success: function (data) {
-              const itemArr = data.response.body.items;
-              let value = '';
-              for (let i in itemArr) {
-                // for문 안에 있는 내용을 코딩하시오.
-                value += `<tr>
-          <td>${i.stationName}</td>
-          <td>${i.dataTime}</td>
-          <td>${i.khaiValue}</td>
-          <td>${i.pm10Value}</td>
-          <td>${i.coValue}</td>
-          <td>${i.no2Value}</td>
-          <td>${i.so2Value}</td>
-          <td>${i.o3Value}</td>
-          </tr>`;
-              }
-              $('#result1 tbody').html(value);
-            },
-          });
-        });
-      });
-    </script>
   </body>
 </html>
