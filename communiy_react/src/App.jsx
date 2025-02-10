@@ -103,6 +103,7 @@ function App() {
           <Route path="users" element={<UserTable />} />
           <Route path="community" element={<Community />} />
           <Route path="community/:id" element={<CommunityDetail />} />
+          {/* <Route path="complaint" element={<Complaint />} /> */}
         </Route>
       </Routes>
     </BrowserRouter>
