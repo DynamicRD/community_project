@@ -53,6 +53,12 @@ export default function Login() {
       alert('로그인에 실패했습니다. 다시 시도해주세요.');
     }
   };
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault(); // 기본 Enter 동작(폼 제출) 방지
+      handleLogin(); // 로그인 함수 실행
+    }
+  };
 
   useEffect(() => {
     // 팝업에서 데이터를 받을 리스너 설정
@@ -132,7 +138,9 @@ export default function Login() {
             }}
             value={id}
             onChange={(e) => setId(e.target.value)}
+            onKeyDown={handleKeyDown} // 추가
           />
+
           <input
             type="password"
             placeholder="비밀번호를 입력하시오"
@@ -145,7 +153,9 @@ export default function Login() {
             }}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            onKeyDown={handleKeyDown} // 추가
           />
+
           <button
             onClick={handleLogin}
             style={{
