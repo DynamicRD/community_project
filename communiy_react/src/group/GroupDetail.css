@@ -1,7 +1,4 @@
 .group_detail {
-  /* font-family: 'IBM Plex Sans KR', serif;
-  font-style: normal; */
-  width: 1000px;
   border-radius: 10px;
   padding: 50px 0px;
   display: flex;
@@ -47,7 +44,7 @@
 }
 
 .group_detail > .information p,
-.group_detail > .map p {
+.group_detail > .map .detail_address {
   color: gray;
 }
 
@@ -81,7 +78,7 @@
   display: flex;
   justify-content: center;
 }
-.group_detail > .button > button {
+.group_detail > .button button, .group_detail > .button > Link {
   font-size: 20px;
   border: 0px;
   border-radius: 10px;

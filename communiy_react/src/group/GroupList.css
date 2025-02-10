@@ -8,12 +8,6 @@ Link{
 }
 
 .group_list {
-  /* font-family: 'IBM Plex Sans KR', serif;
-<<<<<<< HEAD
-
-=======
->>>>>>> 0a0c04dc77e24cabcaab19a71f3f12cff1921ce1
-  font-style: normal; */
   box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   border-radius: 10px;
   padding: 50px 30px;
@@ -83,8 +77,20 @@ Link{
   color: #6c757d; /* 비활성 페이지 텍스트 색상 */
   background-color: #e9ecef; /* 비활성 페이지 배경색 */
   border-color: #ddd; /* 비활성 페이지 테두리 색상 */
-<<<<<<< HEAD
+
 }
-=======
+
+
+.group_span {
+  font-family: 'Freesentation-9Black';
 }
->>>>>>> 0a0c04dc77e24cabcaab19a71f3f12cff1921ce1
+
+@font-face {
+  font-family: 'Freesentation-9Black';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2')
+    format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+
