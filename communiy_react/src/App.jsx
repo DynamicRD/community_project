@@ -152,15 +152,18 @@ function App() {
         <Routes>
           {/* 모임페이지-해원 */}
 
+
           <Route path="/group/detail" element={<GroupDetail reviewData={[...reviewData]}/>} />
           <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
           <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
+
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
           <Route path="/group/management" element={<GroupManagement />} />
 
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
+
           {/* 김동욱 mypage 컴포넌트 추가 */}
           <Route path="/mypage" element={<MyPage />} />
           <Route path="/mypage/infochange" element={<MyInfoChange />} />
@@ -182,7 +185,6 @@ function App() {
 
           <Route path="/test" element={<Test />} />
 
-          
 
           {/* 리뷰게시판 - 문정배*/}
           <Route

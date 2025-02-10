@@ -18,8 +18,8 @@ const Navbar = () => (
         <ul className="navbar-nav mx-auto">
           {[
             { name: '홈', path: '/' },
-            { name: '정기모임', path: '/group/list' },
-            { name: '동행ㆍ소모임', path: '/group/list' },
+            { name: '정기모임', path: '/group/regular_list' },
+            { name: '동행ㆍ소모임', path: '/group/one_list' },
             { name: '모임후기', path: '/review' },
             { name: '공지사항', path: '/announcements' },
           ].map((item, index) => (

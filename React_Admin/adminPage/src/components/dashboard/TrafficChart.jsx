@@ -10,7 +10,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
-
+import './dashboard.css';
 // Chart.js 필수 모듈 등록
 ChartJS.register(
   CategoryScale,
