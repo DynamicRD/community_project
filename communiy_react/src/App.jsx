@@ -152,15 +152,11 @@ function App() {
         <Routes>
           {/* 모임페이지-해원 */}
 
-          <Route
-            path="/group/detail"
-            element={<GroupDetail reviewData={[...reviewData]} />}
-          />
-          <Route
-            path="/group/regular_list"
-            element={<GroupList type={'regular'} />}
-          />
-          <Route path="/group/one_list" element={<GroupList type={'one'} />} />
+
+          <Route path="/group/detail" element={<GroupDetail reviewData={[...reviewData]}/>} />
+          <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
+          <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
+
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
           <Route path="/group/management" element={<GroupManagement />} />
@@ -188,6 +184,7 @@ function App() {
           <Route path="/google/signup" element={<GoogleSignup />} />
 
           <Route path="/test" element={<Test />} />
+
 
           {/* 리뷰게시판 - 문정배*/}
           <Route
