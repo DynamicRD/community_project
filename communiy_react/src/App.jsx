@@ -2,9 +2,13 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { useState } from 'react';
 import '/src/Admin/dashboard/dashboard.css';
 import './App.css';
+
 import Home from './mainpage/Home';
 import Signup from './login/Signup';
-import Login from './login/login';
+import Login from './login/Login';
+import Navbar from './mainpage/Navbar';
+import Footer from './mainpage/Footer';
+
 import UserLayout from './routes/UserLayout';
 import AdminLayout from './routes/AdminLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
@@ -29,6 +33,7 @@ import FailPage from './mypage/tosspay/Fail';
 import AddressInput from './mypage/daumAPI/AddressInput';
 
 import ChatRoom from './chatroom/chatroom';
+
 import Announcements_notice from './announcements/Announcements_notice';
 import Announcements_faq from './announcements/Announcements_faq';
 import Announcements_notice_read from './announcements/Announcements_notice_read';
@@ -46,48 +51,60 @@ import UserTable from './Admin/Users/UserTable';
 import Community from './Admin/Community/Community';
 import CommunityDetail from './Admin/Community/CommunityDetail';
 
+
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/* 공통 페이지 */}
-        <Route path="/user" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+       <Routes>
+    {/* 공통 페이지 */}
+    <Route path="/" element={<Home />} />
+    <Route path="/login" element={<Login />} />
+    <Route path="/signup" element={<Signup />} />
 
-        {/* ✅ 유저 페이지 (UserLayout을 부모로 설정) */}
-        <Route path="/user/*" element={<UserLayout />}>
-          {/* 모임 관련 */}
-          <Route index element={<Home />} /> {/* ✅ 기본 페이지 추가 */}
-          <Route path="group/detail" element={<GroupDetail />} />
-          <Route path="group/regular_list" element={<GroupList />} />
-          <Route path="group/one_list" element={<GroupList />} />
-          <Route path="group/regist" element={<GroupRegist />} />
-          <Route path="group/update" element={<GroupUpdate />} />
-          <Route path="group/management" element={<GroupManagement />} />
-          {/* 마이페이지 관련 */}
-          <Route path="mypage" element={<MyPage />} />
-          <Route path="mypage/infochange" element={<MyInfoChange />} />
-          <Route path="mypage/profilechange" element={<MyProfileChange />} />
-          <Route path="mypage/infodelete" element={<MyInfoDelete />} />
-          <Route path="mypage/amounthis" element={<MyAmountHistory />} />
-          <Route path="mypage/reviews" element={<MyReviews />} />
-          <Route path="mypage/charge" element={<MyAmountCharge />} />
-          <Route path="mypage/checkout" element={<Checkout />} />
-          <Route path="mypage/checkout/success" element={<SuccessPage />} />
-          <Route path="mypage/checkout/fail" element={<FailPage />} />
-          <Route path="mypage/infochange/address" element={<AddressInput />} />
-          {/* 채팅 */}
-          <Route path="chatroom" element={<ChatRoom />} />
-          <Route path="login/googlecheck" element={<GoogleLoginCheck />} />
-          <Route path="google/signup" element={<GoogleSignup />} />
-          {/* 리뷰게시판 */}
-          <Route path="review" element={<Review />} />
-          <Route path="review/read" element={<Read />} />
-          <Route path="review/regist" element={<Regist />} />
-          {/* 공지사항 */}
-          <Route path="announcements" element={<Announcements_notice />} />
-          <Route path="announcements/faq" element={<Announcements_faq />} />
+    {/* ✅ 유저 페이지 (UserLayout을 부모로 설정) */}
+    <Route path="/user/*" element={<UserLayout />}>
+      {/* 모임 관련 */}
+      <Route index element={<Home />} /> {/* ✅ 기본 페이지 추가 */}
+      <Route path="group/detail" element={<GroupDetail reviewData={[...reviewData]} />} />
+      <Route path="group/regular_list" element={<GroupList type={'regular'} />} />
+      <Route path="group/one_list" element={<GroupList type={'one'} />} />
+      <Route path="group/regist" element={<GroupRegist />} />
+      <Route path="group/update" element={<GroupUpdate />} />
+      <Route path="group/management" element={<GroupManagement />} />
+
+      {/* 마이페이지 관련 */}
+      <Route path="mypage" element={<MyPage />} />
+      <Route path="mypage/infochange" element={<MyInfoChange />} />
+      <Route path="mypage/profilechange" element={<MyProfileChange />} />
+      <Route path="mypage/infodelete" element={<MyInfoDelete />} />
+      <Route path="mypage/amounthis" element={<MyAmountHistory />} />
+      <Route path="mypage/reviews" element={<MyReviews reviewData={[...reviewData]} />} />
+      <Route path="mypage/charge" element={<MyAmountCharge />} />
+      <Route path="mypage/checkout" element={<Checkout />} />
+      <Route path="mypage/checkout/success" element={<SuccessPage />} />
+      <Route path="mypage/checkout/fail" element={<FailPage />} />
+      <Route path="mypage/infochange/address" element={<AddressInput />} />
+
+      {/* 채팅 */}
+      <Route path="chatroom" element={<ChatRoom />} />
+
+      {/* 소셜 로그인 */}
+      <Route path="login/googlecheck" element={<GoogleLoginCheck />} />
+      <Route path="google/signup" element={<GoogleSignup />} />
+
+      {/* 리뷰게시판 */}
+      <Route path="review" element={<Review />} />
+      <Route path="review/read" element={<Read />} />
+      <Route path="review/regist" element={<Regist />} />
+
+      {/* 공지사항 */}
+      <Route path="announcements" element={<Announcements_notice />} />
+      <Route path="announcements/faq" element={<Announcements_faq />} />
+    </Route>
+
+    {/* 테스트 페이지 */}
+    <Route path="/test" element={<Test />} />
+        {/* 리뷰게시판 - 문정배*/}
           <Route
             path="announcements/read"
             element={<Announcements_notice_read />}

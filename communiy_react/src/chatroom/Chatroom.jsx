@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // Firebase 모듈화된 방식으로 import
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onChildAdded, push } from 'firebase/database';
-import { Container, Card, Form, Button, ListGroup } from 'react-bootstrap';
+import { Container, Card, Form, Button, ListGroup, Modal } from 'react-bootstrap';
 
 // Firebase 구성
 const firebaseConfig = {
@@ -20,9 +20,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-function ChatRoom() {
+function ChatRoom({show,onHide}) {
   const [messageContent, setMessageContent] = useState('');
   const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
 
   // Firebase에서 실시간으로 메시지를 가져오는 useEffect
   useEffect(() => {
@@ -43,12 +44,23 @@ function ChatRoom() {
           localDate,
         },
       ]);
+
+      if (messagesEndRef.current) {
+        messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+      }
     });
 
     return () => {
       // Firebase 연결 종료 코드 필요 (onChildAdded와 같은 이벤트 제거)
     };
   }, []);
+
+  //  // 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
+  //  useEffect(() => {
+  //   if (messagesEndRef.current) {
+  //     messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+  //   }
+  // }, [messages]);
 
   // 메시지 전송 함수
   const sendMessage = () => {
@@ -100,45 +112,46 @@ function ChatRoom() {
   };
 
   return (
-    <Container className="mt-5">
-      <Card>
-        <Card.Header>
-          <h4>채팅방에 오신 것을 환영합니다!</h4>
-        </Card.Header>
-        <Card.Body>
-          <ListGroup variant="flush">
-            {messages.map((message, index) => (
-              <ListGroup.Item
-                key={index}
-                style={{ display: 'flex', justifyContent: 'space-between' }}
-              >
-                <span>
-                  {message.sender}: {message.content}
-                </span>
-                <small>{new Date(message.timestamp).toLocaleString()}</small>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Card.Body>
-        <Card.Footer>
-          <Form>
-            <Form.Group controlId="messageContent">
-              <Form.Control
-                as="textarea"
-                rows={3}
-                placeholder="메시지를 입력하세요..."
-                value={messageContent}
-                onChange={(e) => setMessageContent(e.target.value)}
-                onKeyDown={handleKeyDown}
-              />
-            </Form.Group>
-            <Button variant="primary" onClick={sendMessage} block>
-              전송
-            </Button>
-          </Form>
-        </Card.Footer>
-      </Card>
-    </Container>
+    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="chatroom-modal">
+      <Modal.Header closeButton>
+        <Modal.Title id="chatroom-modal">채팅방에 오신 것을 환영합니다!</Modal.Title>
+      </Modal.Header>
+      <Modal.Body style={{ maxHeight: '400px', overflowY: 'scroll' }}>
+        <ListGroup variant="flush">
+          {messages.map((message, index) => (
+            <ListGroup.Item
+              key={index}
+              style={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+              <span>
+                {message.sender}: {message.content}
+              </span>
+              <small>{new Date(message.timestamp).toLocaleString()}</small>
+            </ListGroup.Item>
+          ))}
+          <div ref={messagesEndRef} />
+        </ListGroup>
+      </Modal.Body>
+      <Modal.Footer>
+        <Form>
+          <Form.Group controlId="messageContent">
+            <Form.Control
+              as="textarea"
+              cols={100}
+              rows={3}
+              placeholder="메시지를 입력하세요..."
+              value={messageContent}
+              onChange={(e) => setMessageContent(e.target.value)}
+              onKeyDown={handleKeyDown}
+            />
+          </Form.Group>
+          <Button variant="primary" onClick={sendMessage} block>
+            전송
+          </Button>
+        </Form>
+      </Modal.Footer>
+    </Modal>
+
   );
 }
 

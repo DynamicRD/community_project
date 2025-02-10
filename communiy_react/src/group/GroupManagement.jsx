@@ -4,9 +4,9 @@ import { Button, Container, Table } from 'react-bootstrap';
 export default function GroupManagement() {
   const memberList = [
     {
-      id:'gasdf1',
-      nickname:'nickname',
-      reg_date:'2025-02-06',
+      id: 'gasdf1',
+      nickname: 'nickname',
+      reg_date: '2025-02-06',
     },
   ];
   return (
@@ -25,17 +25,17 @@ export default function GroupManagement() {
               </tr>
             </thead>
             <tbody>
-              {memberList.map((memberList,index) => {
-                return(
-                <tr key={index}>
-                  <td>{memberList.id}</td>
-                  <td>{memberList.nickname}</td>
-                  <td>{memberList.reg_date}</td>
-                  <td className="w-25">
-                    <Button>승인하기</Button>&nbsp;<Button>거부하기</Button>
-                  </td>
-                </tr>
-                )
+              {memberList.map((memberList, index) => {
+                return (
+                  <tr key={index}>
+                    <td>{memberList.id}</td>
+                    <td>{memberList.nickname}</td>
+                    <td>{memberList.reg_date}</td>
+                    <td className="w-25">
+                      <Button>승인하기</Button>&nbsp;<Button>거부하기</Button>
+                    </td>
+                  </tr>
+                );
               })}
             </tbody>
           </table>

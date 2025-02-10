@@ -14,9 +14,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret}") // application.properties에서 비밀키 읽기
-    private String secretKey;
-
+   
+	private final SecretConfig secretConfig = new SecretConfig();
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (15분)
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
 
@@ -28,13 +27,14 @@ public class JwtUtil {
         return Jwts.builder()
                 .setSubject("userRegister")
                 .claim("id", member.getId())
-                .claim("role", "ROLE_" + member.getRole())
+                .claim("name",member.getName())
+                .claim("role", member.getRole())
                 .claim("provider", member.getProvider())
                 .claim("phone", member.getPhone())
                 .claim("gender", String.valueOf(member.getGender()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))    
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
                 .compact();
     }
 
@@ -46,14 +46,14 @@ public class JwtUtil {
                 .claim("provider", member.getProvider())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))    
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
                 .compact();
     }
 
     /** ✅ JWT 검증 및 Claims 반환 */
     public Claims validateToken(String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(secretConfig.getJwtSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
     }

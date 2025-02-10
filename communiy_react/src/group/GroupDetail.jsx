@@ -1,9 +1,10 @@
-import { Container, Form, Nav } from 'react-bootstrap';
+import { Container, Form, Modal, Nav } from 'react-bootstrap';
 import './GroupDetail.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendar,
+  faComments,
   faHeart,
   faList,
   faLocationDot,
@@ -11,7 +12,10 @@ import {
   faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import GoogleMap from './component/GoogleMap';
-import { Link } from 'react-router';
+
+import { Link, useNavigate } from 'react-router';
+import { useState } from 'react';
+import ChatRoom from '../chatroom/Chatroom';
 <style>
   .group_detail( box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; border-radius:
   10px; padding: 50px 30px; )
@@ -78,14 +82,58 @@ const reviewData = [
     tag: 'culture6',
   },
 ];
-function GroupDetail() {
+
+function GroupDetail({ reviewData }) {
+  //리뷰 받아오기
   const groupedReviews = [];
   for (let i = 0; i < reviewData.length; i += 3) {
     groupedReviews.push(reviewData.slice(i, i + 3));
   }
 
+  const completedMeetings = [
+    {
+      name: '테크 세미나',
+      date: '2025-01-10',
+      endDate: '2025-01-10',
+      role: '참석자',
+      cost: '₩ 30,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+  ];
+
+  // 채팅창 띄우기
+  const [modalShow, setModalShow] = useState(false);
+
+
   // link 테스트
   const type = 'regular';
+
+  //권한별 버튼 설정
+  const navigate = useNavigate();
+  const [userRole, setUserRole] = useState('group_leader');
+  const handleButtonClick = () => {
+    navigate('/group/management');
+  }
 
   return (
     <Container>
@@ -93,7 +141,7 @@ function GroupDetail() {
         <div className="information col">
           <div>
             <Link to={`/group/${type}_list`}>
-              <h4>동행, 소모임&gt;</h4>
+              <h4>{type === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
             </Link>
             <img
               className="img-fluid"
@@ -108,7 +156,12 @@ function GroupDetail() {
                 <FontAwesomeIcon icon={faList} />
                 &nbsp;카테고리
               </p>
-              <h2>역삼역 일요일 아침 북클럽 모집</h2>
+              <span
+                className="group_span"
+                style={{ fontSize: '35px', padding: '10px 0px' }}
+              >
+                역삼역 일요일 아침 북클럽 모집
+              </span>
             </div>
             <div>
               <h4>
@@ -133,7 +186,12 @@ function GroupDetail() {
         </div>
         <div className="group_leader">
           <div>
-            <h3>🌟 역삼역 일요일 아침 북클럽 모임장 한마디 🌟</h3>
+            <p
+              className="group_span"
+              style={{ fontSize: '33px', marginBottom: '0px' }}
+            >
+              🌟 역삼역 일요일 아침 북클럽 모임장 한마디 🌟
+            </p>
             <br></br>
             안녕하세요, 역삼역 일요일 아침 북클럽에 오신 여러분을 환영합니다! 📚
             <br></br>
@@ -159,7 +217,12 @@ function GroupDetail() {
         <div className="intro">
           <hr />
           <br />
-          <h2>우리 모임은요</h2>
+          <p
+            className="group_span"
+            style={{ fontSize: '37px', marginBottom: '10px' }}
+          >
+            우리 모임은요
+          </p>
           <p>
             📚 역삼역 일요일 아침 북클럽 모집!🌞 책과 함께 여유로운 일요일
             아침을 보내고 싶으신가요? 이번에 역삼역 근처에서 일요일 아침, 책을
@@ -175,22 +238,28 @@ function GroupDetail() {
         </div>
 
         <div className="map">
-          <h2>
+          <p className="group_span" style={{ fontSize: '37px' }}>
             <FontAwesomeIcon icon={faLocationDot} />
             &nbsp;모임장소
-          </h2>
+          </p>
           <h4>투썸플레이스 역삼역점</h4>
-          <p>서울특별시 강남구 테헤란로27길 16</p>
+
+          <p className="detail_address">서울특별시 강남구 테헤란로27길 16</p>
+
           <GoogleMap address={'역삼역'} />
         </div>
 
         <div>
-          <h2>모임 후기</h2>
-          <div className="review_board mt-5">
+
+          <p className="group_span" style={{ fontSize: '37px' }}>
+            모임 후기
+          </p>
+          <div className="review_board mt-4">
             <ul id="board_list" className="list-unstyled">
               {groupedReviews.map((group, index) => (
                 <div
-                  className="d-flex justify-content-start gap-3 mb-4"
+                  className="d-flex justify-content-start gap-5 mb-4"
+
                   key={index}
                 >
                   {group.map((object) => (
@@ -202,12 +271,25 @@ function GroupDetail() {
                           className="review_img"
                         />
                       </Nav.Link>
-                      <div className="d-flex justify-content-between align-items-center mt-2">
+
+
+                      <div className="d-flex justify-content-between align-content-center mt-1 me-4 ms-4">
+
                         <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                         <span style={{ fontSize: '12px' }}>
                           평점: {object.rating}
                         </span>
                       </div>
+
+                      <div
+                        className="club_name d-flex align-content-center"
+                        style={{
+                          fontSize: '14px',
+                        }}
+                      >
+                        {completedMeetings[0].name}
+                      </div>
+
                     </div>
                   ))}
                 </div>
@@ -217,7 +299,9 @@ function GroupDetail() {
         </div>
 
         <div>
-          <h4>환불 규정</h4>
+          <p className="group_span" style={{ fontSize: '30px' }}>
+            환불 규정
+          </p>
           <table className="table table-bordered">
             <thead>
               <tr>
@@ -242,7 +326,9 @@ function GroupDetail() {
           </table>
         </div>
         <div>
-          <h4>이런 모임은 어때요?</h4>
+          <p className="group_span" style={{ fontSize: '30px' }}>
+            이런 모임은 어때요?
+          </p>
           <div className="cards">
             <div className="card" style={{ width: '18rem' }}>
               <img
@@ -285,22 +371,57 @@ function GroupDetail() {
             </div>
           </div>
         </div>
+        {/* 권한별 버튼 */}
         <div className="button">
-          <button>
-            <FontAwesomeIcon icon={faHeart} />
-            &nbsp;찜하기
-          </button>
-          <button
-            onClick={() => {
-              fetch('http://localhost:8080/멤버업데이트?', {
-                method: 'post',
-                body: Form,
-              });
-            }}
-          >
-            참가 신청하기
-          </button>
+
+          {/* 비회원 권한일 때 */}
+          {userRole === 'member' && (
+            <>
+              <button
+                onClick={() => {
+                  fetch('http://localhost:8080/member/statusUpdate', {
+                    method: 'post',
+                    body: Form,
+                  });
+                }}
+              >
+                <FontAwesomeIcon icon={faHeart} />
+                &nbsp;찜하기
+              </button>
+              <button
+                onClick={() => {
+                  fetch('http://localhost:8080/member/statusUpdate', {
+                    method: 'post',
+                    body: Form,
+                  });
+                }}
+              >
+                참가 신청하기
+              </button>
+            </>
+          )}
+
+          {/* 모임멤버 권한일 때 */}
+          {userRole === 'group_member' && (
+            <button onClick={() => setModalShow(true)}>
+              <FontAwesomeIcon icon={faComments} />
+              &nbsp;모임 채팅 참여하기
+            </button>
+          )}
+
+          {/* 모임장 권한일 때 */}
+          {userRole === 'group_leader' && (
+            <>
+              <button onClick={() => setModalShow(true)}>
+                <FontAwesomeIcon icon={faComments} />
+                &nbsp;모임 채팅 참여하기
+              </button>
+              <button onClick={handleButtonClick}>&nbsp;모임 관리하기</button>
+            </>
+          )}
         </div>
+
+        <ChatRoom show={modalShow} onHide={() => setModalShow(false)} />
       </div>
     </Container>
   );

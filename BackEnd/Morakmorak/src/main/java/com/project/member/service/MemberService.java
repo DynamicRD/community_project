@@ -4,11 +4,13 @@ import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
 
 public interface MemberService {
-	public boolean duplicateCheck(Member member);
+	boolean duplicateCheck(Member member);
 
-	public boolean nickDuplicateCheck(Member member);
+	boolean nickDuplicateCheck(Member member);
 
-	public void register(MemberDTO memberDTO);
+	void register(MemberDTO memberDTO);
+	
+	boolean phoneDuplicateCheck(MemberDTO memberDTO);
 
 	Member getUserByIdAndProvider(Member member);// 아이디 ,provider로 유저정보 가져오
 

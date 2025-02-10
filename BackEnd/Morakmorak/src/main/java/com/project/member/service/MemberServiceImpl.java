@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 		// 비밀번호 암호화
 		String rawPassword = memberDTO.getPass(); // 원래 비밀번호
 		String encryptedPassword = encoder.encode(rawPassword);
-
+		System.out.println(encryptedPassword);
 		member.setPw(encryptedPassword);
 		member.setNickname(memberDTO.getNickname());
 		member.setName(memberDTO.getName());
@@ -53,7 +53,15 @@ public class MemberServiceImpl implements MemberService {
 		member.setAddr2(memberDTO.getAddress02());
 		mapper.register(member);
 	}
-
+	
+	@Override
+	public boolean phoneDuplicateCheck(MemberDTO memberDTO) {
+		Member member = new Member();
+		member.setPhone(memberDTO.getPhone1() + memberDTO.getPhone2() + memberDTO.getPhone3());
+		int count = mapper.phoneDuplicateCheck(member);
+		return count > 0;
+	}
+	
 	@Override
 	public Member loginCheck(Member member) {
 		String savedPass = mapper.passCompare(member);
@@ -114,4 +122,6 @@ public class MemberServiceImpl implements MemberService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 }

@@ -14,4 +14,6 @@ public interface MemberMapper {
 	public Member loginCheck(Member member);
 	
 	public String passCompare(Member member);
+	
+	public int phoneDuplicateCheck(Member member);
 }
