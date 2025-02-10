@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.member.mapper.MemberMapper">
+    <select id="idDuplicateCheck" resultType="int">
+        SELECT COUNT(*) 
+        FROM member 
+        WHERE id = #{id}
+    </select>
+    <select id="nickDuplicateCheck" resultType="int">
+        SELECT COUNT(*) 
+        FROM member 
+        WHERE nickname = #{nickname}
+    </select>
+ <!-- 회원 정보 저장 -->
+    <insert id="register" parameterType="com.project.member.model.Member">
+        INSERT INTO member (
+            no,id, pw, email, phone, name, nickname, 
+            birth, gender, zip_code, addr1, addr2
+        ) VALUES (
+            member_seq.nextval,#{id}, #{pw}, #{email}, #{phone}, #{name}, #{nickname}, 
+            TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1}, #{addr2}
+        )
+    </insert>
+    <!-- 아이디, 제공자, 비밀번호를 토대로 로그인 확인-->
+	<select id="loginCheck" parameterType="com.project.member.model.Member" resultType="com.project.member.model.Member">
+		SELECT *
+		FROM Member
+		WHERE ID = #{id} AND PROVIDER = #{provider} 
+	</select>
+	    <select id="passCompare" resultType="String">
+        SELECT pw 
+        FROM member 
+        WHERE id = #{id}
+    </select>
+</mapper>
