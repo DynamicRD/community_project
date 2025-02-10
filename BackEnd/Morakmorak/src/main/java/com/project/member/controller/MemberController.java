@@ -78,6 +78,21 @@ public class MemberController {
     }
     
  // 로그인 처리
+    @PostMapping("/phoneduplicatecheck")
+    public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberDTO memberDTO) {
+    	Map<String, Boolean> response = new HashMap<>();
+    	
+ 
+    	if(service.phoneDuplicateCheck(memberDTO)) {
+    		response.put("isPhoneDuplicate", true);
+    	}else {
+    		response.put("isPhoneDuplicate", false);
+    	}
+    	
+    	return response;
+    	
+    }
+    
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@RequestBody Member member, HttpServletResponse response) {
         

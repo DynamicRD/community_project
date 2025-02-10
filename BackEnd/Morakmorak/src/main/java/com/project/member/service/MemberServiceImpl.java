@@ -53,7 +53,15 @@ public class MemberServiceImpl implements MemberService {
 		member.setAddr2(memberDTO.getAddress02());
 		mapper.register(member);
 	}
-
+	
+	@Override
+	public boolean phoneDuplicateCheck(MemberDTO memberDTO) {
+		Member member = new Member();
+		member.setPhone(memberDTO.getPhone1() + memberDTO.getPhone2() + memberDTO.getPhone3());
+		int count = mapper.phoneDuplicateCheck(member);
+		return count > 0;
+	}
+	
 	@Override
 	public Member loginCheck(Member member) {
 		String savedPass = mapper.passCompare(member);
@@ -114,4 +122,6 @@ public class MemberServiceImpl implements MemberService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	
 }
