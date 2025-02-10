@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './GroupList.css';
 import { Col, Container, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
@@ -17,6 +17,10 @@ function GroupList({ type }) {
         g_title: 'Title 1',
         comment1: 'Comment 1',
         img_url: '/images/card01.png',
+        category: 'culture',
+        area: 'seoul',
+        reg_date: '2025-02-01',
+        star: 4,
       },
     },
     {
@@ -25,6 +29,10 @@ function GroupList({ type }) {
         g_title: 'Title 2',
         comment1: 'Comment 2',
         img_url: '/images/slide01.png',
+        category: 'food',
+        area: 'gyeong-gi',
+        reg_date: '2025-01-15',
+        star: 5,
       },
     },
     {
@@ -33,6 +41,10 @@ function GroupList({ type }) {
         g_title: 'Title 3',
         comment1: 'Comment 3',
         img_url: '/images/card01.png',
+        category: 'hobby',
+        area: 'incheon',
+        reg_date: '2025-01-20',
+        star: 3,
       },
     },
     {
@@ -40,6 +52,10 @@ function GroupList({ type }) {
         g_id: '4',
         g_title: 'Title 4',
         comment1: 'Comment 4',
+        category: 'travel',
+        area: 'gangwon',
+        reg_date: '2025-01-25',
+        star: 2,
       },
     },
     {
@@ -47,6 +63,10 @@ function GroupList({ type }) {
         g_id: '5',
         g_title: 'Title 5',
         comment1: 'Comment 4',
+        category: 'edu',
+        area: 'chungcheong',
+        reg_date: '2025-01-10',
+        star: 1,
       },
     },
     {
@@ -54,6 +74,10 @@ function GroupList({ type }) {
         g_id: '6',
         g_title: 'Title 6',
         comment1: 'Comment 4',
+        category: 'culture',
+        area: 'jeolla',
+        reg_date: '2025-01-05',
+        star: 4,
       },
     },
     {
@@ -61,6 +85,10 @@ function GroupList({ type }) {
         g_id: '7',
         g_title: 'Title 7',
         comment1: 'Comment 4',
+        category: 'food',
+        area: 'gyeongsang',
+        reg_date: '2025-01-30',
+        star: 5,
       },
     },
     {
@@ -68,6 +96,10 @@ function GroupList({ type }) {
         g_id: '8',
         g_title: 'Title 8',
         comment1: 'Comment 4',
+        category: 'hobby',
+        area: 'jeju',
+        reg_date: '2025-01-28',
+        star: 3,
       },
     },
     {
@@ -75,6 +107,10 @@ function GroupList({ type }) {
         g_id: '9',
         g_title: 'Title 9',
         comment1: 'Comment 4',
+        category: 'travel',
+        area: 'seoul',
+        reg_date: '2025-01-18',
+        star: 2,
       },
     },
   ];
@@ -83,6 +119,30 @@ function GroupList({ type }) {
   const [open, setOpen] = useState(false);
   const [rdo, setRdo] = useState([]);
   const [rdo2, setRdo2] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filteredItems, setFilteredItems] = useState(items);
+  const [selectOpt, setSelectOpt] = useState('latest');
+
+  useEffect(() => {
+    const filtered = items.filter(({ groupList }) => {
+      const categoryMatch = rdo.length === 0 || rdo.includes(groupList.category);
+      const areaMatch = rdo2.length === 0 || rdo2.includes(groupList.area);
+      const titleMatch = groupList.g_title.toLowerCase().includes(searchTerm.toLowerCase());
+      return categoryMatch && areaMatch && titleMatch;
+    });
+    setFilteredItems(filtered);
+  }, [rdo, rdo2]);
+
+  useEffect(() => {
+    let sortedItems = [...filteredItems];
+    if (selectOpt === 'latest') {
+      sortedItems.sort((a, b) => new Date(b.groupList.reg_date) - new Date(a.groupList.reg_date));
+    } else if (selectOpt === 'grade') {
+      sortedItems.sort((a, b) => b.groupList.star - a.groupList.star);
+    }
+    setFilteredItems(sortedItems);
+  }, [selectOpt]);
+
   const handelCategoryChange = (e) => {
     const { value, checked } = e.target;
 
@@ -95,6 +155,7 @@ function GroupList({ type }) {
     console.log('category change');
     console.log(rdo);
   };
+
   const handelAreaChange = (e) => {
     const { value, checked } = e.target;
 
@@ -107,11 +168,20 @@ function GroupList({ type }) {
     console.log(rdo2);
   };
 
-  // 정렬기능
-  const [selectOpt, setSelectOpt] = useState();
   const handelSelectChange = (e) => {
     setSelectOpt(e.target.value);
     console.log(selectOpt);
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    const filtered = items.filter(({ groupList }) => {
+      const categoryMatch = rdo.length === 0 || rdo.includes(groupList.category);
+      const areaMatch = rdo2.length === 0 || rdo2.includes(groupList.area);
+      const titleMatch = groupList.g_title.toLowerCase().includes(searchTerm.toLowerCase());
+      return categoryMatch && areaMatch && titleMatch;
+    });
+    setFilteredItems(filtered);
   };
 
   return (
@@ -126,15 +196,6 @@ function GroupList({ type }) {
       </Link>
       <Container>
         <div className="group_list">
-          {/* <Row className="justify-content-center banner">
-          <Col md={8} className="text-center">
-            <h1>모임 개설하러가기</h1>
-            <p>여기서 새로운 모임을 개설하고, 사람들을 초대해 보세요!</p>
-            <Button size="lg" href="/create-meeting">
-              모임 개설하러가기
-            </Button>
-          </Col>
-        </Row> */}
           <h1 className="p-2">
             {type === 'regular' ? `정기모임` : '동행ㆍ소모임'}
           </h1>
@@ -145,15 +206,8 @@ function GroupList({ type }) {
               aria-controls="example-collapse-text"
               aria-expanded={open}
             >
-              filter
+              <i className="bi bi-funnel-fill"></i>Filter
             </button>
-            {/* <Button className='btn1'
-            onClick={() => setOpen(!open)}
-            aria-controls="example-collapse-text"
-            aria-expanded={open}
-          >
-            Filter
-          </Button> */}
             <Collapse in={open} className="mt-2">
               <div id="example-collapse-text">
                 <h5>카테고리</h5>
@@ -193,18 +247,15 @@ function GroupList({ type }) {
           </div>
           <div className="d-flex justify-content-between">
             <div>
-              <form>
+              <form onSubmit={handleSearch}>
                 <input
                   type="text"
                   placeholder="검색어를 입력하세요"
                   className="m-2"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                 />
-                <button
-                  className="btn1"
-                  onClick={() => {
-                    // getList(`http://localhost:8080/group/list?type={type}$category=${rdo}&area=${rdo2}`);
-                  }}
-                >
+                <button className="btn1" type="submit">
                   search
                 </button>
               </form>
@@ -217,13 +268,15 @@ function GroupList({ type }) {
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-              {items.map(({ groupList }) => (
+              {filteredItems.map(({ groupList }) => (
                 <GroupItem
                   g_id={groupList.g_id}
                   g_title={groupList.g_title}
                   img_url={groupList.img_url}
                   comment1={groupList.comment1}
                   start_date={groupList.start_date}
+                  reg_date={groupList.reg_date}
+                  star={groupList.star}
                   key={groupList.g_id}
                 />
               ))}

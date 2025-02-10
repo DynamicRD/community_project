@@ -8,6 +8,7 @@ import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
 
+import MyPage from './mypage/mypage';
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
@@ -28,8 +29,6 @@ import GroupUpdate from './group/GroupUpdate';
 import GroupManage from './group/GroupManagement';
 import GroupManagement from './group/GroupManagement';
 
-import MyPage from './mypage/MyPage';
-import ChatRoom from './chatroom/chatroom';
 import Announcements_notice from './announcements/Announcements_notice';
 import Announcements_faq from './announcements/Announcements_faq';
 import Announcements_notice_read from './announcements/Announcements_notice_read';
@@ -38,6 +37,7 @@ import Test from './login/Test';
 
 import { ContactUs } from './review/test';
 import GoogleSignup from './login/GoogleSignup';
+import ChatRoom from './chatroom/Chatroom';
 
 const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
@@ -151,12 +151,10 @@ function App() {
         <Navbar />
         <Routes>
           {/* 모임페이지-해원 */}
-          <Route path="/group/detail" element={<GroupDetail />} />
-          <Route
-            path="/group/regular_list"
-            element={<GroupList type={'regular'} />}
-          />
-          <Route path="/group/one_list" element={<GroupList type={'one'} />} />
+
+          <Route path="/group/detail" element={<GroupDetail reviewData={[...reviewData]}/>} />
+          <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
+          <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
           <Route path="/group/management" element={<GroupManagement />} />
@@ -184,11 +182,7 @@ function App() {
 
           <Route path="/test" element={<Test />} />
 
-          {/* 모임페이지-해원 */}
-          <Route path="/group/detail" element={<GroupDetail />} />
-          <Route path="/group/list" element={<GroupList />} />
-          <Route path="/group/regist" element={<GroupRegist />} />
-          <Route path="/testFile" element={<ContactUs />} />
+          
 
           {/* 리뷰게시판 - 문정배*/}
           <Route
