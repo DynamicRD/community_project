@@ -12,6 +12,11 @@
         FROM member 
         WHERE nickname = #{nickname}
     </select>
+    <select id="phoneDuplicateCheck" resultType="int">
+        SELECT COUNT(*) 
+        FROM member 
+        WHERE phone = #{phone}
+    </select>
  <!-- 회원 정보 저장 -->
     <insert id="register" parameterType="com.project.member.model.Member">
         INSERT INTO member (

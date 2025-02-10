@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form';
 
 export default function GroupUpdate() {
   const [open, setOpen] = useState(false);
-
   const {g_title,setG_title} = useState();
   const {type,setType} = useState();
   const {category,setCategory} = useState();
@@ -40,7 +39,7 @@ export default function GroupUpdate() {
                 <Form.Select
                   aria-label="Default select example"
                   className="w-50"
-                  value={type}
+                  defaultValue={type}
                   onChange={(e) => setType(e.target.value)} 
                 >
                   <option value="regular">정기모임</option>
@@ -50,7 +49,7 @@ export default function GroupUpdate() {
                 <Form.Select
                   aria-label="Default select example"
                   className="w-50"
-                  value={category}
+                  defaultValue={category}
                   onChange={(e) => setCategory(e.target.value)} 
                 >
                   <option value="culture">문화/예술</option>
@@ -67,24 +66,24 @@ export default function GroupUpdate() {
                     <Form.Control
                       type="number"
                       className="w-50"
-                      value={user_max}
+                      defaultValue={user_max}
                       onChange={(e) => setUser_max(e.target.value)} 
                     />
                   </div>
                   <div className="mt-3">
                     <Form.Label>인당 비용</Form.Label>
                     <Form.Control type="number" className="w-75" ref={price} 
-                    value={price} onChange={(e) => setPrice(e.target.value)}/>
+                    defaultValue={price} onChange={(e) => setPrice(e.target.value)}/>
                   </div>
                 </div>
                 <div className="d-flex flex-row mt-3">
                   <div className="me-5">
                     <Form.Label>모임시작일</Form.Label>
-                    <Form.Control type="datetime-local" ref={start_date} value={start_date} onChange={(e) => setStart_date(e.target.value)}/>
+                    <Form.Control type="datetime-local" ref={start_date} defaultValue={start_date} onChange={(e) => setStart_date(e.target.value)}/>
                   </div>
                   <div>
                     <Form.Label>모임종료일</Form.Label>
-                    <Form.Control type="datetime-local" ref={last_date} value={last_date} onChange={(e) => setLast_date(e.target.value)}/>
+                    <Form.Control type="datetime-local" ref={last_date} defaultValue={last_date} onChange={(e) => setLast_date(e.target.value)}/>
                   </div>
                 </div>
                 {/* 주소 입력 */}
@@ -93,7 +92,7 @@ export default function GroupUpdate() {
                     모임주소
                   </Form.Label>
                   <Col sm={5}>
-                    <Form.Control type="text" value={address} onChange={(e) => setAddress(e.target.value)} size="50" />
+                    <Form.Control type="text" defaultValue={address} onChange={(e) => setAddress(e.target.value)} size="50" />
                   </Col>
                   <Col sm={5}>
                   {/* 버튼 클릭하면 지도 api */}
@@ -128,7 +127,7 @@ export default function GroupUpdate() {
                     상세주소
                   </Form.Label>
                   <Col sm={10}>
-                    <Form.Control type="text" ref={detail_address} size="30" value={detail_address} onChange={(e) => setDetail_address(e.target.value)}/>
+                    <Form.Control type="text" ref={detail_address} size="30" defaultValue={detail_address} onChange={(e) => setDetail_address(e.target.value)}/>
                   </Col>
                 </Form.Group>
               </Form.Group>
@@ -137,9 +136,9 @@ export default function GroupUpdate() {
                 controlId="exampleForm.ControlTextarea1"
               >
                 <Form.Label className="mt-3">모임장 한마디</Form.Label>
-                <Form.Control as="textarea" rows={3} value={comment1} onChange={(e) => setComment1(e.target.value)} />
+                <Form.Control as="textarea" rows={3} defaultValue={comment1} onChange={(e) => setComment1(e.target.value)} />
                 <Form.Label className="mt-3">모임 소개글</Form.Label>
-                <Form.Control as="textarea" rows={5} value={comment2} onChange={(e) => setComment2(e.target.value)} />
+                <Form.Control as="textarea" rows={5} defaultValue={comment2} onChange={(e) => setComment2(e.target.value)} />
               </Form.Group>
             </Form>
 
@@ -147,7 +146,7 @@ export default function GroupUpdate() {
               <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
                   <p>모임 대표 이미지 등록</p>
-                  <input type="file" value={img_url} onChange={(e) => setImg_url(e.target.value)}/>
+                  <input type="file" defaultValue={img_url} onChange={(e) => setImg_url(e.target.value)}/>
                 </div>
                 <div>
                   <Button

@@ -17,6 +17,7 @@ export default function Signup() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
   const [isIdAvailable, setIsIdAvailable] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
+  const [isPhoneDuplicateChecked, setIsPhoneDuplicateChecked] = useState(false);
   const [isPhoneChecked, setIsPhoneChecked] = useState(false);
   const handleDuplicateCheck = () => {
     const { id } = formData; // 현재 입력된 아이디 가져오기
@@ -136,6 +137,7 @@ export default function Signup() {
     // 전화번호 입력값 변경 시 인증 상태 초기화
     if (name === 'phone1' || name === 'phone2' || name === 'phone3') {
       setIsPhoneChecked(false);
+      setIsPhoneDuplicateChecked(false);
     }
     validateField(name, value); // 입력 시 바로 검증
   };
@@ -297,7 +299,13 @@ export default function Signup() {
     console.log(isIdAvailable);
     console.log(isPhoneChecked);
 
-    if (isValid && isNicknameAvailable && isIdAvailable && isPhoneChecked) {
+    if (
+      isValid &&
+      isNicknameAvailable &&
+      isIdAvailable &&
+      isPhoneChecked &&
+      isPhoneDuplicateChecked
+    ) {
       try {
         const response = await fetch('http://localhost:8080/member/register', {
           method: 'POST',
@@ -323,6 +331,8 @@ export default function Signup() {
       alert('아이디와 닉네임 중복체크를 해주세요.');
     } else if (!isPhoneChecked) {
       alert('전화번호 인증을 해주세요.');
+    } else if (!isPhoneDuplicateChecked) {
+      alert('중복된 전화번호입니다.');
     } else {
       alert('조건이 위배되어 회원가입에 실패하였습니다.');
     }
@@ -514,17 +524,42 @@ export default function Signup() {
                   style={{
                     width: '270px',
                   }}
-                  onClick={() => {
+                  onClick={async () => {
                     const form = new FormData();
                     form.append('number1', formData.phone1);
                     form.append('number2', formData.phone2);
                     form.append('number3', formData.phone3);
-                    fetch('http://localhost:8080/send-one', {
-                      method: 'post',
-                      body: form,
-                    }).then(() => {
-                      alert('인증번호가 발송 되었습니다');
-                    });
+
+                    try {
+                      const response = await fetch(
+                        'http://localhost:8080/member/phoneduplicatecheck',
+                        {
+                          method: 'POST',
+                          headers: {
+                            'Content-Type': 'application/json',
+                          },
+                          body: JSON.stringify(formData), // formData를 JSON으로 변환하여 전송
+                        }
+                      )
+                        .then((response) => response.json()) // JSON 응답 처리
+                        .then((data) => {
+                          if (data.isPhoneDuplicate) {
+                            setIsIdAvailable(false);
+                            alert('중복된 전화번호입니다.');
+                          } else {
+                            setIsIdAvailable(true);
+                            fetch('http://localhost:8080/send-one', {
+                              method: 'post',
+                              body: form,
+                            }).then(() => {
+                              alert('인증번호가 발송 되었습니다');
+                            });
+                          }
+                        });
+                    } catch (error) {
+                      console.error('회원가입 오류:', error);
+                      alert('서버와의 통신 중 오류가 발생했습니다.');
+                    }
                   }}
                 >
                   <span
