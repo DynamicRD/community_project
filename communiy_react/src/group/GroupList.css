@@ -8,6 +8,7 @@ Link{
 }
 
 .group_list {
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px;
   border-radius: 10px;
   padding: 50px 30px;
 }
@@ -59,11 +60,11 @@ Link{
 
 .group_list .page-item .page-link {
   color: #fff; /* 텍스트 색상 */
-  background-color: #FF2D00; /* 기본 배경색 */
+  background-color: #ff2d00; /* 기본 배경색 */
 }
 
 .group_list .pagination .page-item.active .page-link {
-  background-color: #FF2D00; /* 활성 페이지 배경색 */
+  background-color: #ff2d00; /* 활성 페이지 배경색 */
   color: white; /* 활성 페이지 텍스트 색상 */
 }
 
@@ -76,7 +77,9 @@ Link{
   color: #6c757d; /* 비활성 페이지 텍스트 색상 */
   background-color: #e9ecef; /* 비활성 페이지 배경색 */
   border-color: #ddd; /* 비활성 페이지 테두리 색상 */
+
 }
+
 
 .group_span {
   font-family: 'Freesentation-9Black';
@@ -89,4 +92,5 @@ Link{
   font-weight: 800;
   font-style: normal;
 }
+
 

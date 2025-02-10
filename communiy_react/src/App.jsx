@@ -8,6 +8,7 @@ import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
 
+import MyPage from './mypage/mypage';
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
@@ -28,8 +29,6 @@ import GroupUpdate from './group/GroupUpdate';
 import GroupManage from './group/GroupManagement';
 import GroupManagement from './group/GroupManagement';
 
-
-import MyPage from './mypage/MyPage';
 import Announcements_notice from './announcements/Announcements_notice';
 import Announcements_faq from './announcements/Announcements_faq';
 import Announcements_notice_read from './announcements/Announcements_notice_read';
@@ -40,12 +39,10 @@ import { ContactUs } from './review/test';
 import GoogleSignup from './login/GoogleSignup';
 import ChatRoom from './chatroom/Chatroom';
 
-
 const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
   today.getMonth() + 1
 }월 ${today.getDate()}일`;
-
 
 const reviewList = [
   {
@@ -55,7 +52,7 @@ const reviewList = [
     img: '/images/review1.png',
     content:
       '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-    rating: 2,
+    rating: 0,
     tag: 'culture',
   },
   {
@@ -65,7 +62,7 @@ const reviewList = [
     img: '/images/review1.png',
     content:
       '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-    rating: 2,
+    rating: 1,
     tag: 'culture2',
   },
   {
@@ -85,7 +82,7 @@ const reviewList = [
     img: '/images/review1.png',
     content:
       '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...4',
-    rating: 2,
+    rating: 3,
     tag: 'culture4',
   },
   {
@@ -95,7 +92,7 @@ const reviewList = [
     img: '/images/review1.png',
     content:
       '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...5',
-    rating: 2,
+    rating: 4,
     tag: 'culture5',
   },
   {
@@ -105,7 +102,7 @@ const reviewList = [
     img: '/images/review1.png',
     content:
       '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...6',
-    rating: 2,
+    rating: 5,
     tag: 'culture6',
   },
 ];
@@ -153,16 +150,14 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-
-
           {/* 모임페이지-해원 */}
+
           <Route path="/group/detail" element={<GroupDetail reviewData={[...reviewData]}/>} />
           <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
           <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
           <Route path="/group/management" element={<GroupManagement />} />
-
 
           {/*메인페이지-신하윤*/}
           <Route path="/" element={<Home />} />
