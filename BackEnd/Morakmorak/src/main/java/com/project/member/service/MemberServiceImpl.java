@@ -39,7 +39,7 @@ public class MemberServiceImpl implements MemberService {
 		// 비밀번호 암호화
 		String rawPassword = memberDTO.getPass(); // 원래 비밀번호
 		String encryptedPassword = encoder.encode(rawPassword);
-
+		System.out.println(encryptedPassword);
 		member.setPw(encryptedPassword);
 		member.setNickname(memberDTO.getNickname());
 		member.setName(memberDTO.getName());
