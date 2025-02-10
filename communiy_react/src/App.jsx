@@ -8,7 +8,6 @@ import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
 
-
 import MyPage from './mypage/mypage';
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
@@ -30,7 +29,6 @@ import GroupUpdate from './group/GroupUpdate';
 import GroupManage from './group/GroupManagement';
 import GroupManagement from './group/GroupManagement';
 
-import MyPage from './mypage/MyPage';
 import ChatRoom from './chatroom/chatroom';
 import Announcements_notice from './announcements/Announcements_notice';
 import Announcements_faq from './announcements/Announcements_faq';
