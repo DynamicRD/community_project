@@ -1,0 +1,93 @@
+.review_header {
+  margin-top: 50px;
+  position: relative;
+  width: 85%;
+  margin-left: 120px;
+}
+
+.review_title {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+}
+
+.review_writer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.review_image {
+  width: 60%;
+}
+
+.reviewBoardLink {
+  display: black;
+  font-size: 13px;
+  width: 80px;
+  color: rgba(0, 0, 0, 0.5);
+}
+.reviewBoardLink:hover {
+  color: black;
+  font-size: 13px;
+}
+
+.review_main {
+  width: 70%;
+}
+
+.review_content > .review_p {
+  font-size: 13px;
+}
+
+.review_list {
+  position: relative;
+  text-align: start;
+  margin: 20px 0;
+  font-size: 13px;
+  width: 75px;
+}
+
+.review_list span {
+  margin: 0 10px;
+  padding: 7px 13px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.review_list span:hover {
+  background-color: #f8f9fa;
+}
+
+.review_regist_commenet {
+  width: 8%;
+  margin-top: 20px;
+  position: relative;
+  font-size: 13px;
+}
+
+.review_regist_commenet span {
+  margin-left: 10px;
+  padding: 7px 13px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.review_regist_commenet span:hover {
+  background-color: #f8f9fa;
+}
+
+#review_date {
+  font-size: 10px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
+.register_btn {
+  position: relative;
+  right: 10px;
+}
+
+.reply_hr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
