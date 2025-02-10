@@ -54,7 +54,7 @@ export default function MyAmountCharge() {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 mb-5 w-25">
       <h2>포인트 충전하기</h2>
 
       {/* 금액 입력 */}
