@@ -1,6 +1,5 @@
 import React from 'react';
 import { Container, Nav } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import Pagination from 'react-bootstrap/Pagination';
 
 import './Review.css';
@@ -15,6 +14,45 @@ export default function Review({ reviewData }) {
     );
   }
 
+  const completedMeetings = [
+    {
+      name: '테크 세미나',
+      date: '2025-01-10',
+      endDate: '2025-01-10',
+      role: '참석자',
+      cost: '₩ 30,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+  ];
+
+  const getStarImages = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(i <= rating ? '/images/star.png' : '/images/emptyStar.png'); // 채워진 별과 비어 있는 별을 나눔
+    }
+    return stars;
+  };
+
   // Group reviews into sets of 3 items per row
   const groupedReviews = [];
   for (let i = 0; i < reviewData.length; i += 3) {
@@ -24,15 +62,31 @@ export default function Review({ reviewData }) {
   return (
     <>
       <Container>
-        <div className="review_board mt-5">
+        <div className=" d-flex m-5">
+          <span
+            className="nav_notice"
+            style={{ fontSize: '33px', marginLeft: '65px' }}
+          >
+            모임 후기
+          </span>
+        </div>
+        <div className="review_board mt-4">
           <ul id="board_list" className="list-unstyled">
             {groupedReviews.map((group, index) => (
               <div
-                className="d-flex justify-content-start gap-3 mb-4"
+                className="d-flex justify-content-start gap-5 mb-4"
                 key={index}
               >
                 {group.map((object) => (
                   <div className="review_item" key={object.no}>
+                    <div
+                      className="club_name d-flex align-content-cetner ms-4 mb-1"
+                      style={{
+                        fontSize: '14px',
+                      }}
+                    >
+                      {completedMeetings[0].name}
+                    </div>
                     <Nav.Link href="/review/Read">
                       <img
                         src={object.img}
@@ -40,10 +94,19 @@ export default function Review({ reviewData }) {
                         className="review_img"
                       />
                     </Nav.Link>
-                    <div className="d-flex justify-content-between align-items-center mt-2">
+
+                    <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
                       <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                       <span style={{ fontSize: '12px' }}>
-                        평점: {object.rating}
+                        평점&nbsp;:&nbsp;
+                        {getStarImages(object.rating).map((star, index) => (
+                          <img
+                            key={index}
+                            src={star}
+                            alt="star"
+                            className="star"
+                          />
+                        ))}
                       </span>
                     </div>
                   </div>
@@ -53,10 +116,10 @@ export default function Review({ reviewData }) {
           </ul>
         </div>
       </Container>
-      <Container className="mb-5">
-        <div className="d-flex justify-content-center align-items-center">
+      <Container>
+        <div className="d-flex justify-content-center align-content-center mb-3">
           <Pagination size="sm">{item}</Pagination>
-          <Nav.Link href="/review/Regist" className="reviewRegist">
+          <Nav.Link href="/mypage/reviews" className="reviewRegist">
             <span>작성 하기</span>
           </Nav.Link>
         </div>

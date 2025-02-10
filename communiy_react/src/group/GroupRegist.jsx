@@ -1,17 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './GroupRegist.css';
-import {
-  Button,
-  Col,
-  Container,
-  FormControl,
-  InputGroup,
-  Row,
-} from 'react-bootstrap';
+import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
+import GoogleMap from './component/GoogleMap';
 
 export default function GroupRegist() {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const g_title = useRef();
@@ -21,11 +16,16 @@ export default function GroupRegist() {
   const price = useRef();
   const address = useRef();
   const detail_address = useRef();
+  const lat = useRef();
+  const alt = useRef();
   const start_date = useRef();
   const last_date = useRef();
   const comment1 = useRef();
   const comment2 = useRef();
   const img_url = useRef();
+
+  // const { address, setAddress } = useState();
+  // const { detail_address, SetDetail_address } = useState();
 
   // 버튼 클릭 시 AddressInput 활성화/비활성화
   // const handleButtonClick = () => {
@@ -35,7 +35,7 @@ export default function GroupRegist() {
 
   return (
     <Container>
-      <div className="group_registe">
+      <div className="group_regist">
         <div className="board">
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
@@ -88,11 +88,11 @@ export default function GroupRegist() {
                 <div className="d-flex flex-row mt-3">
                   <div className="me-5">
                     <Form.Label>모임시작일</Form.Label>
-                    <Form.Control type="date" ref={start_date} />
+                    <Form.Control type="datetime-local" ref={start_date} />
                   </div>
                   <div>
                     <Form.Label>모임종료일</Form.Label>
-                    <Form.Control type="date" ref={last_date} />
+                    <Form.Control type="datetime-local" ref={last_date} />
                   </div>
                 </div>
                 {/* 주소 입력 */}
@@ -101,19 +101,41 @@ export default function GroupRegist() {
                     모임주소
                   </Form.Label>
                   <Col sm={5}>
-                    <Form.Control type="text" name="address01" size="50" />
+                    <Form.Control type="text" ref={address} size="50" placeholder='도로명주소 또는 건물이름 입력'/>
                   </Col>
                   <Col sm={5}>
-                    <Button>찾기</Button>
+                    <Button
+                      onClick={() => {
+                        // const mapForm = new FormData();
+                        // mapForm.append('address', address.current.value);
+                        // fetch('http://localhost:8080/group/map',{
+                        //   method:'post',
+                        //   body: mapForm,
+                        // }).then((response)=>{
+                        //    return response.json();
+                        setOpen(!open);
+                        // })
+                      }}
+                      aria-controls="example-collapse-text"
+                      aria-expanded={open}
+                    >
+                      찾기
+                    </Button>
                   </Col>
+                  <Collapse in={open}>
+                    <div>
+                      {/* map 리턴해서 받아오기 */}
+                      <GoogleMap/>
+                    </div>
+                  </Collapse>
                 </Form.Group>
                 {/* 상세주소 입력 */}
-                <Form.Group as={Row} >
+                <Form.Group as={Row}>
                   <Form.Label column sm={2}>
                     상세주소
                   </Form.Label>
                   <Col sm={10}>
-                    <Form.Control type="text" name="address02" size="30" />
+                    <Form.Control type="text" ref={detail_address} size="30" />
                   </Col>
                 </Form.Group>
               </Form.Group>
@@ -129,24 +151,42 @@ export default function GroupRegist() {
             </Form>
 
             <div className="register_body">
-              <div className="d-flex  justify-content-between">
+              <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
-                  <input type="file" className="file" />
+                  <p>모임 대표 이미지 등록</p>
+                  <input type="file" ref={img_url} />
                 </div>
                 <div>
                   <Button
                     className="register_btn ms-3 justify-content-end"
                     onClick={() => {
-                      const form = new FormData();
-                      // form.append('select', selectRef.current.value);
-                      // form.append('title', title.current.value);
-                      // form.append('content', content.current.value);
-                      fetch('http://localhost:8080/review/insert', {
-                        method: 'post',
-                        body: form,
-                      }).then(() => {
-                        navigate('/review/Home');
-                      });
+                      if (confirm('신청하시겠습니까?')) {
+                        const form = new FormData();
+                        form.append('g_title', g_title.current.value);
+                        form.append('type', type.current.value);
+                        form.append('category', category.current.value);
+                        form.append('user_max', user_max.current.value);
+                        form.append('price', price.current.value);
+                        form.append('address', address.current.value);
+                        form.append('detail_address', detail_address.current.value);
+                        form.append('lat', lat.current.value);
+                        form.append('alt', alt.current.value);
+                        form.append('start_date', start_date.current.value);
+                        form.append('last_date', last_date.current.value);
+                        form.append('comment1', comment1.current.value);
+                        form.append('comment2', comment2.current.value);
+                        if(img_url.current.files.length>0){
+                          form.append('img_url', img_url.current.files[0]);
+                        }
+                        fetch('http://localhost:8080/group/insert', {
+                          method: 'post',
+                          encType: 'multipart/form-data',
+                          body: form,
+                        }).then(() => {
+                          alert('신청이 완료되었습니다.');
+                          navigate('/group/list');
+                        });
+                      }
                     }}
                   >
                     신청하기
@@ -154,7 +194,8 @@ export default function GroupRegist() {
                   <Button
                     className="register_btn ms-3 justify-content-end"
                     onClick={() => {
-                      navigate('/group/list');
+                      history.go(-1);
+                      // navigate('/group/list');
                     }}
                   >
                     취소하기

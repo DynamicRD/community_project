@@ -11,6 +11,37 @@ export default function Regist() {
   const selectRef = useRef();
   const ratingRef = useRef();
 
+  const completedMeetings = [
+    {
+      name: '테크 세미나',
+      date: '2025-01-10',
+      endDate: '2025-01-10',
+      role: '참석자',
+      cost: '₩ 30,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+  ];
+
   return (
     <Container>
       <div className="review_register">
@@ -18,6 +49,11 @@ export default function Regist() {
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
               <b>리뷰 작성하기</b>
+              <div>
+                <span className="meetingsName">
+                  {completedMeetings[0].name}
+                </span>
+              </div>
             </p>
           </div>
           <HorizonLine />
@@ -37,25 +73,7 @@ export default function Regist() {
             </div>
             <div className="d-flex justify-content-between">
               <div>
-                <select
-                  name="category"
-                  id="review_review_category"
-                  ref={selectRef}
-                >
-                  <option value="culture">문화/예술</option>
-                  <option value="food">푸드/드링크</option>
-                  <option value="hobby">취미</option>
-                  <option value="travel">여행</option>
-                  <option value="edu">교육</option>
-                </select>
-              </div>
-              <div>
-                <select
-                  name="rating"
-                  id="review_rating"
-                  className="text-center"
-                  ref={ratingRef}
-                >
+                <select name="rating" id="review_rating" ref={ratingRef}>
                   <option value="0">☆☆☆☆☆</option>
                   <option value="1">★☆☆☆☆</option>
                   <option value="2">★★☆☆☆</option>
@@ -85,7 +103,7 @@ export default function Regist() {
                 </div>
                 <div>
                   <Button
-                    className="review_register_btn ms-3 justify-content-end"
+                    className="review_register_btn ms-3 justify-content-end me-2"
                     onClick={() => {
                       const form = new FormData();
                       form.append('category', selectRef.current.value);

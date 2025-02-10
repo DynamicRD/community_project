@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../mypage/MyInfoChange.css'; // 작성한 CSS 파일 임포트
 import {
@@ -15,6 +15,74 @@ import AddressInput from '../mypage/daumAPI/AddressInput';
 
 export default function Signup() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
+  const [isIdAvailable, setIsIdAvailable] = useState(false);
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState(false);
+  const [isPhoneChecked, setIsPhoneChecked] = useState(false);
+  const handleDuplicateCheck = () => {
+    const { id } = formData; // 현재 입력된 아이디 가져오기
+
+    // 아이디가 비어있는 경우
+    if (!id) {
+      alert('아이디를 입력해주세요.');
+      return;
+    }
+
+    // 서버에 아이디 중복 확인 요청
+    fetch(`http://localhost:8080/member/duplicatecheck?userId=${id}`, {
+      method: 'GET', // GET 방식으로 요청
+    })
+      .then((response) => response.json()) // JSON 응답 처리
+      .then((data) => {
+        if (data.isDuplicate) {
+          setIsIdAvailable(false);
+          alert('이미 존재하는 아이디입니다.');
+        } else {
+          setIsIdAvailable(true);
+          alert('사용 가능한 아이디입니다.');
+        }
+      })
+      .catch((error) => {
+        console.error('아이디 중복 확인 오류:', error);
+        alert('아이디 중복 확인에 실패했습니다. 다시 시도해주세요.');
+      });
+  };
+
+  const handleNickDuplicateCheck = () => {
+    const { nickname } = formData; // 현재 입력된 닉네임임
+
+    // 닉네임이 비어있는 경우
+    if (!nickname) {
+      alert('아이디를 입력해주세요.');
+      return;
+    }
+
+    // 서버에  닉네임이 중복 확인 요청
+    fetch(
+      `http://localhost:8080/member/nickduplicatecheck?nickname=${nickname}`,
+      {
+        method: 'GET', // GET 방식으로 요청
+      }
+    )
+      .then((response) => response.json()) // JSON 응답 처리
+      .then((data) => {
+        if (data.isDuplicate) {
+          setIsNicknameAvailable(false);
+          alert('이미 존재하는 닉네임입니다.');
+        } else {
+          setIsNicknameAvailable(true);
+          alert('사용 가능한 닉네임입니다.');
+        }
+      })
+      .catch((error) => {
+        console.error('닉네임 중복 확인 오류:', error);
+        alert('닉네임 중복 확인에 실패했습니다. 다시 시도해주세요.');
+      });
+  };
+
+  //인증번호 값 받는 Ref함수 추가
+  const valid = useRef();
+  const [randomNumber, setRandomNumber] = useState();
+
   const [formData, setFormData] = useState({
     id: '',
     nickname: '',
@@ -30,7 +98,8 @@ export default function Signup() {
     addcode: '',
     address01: '',
     address02: '',
-    pr: '',
+
+    valid: '',
   });
 
   const [errors, setErrors] = useState({
@@ -44,6 +113,7 @@ export default function Signup() {
     birth: '',
     email: '',
     addcode: '',
+    valid: '', // 인증번호 추가
   });
 
   const navigate = useNavigate();
@@ -54,6 +124,19 @@ export default function Signup() {
       ...formData,
       [name]: type === 'checkbox' ? checked : value,
     });
+    // 아이디 입력값이 변경될 경우 중복 체크 상태 초기화
+    if (name === 'id') {
+      setIsIdAvailable(false);
+    }
+
+    // 닉네임 입력값이 변경될 경우 중복 체크 상태 초기화
+    if (name === 'nickname') {
+      setIsNicknameAvailable(false);
+    }
+    // 전화번호 입력값 변경 시 인증 상태 초기화
+    if (name === 'phone1' || name === 'phone2' || name === 'phone3') {
+      setIsPhoneChecked(false);
+    }
     validateField(name, value); // 입력 시 바로 검증
   };
 
@@ -89,7 +172,6 @@ export default function Signup() {
       addcode: '',
       address01: '',
       address02: '',
-      pr: '',
     });
     setErrors({
       id: '',
@@ -121,10 +203,12 @@ export default function Signup() {
     birth: /^(19|20)\d{2}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/,
     email: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     addcode: /^[0-9]{5}$/,
+    valid: /^[0-9]{6}$/,
   };
 
   const validateField = (name, value) => {
     let errorMessage = '';
+    console.log(value + '' + name + '' + randomNumber);
     if (patterns[name]) {
       if (typeof patterns[name] === 'function') {
         errorMessage = !patterns[name](value)
@@ -166,6 +250,10 @@ export default function Signup() {
             case 'addcode':
               errorMessage = '우편번호는 5자리 숫자로 입력해주세요.';
               break;
+            case 'valid':
+              errorMessage = '인증번호는 6자리 숫자로 입력해주세요.';
+              break;
+
             default:
               errorMessage = '형식이 올바르지 않습니다.';
           }
@@ -183,10 +271,16 @@ export default function Signup() {
     let isValid = true;
     let newErrors = { ...errors };
 
+    // 폼 데이터에서 빈 값이 있는지 체크
     for (const field in formData) {
-      validateField(field, formData[field]);
-      if (errors[field]) {
+      if (formData[field] === '') {
         isValid = false;
+      } else {
+        // 기존의 패턴에 맞는 값인지 확인
+        validateField(field, formData[field]);
+        if (errors[field]) {
+          isValid = false;
+        }
       }
     }
 
@@ -194,21 +288,54 @@ export default function Signup() {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (validateForm()) {
-      console.log(formData);
-      window.alert('가입되었습니다.');
-      navigate('/');
+    // 유효성 검사
+    const isValid = validateForm();
+    console.log(isNicknameAvailable);
+    console.log(isIdAvailable);
+    console.log(isPhoneChecked);
+
+    if (isValid && isNicknameAvailable && isIdAvailable && isPhoneChecked) {
+      try {
+        const response = await fetch('http://localhost:8080/member/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData), // formData를 JSON으로 변환하여 전송
+        });
+
+        const data = await response.json(); // 서버 응답 받기
+
+        if (response.ok) {
+          alert('가입되었습니다.');
+          navigate('/');
+        } else {
+          alert(`회원가입 실패: ${data.message || '알 수 없는 오류'}`);
+        }
+      } catch (error) {
+        console.error('회원가입 오류:', error);
+        alert('서버와의 통신 중 오류가 발생했습니다.');
+      }
+    } else if (!isNicknameAvailable || !isIdAvailable) {
+      alert('아이디와 닉네임 중복체크를 해주세요.');
+    } else if (!isPhoneChecked) {
+      alert('전화번호 인증을 해주세요.');
     } else {
-      window.alert('조건이 위배되어 회원가입에 실패하였습니다.');
+      alert('조건이 위배되어 회원가입에 실패하였습니다.');
     }
   };
+
   // 버튼 클릭 시 AddressInput 활성화/비활성화
   const handleButtonClick = () => {
     setIsAddressInputVisible((prevState) => !prevState); // 상태를 반전시킴
   };
+
+  useEffect(() => {
+    console.log(randomNumber);
+  });
 
   return (
     <Container className="mt-5 mb-5 bg-light p-5">
@@ -230,7 +357,7 @@ export default function Signup() {
                 />
                 <Button
                   variant="outline-secondary"
-                  onClick={() => alert('중복 확인')}
+                  onClick={handleDuplicateCheck}
                 >
                   중복확인
                 </Button>
@@ -254,7 +381,7 @@ export default function Signup() {
                 />
                 <Button
                   variant="outline-secondary"
-                  onClick={() => alert('중복 확인')}
+                  onClick={handleNickDuplicateCheck}
                 >
                   중복확인
                 </Button>
@@ -381,7 +508,35 @@ export default function Signup() {
                   onChange={handleChange}
                   className="phone-input"
                 />
+                {/* 인증번호 전송 버튼 */}
+                <Button
+                  variant="outline-secondary"
+                  style={{
+                    width: '270px',
+                  }}
+                  onClick={() => {
+                    const form = new FormData();
+                    form.append('number1', formData.phone1);
+                    form.append('number2', formData.phone2);
+                    form.append('number3', formData.phone3);
+                    fetch('http://localhost:8080/send-one', {
+                      method: 'post',
+                      body: form,
+                    }).then(() => {
+                      alert('인증번호가 발송 되었습니다');
+                    });
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '15px',
+                    }}
+                  >
+                    인증번호발송
+                  </span>
+                </Button>
               </div>
+
               {errors.phone2 && (
                 <div className="text-danger">{errors.phone2}</div>
               )}
@@ -390,6 +545,44 @@ export default function Signup() {
               )}
             </Col>
           </Form.Group>
+
+          {/* 인증번호 체크 버튼 */}
+          <div>
+            <Form.Label column sm={2}>
+              인증번호입력
+            </Form.Label>
+            <input
+              type="text"
+              name="valid"
+              ref={valid}
+              className="validCode me-4"
+              style={{ width: '100px' }}
+              onChange={handleChange}
+            />
+            <Button
+              variant="outline-secondary"
+              onClick={() => {
+                fetch('http://localhost:8080/send-one/number')
+                  .then((response) => {
+                    return response.json();
+                  })
+                  .then((data) => {
+                    if (Number(valid.current.value) === data) {
+                      setIsPhoneChecked(true);
+                      alert('인증이 완료 되었습니다');
+                    } else {
+                      alert('인증에 실패하였습니다');
+                      valid.current.value = '';
+                      valid.current.focus();
+                    }
+                  });
+              }}
+            >
+              인증확인
+            </Button>
+            {errors.valid && <div className="text-danger">{errors.valid}</div>}
+            {errors.wrong && <div className="text-danger">{errors.wrong}</div>}
+          </div>
 
           {/* 생년월일 입력 */}
           <Form.Group as={Row} className="mb-3">
@@ -440,6 +633,7 @@ export default function Signup() {
                   name="addcode"
                   value={formData.addcode}
                   onChange={handleChange}
+                  readOnly // 사용자가 수정할 수 없지만 복사 가능
                 />
 
                 <Button variant="outline-secondary" onClick={handleButtonClick}>
@@ -469,6 +663,7 @@ export default function Signup() {
                 value={formData.address01}
                 onChange={handleChange}
                 size="50"
+                readOnly // 사용자가 수정할 수 없지만 복사 가능
               />
             </Col>
           </Form.Group>

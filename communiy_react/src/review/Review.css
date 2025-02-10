@@ -32,11 +32,6 @@
   list-style: none;
 }
 
-.review_regist {
-  position: relative;
-  left: 0px;
-}
-
 .reviewRegist {
   position: absolute;
   right: 420px;
@@ -59,4 +54,9 @@
 
 .text1 {
   margin: 15px 15px 15px 0px;
+}
+
+.club_name {
+  opacity: 60%;
+  margin-right: 45px;
 }
