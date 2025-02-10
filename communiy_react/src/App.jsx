@@ -8,6 +8,8 @@ import Navbar from './mainpage/Navbar';
 import Footer from './mainpage/Footer';
 import Home from './mainpage/Home';
 
+
+import MyPage from './mypage/mypage';
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
