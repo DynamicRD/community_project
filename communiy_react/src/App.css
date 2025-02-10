@@ -1,0 +1,247 @@
+body {
+  margin: 0;
+  font-family: 'Pretendard-Regular';
+  display: block;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/* Navbar */
+.navbar {
+  margin: 0 auto;
+  border-bottom: 1px solid #ddd;
+  width: 100vw;
+  display: flex;
+  justify-content: space-around;
+}
+.navbar-custom {
+  font-size: 14px;
+  padding: 10px 0;
+  margin: 0 auto;
+}
+
+.navbar-logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.nav-link {
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: #ff5e57;
+}
+
+.icon-links a {
+  margin-left: 15px;
+  color: #333;
+}
+
+.icon-links a:hover {
+  color: #ff5e57;
+}
+
+.middle-icon {
+  font-size: 1.5rem;
+}
+
+/* Carousel */
+.carousel-item {
+  display: flex;
+  justify-content: center;
+}
+
+.carousel-image {
+  margin-top: 30px;
+  margin-bottom: 40px;
+  border-radius: 15px;
+  object-fit: contain;
+  width: 100%;
+  height: 600px;
+}
+
+/* Theme Category */
+.theme-category {
+  text-align: center;
+  margin: 20px 0;
+}
+
+.theme-category span {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.theme-category span:hover {
+  background-color: #000000;
+  color: white;
+}
+
+/* Product Section */
+.product-card {
+  width: 200px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.product-card img {
+  border-radius: 10px;
+  max-width: 100%;
+}
+
+.arrow1 {
+  font-size: 2rem;
+  position: relative;
+  bottom: 215px;
+  left: 50px;
+  cursor: pointer;
+}
+
+/* Introduction Section */
+.introduction-section {
+  background-color: #f9f9f9;
+  padding: 50px 20px;
+  text-align: center;
+}
+
+.introduction-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.introduction-subtitle {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 40px;
+}
+.plus-title {
+  margin-top: 40px;
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 100vh;
+  background: url('../images/room_full_bg.jpg') no-repeat center center/cover;
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  margin-bottom: 20px;
+}
+
+.hero-button {
+  background-color: #db5932;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.hero-button:hover {
+  background-color: #db5932;
+  color: #000;
+}
+
+/* Services Section */
+.services-section {
+  padding: 50px 15px;
+  background-color: #f8f9fa;
+}
+.services-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.highlight {
+  color: #db5932;
+}
+.service-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 30px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid #000;
+}
+
+.service-image {
+  flex: 1;
+  max-width: 400px;
+  height: auto;
+  border-radius: 5px;
+}
+
+.service-text {
+  flex: 1;
+  min-width: 300px;
+  margin-right: 20px;
+}
+
+.service-text h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.service-text p {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.footer-links {
+  color: #000;
+}
+
+/* Footer */
+footer {
+  background-color: #000;
+  color: #fff;
+  padding: 20px 0;
+}
+
+.footer-links a {
+  text-decoration: none;
+  margin-right: 15px;
+  color: #000;
+}
+
+.footer-links a:hover {
+  color: #ccc;
+}
+
+.social-icons a {
+  color: #fff;
+  margin-right: 15px;
+}
+
+.social-icons a:hover {
+  color: #db5932;
+}
