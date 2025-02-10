@@ -1,109 +1,121 @@
 import React, { useState, useRef } from 'react';
-import { Button, Container, Nav } from 'react-bootstrap';
+import { Button, Container, Nav, Pagination } from 'react-bootstrap';
+import Table from 'react-bootstrap/Table';
 import { useNavigate } from 'react-router-dom';
 import HorizonLine from './HorizonLine';
+import './MyPage.css';
 
 export default function MyReviews() {
-  const navigate = useNavigate();
-  const content = useRef();
-  const title = useRef();
-  const selectRef = useRef();
+  let item = [];
+  for (let number = 1; number <= 5; number++) {
+    item.push(
+      <Pagination.Item key={number} active={number === 1}>
+        {number}
+      </Pagination.Item>
+    );
+  }
+  const radioValue = useRef();
+  const radioValueChecked = () => {
+    radioValue.current = 'checked';
+    console.log(radioValue);
+  };
+
+  const completedMeetings = [
+    {
+      name: '테크 세미나',
+      date: '2025-01-10',
+      endDate: '2025-01-10',
+      role: '참석자',
+      cost: '₩ 30,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+    {
+      name: '사진 동아리',
+      date: '2025-01-15',
+      endDate: '2025-01-15',
+      role: '모임장',
+      cost: '₩ 20,000',
+    },
+  ];
 
   return (
-    <Container>
-      <div className="register">
-        <div className="board">
-          <div className="review_title">
-            <p style={{ fontSize: '25px' }}>
-              <b>리뷰 작성하기</b>
-            </p>
-          </div>
-          <HorizonLine />
-          <div className="register_title">
-            <div className="board">
-              <p style={{ fontSize: '20px' }}>
-                <input
-                  type="text"
-                  className="title mt-4"
-                  placeholder="제목"
-                  ref={title}
-                />
-              </p>
-              <div className="writer mb-3">
-                <span>문정배</span>
-              </div>
-            </div>
-            <div className="d-flex justify-content-between">
-              <div>
-                <select name="category" id="category" ref={selectRef}>
-                  <option value="culture">문화/예술</option>
-                  <option value="food">푸드/드링크</option>
-                  <option value="hobby">취미</option>
-                  <option value="travel">여행</option>
-                  <option value="edu">교육</option>
-                </select>
-              </div>
-              <div>
-                <select name="rating" id="rating" className="text-center">
-                  <option value="0">☆☆☆☆☆</option>
-                  <option value="1">★☆☆☆☆</option>
-                  <option value="2">★★☆☆☆</option>
-                  <option value="3">★★★☆☆</option>
-                  <option value="4">★★★★☆</option>
-                  <option value="5">★★★★★</option>
-                </select>
-              </div>
-            </div>
-            <div className="register_body">
-              <div className="mb-2 mt-2">
-                <label htmlFor="content" className="mb-3">
-                  <textarea
-                    className="form-control content"
-                    cols={'200'}
-                    rows="10"
-                    id="content"
-                    name="text"
-                    placeholder="내용작성"
-                    ref={content}
-                  ></textarea>
-                </label>
-              </div>
-              <div className="d-flex  justify-content-between">
-                <div className="register_button">
-                  <input type="file" className="file" />
-                </div>
-                <div>
-                  <Button
-                    className="register_btn ms-3 justify-content-end"
-                    onClick={() => {
-                      const form = new FormData();
-                      form.append('select', selectRef.current.value);
-                      form.append('title', title.current.value);
-                      form.append('content', content.current.value);
-                      fetch('http://localhost:8080/review/insert', {
-                        method: 'post',
-                        body: form,
-                      }).then(() => {
-                        navigate('/review/Home');
-                      });
-                    }}
-                  >
-                    작성
-                  </Button>
-                  <Button
-                    className="register_btn ms-3 justify-content-end"
-                    onClick={() => {
-                      navigate('/review');
-                    }}
-                  >
-                    목록
-                  </Button>
-                </div>
-              </div>
-            </div>
+    <>
+      <Container>
+        <div className="mypage_review_list mt-5 w-100">
+          <div className="d-flex justify-content-start gap-3 mb-4">
+            <table className="mypage_review_table">
+              {completedMeetings.map((object) => (
+                <tbody key={object.no}>
+                  <tr>
+                    <td>
+                      <input type="radio" name="radio" ref={radioValue} />
+                    </td>
+                    <Nav.Link href="#" onClick={radioValueChecked}>
+                      <tr className="d-flex m-4">
+                        <td>
+                          <img
+                            src="/images/review1.png"
+                            alt="이미지"
+                            style={{ width: '120px' }}
+                            className="mypage_review_table_img"
+                          />
+                        </td>
+                        <tr className="d-flex flex-column ms-4 w-100 justify-content-center">
+                          <td>
+                            <span
+                              style={{ fontSize: '30px', fontWeight: '900' }}
+                            >
+                              {object.name}
+                            </span>
+                          </td>
+                          <tr className="d-flex justify-content-between align-items-center">
+                            <td style={{ fontSize: '14px' }}>
+                              <span>{object.date}~</span>
+                              <span> {object.endDate}</span>
+                            </td>
+                            <td
+                              style={{ fontSize: '17px', fontWeight: '900' }}
+                              className="me-5"
+                            >
+                              {object.role}
+                            </td>
+                          </tr>
+                          <td>
+                            <span style={{ fontWeight: '900' }}>
+                              {object.cost}
+                            </span>
+                          </td>
+                        </tr>
+                      </tr>
+                    </Nav.Link>
+                  </tr>
+                </tbody>
+              ))}
+            </table>
           </div>
         </div>
-      </div>
-    </Container>
+      </Container>
+      <Container className="mb-5">
+        <div className="d-flex justify-content-center align-content-center mb-3">
+          <Pagination size="sm">{item}</Pagination>
+          <Nav.Link href="/review/Regist" className="reviewList">
+            <span>작성 하기</span>
+          </Nav.Link>
+        </div>
+      </Container>
+    </>
   );
 }

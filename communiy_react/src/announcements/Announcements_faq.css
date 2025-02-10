@@ -1,0 +1,66 @@
+.announcements_table {
+  width: 100%;
+  font-family: 'Freesentation-9Black';
+}
+
+.nav_notice {
+  font-family: 'Freesentation-9Black';
+}
+
+@font-face {
+  font-family: 'Freesentation-9Black';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2')
+    format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+.table_td_title {
+  font-family: 'Pretendard-Regular';
+  font-weight: 900;
+  padding: 15px 0px 15px 0px;
+  font-size: large;
+  width: 70%;
+}
+
+.faq_accordion_title {
+  font-family: 'Pretendard-Regular';
+  font-weight: 900;
+  font-size: large;
+  display: flex;
+  align-items: center;
+  padding: 20px 0px 20px 48px;
+}
+
+.faq_accordion_body {
+  font-family: 'Pretendard-Regular';
+  font-weight: 300;
+  font-size: medium;
+  display: flex;
+  align-items: center;
+  word-wrap: break-word; /* 단어가 길면 줄 바꿈을 자동으로 함 */
+  white-space: normal;
+  margin-left: 20px;
+}
+
+.accordion-button.active,
+.accordion-body:focus,
+.accordion-body.active {
+  background-color: rgba(197, 0, 0, 0.692);
+  color: rgb(0, 0, 0);
+}
+.accordion-button:not(:focus),
+.accordion-button:not(:focus),
+.accordion-body:not(:focus),
+.accordion-body:not(:focus) {
+  border-radius: 10px;
+  background-color: rgba(46, 46, 46, 0.03);
+  color: rgb(0, 0, 0);
+}

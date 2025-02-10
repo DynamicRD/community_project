@@ -48,3 +48,4 @@ src/main/resources/application-local.properties
 webpack-assets.json
 
 .metadata
+React_Admin/

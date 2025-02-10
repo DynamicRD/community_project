@@ -16,7 +16,6 @@ import AddressInput from './daumAPI/AddressInput';
 export default function MyInfoChange() {
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
   const [formData, setFormData] = useState({
-    id: '',
     nickname: '',
     pass: '',
     repass: '',
@@ -34,7 +33,6 @@ export default function MyInfoChange() {
   });
 
   const [errors, setErrors] = useState({
-    id: '',
     nickname: '',
     pass: '',
     repass: '',
@@ -75,7 +73,6 @@ export default function MyInfoChange() {
 
   const handleReset = () => {
     setFormData({
-      id: '',
       nickname: '',
       pass: '',
       repass: '',
@@ -92,7 +89,6 @@ export default function MyInfoChange() {
       pr: '',
     });
     setErrors({
-      id: '',
       nickname: '',
       pass: '',
       repass: '',
@@ -111,7 +107,6 @@ export default function MyInfoChange() {
 
   // 패턴 조건 설정
   const patterns = {
-    id: /^[a-z0-9_]{4,10}$/,
     nickname: /^[a-zA-Z0-9가-힣]{2,10}$/,
     pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/,
     repass: (value) => value === formData.pass,
@@ -133,9 +128,6 @@ export default function MyInfoChange() {
       } else {
         if (!patterns[name].test(value)) {
           switch (name) {
-            case 'id':
-              errorMessage = '아이디는 4자 이상 20자 이하로 입력해주세요.';
-              break;
             case 'nickname':
               errorMessage =
                 '닉네임은 2자 이상 10자 이하, 한글/영문/숫자만 사용 가능합니다.';
@@ -211,296 +203,278 @@ export default function MyInfoChange() {
   };
 
   return (
-    <Container className="mt-5 bg-light">
-      <h2 className="text-center">개인 정보 수정</h2>
-      <Form onSubmit={handleSubmit}>
-        {/* 아이디 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            아이디
-          </Form.Label>
-          <Col sm={10}>
-            <InputGroup>
-              <FormControl
-                type="text"
-                name="id"
-                value={formData.id}
-                onChange={handleChange}
-              />
-              <Button
-                variant="outline-secondary"
-                onClick={() => alert('중복 확인')}
-              >
-                중복확인
-              </Button>
-            </InputGroup>
-            {errors.id && <div className="text-danger">{errors.id}</div>}
-          </Col>
-        </Form.Group>
-
-        {/* 닉네임 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            닉네임
-          </Form.Label>
-          <Col sm={10}>
-            <InputGroup>
-              <FormControl
-                type="text"
-                name="nickname"
-                value={formData.nickname}
-                onChange={handleChange}
-              />
-              <Button
-                variant="outline-secondary"
-                onClick={() => alert('중복 확인')}
-              >
-                중복확인
-              </Button>
-            </InputGroup>
-            {errors.nickname && (
-              <div className="text-danger">{errors.nickname}</div>
-            )}
-          </Col>
-        </Form.Group>
-
-        {/* 비밀번호 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            비밀번호
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="password"
-              name="pass"
-              value={formData.pass}
-              onChange={handleChange}
-            />
-            {errors.pass && <div className="text-danger">{errors.pass}</div>}
-          </Col>
-        </Form.Group>
-
-        {/* 비밀번호 확인 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            비밀번호 확인
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="password"
-              name="repass"
-              value={formData.repass}
-              onChange={handleChange}
-            />
-            {errors.repass && (
-              <div className="text-danger">{errors.repass}</div>
-            )}
-          </Col>
-        </Form.Group>
-
-        {/* 이름 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            이름
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="text"
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-            {errors.name && <div className="text-danger">{errors.name}</div>}
-          </Col>
-        </Form.Group>
-
-        {/* 성별 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            성별
-          </Form.Label>
-          <Col sm={10}>
-            <Row>
-              <Col sm="auto">
-                <Form.Check
-                  type="radio"
-                  label="남자"
-                  name="gender"
-                  value="남자"
-                  checked={formData.gender === '남자'}
-                  onChange={handleGenderChange}
+    <Container className="mt-5 bg-light p-5">
+      <div className="infochange">
+        <h2 className="text-center">개인 정보 수정</h2>
+        <Form onSubmit={handleSubmit}>
+          {/* 닉네임 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              닉네임
+            </Form.Label>
+            <Col sm={10}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  name="nickname"
+                  value={formData.nickname}
+                  onChange={handleChange}
                 />
-              </Col>
-              <Col sm="auto">
-                <Form.Check
-                  type="radio"
-                  label="여자"
-                  name="gender"
-                  value="여자"
-                  checked={formData.gender === '여자'}
-                  onChange={handleGenderChange}
-                />
-              </Col>
-            </Row>
-            {errors.gender && (
-              <div className="text-danger">{errors.gender}</div>
-            )}
-          </Col>
-        </Form.Group>
-
-        {/* 전화번호 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            전화번호
-          </Form.Label>
-          <Col sm={10}>
-            <div className="phone-input-group">
-              <Form.Select
-                name="phone1"
-                value={formData.phone1}
-                onChange={handleChange}
-                className="phone-select"
-              >
-                <option value="02">02</option>
-                <option value="010">010</option>
-              </Form.Select>
-              <span>-</span>
-              <FormControl
-                type="text"
-                name="phone2"
-                value={formData.phone2}
-                onChange={handleChange}
-                className="phone-input"
-              />
-              <span>-</span>
-              <FormControl
-                type="text"
-                name="phone3"
-                value={formData.phone3}
-                onChange={handleChange}
-                className="phone-input"
-              />
-            </div>
-            {errors.phone2 && (
-              <div className="text-danger">{errors.phone2}</div>
-            )}
-            {errors.phone3 && (
-              <div className="text-danger">{errors.phone3}</div>
-            )}
-          </Col>
-        </Form.Group>
-
-        {/* 생년월일 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            생년월일
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="text"
-              name="birth"
-              value={formData.birth}
-              onChange={handleChange}
-              placeholder="ex: 0000-00-00"
-            />
-            {errors.birth && <div className="text-danger">{errors.birth}</div>}
-          </Col>
-        </Form.Group>
-
-        {/* 이메일 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            이메일
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="text"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-            {errors.email && <div className="text-danger">{errors.email}</div>}
-          </Col>
-        </Form.Group>
-
-        {/* 우편번호 찾기 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            우편번호
-          </Form.Label>
-          <Col sm={4}>
-            <InputGroup>
-              <FormControl
-                type="text"
-                name="addcode"
-                value={formData.addcode}
-                onChange={handleChange}
-              />
-
-              <Button variant="outline-secondary" onClick={handleButtonClick}>
-                찾기
-              </Button>
-
-              {/* isAddressInputVisible가 true일 때만 AddressInput을 렌더링 */}
-              {isAddressInputVisible && (
-                <AddressInput onComplete={handlePostcodeComplete} />
+                <Button
+                  variant="outline-secondary"
+                  onClick={() => alert('중복 확인')}
+                >
+                  중복확인
+                </Button>
+              </InputGroup>
+              {errors.nickname && (
+                <div className="text-danger">{errors.nickname}</div>
               )}
-            </InputGroup>
-            {errors.addcode && (
-              <div className="text-danger">{errors.addcode}</div>
-            )}
-          </Col>
-        </Form.Group>
+            </Col>
+          </Form.Group>
 
-        {/* 주소 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            주소
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="text"
-              name="address01"
-              value={formData.address01}
-              onChange={handleChange}
-              size="50"
-            />
-          </Col>
-        </Form.Group>
+          {/* 비밀번호 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              비밀번호
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="password"
+                name="pass"
+                value={formData.pass}
+                onChange={handleChange}
+              />
+              {errors.pass && <div className="text-danger">{errors.pass}</div>}
+            </Col>
+          </Form.Group>
 
-        {/* 상세주소 입력 */}
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            상세주소
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="text"
-              name="address02"
-              value={formData.address02}
-              onChange={handleChange}
-              size="30"
-            />
-          </Col>
-        </Form.Group>
+          {/* 비밀번호 확인 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              비밀번호 확인
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="password"
+                name="repass"
+                value={formData.repass}
+                onChange={handleChange}
+              />
+              {errors.repass && (
+                <div className="text-danger">{errors.repass}</div>
+              )}
+            </Col>
+          </Form.Group>
 
-        {/* 버튼들 */}
-        <Form.Group as={Row} className="mb-3 text-center">
-          <Col sm={12}>
-            <Button variant="primary" type="submit">
-              정보수정
-            </Button>
-            &nbsp;&nbsp;
-            <Button variant="secondary" type="reset" onClick={handleReset}>
-              다시입력
-            </Button>
-            &nbsp;&nbsp;
-            <Button variant="secondary" onClick={handleGoBack}>
-              돌아가기
-            </Button>
-          </Col>
-        </Form.Group>
-      </Form>
+          {/* 이름 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              이름
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+              />
+              {errors.name && <div className="text-danger">{errors.name}</div>}
+            </Col>
+          </Form.Group>
+
+          {/* 성별 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              성별
+            </Form.Label>
+            <Col sm={10}>
+              <Row>
+                <Col sm="auto">
+                  <Form.Check
+                    type="radio"
+                    label="남자"
+                    name="gender"
+                    value="남자"
+                    checked={formData.gender === '남자'}
+                    onChange={handleGenderChange}
+                  />
+                </Col>
+                <Col sm="auto">
+                  <Form.Check
+                    type="radio"
+                    label="여자"
+                    name="gender"
+                    value="여자"
+                    checked={formData.gender === '여자'}
+                    onChange={handleGenderChange}
+                  />
+                </Col>
+              </Row>
+              {errors.gender && (
+                <div className="text-danger">{errors.gender}</div>
+              )}
+            </Col>
+          </Form.Group>
+
+          {/* 전화번호 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              전화번호
+            </Form.Label>
+            <Col sm={10}>
+              <div className="phone-input-group">
+                <Form.Select
+                  name="phone1"
+                  value={formData.phone1}
+                  onChange={handleChange}
+                  className="phone-select"
+                >
+                  <option value="02">02</option>
+                  <option value="010">010</option>
+                </Form.Select>
+                <span>-</span>
+                <FormControl
+                  type="text"
+                  name="phone2"
+                  value={formData.phone2}
+                  onChange={handleChange}
+                  className="phone-input"
+                />
+                <span>-</span>
+                <FormControl
+                  type="text"
+                  name="phone3"
+                  value={formData.phone3}
+                  onChange={handleChange}
+                  className="phone-input"
+                />
+              </div>
+              {errors.phone2 && (
+                <div className="text-danger">{errors.phone2}</div>
+              )}
+              {errors.phone3 && (
+                <div className="text-danger">{errors.phone3}</div>
+              )}
+            </Col>
+          </Form.Group>
+
+          {/* 생년월일 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              생년월일
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                name="birth"
+                value={formData.birth}
+                onChange={handleChange}
+                placeholder="ex: 0000-00-00"
+              />
+              {errors.birth && (
+                <div className="text-danger">{errors.birth}</div>
+              )}
+            </Col>
+          </Form.Group>
+
+          {/* 이메일 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              이메일
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
+              {errors.email && (
+                <div className="text-danger">{errors.email}</div>
+              )}
+            </Col>
+          </Form.Group>
+
+          {/* 우편번호 찾기 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              우편번호
+            </Form.Label>
+            <Col sm={4}>
+              <InputGroup>
+                <FormControl
+                  type="text"
+                  name="addcode"
+                  value={formData.addcode}
+                  onChange={handleChange}
+                />
+
+                <Button variant="outline-secondary" onClick={handleButtonClick}>
+                  찾기
+                </Button>
+
+                {/* isAddressInputVisible가 true일 때만 AddressInput을 렌더링 */}
+                {isAddressInputVisible && (
+                  <AddressInput onComplete={handlePostcodeComplete} />
+                )}
+              </InputGroup>
+              {errors.addcode && (
+                <div className="text-danger">{errors.addcode}</div>
+              )}
+            </Col>
+          </Form.Group>
+
+          {/* 주소 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              주소
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                name="address01"
+                value={formData.address01}
+                onChange={handleChange}
+                size="50"
+              />
+            </Col>
+          </Form.Group>
+
+          {/* 상세주소 입력 */}
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              상세주소
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                name="address02"
+                value={formData.address02}
+                onChange={handleChange}
+                size="30"
+              />
+            </Col>
+          </Form.Group>
+
+          {/* 버튼들 */}
+          <Form.Group as={Row} className="mb-3 text-center">
+            <Col sm={12}>
+              <Button variant="primary" type="submit">
+                정보수정
+              </Button>
+              &nbsp;&nbsp;
+              <Button variant="secondary" type="reset" onClick={handleReset}>
+                다시입력
+              </Button>
+              &nbsp;&nbsp;
+              <Button variant="secondary" onClick={handleGoBack}>
+                돌아가기
+              </Button>
+            </Col>
+          </Form.Group>
+        </Form>
+      </div>
     </Container>
   );
 }

@@ -1,0 +1,98 @@
+.announcements_table {
+  width: 100%;
+  font-family: 'Freesentation-9Black';
+}
+
+.nav_notice {
+  font-family: 'Freesentation-9Black';
+}
+
+@font-face {
+  font-family: 'Freesentation-9Black';
+  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2')
+    format('woff2');
+  font-weight: 800;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Pretendard-Regular';
+  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+    format('woff');
+  font-weight: 400;
+  font-style: normal;
+}
+.table_td_title {
+  font-family: 'Pretendard-Regular';
+  font-weight: 900;
+  padding: 15px 0px 15px 0px;
+  font-size: large;
+  width: 70%;
+}
+
+.table_td_date {
+  font-family: 'Pretendard-Regular';
+  text-align: end;
+  font-size: medium;
+  width: 30%;
+  opacity: 60%;
+}
+
+.notice_read {
+  margin: 80px 130px 80px 130px;
+}
+.notice_read2 {
+  margin: 10px 130px 10px 130px;
+}
+
+.notice_title {
+  font-family: 'Freesentation-9Black';
+  font-size: 55px;
+}
+
+.notice_date {
+  font-family: 'Pretendard-Regular';
+  font-size: 13px;
+  opacity: 70%;
+  margin-left: 20px;
+}
+
+.notice_content {
+  display: flex;
+  font-family: 'Pretendard-Regular';
+  font-size: 19px;
+}
+
+.notice_hr {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.notice_hr2 {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.notice_btn {
+  text-align: center;
+  margin: 0px 0px 40px 0;
+  font-family: 'Pretendard-Regular';
+}
+
+.notice_btn span {
+  margin: 0 10px;
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.notice_btn span:hover {
+  background-color: #000000;
+  color: white;
+}
+
+.btn1 {
+  background-color: #ec6e43;
+}
+.btn2 {
+  background-color: #db5932;
+}

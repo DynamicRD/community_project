@@ -6,6 +6,7 @@ import IntroductionSection from './IntroductionSection';
 import HeroSection from './HeroSection';
 import ServicesSection from './ServicesSection';
 import FooterLinks from './FooterLinks';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
