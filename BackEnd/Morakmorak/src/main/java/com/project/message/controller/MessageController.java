@@ -10,6 +10,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.project.common.config.SecretConfig;
+
 
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -38,10 +42,11 @@ public class MessageController {
 
 	final DefaultMessageService messageService;
 	static int number;
-
+	private final SecretConfig secretConfig = new SecretConfig();
+	
 	public MessageController() {
 		// 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
-		this.messageService = NurigoApp.INSTANCE.initialize("NCSW00Q3G7SZFQ1I", "LQ0DNASFVYA1XA6VNGFGPLQCUMHHGGXO",
+		this.messageService = NurigoApp.INSTANCE.initialize(secretConfig.getApiKey(), secretConfig.getSecretKey(),
 				"https://api.coolsms.co.kr");
 	}
 
