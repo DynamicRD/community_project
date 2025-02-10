@@ -2,13 +2,13 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
+import { Link, useNavigate } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
 
 export default function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
-
+  const navigate = useNavigate();
   const handleLogin = async () => {
     console.log('ID:', id, 'Password:', password, 'Remember Me:', rememberMe);
 
@@ -18,7 +18,6 @@ export default function Login() {
         {
           id: id, // 백엔드에서 요구하는 필드명 사용
           pw: password, // 백엔드에 맞춰 필드명 변경
-          //provider: 'local', // 기본 로그인 방식 (소셜 로그인이 아니라면 "local" 사용)
         },
         {
           withCredentials: true, // 쿠키 전송 허용
@@ -40,6 +39,12 @@ export default function Login() {
         } else {
           localStorage.removeItem('rememberMe');
         }
+
+        // 페이지 이동 후 새로고침
+        navigate('/');
+        setTimeout(() => {
+          window.location.reload();
+        }, 100); // 100ms 후 새로고침 (navigate 적용 후 실행되도록 설정)
       } else {
         alert(response.data.message || '로그인에 실패했습니다.');
       }
