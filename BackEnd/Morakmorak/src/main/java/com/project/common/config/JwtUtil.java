@@ -1,9 +1,9 @@
 package com.project.common.config;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Component;
 
 import com.project.member.model.Member;
@@ -11,49 +11,64 @@ import com.project.member.model.Member;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret}") // application.properties에서 비밀키 읽기
-    private String secretKey;
 
+   
+	private final static SecretConfig secretConfig = new SecretConfig();
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (15분)
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
 
-    // ================== JWT 관련 ==================
 
-    /** ✅ JWT 액세스 토큰 생성 */
-    public String createAccessToken(Member member) {
-
+    public static String createAccessToken(Member member) {
         return Jwts.builder()
                 .setSubject("userRegister")
                 .claim("id", member.getId())
-                .claim("role", "ROLE_" + member.getRole())
+                .claim("name",member.getName())
+                .claim("role", member.getRole())
                 .claim("provider", member.getProvider())
                 .claim("phone", member.getPhone())
                 .claim("gender", String.valueOf(member.getGender()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))    
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
+                .compact();
+    }
+  
+    public static String kakaoGenerateAccessToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256,  secretConfig.getJwtSecretKey())
+                .compact();
+    }
+  
+    public static String kakaoGenerateRefreshToken(String email) {
+        return Jwts.builder()
+        		.setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
                 .compact();
     }
 
-    /** ✅ 리프레시 토큰 생성 */
-    public String createRefreshToken(Member member) {
+
+    public static String createRefreshToken(Member member) {
         return Jwts.builder()
-                .setSubject("refreshToken")
+        	.setSubject("refreshToken")
                 .claim("id", member.getId())
                 .claim("provider", member.getProvider())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))    
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
                 .compact();
     }
 
     /** ✅ JWT 검증 및 Claims 반환 */
     public Claims validateToken(String token) {
         return Jwts.parser()
-                .setSigningKey(secretKey)
+                .setSigningKey(secretConfig.getJwtSecretKey())
                 .parseClaimsJws(token)
                 .getBody();
     }
@@ -76,6 +91,7 @@ public class JwtUtil {
     	member.setProvider(validateToken(token).get("provider", String.class));
         return member;
     }
+
 }
 
 

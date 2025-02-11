@@ -2,6 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.member.mapper.MemberMapper">
+	<insert id="insertMember">
+		 INSERT INTO MEMBER (
+            no, role, id, pw, email, provider, provider_id, phone, name, nickname, birth,
+            gender, money, zip_code, addr1, addr2, star_sum, black, reg_date, img_url, self_pr
+        ) VALUES (
+            MEMBER_SEQ.NEXTVAL, 0, 1, NULL, #{email}, #{provider}, #{providerId}, NULL, NULL, NULL, NULL,
+            NULL, 0, NULL, NULL, NULL, 0, 0, SYSDATE, NULL, NULL
+        )
+	</insert>
+
+	<select id="findByEmail" resultType="com.project.member.model.Member">
+		SELECT * FROM MEMBER WHERE email = #{email}
+	</select>
+
     <select id="idDuplicateCheck" resultType="int">
         SELECT COUNT(*) 
         FROM member 
@@ -12,7 +26,12 @@
         FROM member 
         WHERE nickname = #{nickname}
     </select>
- <!-- 회원 정보 저장 -->
+    <select id="phoneDuplicateCheck" resultType="int">
+        SELECT COUNT(*) 
+        FROM member 
+        WHERE phone = #{phone}
+    </select>
+
     <insert id="register" parameterType="com.project.member.model.Member">
         INSERT INTO member (
             no,id, pw, email, phone, name, nickname, 
@@ -22,7 +41,7 @@
             TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1}, #{addr2}
         )
     </insert>
-    <!-- 아이디, 제공자, 비밀번호를 토대로 로그인 확인-->
+   
 	<select id="loginCheck" parameterType="com.project.member.model.Member" resultType="com.project.member.model.Member">
 		SELECT *
 		FROM Member

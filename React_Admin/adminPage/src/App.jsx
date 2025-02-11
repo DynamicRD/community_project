@@ -17,10 +17,10 @@ function App() {
           <Navigation />
           <div className="main-content">
             <Routes>
-              <Route path="/" element={<Dashboard />} />
-              <Route path="/users" element={<UserTable />} />
-              <Route path="/community" element={<Community />} />
-              <Route path="/community/:id" element={<CommunityDetail />} />
+              <Route path="admin/Dashoboard" element={<Dashboard />} />
+              <Route path="admin/users" element={<UserTable />} />
+              <Route path="admin/community" element={<Community />} />
+              <Route path="admin/community/:id" element={<CommunityDetail />} />
             </Routes>
           </div>
           <Footer />
