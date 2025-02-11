@@ -161,10 +161,10 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown} // 추가
           />
-          <button className="buttonLogin">
-            onClick={handleLogin}
-            style=
-            {{
+          <button
+            className="buttonLogin"
+            onClick={handleLogin} // ✅ 올바르게 수정
+            style={{
               width: '100%',
               padding: '10px',
               backgroundColor: '#01ff23d1',
@@ -173,8 +173,10 @@ export default function Login() {
               borderRadius: '25px',
               cursor: 'pointer',
             }}
+          >
             로그인
           </button>
+
           <div
             style={{
               display: 'flex',
