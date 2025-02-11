@@ -29,5 +29,5 @@ public class Member {
     private LocalDate regDate; // 가입일 (기본값: 현재 날짜)
     private String imgUrl; // 프로필 사진 URL
     private String selfPr; // 자기소개
-    
+    private boolean rememberMe;
 }

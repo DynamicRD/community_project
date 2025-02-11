@@ -48,8 +48,15 @@
 		WHERE ID = #{id} AND PROVIDER = #{provider} 
 	</select>
 	    <select id="passCompare" resultType="String">
-        SELECT pw 
-        FROM member 
-        WHERE id = #{id}
-    </select>
+		SELECT pw
+		FROM member
+		WHERE id = #{id}
+	</select>
+
+	<select id="getMemberInfo"
+		resultType="com.project.member.model.Member">
+		SELECT *
+		FROM member
+		WHERE id = #{id}
+	</select>
 </mapper>

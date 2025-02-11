@@ -25,4 +25,6 @@ public interface MemberMapper {
 
 	
 	public int phoneDuplicateCheck(Member member);
+	
+	public Member getMemberInfo(Member member);
 }

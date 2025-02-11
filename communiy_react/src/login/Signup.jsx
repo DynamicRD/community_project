@@ -545,10 +545,10 @@ export default function Signup() {
                         .then((response) => response.json()) // JSON 응답 처리
                         .then((data) => {
                           if (data.isPhoneDuplicate) {
-                            setIsIdAvailable(false);
+                            setIsPhoneDuplicateChecked(false);
                             alert('중복된 전화번호입니다.');
                           } else {
-                            setIsIdAvailable(true);
+                            setIsPhoneDuplicateChecked(true);
                             fetch('http://localhost:8080/send-one', {
                               method: 'post',
                               body: form,

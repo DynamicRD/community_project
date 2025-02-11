@@ -19,6 +19,7 @@ export default function Login() {
         {
           id: id, // 백엔드에서 요구하는 필드명 사용
           pw: password, // 백엔드에 맞춰 필드명 변경
+          rememberMe: rememberMe,
         },
         {
           withCredentials: true, // 쿠키 전송 허용
@@ -28,18 +29,6 @@ export default function Login() {
       // 로그인 성공
       if (response.data.success) {
         console.log('로그인 성공');
-
-        // JSON 응답에서 액세스 토큰이 포함되어 있다면 저장
-        if (response.data.accessToken) {
-          localStorage.setItem('jwtToken', response.data.accessToken);
-        }
-
-        // Remember Me 체크 시 로컬 스토리지 저장
-        if (rememberMe) {
-          localStorage.setItem('rememberMe', 'true');
-        } else {
-          localStorage.removeItem('rememberMe');
-        }
 
         // 페이지 이동 후 새로고침
         navigate('/');
