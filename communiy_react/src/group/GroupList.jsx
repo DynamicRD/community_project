@@ -188,7 +188,7 @@ function GroupList({ type }) {
     <>
       <Link to={'/group/regist'} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="group_banner">
-          <span>
+          <span >
             모임 개설하러 가기&nbsp;
             <FontAwesomeIcon icon={faArrowRight} />
           </span>
@@ -196,7 +196,7 @@ function GroupList({ type }) {
       </Link>
       <Container >
         <div className="group_list">
-          <h1 className="p-2 group_span">
+          <h1 className="p-2 group_span" style={{ fontSize: '33px'}}>
             {type === 'regular' ? `정기모임` : '동행ㆍ소모임'}
           </h1>
           <div className="filter m-2">

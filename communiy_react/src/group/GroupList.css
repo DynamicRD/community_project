@@ -60,16 +60,16 @@ Link{
 
 .group_list .page-item .page-link {
   color: #fff; /* 텍스트 색상 */
-  background-color: #ff2d00; /* 기본 배경색 */
+  background-color: #000000; /* 기본 배경색 */
 }
 
 .group_list .pagination .page-item.active .page-link {
-  background-color: #ff2d00; /* 활성 페이지 배경색 */
+  background-color: #ff3a0dee; /* 활성 페이지 배경색 */
   color: white; /* 활성 페이지 텍스트 색상 */
 }
 
 .group_list .pagination .page-item:hover .page-link {
-  background-color: rgb(226, 41, 0); /* 마우스 오버 시 배경색 */
+  background-color: #ff3a0dee; /* 마우스 오버 시 배경색 */
   color: rgb(255, 255, 255); /* 마우스 오버 시 텍스트 색상 */
 }
 
@@ -82,8 +82,7 @@ Link{
 
 
 .group_span {
-  /* font-family: 'Freesentation-9Black'; */
-  font-weight: 700;
+  font-family: 'Freesentation-9Black';
 }
 
 @font-face {

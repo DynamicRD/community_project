@@ -5,9 +5,12 @@ import { Button, Form, Image, InputGroup, Modal } from 'react-bootstrap';
 
 export default function MemberReportForm({ show, onHide, member }) {
   if (!member) return null;
-
-  return (
-    <Modal show={show} onHide={onHide}>
+  let loading = false;
+  if (loading) {
+    return <div>loading</div>;
+  } else {
+    return (
+      <Modal show={show} onHide={onHide}>
         <Modal.Header closeButton>
           <Modal.Title>멤버 신고하기</Modal.Title>
         </Modal.Header>
@@ -24,21 +27,26 @@ export default function MemberReportForm({ show, onHide, member }) {
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="danger" onClick={()=>{
-            confirm('신고하시겠습니까?');{
-              fetch('http://localhost:8080/member/report', {
-                method: 'POST',
-              });
-              alert('신고가 완료되었습니다.');
-              onHide();
-            }
-          }}>
-          신고하기
+          <Button
+            variant="danger"
+            onClick={() => {
+              confirm('신고하시겠습니까?');
+              {
+                fetch('http://localhost:8080/member/report', {
+                  method: 'POST',
+                });
+                alert('신고가 완료되었습니다.');
+                onHide();
+              }
+            }}
+          >
+            신고하기
           </Button>
           <Button variant="secondary" onClick={onHide}>
             취소하기
           </Button>
         </Modal.Footer>
       </Modal>
-  );
+    );
+  }
 }

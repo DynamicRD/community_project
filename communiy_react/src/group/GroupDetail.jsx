@@ -159,158 +159,161 @@ function GroupDetail({ reviewData }) {
   const handleButtonClick = () => {
     navigate(`/group/management?g_id=${g_id}`);
   };
-
-  return (
-    <Container>
-      <div className="group_detail">
-        <div className="information col">
-          <div>
-            <Link to={`/group/${type}_list`}>
-              <h4>{type === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
-            </Link>
-            <img
-              className="img-fluid"
-              src="/images/group_image1.jpg"
-              alt="모임 이미지"
-            />
-          </div>
-          <div className="information_detail">
-            &nbsp;
+  let loading = false;
+  if (loading) {
+    return <div>loading</div>;
+  } else {
+    return (
+      <Container>
+        <div className="group_detail">
+          <div className="information col">
             <div>
-              <p>
-                <FontAwesomeIcon icon={faList} />
-                &nbsp;카테고리
-              </p>
-              <span
-                className="group_span"
-                style={{ fontSize: '35px', padding: '10px 0px' }}
-              >
-                역삼역 일요일 아침 북클럽 모집
-              </span>
-            </div>
-            <div>
-              <h4>
-                <FontAwesomeIcon icon={faCalendar} />
-                &nbsp; 시작일 : 2/16 일요일 10:00
-              </h4>
-              <h4>
-                <FontAwesomeIcon icon={faCalendar} />
-                &nbsp; 종료일 : 2/16 일요일 10:00
-              </h4>
-              <h4>
-                <FontAwesomeIcon icon={faUserGroup} />
-                &nbsp; 모집 인원 3 / 5명
-              </h4>
-              <h4>
-                <FontAwesomeIcon icon={faSackDollar} />
-                &nbsp; 참가비 10000원
-              </h4>
-            </div>
-          </div>
-          <hr />
-        </div>
-        <div className="group_leader">
-          <div>
-            <p
-              className="group_span"
-              style={{ fontSize: '33px', marginBottom: '0px' }}
-            >
-              🌟 역삼역 일요일 아침 북클럽 모임장 한마디 🌟
-            </p>
-            <br></br>
-            안녕하세요, 역삼역 일요일 아침 북클럽에 오신 여러분을 환영합니다! 📚
-            <br></br>
-            <br></br>
-            새로운 시각을 얻고 싶은 분이라면 누구든지 환영입니다. 부담 없이
-            오셔서 즐겁고 의미 있는 시간을 보내요! 😊<br></br>
-            일요일 아침, 역삼역에서 여러분을 기다리고 있겠습니다. 함께 책 속으로
-            떠나보아요! 📖✨
-          </div>
-          <div className="profile mt-5">
-            <div className="d-flex align-items-center">
+              <Link to={`/group/${type}_list`}>
+                <h4>{type === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
+              </Link>
               <img
-                src="/images/group_leader_profile.jpeg"
-                alt="모임장 프로필"
-                className="rounded-circle"
+                className="img-fluid"
+                src="/images/group_image1.jpg"
+                alt="모임 이미지"
               />
-              <h3 className="p-">(모임장 닉네임) 모임장</h3>
             </div>
-            <h4>평균별점 5.0</h4>
-          </div>
-        </div>
-
-        <div className="intro">
-          <hr />
-          <br />
-          <p
-            className="group_span"
-            style={{ fontSize: '37px', marginBottom: '10px' }}
-          >
-            우리 모임은요
-          </p>
-          <p>
-            📚 역삼역 일요일 아침 북클럽 모집!🌞 책과 함께 여유로운 일요일
-            아침을 보내고 싶으신가요? 이번에 역삼역 근처에서 일요일 아침, 책을
-            좋아하는 사람들과 함께 만날 북클럽을 모집합니다! 참여대상: 책을
-            사랑하는 누구나! 다양한 장르의 책을 좋아하시는 분들 환영. 모임 방식:
-            한 권의 책을 선정하여 함께 읽고, 각자 읽은 내용을 공유합니다. 책에
-            대한 의견을 나누고, 서로의 생각을 들을 수 있는 편안한 분위기에서
-            자유롭게 대화합니다. 다양한 사람들과 책을 통해 소통하며, 새로운
-            친구를 만날 기회도 있어요! 책과 함께하는 소중한 시간을 만들고 싶으신
-            분들, 많은 참여 부탁드려요! 그럼 일요일 아침,여러분을 기다리고
-            있을게요! 📖💬
-          </p>
-        </div>
-
-        <div className="groupMemberList">
-          <p
-            className="group_span"
-            style={{ fontSize: '35px', marginBottom: '10px' }}
-          >
-            현재 참여중인 멤버(1/5)
-          </p>
-          <ListGroup as="ol">
-            {memberList.map((member) => {
-              return (
-                <ListGroup.Item
-                  key={member.id}
-                  as="li"
-                  className="d-flex justify-content-between align-items-center"
+            <div className="information_detail">
+              &nbsp;
+              <div>
+                <p>
+                  <FontAwesomeIcon icon={faList} />
+                  &nbsp;카테고리
+                </p>
+                <span
+                  className="group_span"
+                  style={{ fontSize: '35px', padding: '10px 0px' }}
                 >
-                  <div className="ms-2 me-auto">
-                    <div>
-                      <Image
-                        src="../images/group_leader_profile.jpeg"
-                        roundedCircle
-                        style={{ height: '40px', width: '40px' }}
-                      />{' '}
-                      &nbsp;<span className='fs-5'>{member.nickname}</span>
+                  역삼역 일요일 아침 북클럽 모집
+                </span>
+              </div>
+              <div>
+                <h4>
+                  <FontAwesomeIcon icon={faCalendar} />
+                  &nbsp; 시작일 : 2/16 일요일 10:00
+                </h4>
+                <h4>
+                  <FontAwesomeIcon icon={faCalendar} />
+                  &nbsp; 종료일 : 2/16 일요일 10:00
+                </h4>
+                <h4>
+                  <FontAwesomeIcon icon={faUserGroup} />
+                  &nbsp; 모집 인원 3 / 5명
+                </h4>
+                <h4>
+                  <FontAwesomeIcon icon={faSackDollar} />
+                  &nbsp; 참가비 10000원
+                </h4>
+              </div>
+            </div>
+            <hr />
+          </div>
+          <div className="group_leader">
+            <div>
+              <p
+                
+                style={{ fontSize: '33px', marginBottom: '0px', fontWeight:'700' }}
+              >
+                🌟 역삼역 일요일 아침 북클럽 모임장 한마디 🌟
+              </p>
+              <br></br>
+              안녕하세요, 역삼역 일요일 아침 북클럽에 오신 여러분을 환영합니다!
+              📚
+              <br></br>
+              <br></br>
+              새로운 시각을 얻고 싶은 분이라면 누구든지 환영입니다. 부담 없이
+              오셔서 즐겁고 의미 있는 시간을 보내요! 😊<br></br>
+              일요일 아침, 역삼역에서 여러분을 기다리고 있겠습니다. 함께 책
+              속으로 떠나보아요! 📖✨
+            </div>
+            <div className="profile mt-5">
+              <div className="d-flex align-items-center">
+                <img
+                  src="/images/group_leader_profile.jpeg"
+                  alt="모임장 프로필"
+                  className="rounded-circle"
+                />
+                <h3 className="p-">(모임장 닉네임) 모임장</h3>
+              </div>
+              <h4>평균별점 5.0</h4>
+            </div>
+          </div>
+
+          <div className="intro">
+            <hr />
+            <br />
+            <p
+              style={{ fontSize: '37px', marginBottom: '10px', fontWeight:'700' }}
+            >
+              우리 모임은요
+            </p>
+            <p>
+              📚 역삼역 일요일 아침 북클럽 모집!🌞 책과 함께 여유로운 일요일
+              아침을 보내고 싶으신가요? 이번에 역삼역 근처에서 일요일 아침, 책을
+              좋아하는 사람들과 함께 만날 북클럽을 모집합니다! 참여대상: 책을
+              사랑하는 누구나! 다양한 장르의 책을 좋아하시는 분들 환영. 모임
+              방식: 한 권의 책을 선정하여 함께 읽고, 각자 읽은 내용을
+              공유합니다. 책에 대한 의견을 나누고, 서로의 생각을 들을 수 있는
+              편안한 분위기에서 자유롭게 대화합니다. 다양한 사람들과 책을 통해
+              소통하며, 새로운 친구를 만날 기회도 있어요! 책과 함께하는 소중한
+              시간을 만들고 싶으신 분들, 많은 참여 부탁드려요! 그럼 일요일
+              아침,여러분을 기다리고 있을게요! 📖💬
+            </p>
+          </div>
+
+          <div className="groupMemberList">
+            <p
+              style={{ fontSize: '35px', marginBottom: '10px', fontWeight:'700'}}
+            >
+              현재 참여중인 멤버(1/5)
+            </p>
+            <ListGroup as="ol">
+              {memberList.map((member) => {
+                return (
+                  <ListGroup.Item
+                    key={member.id}
+                    as="li"
+                    className="d-flex justify-content-between align-items-center"
+                  >
+                    <div className="ms-2 me-auto">
+                      <div>
+                        <Image
+                          src="../images/group_leader_profile.jpeg"
+                          roundedCircle
+                          style={{ height: '40px', width: '40px' }}
+                        />{' '}
+                        &nbsp;<span className="fs-5">{member.nickname}</span>
+                      </div>
                     </div>
-                  </div>
-                  <Button variant="primary" onClick={() => 
-                    profileOpen(member.id)
-                    }>
-                    프로필 보기
-                  </Button>
-                </ListGroup.Item>
-              );
-            })}
-          </ListGroup>
-        </div>
+                    <Button
+                      variant="primary"
+                      onClick={() => profileOpen(member.id)}
+                    >
+                      프로필 보기
+                    </Button>
+                  </ListGroup.Item>
+                );
+              })}
+            </ListGroup>
+          </div>
 
-        <div className="map">
-          <p className="group_span" style={{ fontSize: '37px' }}>
-            <FontAwesomeIcon icon={faLocationDot} />
-            &nbsp;모임장소
-          </p>
-          <h4>투썸플레이스 역삼역점</h4>
+          <div className="map">
+            <p style={{ fontSize: '37px', fontWeight:'700'}}>
+              <FontAwesomeIcon icon={faLocationDot} />
+              &nbsp;모임장소
+            </p>
+            <h4>투썸플레이스 역삼역점</h4>
 
-          <p className="detail_address">서울특별시 강남구 테헤란로27길 16</p>
+            <p className="detail_address">서울특별시 강남구 테헤란로27길 16</p>
 
-          <GoogleMap address={'역삼역'} />
-        </div>
+            <GoogleMap address={'역삼역'} />
+          </div>
 
-        {/* <div>
+          {/* <div>
           <p className="group_span" style={{ fontSize: '37px' }}>
             모임 후기
           </p>
@@ -354,138 +357,143 @@ function GroupDetail({ reviewData }) {
           </div>
         </div> */}
 
-        <div>
-          <p className="group_span" style={{ fontSize: '30px' }}>
-            환불 규정
-          </p>
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>취소 시점</th>
-                <th>환불 규정</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th>모임 시작 7일 전까지</th>
-                <td>전액 환불</td>
-              </tr>
-              <tr>
-                <th>모임 시작 3일 전까지</th>
-                <td>참가비의 50% 환불</td>
-              </tr>
-              <tr>
-                <th>모임 시작 3일 이내</th>
-                <td>환불 불가</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <p className="group_span" style={{ fontSize: '30px' }}>
-            이런 모임은 어때요?
-          </p>
-          <div className="cards">
-            <div className="card" style={{ width: '18rem' }}>
-              <img
-                src="/images/media1.jpg"
-                className="card-img-top"
-                alt="추천 모임 이미지"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Card with stretched link</h5>
-                <a href="#" className="btn btn-primary stretched-link">
-                  Go somewhere
-                </a>
+          <div>
+            <p style={{ fontSize: '30px', fontWeight:'700' }}>
+              환불 규정
+            </p>
+            <table className="table table-bordered">
+              <thead>
+                <tr>
+                  <th>취소 시점</th>
+                  <th>환불 규정</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>모임 시작 7일 전까지</th>
+                  <td>전액 환불</td>
+                </tr>
+                <tr>
+                  <th>모임 시작 3일 전까지</th>
+                  <td>참가비의 50% 환불</td>
+                </tr>
+                <tr>
+                  <th>모임 시작 3일 이내</th>
+                  <td>환불 불가</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <p style={{ fontSize: '30px', fontWeight:'700' }}>
+              이런 모임은 어때요?
+            </p>
+            <div className="cards">
+              <div className="card" style={{ width: '18rem' }}>
+                <img
+                  src="/images/media1.jpg"
+                  className="card-img-top"
+                  alt="추천 모임 이미지"
+                />
+                <div className="card-body">
+                  <h5 className="card-title">Card with stretched link</h5>
+                  <a href="#" className="btn btn-primary stretched-link">
+                    Go somewhere
+                  </a>
+                </div>
               </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img
-                src="/images/media1.jpg"
-                className="card-img-top"
-                alt="추천 모임 이미지"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Card with stretched link</h5>
-                <a href="#" className="btn btn-primary stretched-link">
-                  Go somewhere
-                </a>
+              <div className="card" style={{ width: '18rem' }}>
+                <img
+                  src="/images/media1.jpg"
+                  className="card-img-top"
+                  alt="추천 모임 이미지"
+                />
+                <div className="card-body">
+                  <h5 className="card-title">Card with stretched link</h5>
+                  <a href="#" className="btn btn-primary stretched-link">
+                    Go somewhere
+                  </a>
+                </div>
               </div>
-            </div>
-            <div className="card" style={{ width: '18rem' }}>
-              <img
-                src="/images/media1.jpg"
-                className="card-img-top"
-                alt="추천 모임 이미지"
-              />
-              <div className="card-body">
-                <h5 className="card-title">Card with stretched link</h5>
-                <a href="#" className="btn btn-primary stretched-link">
-                  Go somewhere
-                </a>
+              <div className="card" style={{ width: '18rem' }}>
+                <img
+                  src="/images/media1.jpg"
+                  className="card-img-top"
+                  alt="추천 모임 이미지"
+                />
+                <div className="card-body">
+                  <h5 className="card-title">Card with stretched link</h5>
+                  <a href="#" className="btn btn-primary stretched-link">
+                    Go somewhere
+                  </a>
+                </div>
               </div>
             </div>
           </div>
-        </div>
-        {/* 권한별 버튼 */}
-        <div className="button">
-          {/* 비회원 권한일 때 */}
-          {userRole === 'member' && (
-            <>
-              <button
-                onClick={() => {
-                  fetch('http://localhost:8080/member/statusUpdate', {
-                    method: 'post',
-                    body: Form,
-                  });
-                }}
-              >
-                <FontAwesomeIcon icon={faHeart} />
-                &nbsp;찜하기
-              </button>
-              <button
-                onClick={() => {
-                  setFormShow(true);
-                }}
-                // onClick={() => {
-                //   <GroupJoinForm/>
-                //   // fetch('http://localhost:8080/member/statusUpdate', {
-                //   //   method: 'post',
-                //   //   body: Form,
-                //   // });
-                // }}
-              >
-                참가 신청하기
-              </button>
-            </>
-          )}
+          {/* 권한별 버튼 */}
+          <div className="button">
+            {/* 비회원 권한일 때 */}
+            {userRole === 'member' && (
+              <>
+                <button
+                  onClick={() => {
+                    fetch('http://localhost:8080/member/statusUpdate', {
+                      method: 'post',
+                      body: Form,
+                    });
+                  }}
+                >
+                  <FontAwesomeIcon icon={faHeart} />
+                  &nbsp;찜하기
+                </button>
+                <button
+                  onClick={() => {
+                    setFormShow(true);
+                  }}
+                  // onClick={() => {
+                  //   <GroupJoinForm/>
+                  //   // fetch('http://localhost:8080/member/statusUpdate', {
+                  //   //   method: 'post',
+                  //   //   body: Form,
+                  //   // });
+                  // }}
+                >
+                  참가 신청하기
+                </button>
+              </>
+            )}
 
-          {/* 모임멤버 권한일 때 */}
-          {userRole === 'group_member' && (
-            <button onClick={() => setChatShow(true)}>
-              <FontAwesomeIcon icon={faComments} />
-              &nbsp;모임 채팅 참여하기
-            </button>
-          )}
-
-          {/* 모임장 권한일 때 */}
-          {userRole === 'group_leader' && (
-            <>
+            {/* 모임멤버 권한일 때 */}
+            {userRole === 'group_member' && (
               <button onClick={() => setChatShow(true)}>
                 <FontAwesomeIcon icon={faComments} />
                 &nbsp;모임 채팅 참여하기
               </button>
-              <button onClick={handleButtonClick}>&nbsp;모임 관리하기</button>
-            </>
-          )}
-        </div>
+            )}
 
-        <GroupJoinForm show={formShow} onHide={() => setFormShow(false)} />
-        <ChatRoom show={chatShow} onHide={() => setChatShow(false)} />
-        <MemberProfileView show={profileShow} onHide={() => setProfileShow(false)} member={selectedMember} />
-      </div>
-    </Container>
-  );
+            {/* 모임장 권한일 때 */}
+            {userRole === 'group_leader' && (
+              <>
+                <button onClick={() => setChatShow(true)}>
+                  <FontAwesomeIcon icon={faComments} />
+                  &nbsp;모임 채팅 참여하기
+                </button>
+                <button onClick={handleButtonClick}>&nbsp;모임 관리하기</button>
+              </>
+            )}
+          </div>
+
+          <GroupJoinForm show={formShow} onHide={() => setFormShow(false)} />
+          <ChatRoom show={chatShow} onHide={() => setChatShow(false)} />
+          <MemberProfileView
+            show={profileShow}
+            onHide={() => setProfileShow(false)}
+            member={selectedMember}
+          />
+        </div>
+      </Container>
+    );
+  }
 }
 
 export default GroupDetail;
