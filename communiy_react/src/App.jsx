@@ -44,6 +44,8 @@ import UserTable from './Admin/Users/UserTable';
 import Community from './Admin/Community/Community';
 import CommunityDetail from './Admin/Community/CommunityDetail';
 import ChatRoom from './chatroom/Chatroom';
+import Complaint from './Admin/Complaint/Complaint';
+import Stats from './Admin/Stats/Stats';
 
 function App() {
   return (
@@ -109,6 +111,8 @@ function App() {
           <Route path="users" element={<UserTable />} />
           <Route path="community" element={<Community />} />
           <Route path="community/:id" element={<CommunityDetail />} />
+          <Route path="complaint" element={<Complaint />} />
+          <Route path="stats" element={<Stats />} />
         </Route>
       </Routes>
     </BrowserRouter>
