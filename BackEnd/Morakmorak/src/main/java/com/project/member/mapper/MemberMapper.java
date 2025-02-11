@@ -22,4 +22,7 @@ public interface MemberMapper {
 	void insertMember(Member member);
 
 	Member findByEmail(String email);
+
+	
+	public int phoneDuplicateCheck(Member member);
 }
