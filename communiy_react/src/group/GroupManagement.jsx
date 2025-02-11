@@ -39,8 +39,6 @@ export default function GroupManagement() {
       group_pr: '잘 부탁드립니다.',
       gender: '여성',
       phone:'010-1234-5678',
-      nickname: 'nickname',
-      reg_date: '2025-02-06',
     },
   ];
 

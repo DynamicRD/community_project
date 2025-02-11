@@ -348,7 +348,7 @@ export default function Signup() {
   });
 
   return (
-    <Container className="mt-5 mb-5 bg-light p-5">
+    <Container className="mt-5 mb-5 bg-light p-5 w-50">
       <div className="infochange">
         <h2 className="text-center">회원가입</h2>
         <Form onSubmit={handleSubmit}>
@@ -491,7 +491,7 @@ export default function Signup() {
             <Form.Label column sm={2}>
               전화번호
             </Form.Label>
-            <Col sm={10}>
+            <Col sm={9}>
               <div className="phone-input-group">
                 <Form.Select
                   name="phone1"
@@ -522,7 +522,7 @@ export default function Signup() {
                 <Button
                   variant="outline-secondary"
                   style={{
-                    width: '270px',
+                    width: '200px',
                   }}
                   onClick={async () => {
                     const form = new FormData();
@@ -567,7 +567,7 @@ export default function Signup() {
                       fontSize: '15px',
                     }}
                   >
-                    인증번호발송
+                    인증번호 발송
                   </span>
                 </Button>
               </div>

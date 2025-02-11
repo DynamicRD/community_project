@@ -1,4 +1,14 @@
-import { Container, Form, Modal, Nav } from 'react-bootstrap';
+import {
+  Container,
+  Form,
+  Modal,
+  Nav,
+  Table,
+  Image,
+  ListGroup,
+  Badge,
+  Button,
+} from 'react-bootstrap';
 import './GroupDetail.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -16,11 +26,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import ChatRoom from '../chatroom/Chatroom';
 import GroupJoinForm from './component/GroupJoinForm';
-
-<style>
-  .group_detail( box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; border-radius:
-  10px; padding: 50px 30px; )
-</style>;
+import MemberProfileView from './component/MemberProfileView';
 const reviewData = [
   {
     no: 1,
@@ -84,53 +90,65 @@ const reviewData = [
   },
 ];
 
-
 function GroupDetail({ reviewData }) {
   const g_id = 1; // URL에서 g_id를 추출
 
-  //리뷰 받아오기
-  const groupedReviews = [];
-  for (let i = 0; i < reviewData.length; i += 3) {
-    groupedReviews.push(reviewData.slice(i, i + 3));
-  }
+  // //리뷰 받아오기
+  // const groupedReviews = [];
+  // for (let i = 0; i < reviewData.length; i += 3) {
+  //   groupedReviews.push(reviewData.slice(i, i + 3));
+  // }
 
-  const completedMeetings = [
+  const memberList = [
     {
-      name: '테크 세미나',
-      date: '2025-01-10',
-      endDate: '2025-01-10',
-      role: '참석자',
-      cost: '₩ 30,000',
+      id: 'gasdf1',
+      nickname: 'nickname1',
+      birth: '1999-01-01',
+      reg_date: '2025-02-06',
+      role: 'member',
+      self_pr: '자기소개입니다',
+      group_pr: '잘 부탁드립니다.',
+      gender: '여성',
+      phone: '010-1234-5678',
     },
     {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
+      id: 'gasdf2',
+      nickname: 'nickname2',
+      birth: '1999-01-01',
+      reg_date: '2025-02-06',
+      role: 'member',
+      self_pr: '자기소개입니다',
+      group_pr: '잘 부탁드립니다.',
+      gender: '여성',
+      phone: '010-1234-5678',
     },
     {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
+      id: 'gasdf3',
+      nickname: 'nickname3',
+      birth: '1999-01-01',
+      reg_date: '2025-02-06',
+      role: 'member',
+      self_pr: '자기소개입니다',
+      group_pr: '잘 부탁드립니다.',
+      gender: '여성',
+      phone: '010-1234-5678',
     },
   ];
+
+  //멤버 프로필 띄우기
+  const [profileShow, setProfileShow] = useState(false);
+  const [selectedMember, setSelectedMember] = useState(null);
+  const profileOpen = (id) => {
+    const member = memberList.find((member) => member.id === id);
+    setSelectedMember(member);
+    setProfileShow(true);
+  };
 
   //신청폼 띄우기
   const [formShow, setFormShow] = useState(false);
 
   // 채팅창 띄우기
-  const [modalShow, setModalShow] = useState(false);
-
+  const [chatShow, setChatShow] = useState(false);
 
   // link 테스트
   const type = 'regular';
@@ -140,7 +158,7 @@ function GroupDetail({ reviewData }) {
   const [userRole, setUserRole] = useState('group_leader');
   const handleButtonClick = () => {
     navigate(`/group/management?g_id=${g_id}`);
-  }
+  };
 
   return (
     <Container>
@@ -177,11 +195,11 @@ function GroupDetail({ reviewData }) {
               </h4>
               <h4>
                 <FontAwesomeIcon icon={faCalendar} />
-                &nbsp;&nbsp; 종료일 : 2/16 일요일 10:00
+                &nbsp; 종료일 : 2/16 일요일 10:00
               </h4>
               <h4>
                 <FontAwesomeIcon icon={faUserGroup} />
-                &nbsp; 모집 인원 1 / 5명
+                &nbsp; 모집 인원 3 / 5명
               </h4>
               <h4>
                 <FontAwesomeIcon icon={faSackDollar} />
@@ -244,6 +262,42 @@ function GroupDetail({ reviewData }) {
           </p>
         </div>
 
+        <div className="groupMemberList">
+          <p
+            className="group_span"
+            style={{ fontSize: '35px', marginBottom: '10px' }}
+          >
+            현재 참여중인 멤버(1/5)
+          </p>
+          <ListGroup as="ol">
+            {memberList.map((member) => {
+              return (
+                <ListGroup.Item
+                  key={member.id}
+                  as="li"
+                  className="d-flex justify-content-between align-items-center"
+                >
+                  <div className="ms-2 me-auto">
+                    <div>
+                      <Image
+                        src="../images/group_leader_profile.jpeg"
+                        roundedCircle
+                        style={{ height: '40px', width: '40px' }}
+                      />{' '}
+                      &nbsp;<span className='fs-5'>{member.nickname}</span>
+                    </div>
+                  </div>
+                  <Button variant="primary" onClick={() => 
+                    profileOpen(member.id)
+                    }>
+                    프로필 보기
+                  </Button>
+                </ListGroup.Item>
+              );
+            })}
+          </ListGroup>
+        </div>
+
         <div className="map">
           <p className="group_span" style={{ fontSize: '37px' }}>
             <FontAwesomeIcon icon={faLocationDot} />
@@ -256,8 +310,7 @@ function GroupDetail({ reviewData }) {
           <GoogleMap address={'역삼역'} />
         </div>
 
-        <div>
-
+        {/* <div>
           <p className="group_span" style={{ fontSize: '37px' }}>
             모임 후기
           </p>
@@ -266,7 +319,6 @@ function GroupDetail({ reviewData }) {
               {groupedReviews.map((group, index) => (
                 <div
                   className="d-flex justify-content-start gap-5 mb-4"
-
                   key={index}
                 >
                   {group.map((object) => (
@@ -279,9 +331,7 @@ function GroupDetail({ reviewData }) {
                         />
                       </Nav.Link>
 
-
                       <div className="d-flex justify-content-between align-content-center mt-1 me-4 ms-4">
-
                         <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                         <span style={{ fontSize: '12px' }}>
                           평점: {object.rating}
@@ -296,14 +346,13 @@ function GroupDetail({ reviewData }) {
                       >
                         {completedMeetings[0].name}
                       </div>
-
                     </div>
                   ))}
                 </div>
               ))}
             </ul>
           </div>
-        </div>
+        </div> */}
 
         <div>
           <p className="group_span" style={{ fontSize: '30px' }}>
@@ -380,7 +429,6 @@ function GroupDetail({ reviewData }) {
         </div>
         {/* 권한별 버튼 */}
         <div className="button">
-
           {/* 비회원 권한일 때 */}
           {userRole === 'member' && (
             <>
@@ -396,7 +444,9 @@ function GroupDetail({ reviewData }) {
                 &nbsp;찜하기
               </button>
               <button
-              onClick={()=>{setFormShow(true)}}
+                onClick={() => {
+                  setFormShow(true);
+                }}
                 // onClick={() => {
                 //   <GroupJoinForm/>
                 //   // fetch('http://localhost:8080/member/statusUpdate', {
@@ -412,7 +462,7 @@ function GroupDetail({ reviewData }) {
 
           {/* 모임멤버 권한일 때 */}
           {userRole === 'group_member' && (
-            <button onClick={() => setModalShow(true)}>
+            <button onClick={() => setChatShow(true)}>
               <FontAwesomeIcon icon={faComments} />
               &nbsp;모임 채팅 참여하기
             </button>
@@ -421,7 +471,7 @@ function GroupDetail({ reviewData }) {
           {/* 모임장 권한일 때 */}
           {userRole === 'group_leader' && (
             <>
-              <button onClick={() => setModalShow(true)}>
+              <button onClick={() => setChatShow(true)}>
                 <FontAwesomeIcon icon={faComments} />
                 &nbsp;모임 채팅 참여하기
               </button>
@@ -431,7 +481,8 @@ function GroupDetail({ reviewData }) {
         </div>
 
         <GroupJoinForm show={formShow} onHide={() => setFormShow(false)} />
-        <ChatRoom show={modalShow} onHide={() => setModalShow(false)} />
+        <ChatRoom show={chatShow} onHide={() => setChatShow(false)} />
+        <MemberProfileView show={profileShow} onHide={() => setProfileShow(false)} member={selectedMember} />
       </div>
     </Container>
   );

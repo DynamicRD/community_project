@@ -101,7 +101,7 @@ export default function GroupRegist() {
                       onClick={() => {
                         // const mapForm = new FormData();
                         // mapForm.append('address', address.current.value);
-                        // fetch('http://localhost:8080/group/map',{
+                        // fetch('http://localhost:8080/group/insert',{
                         //   method:'post',
                         //   body: mapForm,
                         // }).then((response)=>{
