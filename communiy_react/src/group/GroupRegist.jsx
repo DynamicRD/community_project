@@ -22,19 +22,12 @@ export default function GroupRegist() {
   const last_date = useRef();
   const comment1 = useRef();
   const comment2 = useRef();
-  const img_url = useRef();
-
-  // const { address, setAddress } = useState();
-  // const { detail_address, SetDetail_address } = useState();
-
-  // 버튼 클릭 시 AddressInput 활성화/비활성화
-  // const handleButtonClick = () => {
-  //   // 주소 입력창을 토글하는 기능
-  //   setIsAddressInputVisible((prevState) => !prevState);
-  // };
+  const img_url1 = useRef();
+  const img_url2 = useRef();
+  const img_url3 = useRef();
 
   return (
-    <Container>
+    <Container className='w-75'>
       <div className="group_regist">
         <div className="board">
           <div className="review_title">
@@ -154,7 +147,10 @@ export default function GroupRegist() {
               <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
                   <p>모임 대표 이미지 등록</p>
-                  <input type="file" ref={img_url} />
+                  <input type="file" ref={img_url1} className='mb-3'/>
+                  <p>모임 상세 이미지 등록</p>
+                  <input type="file" ref={img_url2} />
+                  <input type="file" ref={img_url3} />
                 </div>
                 <div>
                   <Button
@@ -175,8 +171,14 @@ export default function GroupRegist() {
                         form.append('last_date', last_date.current.value);
                         form.append('comment1', comment1.current.value);
                         form.append('comment2', comment2.current.value);
-                        if(img_url.current.files.length>0){
-                          form.append('img_url', img_url.current.files[0]);
+                        if(img_url1.current.files.length>0){
+                          form.append('img_url1', img_url1.current.files[0]);
+                        }
+                        if(img_url2.current.files.length>0){
+                          form.append('img_url2', img_url2.current.files[0]);
+                        }
+                        if(img_url3.current.files.length>0){
+                          form.append('img_url3', img_url3.current.files[0]);
                         }
                         fetch('http://localhost:8080/group/insert', {
                           method: 'post',

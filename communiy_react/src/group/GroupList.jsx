@@ -194,9 +194,9 @@ function GroupList({ type }) {
           </span>
         </div>
       </Link>
-      <Container>
+      <Container >
         <div className="group_list">
-          <h1 className="p-2">
+          <h1 className="p-2 group_span">
             {type === 'regular' ? `정기모임` : '동행ㆍ소모임'}
           </h1>
           <div className="filter m-2">

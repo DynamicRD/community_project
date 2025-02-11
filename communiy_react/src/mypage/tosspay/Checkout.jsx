@@ -5,6 +5,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Container } from 'react-bootstrap';
 
 export default function Checkout() {
+  
   const paymentWidgetRef = useRef(null); // PaymentWidgetInstance를 참조
   const paymentMethodsWidgetRef = useRef(null); // 결제 방법 위젯을 참조
   const location = useLocation(); // useLocation 훅 호출 후 location 사용
@@ -68,30 +69,20 @@ export default function Checkout() {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 w-50 ">
       <div className="text-center">
         <h1>주문서</h1>
         <div id="payment-widget" /> {/* 결제 위젯이 렌더링될 DOM */}
-        {/* <div>
-          <input
-            type="checkbox"
-            onChange={(event) => {
-              // 체크박스 상태에 따라 가격을 조정
-              setPrice(event.target.checked ? price - 5000 : price + 5000);
-            }}
-          />
-          <label>5,000원 할인 쿠폰 적용</label>
-        </div> */}
         <Button
           onClick={handlePayment}
           variant="primary"
           block
-          className="mt-3"
+          className="mt-3 mb-3 w-25"
         >
           결제하기
-        </Button>
+        </Button>&nbsp;
         <Link to="/mypage">
-          <Button variant="secondary" block className="mt-3">
+          <Button variant="secondary" block className="mt-3 mb-3 w-25">
             돌아가기
           </Button>
         </Link>

@@ -76,7 +76,7 @@ export default function MyProfileChange() {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 w-50">
       <h2 className="text-center">프로필 정보 수정</h2>
       <Form onSubmit={handleSubmit}>
         {/* 프로필 사진 업로드 */}

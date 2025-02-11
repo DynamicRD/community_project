@@ -12,10 +12,11 @@ import {
   faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import GoogleMap from './component/GoogleMap';
-
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useState } from 'react';
 import ChatRoom from '../chatroom/Chatroom';
+import GroupJoinForm from './component/GroupJoinForm';
+
 <style>
   .group_detail( box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; border-radius:
   10px; padding: 50px 30px; )
@@ -83,7 +84,10 @@ const reviewData = [
   },
 ];
 
+
 function GroupDetail({ reviewData }) {
+  const g_id = 1; // URL에서 g_id를 추출
+
   //리뷰 받아오기
   const groupedReviews = [];
   for (let i = 0; i < reviewData.length; i += 3) {
@@ -121,6 +125,9 @@ function GroupDetail({ reviewData }) {
     },
   ];
 
+  //신청폼 띄우기
+  const [formShow, setFormShow] = useState(false);
+
   // 채팅창 띄우기
   const [modalShow, setModalShow] = useState(false);
 
@@ -132,7 +139,7 @@ function GroupDetail({ reviewData }) {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState('group_leader');
   const handleButtonClick = () => {
-    navigate('/group/management');
+    navigate(`/group/management?g_id=${g_id}`);
   }
 
   return (
@@ -389,12 +396,14 @@ function GroupDetail({ reviewData }) {
                 &nbsp;찜하기
               </button>
               <button
-                onClick={() => {
-                  fetch('http://localhost:8080/member/statusUpdate', {
-                    method: 'post',
-                    body: Form,
-                  });
-                }}
+              onClick={()=>{setFormShow(true)}}
+                // onClick={() => {
+                //   <GroupJoinForm/>
+                //   // fetch('http://localhost:8080/member/statusUpdate', {
+                //   //   method: 'post',
+                //   //   body: Form,
+                //   // });
+                // }}
               >
                 참가 신청하기
               </button>
@@ -421,6 +430,7 @@ function GroupDetail({ reviewData }) {
           )}
         </div>
 
+        <GroupJoinForm show={formShow} onHide={() => setFormShow(false)} />
         <ChatRoom show={modalShow} onHide={() => setModalShow(false)} />
       </div>
     </Container>
