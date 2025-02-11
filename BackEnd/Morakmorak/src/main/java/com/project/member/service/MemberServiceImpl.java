@@ -34,6 +34,7 @@ public class MemberServiceImpl implements MemberService {
     private final RestTemplate restTemplate = new RestTemplate();
     
 
+
 	@Override
 	public boolean duplicateCheck(Member member) {
 		int count = mapper.idDuplicateCheck(member); // 오타 수정
@@ -214,7 +215,6 @@ public class MemberServiceImpl implements MemberService {
 	// 🔹 카카오 Access Token 요청 메서드 추가
 	    private String getAccessToken(String authCode) {
 	        String tokenUrl = "https://kauth.kakao.com/oauth/token"
-	                + "?grant_type=authorization_code"
 	                + "&client_id=" + secretConfig.getKakaoClienID()
 	                + "&redirect_uri=" + secretConfig.getKaKaoRedirectURL()
 	                + "&code=" + authCode;

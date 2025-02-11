@@ -84,8 +84,17 @@
 }
 
 .register_btn {
+  background-color: #ff6745;
+  border: 1px solid #ff6745;
   position: relative;
   right: 10px;
+  height: 35px;
+  text-align: center;
+}
+
+.register_btn:hover {
+  background-color: #ff67458f;
+  border: 1px solid #ff674500;
 }
 
 .reply_hr {

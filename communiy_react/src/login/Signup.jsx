@@ -82,7 +82,6 @@ export default function Signup() {
 
   //인증번호 값 받는 Ref함수 추가
   const valid = useRef();
-  const [randomNumber, setRandomNumber] = useState();
 
   const [formData, setFormData] = useState({
     id: '',
@@ -210,7 +209,6 @@ export default function Signup() {
 
   const validateField = (name, value) => {
     let errorMessage = '';
-    console.log(value + '' + name + '' + randomNumber);
     if (patterns[name]) {
       if (typeof patterns[name] === 'function') {
         errorMessage = !patterns[name](value)
@@ -343,9 +341,12 @@ export default function Signup() {
     setIsAddressInputVisible((prevState) => !prevState); // 상태를 반전시킴
   };
 
-  useEffect(() => {
-    console.log(randomNumber);
-  });
+  // 버튼 클릭 시 인증번호 입력 칸 활성화
+  const [isVisible, setIsVisible] = useState(false);
+
+  const handleClick = () => {
+    setIsVisible(true);
+  };
 
   return (
     <Container className="mt-5 mb-5 bg-light p-5">
@@ -530,6 +531,7 @@ export default function Signup() {
                     form.append('number2', formData.phone2);
                     form.append('number3', formData.phone3);
 
+
                     try {
                       const response = await fetch(
                         'http://localhost:8080/member/phoneduplicatecheck',
@@ -582,7 +584,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 인증번호 체크 버튼 */}
-          <div>
+          <div style={{ display: isVisible === true ? 'block' : 'none' }}>
             <Form.Label column sm={2}>
               인증번호입력
             </Form.Label>
@@ -616,7 +618,6 @@ export default function Signup() {
               인증확인
             </Button>
             {errors.valid && <div className="text-danger">{errors.valid}</div>}
-            {errors.wrong && <div className="text-danger">{errors.wrong}</div>}
           </div>
 
           {/* 생년월일 입력 */}

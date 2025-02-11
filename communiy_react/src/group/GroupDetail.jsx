@@ -12,15 +12,11 @@ import {
   faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import GoogleMap from './component/GoogleMap';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router';
 import { useState } from 'react';
 import ChatRoom from '../chatroom/Chatroom';
-import GroupJoinForm from './component/GroupJoinForm';
 
-<style>
-  .group_detail( box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px; border-radius:
-  10px; padding: 50px 30px; )
-</style>;
+//리뷰관련 목업데이터
 const reviewData = [
   {
     no: 1,
@@ -84,15 +80,20 @@ const reviewData = [
   },
 ];
 
-
-function GroupDetail({ reviewData }) {
-  const g_id = 1; // URL에서 g_id를 추출
-
+function GroupDetail() {
   //리뷰 받아오기
   const groupedReviews = [];
   for (let i = 0; i < reviewData.length; i += 3) {
     groupedReviews.push(reviewData.slice(i, i + 3));
   }
+  //평점 별 별 사진찍기 함수
+  const getStarImages = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(i <= rating ? '/images/star.png' : '/images/emptyStar.png'); // 채워진 별과 비어 있는 별을 나눔
+    }
+    return stars;
+  };
 
   const completedMeetings = [
     {
@@ -125,12 +126,8 @@ function GroupDetail({ reviewData }) {
     },
   ];
 
-  //신청폼 띄우기
-  const [formShow, setFormShow] = useState(false);
-
   // 채팅창 띄우기
   const [modalShow, setModalShow] = useState(false);
-
 
   // link 테스트
   const type = 'regular';
@@ -139,8 +136,8 @@ function GroupDetail({ reviewData }) {
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState('group_leader');
   const handleButtonClick = () => {
-    navigate(`/group/management?g_id=${g_id}`);
-  }
+    navigate('/group/management');
+  };
 
   return (
     <Container>
@@ -250,14 +247,11 @@ function GroupDetail({ reviewData }) {
             &nbsp;모임장소
           </p>
           <h4>투썸플레이스 역삼역점</h4>
-
           <p className="detail_address">서울특별시 강남구 테헤란로27길 16</p>
-
           <GoogleMap address={'역삼역'} />
         </div>
 
         <div>
-
           <p className="group_span" style={{ fontSize: '37px' }}>
             모임 후기
           </p>
@@ -266,11 +260,18 @@ function GroupDetail({ reviewData }) {
               {groupedReviews.map((group, index) => (
                 <div
                   className="d-flex justify-content-start gap-5 mb-4"
-
                   key={index}
                 >
                   {group.map((object) => (
                     <div className="review_item" key={object.no}>
+                      <div
+                        className="club_name d-flex align-content-cetner ms-4 mb-1"
+                        style={{
+                          fontSize: '14px',
+                        }}
+                      >
+                        {completedMeetings[0].name}
+                      </div>
                       <Nav.Link href="/review/Read">
                         <img
                           src={object.img}
@@ -279,24 +280,20 @@ function GroupDetail({ reviewData }) {
                         />
                       </Nav.Link>
 
-
-                      <div className="d-flex justify-content-between align-content-center mt-1 me-4 ms-4">
-
+                      <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
                         <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                         <span style={{ fontSize: '12px' }}>
-                          평점: {object.rating}
+                          평점&nbsp;:&nbsp;
+                          {getStarImages(object.rating).map((star, index) => (
+                            <img
+                              key={index}
+                              src={star}
+                              alt="star"
+                              className="star"
+                            />
+                          ))}
                         </span>
                       </div>
-
-                      <div
-                        className="club_name d-flex align-content-center"
-                        style={{
-                          fontSize: '14px',
-                        }}
-                      >
-                        {completedMeetings[0].name}
-                      </div>
-
                     </div>
                   ))}
                 </div>
@@ -380,7 +377,6 @@ function GroupDetail({ reviewData }) {
         </div>
         {/* 권한별 버튼 */}
         <div className="button">
-
           {/* 비회원 권한일 때 */}
           {userRole === 'member' && (
             <>
@@ -396,14 +392,12 @@ function GroupDetail({ reviewData }) {
                 &nbsp;찜하기
               </button>
               <button
-              onClick={()=>{setFormShow(true)}}
-                // onClick={() => {
-                //   <GroupJoinForm/>
-                //   // fetch('http://localhost:8080/member/statusUpdate', {
-                //   //   method: 'post',
-                //   //   body: Form,
-                //   // });
-                // }}
+                onClick={() => {
+                  fetch('http://localhost:8080/member/statusUpdate', {
+                    method: 'post',
+                    body: Form,
+                  });
+                }}
               >
                 참가 신청하기
               </button>
@@ -430,7 +424,6 @@ function GroupDetail({ reviewData }) {
           )}
         </div>
 
-        <GroupJoinForm show={formShow} onHide={() => setFormShow(false)} />
         <ChatRoom show={modalShow} onHide={() => setModalShow(false)} />
       </div>
     </Container>

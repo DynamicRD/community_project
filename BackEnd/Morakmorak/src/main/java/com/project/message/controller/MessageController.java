@@ -17,11 +17,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.common.config.SecretConfig;
-
 
 import lombok.extern.slf4j.Slf4j;
 import net.nurigo.sdk.NurigoApp;
@@ -42,6 +40,7 @@ public class MessageController {
 
 	final DefaultMessageService messageService;
 	static int number;
+	static int number2;
 	private final SecretConfig secretConfig = new SecretConfig();
 	
 	public MessageController() {
@@ -120,12 +119,33 @@ public class MessageController {
 		System.out.println(response);
 		return response;
 	}
+	
+	@CrossOrigin
+	@PostMapping("/send-one2")
+	public SingleMessageSentResponse sendOne2(@RequestParam("number") String number) {
+		number2 = (int)(Math.random()*(1000000-100000+1)+100000);
+		Message message = new Message();
+		// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
+		message.setFrom("01066389944");
+		message.setTo(number);
+		message.setText("[모락모락] 본인확인을 위해 인증번호 [" + number2 + "]을 입력해 주세요");
+		log.info("value=" +number);
+		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
+		System.out.println(response);
+		return response;
+	}
 
 	@CrossOrigin
 	@RequestMapping("/send-one/number")
 	public int sendNumber() {
 		System.out.println(number);
 		return number;
+	}
+	@CrossOrigin
+	@RequestMapping("/send-one/number2")
+	public int sendNumber2() {
+		System.out.println(number2);
+		return number2;
 	}
 	
 //	@PostMapping("/send-one")

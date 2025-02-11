@@ -45,11 +45,16 @@ import UserTable from './Admin/Users/UserTable';
 import Community from './Admin/Community/Community';
 import CommunityDetail from './Admin/Community/CommunityDetail';
 import ChatRoom from './chatroom/Chatroom';
+import FindId from './login/FindId';
+import FindPwd from './login/FindPwd';
+import ResetPassword from './login/ResetPassword';
+import WishList from './wishlist/wishlist';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* 유저 레이아웃 */}
         <Route element={<UserLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
@@ -93,11 +98,17 @@ function App() {
           <Route path="/announcements" element={<AnnouncementsNotice />} />
           <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
           <Route path="/announcements/read" element={<AnnouncementsNoticeRead />} />
-        </Route>
-      </Routes>
 
-      {/* ✅ 관리자 관련 라우트 */}
-      <Routes>
+          {/* 찜 목록 */}
+          <Route path="/favorites" element={<WishList />} />
+
+          {/* 아이디, 비밀번호 찾기 */}
+          <Route path="/find-id" element={<FindId />} />
+          <Route path="/find-password" element={<FindPwd />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
+        </Route>
+
+        {/* ✅ 관리자 관련 라우트 */}
         <Route path="/admin/*" element={<AdminLayout />}>
           <Route index element={<Dashboard />} />
           <Route path="dashboard" element={<Dashboard />} />
