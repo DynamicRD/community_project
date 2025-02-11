@@ -15,7 +15,7 @@ public class VisitServiceImpl implements VisitService {
 	
 	@Override
 	public void insert(VisitLog visitLog) throws Exception {
-		mapper.insert(visitLog);
+		//mapper.insert(visitLog);
 		System.out.println("Impl"+visitLog);
 	}
 
