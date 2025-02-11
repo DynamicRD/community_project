@@ -33,6 +33,7 @@ import AnnouncementsNoticeRead from './announcements/Announcements_notice_read';
 
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
+import KakaoCallback from './login/KakaoCallback';
 
 import Read from './review/Read';
 import Review from './review/Review';
@@ -48,19 +49,16 @@ import ChatRoom from './chatroom/Chatroom';
 function App() {
   return (
     <BrowserRouter>
-      {/* ✅ 유저 관련 라우트 */}
       <Routes>
         <Route element={<UserLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/member/kakao/callback" element={<KakaoCallback />} />
 
           {/* 모임 관련 */}
           <Route path="/group/detail" element={<GroupDetail />} />
-          <Route
-            path="/group/regular_list"
-            element={<GroupList type="regular" />}
-          />
+          <Route path="/group/regular_list" element={<GroupList type="regular" />} />
           <Route path="/group/one_list" element={<GroupList type="one" />} />
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
@@ -94,10 +92,7 @@ function App() {
           {/* 공지사항 */}
           <Route path="/announcements" element={<AnnouncementsNotice />} />
           <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
-          <Route
-            path="/announcements/read"
-            element={<AnnouncementsNoticeRead />}
-          />
+          <Route path="/announcements/read" element={<AnnouncementsNoticeRead />} />
         </Route>
       </Routes>
 

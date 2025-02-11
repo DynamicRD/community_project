@@ -1,28 +1,19 @@
 package com.project.member.controller;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.common.config.JwtUtil;
-import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
 import com.project.member.service.MemberService;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,11 +21,24 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/member")
 @CrossOrigin
 public class MemberController {
-
-	@Autowired
+		@Autowired
 	private MemberService service;
 	@Autowired
 	private JwtUtil JwtUtil;
+
+
+	@PostMapping("/kakao")
+	public ResponseEntity<?> kakaoLogin(@RequestBody Map<String, String> request) {
+		Map<String, String> tokens = service.kakaoLogin(request.get("accessToken"));
+
+		ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.get("refreshToken"))
+				.httpOnly(true).secure(true).path("/").maxAge(604800).build();
+
+		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + tokens.get("accessToken")).body("Login Successful");
+	}
+
+
 
 	@GetMapping("/duplicatecheck")
 	public Map<String, Boolean> checkDuplicate(@RequestParam("userId") String userId) { // "userId"로 변경
@@ -147,4 +151,5 @@ public class MemberController {
 		cookie.setAttribute("SameSite", "Strict"); // XSRF 방지
 		response.addCookie(cookie);
 	}
+
 }

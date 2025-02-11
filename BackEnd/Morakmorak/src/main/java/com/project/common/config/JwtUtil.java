@@ -1,29 +1,26 @@
 package com.project.common.config;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Component;
 
-import com.project.member.model.Member;
-
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
+
    
 	private final SecretConfig secretConfig = new SecretConfig();
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (15분)
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
 
-    // ================== JWT 관련 ==================
+    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
-    /** ✅ JWT 액세스 토큰 생성 */
-    public String createAccessToken(Member member) {
-
+    public static String generateAccessToken(String email) {
         return Jwts.builder()
                 .setSubject("userRegister")
                 .claim("id", member.getId())
@@ -37,11 +34,27 @@ public class JwtUtil {
                 .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
                 .compact();
     }
-
-    /** ✅ 리프레시 토큰 생성 */
-    public String createRefreshToken(Member member) {
+  
+    public static String kakaoGenerateAccessToken(String email) {
         return Jwts.builder()
-                .setSubject("refreshToken")
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+  
+    public static String kakaoGenerateRefreshToken(String email) {
+        return Jwts.builder()
+        		.setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .compact();
+    }
+
+
+    public static String generateRefreshToken(String email) {
+        return Jwts.builder()
+        	.setSubject("refreshToken")
                 .claim("id", member.getId())
                 .claim("provider", member.getProvider())
                 .setIssuedAt(new Date())
@@ -76,6 +89,7 @@ public class JwtUtil {
     	member.setProvider(validateToken(token).get("provider", String.class));
         return member;
     }
+
 }
 
 
