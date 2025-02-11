@@ -6,6 +6,9 @@ import javax.crypto.SecretKey;
 
 import org.springframework.stereotype.Component;
 
+import com.project.member.model.Member;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -14,13 +17,12 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
    
-	private final SecretConfig secretConfig = new SecretConfig();
+	private final static SecretConfig secretConfig = new SecretConfig();
     private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (15분)
     private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
 
-    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
-    public static String generateAccessToken(String email) {
+    public static String createAccessToken(Member member) {
         return Jwts.builder()
                 .setSubject("userRegister")
                 .claim("id", member.getId())
@@ -38,21 +40,21 @@ public class JwtUtil {
     public static String kakaoGenerateAccessToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256,  secretConfig.getJwtSecretKey())
                 .compact();
     }
   
     public static String kakaoGenerateRefreshToken(String email) {
         return Jwts.builder()
         		.setSubject(email)
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
                 .compact();
     }
 
 
-    public static String generateRefreshToken(String email) {
+    public static String createRefreshToken(Member member) {
         return Jwts.builder()
         	.setSubject("refreshToken")
                 .claim("id", member.getId())
