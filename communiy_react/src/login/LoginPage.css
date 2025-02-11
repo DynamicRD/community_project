@@ -1,0 +1,34 @@
+.findIdButton {
+  text-align: center;
+  font-weight: 500;
+  border: 1px solid #6c757d;
+  cursor: pointer;
+  color: #6c757d;
+}
+
+.findIdButton:active {
+  background-color: #6c757d;
+  color: white;
+}
+
+.findId {
+  opacity: 50%;
+}
+
+.findId:hover {
+  opacity: 100%;
+}
+
+.buttonLogin {
+  width: 100%;
+  padding: 10px;
+  background-color: #ff471d;
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.buttonLogin:hover {
+  background-color: #ff461dd2;
+}

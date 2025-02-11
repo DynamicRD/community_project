@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import { Link } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
+import './LoginPage.css';
 
 export default function Login() {
   const [id, setId] = useState('');
@@ -102,7 +103,7 @@ export default function Login() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh',
+          height: '80vh',
         }}
       >
         <div
@@ -114,7 +115,12 @@ export default function Login() {
             width: '400px',
           }}
         >
-          <h2 style={{ textAlign: 'center' }}>회원 로그인</h2>
+          <h2
+            style={{ textAlign: 'center', fontWeight: '900' }}
+            className="mt-3 mb-4"
+          >
+            회원 로그인
+          </h2>
           <input
             type="text"
             placeholder="아이디를 입력하시오"
@@ -134,25 +140,14 @@ export default function Login() {
             style={{
               width: '100%',
               padding: '10px',
-              marginBottom: '10px',
+              marginBottom: '20px',
               border: '1px solid #ccc',
               borderRadius: '5px',
             }}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <button
-            onClick={handleLogin}
-            style={{
-              width: '100%',
-              padding: '10px',
-              backgroundColor: '#01ff23d1',
-              color: 'white',
-              border: 'none',
-              borderRadius: '25px',
-              cursor: 'pointer',
-            }}
-          >
+          <button onClick={handleLogin} className="buttonLogin">
             로그인
           </button>
           <div
@@ -200,18 +195,18 @@ export default function Login() {
           >
             <p>
               아이디를 잊어버리셨나요?{' '}
-              <Link to="/find-id" style={{ color: 'blue' }}>
-                아이디 찾기
+              <Link to="/find-id" style={{ textDecoration: 'none' }}>
+                <span className="findId">아이디 찾기</span>
               </Link>
               <br />
               비밀번호를 잊어버리셨나요?{' '}
-              <Link to="/find-password" style={{ color: 'blue' }}>
-                비밀번호 찾기
+              <Link to="/find-password" style={{ textDecoration: 'none' }}>
+                <span className="findId">비밀번호 찾기</span>
               </Link>
               <br />
               아직 회원이 아니신가요?{' '}
-              <Link to="/signup" style={{ color: 'blue' }}>
-                회원가입
+              <Link to="/signup" style={{ textDecoration: 'none' }}>
+                <span className="findId">회원가입</span>
               </Link>
             </p>
           </div>

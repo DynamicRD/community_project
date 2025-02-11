@@ -38,6 +38,10 @@ import Test from './login/Test';
 import { ContactUs } from './review/test';
 import GoogleSignup from './login/GoogleSignup';
 import ChatRoom from './chatroom/Chatroom';
+import FindId from './login/FindId';
+import FindPwd from './login/FindPwd';
+import ResetPassword from './login/ResetPassword';
+import WishList from './wishlist/wishlist';
 
 const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
@@ -152,10 +156,15 @@ function App() {
         <Routes>
           {/* 모임페이지-해원 */}
 
-
-          <Route path="/group/detail" element={<GroupDetail reviewData={[...reviewData]}/>} />
-          <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
-          <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
+          <Route
+            path="/group/detail"
+            element={<GroupDetail reviewData={[...reviewData]} />}
+          />
+          <Route
+            path="/group/regular_list"
+            element={<GroupList type={'regular'} />}
+          />
+          <Route path="/group/one_list" element={<GroupList type={'one'} />} />
 
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
@@ -184,7 +193,6 @@ function App() {
           <Route path="/google/signup" element={<GoogleSignup />} />
 
           <Route path="/test" element={<Test />} />
-
 
           {/* 리뷰게시판 - 문정배*/}
           <Route
@@ -219,9 +227,16 @@ function App() {
             }
           />
 
+          {/* 찜목록 */}
+          <Route path="/favorites" element={<WishList />} />
+
           {/* 로그인-신지호 */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          {/* 아이디, 비밀번호 찾기 */}
+          <Route path="/find-id" d-pas element={<FindId />} />
+          <Route path="/find-password" element={<FindPwd />} />
+          <Route path="/resetPassword" element={<ResetPassword />} />
         </Routes>
         <Footer />
       </BrowserRouter>

@@ -1,0 +1,18 @@
+.favorite {
+  position: absolute;
+  z-index: 2;
+  border: 1px solid black;
+  padding: 5px;
+  cursor: pointer;
+  background-color: none;
+  border: none;
+}
+
+.heartIcon {
+  color: #ff2d00;
+  font-size: 20px;
+}
+
+.wishList {
+  margin: 30px;
+}
