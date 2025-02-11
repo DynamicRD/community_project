@@ -16,6 +16,7 @@ import { Link, useNavigate } from 'react-router';
 import { useState } from 'react';
 import ChatRoom from '../chatroom/Chatroom';
 
+//리뷰관련 목업데이터
 const reviewData = [
   {
     no: 1,
@@ -85,6 +86,15 @@ function GroupDetail() {
   for (let i = 0; i < reviewData.length; i += 3) {
     groupedReviews.push(reviewData.slice(i, i + 3));
   }
+  //평점 별 별 사진찍기 함수
+  const getStarImages = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(i <= rating ? '/images/star.png' : '/images/emptyStar.png'); // 채워진 별과 비어 있는 별을 나눔
+    }
+    return stars;
+  };
+
   const completedMeetings = [
     {
       name: '테크 세미나',
@@ -254,6 +264,14 @@ function GroupDetail() {
                 >
                   {group.map((object) => (
                     <div className="review_item" key={object.no}>
+                      <div
+                        className="club_name d-flex align-content-cetner ms-4 mb-1"
+                        style={{
+                          fontSize: '14px',
+                        }}
+                      >
+                        {completedMeetings[0].name}
+                      </div>
                       <Nav.Link href="/review/Read">
                         <img
                           src={object.img}
@@ -262,19 +280,19 @@ function GroupDetail() {
                         />
                       </Nav.Link>
 
-                      <div className="d-flex justify-content-between align-content-center mt-1 me-4 ms-4">
+                      <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
                         <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                         <span style={{ fontSize: '12px' }}>
-                          평점: {object.rating}
+                          평점&nbsp;:&nbsp;
+                          {getStarImages(object.rating).map((star, index) => (
+                            <img
+                              key={index}
+                              src={star}
+                              alt="star"
+                              className="star"
+                            />
+                          ))}
                         </span>
-                      </div>
-                      <div
-                        className="club_name d-flex align-content-center"
-                        style={{
-                          fontSize: '14px',
-                        }}
-                      >
-                        {completedMeetings[0].name}
                       </div>
                     </div>
                   ))}

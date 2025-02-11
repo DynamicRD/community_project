@@ -122,7 +122,7 @@ function MyPage() {
   };
 
   return (
-    <Container className="mt-5">
+    <Container className="mt-5 w-75">
       <div className="myPage">
         {/* Profile Header */}
         <div className="profile-header rounded-2 p-4">
