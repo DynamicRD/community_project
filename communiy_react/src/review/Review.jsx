@@ -4,7 +4,6 @@ import Pagination from 'react-bootstrap/Pagination';
 
 import './Review.css';
 
-
 const reviewData = [
   {
     no: 1,
@@ -212,7 +211,7 @@ export default function Review() {
                     >
                       {completedMeetings[0].name}
                     </div>
-                    <Nav.Link href="/user/review/Read">
+                    <Nav.Link href="/review/Read">
                       <img
                         src={object.img}
                         alt="review"
@@ -221,9 +220,7 @@ export default function Review() {
                     </Nav.Link>
 
                     <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
-                      <Nav.Link href="/user/review/Read">
-                        {object.title}
-                      </Nav.Link>
+                      <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                       <span style={{ fontSize: '12px' }}>
                         평점&nbsp;:&nbsp;
                         {getStarImages(object.rating).map((star, index) => (

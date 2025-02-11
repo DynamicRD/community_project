@@ -1,10 +1,9 @@
 import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
-import { Container } from 'react-bootstrap';.
+import { Container } from 'react-bootstrap';
 import './LoginPage.css';
 import { Link, useNavigate } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
-
 
 export default function Login() {
   const [id, setId] = useState('');
@@ -162,10 +161,10 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown} // 추가
           />
-          <button
-            className="buttonLogin">
+          <button className="buttonLogin">
             onClick={handleLogin}
-            style={{
+            style=
+            {{
               width: '100%',
               padding: '10px',
               backgroundColor: '#01ff23d1',
@@ -174,8 +173,6 @@ export default function Login() {
               borderRadius: '25px',
               cursor: 'pointer',
             }}
-          >
-
             로그인
           </button>
           <div
