@@ -531,7 +531,6 @@ export default function Signup() {
                     form.append('number2', formData.phone2);
                     form.append('number3', formData.phone3);
 
-
                     try {
                       const response = await fetch(
                         'http://localhost:8080/member/phoneduplicatecheck',
@@ -554,6 +553,7 @@ export default function Signup() {
                               method: 'post',
                               body: form,
                             }).then(() => {
+                              handleClick();
                               alert('인증번호가 발송 되었습니다');
                             });
                           }
