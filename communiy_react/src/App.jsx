@@ -24,7 +24,6 @@ import Review from './review/Review';
 import Regist from './review/Regist';
 import Signup from './login/Signup';
 
-import Login from './login/login';
 import GroupUpdate from './group/GroupUpdate';
 import GroupManage from './group/GroupManagement';
 import GroupManagement from './group/GroupManagement';
@@ -38,6 +37,8 @@ import Test from './login/Test';
 import { ContactUs } from './review/test';
 import GoogleSignup from './login/GoogleSignup';
 import ChatRoom from './chatroom/Chatroom';
+import KakaoCallback from './login/KakaoCallback';
+import Login from './Login/login';
 
 const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
@@ -152,9 +153,15 @@ function App() {
         <Routes>
           {/* 모임페이지-해원 */}
 
-          <Route path="/group/detail" element={<GroupDetail reviewData={[...reviewData]}/>} />
-          <Route path="/group/regular_list" element={<GroupList type={'regular'}/>} />
-          <Route path="/group/one_list" element={<GroupList type={'one'}/>} />
+          <Route
+            path="/group/detail"
+            element={<GroupDetail reviewData={[...reviewData]} />}
+          />
+          <Route
+            path="/group/regular_list"
+            element={<GroupList type={'regular'} />}
+          />
+          <Route path="/group/one_list" element={<GroupList type={'one'} />} />
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
           <Route path="/group/management" element={<GroupManagement />} />
@@ -181,8 +188,6 @@ function App() {
           <Route path="/google/signup" element={<GoogleSignup />} />
 
           <Route path="/test" element={<Test />} />
-
-          
 
           {/* 리뷰게시판 - 문정배*/}
           <Route
@@ -220,6 +225,7 @@ function App() {
           {/* 로그인-신지호 */}
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/member/kakao/callback" element={<KakaoCallback />} />
         </Routes>
         <Footer />
       </BrowserRouter>

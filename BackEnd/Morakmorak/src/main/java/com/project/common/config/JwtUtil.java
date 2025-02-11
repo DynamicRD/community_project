@@ -1,81 +1,103 @@
 package com.project.common.config;
 
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Value;
+import javax.crypto.SecretKey;
+
 import org.springframework.stereotype.Component;
 
-import com.project.member.model.Member;
-
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
-    @Value("${jwt.secret}") // application.properties에서 비밀키 읽기
-    private String secretKey;
+	
+	private static final String SECRET_KEY = "secretkeysecretkeysecretkeysecretkeysecretkeysecretkey";
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 15;  // 15분
+    private static final long REFRESH_TOKEN_EXPIRATION = 1000L * 60 * 60 * 24 * 7;  // 7일
 
-    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (15분)
-    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
+    private static final SecretKey key = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
-    // ================== JWT 관련 ==================
-
-    /** ✅ JWT 액세스 토큰 생성 */
-    public String createAccessToken(Member member) {
-
+    public static String generateAccessToken(String email) {
         return Jwts.builder()
-                .setSubject("userRegister")
-                .claim("id", member.getId())
-                .claim("role", "ROLE_" + member.getRole())
-                .claim("provider", member.getProvider())
-                .claim("phone", member.getPhone())
-                .claim("gender", String.valueOf(member.getGender()))
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))    
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
 
-    /** ✅ 리프레시 토큰 생성 */
-    public String createRefreshToken(Member member) {
+    public static String generateRefreshToken(String email) {
         return Jwts.builder()
-                .setSubject("refreshToken")
-                .claim("id", member.getId())
-                .claim("provider", member.getProvider())
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))    
-                .signWith(SignatureAlgorithm.HS256, secretKey)
+        		.setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION))
+                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
                 .compact();
     }
-
-    /** ✅ JWT 검증 및 Claims 반환 */
-    public Claims validateToken(String token) {
-        return Jwts.parser()
-                .setSigningKey(secretKey)
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    /** ✅ JWT에서 Role 추출 */
-    public String getRoleFromToken(String token) {
-        return validateToken(token).get("role", String.class);
-    }
-
-    /** ✅ JWT 만료 여부 확인 */
-    public boolean isTokenExpired(String token) {
-        Claims claims = validateToken(token);
-        return claims.getExpiration().before(new Date()); // 만료 시간이 현재보다 이전이면 true 반환
-    }
-    
-    /** ✅ JWT에서 id,provider 추출해서 User에 담아서 반환 */
-    public Member getIdProviderFromToken(String token) {
-    	Member member= new Member();
-    	member.setId(validateToken(token).get("id", String.class));
-    	member.setProvider(validateToken(token).get("provider", String.class));
-        return member;
-    }
+	
+	
+//    @Value("${jwt.secret}") // application.properties에서 비밀키 읽기
+//    private String secretKey;
+//
+//    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (15분)
+//    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
+//
+//    // ================== JWT 관련 ==================
+//
+//    /** ✅ JWT 액세스 토큰 생성 */
+//    public String createAccessToken(Member member) {
+//
+//        return Jwts.builder()
+//                .setSubject("userRegister")
+//                .claim("id", member.getId())
+//                .claim("role", "ROLE_" + member.getRole())
+//                .claim("provider", member.getProvider())
+//                .claim("phone", member.getPhone())
+//                .claim("gender", String.valueOf(member.getGender()))
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))    
+//                .signWith(SignatureAlgorithm.HS256, secretKey)
+//                .compact();
+//    }
+//
+//    /** ✅ 리프레시 토큰 생성 */
+//    public String createRefreshToken(Member member) {
+//        return Jwts.builder()
+//                .setSubject("refreshToken")
+//                .claim("id", member.getId())
+//                .claim("provider", member.getProvider())
+//                .setIssuedAt(new Date())
+//                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))    
+//                .signWith(SignatureAlgorithm.HS256, secretKey)
+//                .compact();
+//    }
+//
+//    /** ✅ JWT 검증 및 Claims 반환 */
+//    public Claims validateToken(String token) {
+//        return Jwts.parser()
+//                .setSigningKey(secretKey)
+//                .parseClaimsJws(token)
+//                .getBody();
+//    }
+//
+//    /** ✅ JWT에서 Role 추출 */
+//    public String getRoleFromToken(String token) {
+//        return validateToken(token).get("role", String.class);
+//    }
+//
+//    /** ✅ JWT 만료 여부 확인 */
+//    public boolean isTokenExpired(String token) {
+//        Claims claims = validateToken(token);
+//        return claims.getExpiration().before(new Date()); // 만료 시간이 현재보다 이전이면 true 반환
+//    }
+//    
+//    /** ✅ JWT에서 id,provider 추출해서 User에 담아서 반환 */
+//    public Member getIdProviderFromToken(String token) {
+//    	Member member= new Member();
+//    	member.setId(validateToken(token).get("id", String.class));
+//    	member.setProvider(validateToken(token).get("provider", String.class));
+//        return member;
+//    }
 }
 
 
