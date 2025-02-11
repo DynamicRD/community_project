@@ -20,6 +20,13 @@ public class SecretConfig {
     public String getJwtSecretKey() {
         return dotenv.get("JWT_SECRETKEY");
     }
+    
+    public String getKakaoClienID() {
+    	return dotenv.get("KAKAO_CLIENT_ID");
+    }
+    public String getKaKaoRedirectURL() {
+    	return dotenv.get("KAKAO_REDIRECT_URI");
+    }
 
 
 }
