@@ -49,3 +49,4 @@ webpack-assets.json
 
 .metadata
 React_Admin/
+*.env

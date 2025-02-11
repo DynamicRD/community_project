@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.project.common.config.JwtUtil;
+import com.project.common.config.SecretConfig;
 import com.project.member.mapper.MemberMapper;
 import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
@@ -25,14 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-
+	private final static SecretConfig secretConfig = new SecretConfig();
+	
 	@Autowired
 	private MemberMapper mapper;
 	private final JwtUtil jwtUtil;
     private final RestTemplate restTemplate = new RestTemplate();
     
-    private final String CLIENT_ID = "a329a680eeb633204d87c30434856288";
-    private final String REDIRECT_URI = "http://localhost:5173/member/kakao/callback";
+
 
 	@Override
 	public boolean duplicateCheck(Member member) {
@@ -214,9 +215,8 @@ public class MemberServiceImpl implements MemberService {
 	// 🔹 카카오 Access Token 요청 메서드 추가
 	    private String getAccessToken(String authCode) {
 	        String tokenUrl = "https://kauth.kakao.com/oauth/token"
-	                + "?grant_type=authorization_code"
-	                + "&client_id=" + CLIENT_ID
-	                + "&redirect_uri=" + REDIRECT_URI
+	                + "&client_id=" + secretConfig.getKakaoClienID()
+	                + "&redirect_uri=" + secretConfig.getKaKaoRedirectURL()
 	                + "&code=" + authCode;
 
 	        ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, null, Map.class);

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './GroupRegist.css';
 import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import GoogleMap from './component/GoogleMap';
 
 export default function GroupUpdate() {
   const [open, setOpen] = useState(false);
@@ -18,10 +19,12 @@ export default function GroupUpdate() {
   const {last_date, setLast_date} = useState();
   const {comment1, setComment1} = useState();
   const {comment2, setComment2} = useState();
-  const {img_url, setImg_url} = useState();
+  const {img_url1, setImg1_url} = useState();
+  const {img_url2, setImg2_url} = useState();
+  const {img_url3, setImg3_url} = useState();
 
   return (
-    <Container>
+    <Container className='w-75'>
       <div className="group_regist">
         <div className="board">
           <div className="review_title">
@@ -116,8 +119,7 @@ export default function GroupUpdate() {
                   </Col>
                   <Collapse in={open}>
                     <div>
-                      map
-                      {/* map 리턴해서 받아오기 */}
+                      <GoogleMap/>
                     </div>
                   </Collapse>
                 </Form.Group>
@@ -146,7 +148,10 @@ export default function GroupUpdate() {
               <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
                   <p>모임 대표 이미지 등록</p>
-                  <input type="file" defaultValue={img_url} onChange={(e) => setImg_url(e.target.value)}/>
+                  <input type="file" className='mb-3' defaultValue={img_url1} onChange={(e) => setImg1_url(e.target.value)}/>
+                  <p>모임 상세 이미지 등록</p>
+                  <input type="file" defaultValue={img_url2} onChange={(e) => setImg2_url(e.target.value)} />
+                  <input type="file" defaultValue={img_url3} onChange={(e) => setImg3_url(e.target.value)} />
                 </div>
                 <div>
                   <Button
@@ -168,8 +173,14 @@ export default function GroupUpdate() {
                         form.append('last_date', last_date.current.value);
                         form.append('comment1', comment1.current.value);
                         form.append('comment2', comment2.current.value);
-                        if(img_url.current.files.length>0){
-                          form.append('img_url', img_url.current.files[0]);
+                        if(img_url1.current.files.length>0){
+                          form.append('img_url1', img_url1.current.files[0]);
+                        }
+                        if(img_url2.current.files.length>0){
+                          form.append('img_url2', img_url2.current.files[0]);
+                        }
+                        if(img_url3.current.files.length>0){
+                          form.append('img_url3', img_url3.current.files[0]);
                         }
                         fetch('http://localhost:8080/group/update', {
                           method: 'post',
