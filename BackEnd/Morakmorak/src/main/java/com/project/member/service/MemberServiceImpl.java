@@ -26,7 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-	private final SecretConfig secretConfig = new SecretConfig();
+	private final static SecretConfig secretConfig = new SecretConfig();
 	
 	@Autowired
 	private MemberMapper mapper;
