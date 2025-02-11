@@ -139,7 +139,7 @@ public class MemberServiceImpl implements MemberService {
 		// TODO Auto-generated method stub
 		return null;
 	}
-<
+
 	
 	 @Override
 	 @Transactional // ✅ 트랜잭션 적용
@@ -201,8 +201,8 @@ public class MemberServiceImpl implements MemberService {
 	        }
 
 	        // JWT 토큰 생성
-	        String newAccessToken = jwtUtil.generateAccessToken(email);
-	        String refreshToken = jwtUtil.generateRefreshToken(email);
+	        String newAccessToken = jwtUtil.kakaoGenerateAccessToken(email);
+	        String refreshToken = jwtUtil.kakaoGenerateRefreshToken(email);
 
 	        Map<String, String> tokens = new HashMap<>();
 	        tokens.put("accessToken", newAccessToken);
