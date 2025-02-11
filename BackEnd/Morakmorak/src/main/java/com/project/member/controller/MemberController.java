@@ -166,7 +166,7 @@ public class MemberController {
 			member.setId(id);
 			
 			//id로 DB에 멤버정보를 긁어온다
-			member = service.selectMemberById(member);
+			member = service.selectMemberByNo(member);
 	        Date expiration = jwtTokenProvider.getExpirationDate(refreshToken);
 	        long remainingTime = expiration.getTime() - System.currentTimeMillis();
 
@@ -181,7 +181,7 @@ public class MemberController {
 	 
 	 @GetMapping("/getdata")
 	 public ResponseEntity<Map<String, Object>> getRole(
-	         @CookieValue(value = "access_Token", required = false) String accessToken,
+	         @CookieValue(value = "access_token", required = false) String accessToken,
 	         HttpServletResponse response) {
 
 	     // 액세스 토큰 검증
@@ -191,26 +191,33 @@ public class MemberController {
 	     }
 	     System.out.println("실행되었습니다");
 	     // 토큰에서 ID 추출
-	     String id = jwtTokenProvider.getIdFromToken(accessToken);
-	     
+	     System.out.println(accessToken);
+	     int no = jwtTokenProvider.getNoFromToken(accessToken);
 	     // DB에서 회원 정보 조회
 	     Member member = new Member();
-	     member.setId(id);
-	     member = service.selectMemberById(member);
-	     
-	     if (member == null) {
-	         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-	                 .body(Map.of("success", false, "message", "회원 정보를 찾을 수 없습니다."));
-	     }
+	     member.setNo(no);
+	     System.out.println("no값은 "+no);
+	     try {
+	         // DB에서 회원 정보 조회
+	         member = service.selectMemberByNo(member);
+	       
+	         if (member == null) {
+	             return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                     .body(Map.of("success", false, "message", "회원 정보를 찾을 수 없습니다."));
+	         }
 
-	     // JSON 응답 생성
-	     Map<String, Object> responseData = Map.of(
-	         "success", true,
-	         "message", "로그인 성공!",
-	         "member", member  // Member 객체 포함
-	     );
-	     System.out.println("멤버데이터" + member);
-	     return ResponseEntity.ok(responseData);
+	         // JSON 응답 생성
+	         Map<String, Object> responseData = Map.of(
+	                 "success", true,
+	                 "message", "로그인 성공!",
+	                 "member", member
+	         );
+	         System.out.println("멤버 데이터: " + member);
+	         return ResponseEntity.ok(responseData);
+	     } catch (Exception e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                 .body(Map.of("success", false, "message", "서버 오류 발생"));
+	     }
 	 }
 	 
 	 @GetMapping("/check_tokens")
@@ -226,6 +233,26 @@ public class MemberController {
 	         "refreshTokenExists", refreshTokenExists
 	     ));
 	 }
+	 
+	 @PostMapping("/logout")
+	    public ResponseEntity<Map<String, Object>> logout(HttpServletResponse response) {
+	        // 쿠키 삭제 (빈 값과 만료 시간 설정)
+	        Cookie accessTokenCookie = new Cookie("access_token", null);
+	        accessTokenCookie.setMaxAge(0);
+	        accessTokenCookie.setPath("/");
+	        accessTokenCookie.setHttpOnly(true);
+
+	        Cookie refreshTokenCookie = new Cookie("refresh_token", null);
+	        refreshTokenCookie.setMaxAge(0);
+	        refreshTokenCookie.setPath("/");
+	        refreshTokenCookie.setHttpOnly(true);
+
+	        response.addCookie(accessTokenCookie);
+	        response.addCookie(refreshTokenCookie);
+
+	        return ResponseEntity.ok(Map.of("success", true, "message", "로그아웃 성공"));
+	    }
+	 
 	// --------------------------------------------------api메소드가 아닌 컨트롤러용 메소드
 		//액세스 토큰 재발급
 		public ResponseEntity<?> refreshAccessToken(Member member,HttpServletResponse response) {

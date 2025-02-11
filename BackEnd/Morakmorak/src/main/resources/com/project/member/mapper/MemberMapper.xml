@@ -53,10 +53,10 @@
 		WHERE id = #{id}
 	</select>
 
-	<select id="getMemberInfo"
+	<select id="getMemberInfoByNo" parameterType="com.project.member.model.Member"
 		resultType="com.project.member.model.Member">
 		SELECT *
 		FROM member
-		WHERE id = #{id}
+		WHERE no = #{no}
 	</select>
 </mapper>

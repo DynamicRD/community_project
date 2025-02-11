@@ -18,5 +18,5 @@ public interface MemberService {
 
 	Map<String, String> kakaoLogin(String accessToken);
 	
-	Member selectMemberById(Member member);
+	Member selectMemberByNo(Member member);
 }

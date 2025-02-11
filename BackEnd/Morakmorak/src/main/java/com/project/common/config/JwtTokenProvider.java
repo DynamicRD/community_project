@@ -66,4 +66,19 @@ public class JwtTokenProvider {
             return null; // 오류 발생 시 null 반환
         }
     }
+    
+    
+    public Integer getNoFromToken(String token) {
+        try {
+            Claims claims = Jwts.parser()
+                    .setSigningKey(secretConfig.getJwtSecretKey())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            return claims.get("no", Integer.class); // "no" 값을 Integer 타입으로 가져옴
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // 유효하지 않은 토큰일 경우 null 반환
+        }
+    }
 }

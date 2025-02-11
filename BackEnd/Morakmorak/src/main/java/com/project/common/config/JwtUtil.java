@@ -26,6 +26,7 @@ public class JwtUtil {
     public static String createAccessToken(Member member) {
         return Jwts.builder()
                 .setSubject("userRegister")
+                .claim("no",member.getNo())
                 .claim("id", member.getId())
                 .claim("name",member.getName())
                 .claim("role", member.getRole())

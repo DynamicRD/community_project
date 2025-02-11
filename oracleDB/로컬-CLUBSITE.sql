@@ -182,9 +182,10 @@ create table member(
     reg_date date default sysdate,        --가입일
     img_url varchar2(50) default '',                 --사진
     self_pr varchar2(255) default '',               --자기소개
-    primary key(id)
+    primary key(no)
 );
-
+update member set role=1 where id = 'aaaaa';
+commit;
 SELECT *
 		FROM Member
 		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 

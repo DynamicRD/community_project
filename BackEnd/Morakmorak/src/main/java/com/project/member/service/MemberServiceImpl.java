@@ -183,8 +183,8 @@ public class MemberServiceImpl implements MemberService {
 	    }
 
 		@Override
-		public Member selectMemberById(Member member) {
-			member = mapper.getMemberInfo(member);
+		public Member selectMemberByNo(Member member) {
+			member = mapper.getMemberInfoByNo(member);
 			return member;
 		}
 

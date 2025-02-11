@@ -18,13 +18,9 @@ const checkAndRefreshToken = async () => {
 };
 const getData = async () => {
   try {
-    const response = await axios.get(
-      'http://localhost:8080/member/getdata',
-      {}, // ✅ 요청 본문을 비워둠 (필요한 경우만 사용)
-      {
-        withCredentials: true, // ✅ 설정 객체에 추가
-      }
-    );
+    const response = await axios.get('http://localhost:8080/member/getdata', {
+      withCredentials: true, // ✅ 설정 객체에 추가
+    });
 
     console.log('서버 응답:', response.data);
     return response.data.member;
@@ -97,6 +93,7 @@ function Navbar() {
           // ✅ null 체크 추가
           setRole(userData.role);
           setName(userData.name);
+          return userData;
         } else {
           console.warn('유저 데이터를 불러올 수 없습니다.');
         }
@@ -108,12 +105,22 @@ function Navbar() {
     console.log('권한 상태:', isAuthenticated);
   }, [isAuthenticated]);
 
-  const handleLogout = () => {
-    console.log(role);
-    Cookies.remove('access_Token', { path: '/' });
-    Cookies.remove('refresh_Token', { path: '/' });
-    alert('로그아웃 되었습니다.');
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/member/logout',
+        {},
+        { withCredentials: true }
+      );
+
+      if (response.data.success) {
+        alert('로그아웃 되었습니다.');
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      alert('로그아웃 중 오류가 발생했습니다.');
+    }
   };
 
   return (
