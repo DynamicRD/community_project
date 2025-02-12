@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Member {
-    private Long no; // 회원 고유 ID
+    private int no; // 회원 고유 ID
     private int role; 
     private String id; // 자체 회원가입 ID
     private String pw; // 자체 회원가입 비밀번호
@@ -29,5 +29,5 @@ public class Member {
     private LocalDate regDate; // 가입일 (기본값: 현재 날짜)
     private String imgUrl; // 프로필 사진 URL
     private String selfPr; // 자기소개
-    
+    private boolean rememberMe;
 }

@@ -99,48 +99,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
-	@Override
-	public boolean insert(Member member) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Member getUserByAccessToken(String accessToken) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Member findCommonUserByEmail(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Member findCommonUserByEmailAndId(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean updateRandomPwdById(Member member) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Member getUserByIdAndProvider(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Member checkRegist(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	
 	 @Override
 	 @Transactional // ✅ 트랜잭션 적용
@@ -222,4 +181,12 @@ public class MemberServiceImpl implements MemberService {
 	        ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, null, Map.class);
 	        return (String) response.getBody().get("access_token");
 	    }
+
+		@Override
+		public Member selectMemberByNo(Member member) {
+			member = mapper.getMemberInfoByNo(member);
+			return member;
+		}
+
+	
 }
