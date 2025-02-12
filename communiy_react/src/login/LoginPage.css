@@ -30,6 +30,7 @@
 }
 
 .buttonLogin:hover {
+  transition: 0.3s all;
   background-color: #ff461dd2;
 }
 
@@ -85,8 +86,4 @@
 
 .OnSubmitForm {
   margin-left: 110px;
-}
-
-.LoginBg {
-  background-color: rgba(0, 0, 0, 0.005);
 }

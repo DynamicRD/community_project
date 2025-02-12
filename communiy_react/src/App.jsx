@@ -63,10 +63,7 @@ function App() {
 
           {/* 모임 관련 */}
           <Route path="/group/detail" element={<GroupDetail />} />
-          <Route
-            path="/group/regular_list"
-            element={<GroupList type="regular" />}
-          />
+          <Route path="/group/regular_list" element={<GroupList type="regular" />} />
           <Route path="/group/one_list" element={<GroupList type="one" />} />
           <Route path="/group/regist" element={<GroupRegist />} />
           <Route path="/group/update" element={<GroupUpdate />} />
@@ -100,10 +97,7 @@ function App() {
           {/* 공지사항 */}
           <Route path="/announcements" element={<AnnouncementsNotice />} />
           <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
-          <Route
-            path="/announcements/read"
-            element={<AnnouncementsNoticeRead />}
-          />
+          <Route path="/announcements/read" element={<AnnouncementsNoticeRead />} />
 
           {/* 찜 목록 */}
           <Route path="/favorites" element={<WishList />} />

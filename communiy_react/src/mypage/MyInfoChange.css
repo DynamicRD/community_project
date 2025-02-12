@@ -82,11 +82,13 @@
 .registSummtBtn {
   border: 1px solid #ff461d00;
   background-color: #ff471d;
+  color: white;
 }
 
 .registSummtBtn:hover {
   border: 1px solid #ff461d00;
   background-color: #ff461dd2;
+    color: white;
 }
 
 .btnClub {
