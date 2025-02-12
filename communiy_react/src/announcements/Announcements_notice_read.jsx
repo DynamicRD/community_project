@@ -39,6 +39,12 @@ const announcementData = [
     content: '문정배 최고라고 생각합니다5',
     date: formattedDate,
   },
+  {
+    no: 6,
+    title: '문정배에 대한 고찰',
+    content: '문정배 최고라고 생각합니다5',
+    date: formattedDate,
+  },
 ];
 
 export default function Announcements_notice_read() {

@@ -166,12 +166,12 @@ export default function FindPwd() {
       >
         <div
           style={{
-            backgroundColor: '#ffffff',
             padding: '20px',
             borderRadius: '10px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
             width: '400px',
           }}
+          className="LoginBg"
         >
           <h2
             style={{ textAlign: 'center', fontWeight: '900' }}
