@@ -33,16 +33,31 @@
     </select>
 
     <insert id="register" parameterType="com.project.member.model.Member">
-        INSERT INTO member (
-            no,id, pw, email, phone, name, nickname, 
-            birth, gender, zip_code, addr1, addr2
-        ) VALUES (
-            member_seq.nextval,#{id}, #{pw}, #{email}, #{phone}, #{name}, #{nickname}, 
-            TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1}, #{addr2}
-        )
-    </insert>
-   
-	<select id="loginCheck" parameterType="com.project.member.model.Member" resultType="com.project.member.model.Member">
+		INSERT INTO member (
+		no, pw, email, phone, name, nickname,
+		birth, gender, zip_code, addr1, addr2
+		) VALUES (
+		member_seq.nextval, #{pw}, #{email}, #{phone}, #{name},
+		#{nickname},
+		TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1},
+		#{addr2}
+		)
+	</insert>
+
+	<insert id="registerGoogle" parameterType="com.project.member.model.Member">
+		INSERT INTO member (
+		no, email, name, nickname, birth, gender, zip_code, addr1, addr2,
+		provider, provider_id
+		) VALUES ( 
+		member_seq.nextval, #{email}, #{name}, #{nickname},
+		TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1},
+		#{addr2}, #{provider}, #{providerId}
+		)
+	</insert>
+
+
+	<select id="loginCheck" parameterType="com.project.member.model.Member"
+		resultType="com.project.member.model.Member">
 		SELECT *
 		FROM Member
 		WHERE ID = #{id} AND PROVIDER = #{provider} 
@@ -59,4 +74,14 @@
 		FROM member
 		WHERE no = #{no}
 	</select>
+	   <select id="googleRegisteredCheck" resultType="int">
+        SELECT COUNT(*) 
+        FROM member 
+        WHERE provider_id = #{providerId} and provider = #{provider}
+    </select>
+	   <select id="getGoogleInfo" resultType="com.project.member.model.Member">
+        SELECT *
+        FROM member 
+        WHERE provider_id = #{providerId} and provider = #{provider}
+    </select>
 </mapper>

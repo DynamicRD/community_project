@@ -19,4 +19,6 @@ public class MemberDTO {
     private String addcode;
     private String address01;
     private String address02;
+    private String providerId;
+    private String provider;
 }

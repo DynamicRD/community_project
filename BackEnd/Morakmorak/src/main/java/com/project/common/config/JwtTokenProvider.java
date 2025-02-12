@@ -75,10 +75,11 @@ public class JwtTokenProvider {
                     .parseClaimsJws(token)
                     .getBody();
 
-            return claims.get("no", Integer.class); // "no" 값을 Integer 타입으로 가져옴
+            return claims.get("no",Integer.class); // "no" 값을 Long 타입으로 가져옴
         } catch (Exception e) {
             e.printStackTrace();
             return null; // 유효하지 않은 토큰일 경우 null 반환
         }
     }
+
 }

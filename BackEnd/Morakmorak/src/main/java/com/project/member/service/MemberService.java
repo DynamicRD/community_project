@@ -19,4 +19,8 @@ public interface MemberService {
 	Map<String, String> kakaoLogin(String accessToken);
 	
 	Member selectMemberByNo(Member member);
+	
+	boolean googleUserCheck(Member member);
+	
+	Member selectGoogleInfo(Member member);
 }
