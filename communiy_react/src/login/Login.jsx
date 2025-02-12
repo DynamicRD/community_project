@@ -108,12 +108,12 @@ export default function Login() {
       >
         <div
           style={{
-            backgroundColor: '#ffffff',
             padding: '20px',
             borderRadius: '10px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
             width: '400px',
           }}
+          className="LoginBg"
         >
           <h2
             style={{ textAlign: 'center', fontWeight: '900' }}
@@ -156,7 +156,6 @@ export default function Login() {
             style={{
               width: '100%',
               padding: '10px',
-              backgroundColor: '#01ff23d1',
               color: 'white',
               border: 'none',
               borderRadius: '25px',

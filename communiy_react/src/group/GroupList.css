@@ -3,7 +3,7 @@
   padding: 0;
 }
 
-Link{
+Link {
   text-decoration: none;
 }
 
@@ -31,12 +31,12 @@ Link{
   border-radius: 10px;
 }
 
-.group_list input[type="checkbox"]{
+.group_list input[type='checkbox'] {
   margin-left: 10px;
 }
 
 .group_list .btn1 {
-  background-color: #FF2D00;
+  background-color: #ff2d00;
   color: white;
   border: 0px;
   padding: 8px 15px;
@@ -77,20 +77,8 @@ Link{
   color: #6c757d; /* 비활성 페이지 텍스트 색상 */
   background-color: #e9ecef; /* 비활성 페이지 배경색 */
   border-color: #ddd; /* 비활성 페이지 테두리 색상 */
-
 }
-
 
 .group_span {
   font-family: 'Freesentation-9Black';
 }
-
-@font-face {
-  font-family: 'Freesentation-9Black';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2')
-    format('woff2');
-  font-weight: 800;
-  font-style: normal;
-}
-
-

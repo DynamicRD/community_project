@@ -98,7 +98,7 @@ function MyPage() {
     return (
       <Table bordered className="mt-3">
         <thead>
-          <tr className="table-success">
+          <tr className="table-secondary">
             <th>모임명</th>
             <th>참가일시</th>
             <th>종료일자</th>
@@ -148,7 +148,9 @@ function MyPage() {
           <div className="container bg-light text-dark p-4">
             <div className="text-end">
               <Link to="/mypage/profilechange">
-                <Button variant="custom">프로필 수정하기</Button>
+                <Button className="myPageBtn" variant="danger">
+                  프로필 수정하기
+                </Button>
               </Link>
             </div>
             <div className="text-center mt-3">
@@ -157,13 +159,28 @@ function MyPage() {
           </div>
           <div className="btn-group-justified m-3">
             <Link to="/mypage/infochange">
-              <Button variant="light m-3">개인 정보 수정</Button>
+              <Button
+                variant="light m-3"
+                style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
+              >
+                개인 정보 수정
+              </Button>
             </Link>
             <Link to="/mypage/amounthis">
-              <Button variant="light m-3">거래 내역 확인</Button>
+              <Button
+                variant="light m-3"
+                style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
+              >
+                거래 내역 확인
+              </Button>
             </Link>
             <Link to="/mypage/reviews">
-              <Button variant="light m-3">작성 리뷰 확인</Button>
+              <Button
+                variant="light m-3"
+                style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
+              >
+                작성 리뷰 확인
+              </Button>
             </Link>
           </div>
         </div>
@@ -176,7 +193,9 @@ function MyPage() {
               <div className="h3">₩ 500,000</div>
               <div className="mt-3">
                 <Link to="/mypage/charge">
-                  <Button>충전하기</Button>
+                  <Button className="myPageBtn" variant="danger">
+                    충전하기
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -197,8 +216,8 @@ function MyPage() {
 
           {/* 더보기 / 접기 버튼 */}
           <Button
-            variant="custom"
-            className="mt-3"
+            className="myPageBtn mt-3"
+            variant="danger"
             onClick={() => setShowMore(!showMore)}
           >
             {showMore ? '접기' : '더보기'}
@@ -209,19 +228,34 @@ function MyPage() {
         <div className="border-section mt-4">
           <div className="btn-group m-2">
             <Button
-              className="m-2"
+              className="typeClub m-2"
+              variant="light"
+              style={{
+                borderRadius: '5px',
+                color: 'white',
+              }}
               onClick={() => setActiveTab('ongoing')}
             >
               진행중인 모임
             </Button>
             <Button
-              className="m-2"
+              className="typeClub m-2"
+              variant="light"
+              style={{
+                borderRadius: '5px',
+                color: 'white',
+              }}
               onClick={() => setActiveTab('completed')}
             >
               종료된 모임
             </Button>
             <Button
-              className="m-2"
+              className="typeClub m-2"
+              variant="light"
+              style={{
+                borderRadius: '5px',
+                color: 'white',
+              }}
               onClick={() => setActiveTab('saved')}
             >
               찜한 모임
@@ -231,7 +265,7 @@ function MyPage() {
           {/* 해당 모임 테이블 렌더링 */}
           {renderTable()}
 
-          <Pagination className="d-flex justify-content-center">
+          <Pagination className="d-flex justify-content-center ">
             <Pagination.Prev />
             <Pagination.Item>{1}</Pagination.Item>
             <Pagination.Item>{2}</Pagination.Item>
@@ -241,7 +275,7 @@ function MyPage() {
           <div className="text-center">
             {' '}
             <Link to="/mypage/infodelete">
-              <Button variant="danger" block className="mt-3">
+              <Button block className="myPageBtn mt-3" variant="danger">
                 회원탈퇴
               </Button>
             </Link>

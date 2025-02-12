@@ -122,7 +122,7 @@ export default function MyProfileChange() {
         {/* 버튼들 */}
         <Form.Group as={Row} className="mb-3 text-center">
           <Col sm={12}>
-            <Button variant="primary" type="submit">
+            <Button className="registSummtBtn" type="submit">
               프로필 수정
             </Button>
             &nbsp;&nbsp;

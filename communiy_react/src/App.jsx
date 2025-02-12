@@ -16,7 +16,7 @@ import GroupDetail from './group/GroupDetail';
 import GroupRegist from './group/GroupRegist';
 import GroupUpdate from './group/GroupUpdate';
 import GroupManagement from './group/GroupManagement';
-import MyPage from './mypage/mypage';
+import MyPage from './mypage/MyPage';
 import MyInfoChange from './mypage/MyInfoChange';
 import MyProfileChange from './mypage/MyProfileChange';
 import MyInfoDelete from './mypage/MyInfoDelete';
