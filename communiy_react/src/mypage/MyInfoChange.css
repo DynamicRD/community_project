@@ -1,7 +1,20 @@
 @charset "UTF-8";
 
+.registForm {
+  display: flex;
+  justify-content: center;
+  margin: 0px auto;
+}
+
+.infochange {
+  border-radius: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 800px;
+  background-color: rgba(0, 0, 0, 0.005);
+}
+
 /* 제목 스타일 */
-.infochange h2 {
+.infochange > h2 {
   text-align: center;
   margin-bottom: 30px;
   font-weight: bold;
@@ -14,11 +27,12 @@
 .infochange input[type='password'],
 .infochange select,
 .infochange textarea {
-  padding: 5px;
-  font-size: 14px;
-  width: 70%;
-  box-sizing: border-box;
-  margin-bottom: 15px;
+  border: 1px solid #cccccc;
+  width: 80%;
+}
+
+.infochange select {
+  width: 16%;
 }
 
 .infochange textarea {
@@ -28,18 +42,6 @@
 /* 입력 그룹 (아이디, 닉네임 등) 레이아웃 */
 .input-group {
   display: flex;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.input-group input[type='text'],
-.input-group input[type='password'] {
-  width: 70%;
-  margin-right: 10px;
-}
-
-.input-group input[type='button'] {
-  width: 28%;
 }
 
 /* 전화번호 입력 그룹 스타일 */
@@ -49,24 +51,17 @@
   align-items: center;
 }
 
-.phone-select {
-  width: 100px; /* 국가 코드나 앞자리 번호를 입력하는 셀의 너비 */
+.phone-input {
+  margin-left: 5px;
 }
 
-.phone-input {
-  width: 80px; /* 전화번호 두 번째, 세 번째 부분의 입력 셀 너비 */
-  margin-left: 5px;
-  margin-right: 5px;
+#phone {
+  width: 20%;
 }
 
 .phone-input-group span {
-  font-size: 18px;
+  font-size: 16px;
   margin: 0 5px;
-}
-
-/* 라디오 버튼(성별 선택) 스타일 */
-.form-check {
-  margin-bottom: 10px;
 }
 
 /* 폼의 레이블 스타일 */
@@ -78,4 +73,32 @@
 /* 성별 선택 레이아웃 조정 */
 .form-check-inline {
   margin-right: 20px;
+}
+
+.errorValid {
+  margin-left: 208px;
+}
+
+.registSummtBtn {
+  border: 1px solid #ff461d00;
+  background-color: #ff471d;
+  color: white;
+}
+
+.registSummtBtn:hover {
+  border: 1px solid #ff461d00;
+  background-color: #ff461dd2;
+    color: white;
+}
+
+.btnClub {
+  margin-right: 50px;
+}
+
+.errors_pass {
+  width: 80%;
+}
+
+.LoginBg {
+  background-color: rgba(0, 0, 0, 0.006);
 }

@@ -26,13 +26,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
-	private final SecretConfig secretConfig = new SecretConfig();
+	private final static SecretConfig secretConfig = new SecretConfig();
 	
 	@Autowired
 	private MemberMapper mapper;
 	private final JwtUtil jwtUtil;
     private final RestTemplate restTemplate = new RestTemplate();
     
+
 
 	@Override
 	public boolean duplicateCheck(Member member) {
@@ -98,48 +99,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
-	@Override
-	public boolean insert(Member member) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Member getUserByAccessToken(String accessToken) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Member findCommonUserByEmail(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Member findCommonUserByEmailAndId(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean updateRandomPwdById(Member member) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Member getUserByIdAndProvider(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Member checkRegist(Member member) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
+	
 	
 	 @Override
 	 @Transactional // ✅ 트랜잭션 적용
@@ -214,7 +174,6 @@ public class MemberServiceImpl implements MemberService {
 	// 🔹 카카오 Access Token 요청 메서드 추가
 	    private String getAccessToken(String authCode) {
 	        String tokenUrl = "https://kauth.kakao.com/oauth/token"
-	                + "?grant_type=authorization_code"
 	                + "&client_id=" + secretConfig.getKakaoClienID()
 	                + "&redirect_uri=" + secretConfig.getKaKaoRedirectURL()
 	                + "&code=" + authCode;
@@ -222,4 +181,12 @@ public class MemberServiceImpl implements MemberService {
 	        ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, null, Map.class);
 	        return (String) response.getBody().get("access_token");
 	    }
+
+		@Override
+		public Member selectMemberByNo(Member member) {
+			member = mapper.getMemberInfoByNo(member);
+			return member;
+		}
+
+	
 }

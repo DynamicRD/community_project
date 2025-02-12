@@ -18,13 +18,13 @@
   margin-top: 15px;
 }
 .myPage .btn-custom {
-  background-color: #FF2D00;
+  background-color: #ff2d00;
   color: white;
   border-radius: 25px;
   border: none;
 }
 .myPage .btn-custom:hover {
-  background-color: #FF2D00;
+  background-color: #ff2d00;
 }
 .myPage .table th,
 .myPage .table td {
@@ -33,14 +33,15 @@
 .myPage .table td {
   vertical-align: middle;
 }
+
+/* 마이페이지 페이징버튼 */
 .myPage .pagination .page-link {
-  background-color: #FF2D00;
-  color: white;
+  color: black;
 }
 .myPage .pagination .page-link:hover {
-  background-color: #ff2f00cd;
-  color: white;
+  background-color: #6c757db7;
 }
+
 .myPage .panel-body ul li {
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -90,20 +91,44 @@
 }
 
 .reviewList span {
+  background-color: #ff6745;
   padding: 7px 10px;
   border: 1px solid #ccc;
   border-radius: 20px;
   cursor: pointer;
-  color: black;
+  color: white;
   font-size: small;
 }
 
-.reviewList:hover,
 .reviewList span:hover {
-  background-color: #f8f9fa;
-  color: black;
+  transition: 0.5s all;
+  background-color: #ff6745c2;
+  color: white;
 }
 
 .mypage_review_table_img {
   border-radius: 15px;
+}
+
+/* 마이페이지 프로필 수정 및 더보기 .. 버튼들 */
+.myPageBtn {
+  background-color: #ff2d00;
+  border: 1px solid #ff461d00;
+}
+.myPageBtn:hover {
+  transition: 0.3s all;
+  border: 1px solid #ff461d00;
+  background-color: #ff461dd2;
+}
+
+/* 마이페이지 모임타입 버튼 */
+.typeClub {
+  background-color: #6c757d;
+  color: white;
+  border: none;
+}
+
+.typeClub:hover {
+  background-color: #6c757db7;
+  color: white;
 }

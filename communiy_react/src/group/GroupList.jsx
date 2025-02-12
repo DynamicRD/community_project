@@ -3,7 +3,7 @@ import './GroupList.css';
 import { Col, Container, Row } from 'react-bootstrap';
 import Button from 'react-bootstrap/Button';
 import Collapse from 'react-bootstrap/Collapse';
-import GroupItem from './component/GroupItem';
+import GroupItem from './GroupItem';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
@@ -188,7 +188,7 @@ function GroupList({ type }) {
     <>
       <Link to={'/group/regist'} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div className="group_banner">
-          <span >
+          <span>
             모임 개설하러 가기&nbsp;
             <FontAwesomeIcon icon={faArrowRight} />
           </span>
@@ -196,7 +196,7 @@ function GroupList({ type }) {
       </Link>
       <Container >
         <div className="group_list">
-          <h1 className="p-2 group_span" style={{ fontSize: '33px'}}>
+          <h1 className="p-2 group_span">
             {type === 'regular' ? `정기모임` : '동행ㆍ소모임'}
           </h1>
           <div className="filter m-2">

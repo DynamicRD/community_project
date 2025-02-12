@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
+import './LoginPage.css';
 import { Link, useNavigate } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
 
 export default function Login() {
@@ -18,6 +19,7 @@ export default function Login() {
         {
           id: id, // 백엔드에서 요구하는 필드명 사용
           pw: password, // 백엔드에 맞춰 필드명 변경
+          rememberMe: rememberMe,
         },
         {
           withCredentials: true, // 쿠키 전송 허용
@@ -27,18 +29,6 @@ export default function Login() {
       // 로그인 성공
       if (response.data.success) {
         console.log('로그인 성공');
-
-        // JSON 응답에서 액세스 토큰이 포함되어 있다면 저장
-        if (response.data.accessToken) {
-          localStorage.setItem('jwtToken', response.data.accessToken);
-        }
-
-        // Remember Me 체크 시 로컬 스토리지 저장
-        if (rememberMe) {
-          localStorage.setItem('rememberMe', 'true');
-        } else {
-          localStorage.removeItem('rememberMe');
-        }
 
         // 페이지 이동 후 새로고침
         navigate('/');
@@ -113,19 +103,24 @@ export default function Login() {
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          height: '100vh',
+          height: '80vh',
         }}
       >
         <div
           style={{
-            backgroundColor: '#ffffff',
             padding: '20px',
             borderRadius: '10px',
             boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
             width: '400px',
           }}
+          className="LoginBg"
         >
-          <h2 style={{ textAlign: 'center' }}>회원 로그인</h2>
+          <h2
+            style={{ textAlign: 'center', fontWeight: '900' }}
+            className="mt-3 mb-4"
+          >
+            회원 로그인
+          </h2>
           <input
             type="text"
             placeholder="아이디를 입력하시오"
@@ -147,7 +142,7 @@ export default function Login() {
             style={{
               width: '100%',
               padding: '10px',
-              marginBottom: '10px',
+              marginBottom: '20px',
               border: '1px solid #ccc',
               borderRadius: '5px',
             }}
@@ -155,13 +150,12 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
             onKeyDown={handleKeyDown} // 추가
           />
-
           <button
-            onClick={handleLogin}
+            className="buttonLogin"
+            onClick={handleLogin} // ✅ 올바르게 수정
             style={{
               width: '100%',
               padding: '10px',
-              backgroundColor: '#01ff23d1',
               color: 'white',
               border: 'none',
               borderRadius: '25px',
@@ -170,6 +164,7 @@ export default function Login() {
           >
             로그인
           </button>
+
           <div
             style={{
               display: 'flex',
@@ -215,18 +210,18 @@ export default function Login() {
           >
             <p>
               아이디를 잊어버리셨나요?{' '}
-              <Link to="/find-id" style={{ color: 'blue' }}>
-                아이디 찾기
+              <Link to="/find-id" style={{ textDecoration: 'none' }}>
+                <span className="findId">아이디 찾기</span>
               </Link>
               <br />
               비밀번호를 잊어버리셨나요?{' '}
-              <Link to="/find-password" style={{ color: 'blue' }}>
-                비밀번호 찾기
+              <Link to="/find-password" style={{ textDecoration: 'none' }}>
+                <span className="findId">비밀번호 찾기</span>
               </Link>
               <br />
               아직 회원이 아니신가요?{' '}
-              <Link to="/signup" style={{ color: 'blue' }}>
-                회원가입
+              <Link to="/signup" style={{ textDecoration: 'none' }}>
+                <span className="findId">회원가입</span>
               </Link>
             </p>
           </div>

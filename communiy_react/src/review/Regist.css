@@ -28,6 +28,17 @@
 }
 
 .review_register_btn {
+  background-color: #ff6745;
+  border: 1px solid #ff6745;
+  margin-top: 5px;
+  position: relative;
+  text-align: center;
+  right: 10px;
+  font-size: 13px;
+}
+.review_register_btn:hover {
+  background-color: #ff67458f;
+  border: 1px solid #ff674500;
   margin-top: 5px;
   position: relative;
   text-align: center;
@@ -38,14 +49,14 @@
 .review_register_btn span {
   margin: 0 5px;
   padding: 7px 13px;
-  border: 1px solid #ccc;
+
   border-radius: 20px;
   cursor: pointer;
   width: 200px;
 }
 
 .review_register_btn span:hover {
-  background-color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.658);
 }
 
 .review_input_title {
