@@ -14,13 +14,12 @@ public class SecretConfig {
     }
 
     public String getSecretKey() {
-        return dotenv.get("NURIGO_SECRECT_KEY");
+        return dotenv.get("NURIGO_SECRET_KEY");
     }
 
     public String getJwtSecretKey() {
         return dotenv.get("JWT_SECRETKEY");
     }
-
     
     public String getKakaoClienID() {
     	return dotenv.get("KAKAO_CLIENT_ID");

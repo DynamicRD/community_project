@@ -25,7 +25,7 @@ export default function MemberProfileView({ show, onHide, member }) {
         align-items-center gap-3"
           >
             <Image
-              src="../images/group_leader_profile.jpeg"
+              src="../images/폼폼.png"
               roundedCircle
               style={{ height: '100px', width: '100px' }}
             />
