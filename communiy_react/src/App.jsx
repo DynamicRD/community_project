@@ -72,16 +72,25 @@ function App() {
             <Route path="/group/management" element={<GroupManagement />} />
 
             {/* 마이페이지 관련 */}
-            <Route path="/mypage" element={<MyPage />} />
-            <Route path="/mypage/infochange" element={<MyInfoChange />} />
-            <Route path="/mypage/profilechange" element={<MyProfileChange />} />
-            <Route path="/mypage/infodelete" element={<MyInfoDelete />} />
-            <Route path="/mypage/amounthis" element={<MyAmountHistory />} />
-            <Route path="/mypage/reviews" element={<MyReviews />} />
-            <Route path="/mypage/charge" element={<MyAmountCharge />} />
-            <Route path="/mypage/checkout" element={<Checkout />} />
-            <Route path="/mypage/checkout/success" element={<SuccessPage />} />
-            <Route path="/mypage/checkout/fail" element={<FailPage />} />
+            <Route path="/mypage/:idx" element={<MyPage />} />
+            <Route path="/mypage/infochange/:idx" element={<MyInfoChange />} />
+            <Route
+              path="/mypage/profilechange/:idx"
+              element={<MyProfileChange />}
+            />
+            <Route path="/mypage/infodelete/:idx" element={<MyInfoDelete />} />
+            <Route
+              path="/mypage/amounthis/:idx"
+              element={<MyAmountHistory />}
+            />
+            <Route path="/mypage/reviews/:idx" element={<MyReviews />} />
+            <Route path="/mypage/charge/:idx" element={<MyAmountCharge />} />
+            <Route path="/mypage/checkout/:idx" element={<Checkout />} />
+            <Route
+              path="/mypage/checkout/success/:idx"
+              element={<SuccessPage />}
+            />
+            <Route path="/mypage/checkout/fail/:idx" element={<FailPage />} />
             <Route
               path="/mypage/infochange/address"
               element={<AddressInput />}
@@ -122,7 +131,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<UserTable />} />
             <Route path="community" element={<Community />} />
-            <Route path="community/:id" element={<CommunityDetail />} />
+            <Route path="community/:idx" element={<CommunityDetail />} />
           </Route>
         </Routes>
       </BrowserRouter>

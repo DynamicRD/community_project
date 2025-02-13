@@ -110,6 +110,19 @@ public class MemberController {
 		}
 	}
 
+	// 회원가입 진행
+	@PostMapping("/infochange")
+	public ResponseEntity<?> infoChangeMember(@RequestBody MemberDTO memberDTO) {
+		try {
+			// 회원가입 로직 처리 (예: DB 저장)
+			service.register(memberDTO);
+			return ResponseEntity.ok().body(Collections.singletonMap("message", "회원정보 수정 성공"));
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Collections.singletonMap("message", "회원정보 수정 실패: " + e.getMessage()));
+		}
+	}
+
 	// 전화번호 중복 확인
 	@PostMapping("/phoneduplicatecheck")
 	public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberDTO memberDTO) {
@@ -137,10 +150,9 @@ public class MemberController {
 		}
 
 		log.info("🔹 /login 요청 - 유저 ID: {}", member.getId());
-		System.out.println(member);
 		// DB에서 사용자 확인
 		Member member2 = service.loginCheck(member);
-		System.out.println(member2);
+		System.out.println("member2값 읽어오기"+member2);
 		if (member2 == null) {
 			return ResponseEntity.status(404).body(Map.of("success", false, "message", "등록되지 않은 사용자입니다. 회원가입이 필요합니다."));
 		}
@@ -170,19 +182,23 @@ public class MemberController {
 	// 리프레시 토큰 유효시간 검증
 	@GetMapping("/refresh_check")
 	public ResponseEntity<?> checkRefreshToken(
-			@CookieValue(value = "refresh_Token", required = false) String refreshToken, HttpServletResponse response) {
+			@CookieValue(value = "refresh_token", required = false) String refreshToken, HttpServletResponse response) {
+	
+		System.out.println("토큰 유효시간 검증");
+		System.out.println(refreshToken);
 		if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
 		}
-		String id = jwtTokenProvider.getIdFromToken(refreshToken);
+		System.out.println("토큰 아이디");
+		int no = JwtUtil.getNoFromToken(refreshToken);
+		System.out.println("no추출 완료 : " +no);
 		Member member = new Member();
-		member.setId(id);
+		member.setNo(no);
 
 		// id로 DB에 멤버정보를 긁어온다
 		member = service.selectMemberByNo(member);
-		Date expiration = jwtTokenProvider.getExpirationDate(refreshToken);
-		long remainingTime = expiration.getTime() - System.currentTimeMillis();
-
+		System.out.println(member);
+		long remainingTime = jwtutil.getExpireDateFromToken(refreshToken);
 		if (remainingTime < 10 * 60 * 1000) { // 10분 이하 남았을 경우
 			return refreshTwoToken(member, response);
 
@@ -193,14 +209,19 @@ public class MemberController {
 
 	@GetMapping("/getdata")
 	public ResponseEntity<Map<String, Object>> getRole(
-			@CookieValue(value = "access_token", required = false) String accessToken, HttpServletResponse response) {
-
+			@CookieValue(value = "access_token", required = false) String accessToken,
+			@CookieValue(value = "refresh_token", required = false) String refreshToken, HttpServletResponse response) {
 		// 액세스 토큰 검증
 		if (accessToken == null || !jwtTokenProvider.validateToken(accessToken)) {
+			System.out.println("만료된 토큰");
+			Cookie accessTokenCookie = new Cookie("access_token", null);
+			accessTokenCookie.setMaxAge(0);
+			accessTokenCookie.setPath("/");
+			accessTokenCookie.setHttpOnly(true);
+			response.addCookie(accessTokenCookie);
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
 					.body(Map.of("success", false, "message", "Invalid access token"));
 		}
-		System.out.println("실행되었습니다");
 		// 토큰에서 ID 추출
 		System.out.println(accessToken);
 		Integer no = jwtTokenProvider.getNoFromToken(accessToken);
@@ -235,6 +256,7 @@ public class MemberController {
 			@CookieValue(value = "access_token", required = false) String accessToken,
 			@CookieValue(value = "refresh_token", required = false) String refreshToken) {
 
+		
 		boolean accessTokenExists = accessToken != null;
 		boolean refreshTokenExists = refreshToken != null;
 		System.out.println(accessTokenExists);
@@ -260,119 +282,119 @@ public class MemberController {
 
 		return ResponseEntity.ok(Map.of("success", true, "message", "로그아웃 성공"));
 	}
+
 	@RequestMapping("/googlelogin")
-	public ResponseEntity<?> googleLogin(
-	        @RequestParam("code") String code,
-	        @RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
-	        HttpServletResponse response) {
 
-	    // 1. 받은 인증 코드를 사용하여 Google에 액세스 토큰 요청
-	    String tokenUrl = "https://oauth2.googleapis.com/token";
-	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add("code", code);
-	    params.add("client_id", secretConfig.getGoogleClientID());
-	    params.add("client_secret", secretConfig.getGoogleClientSecret());
-	    params.add("redirect_uri", secretConfig.getGoogleRedirectUri());
-	    params.add("grant_type", "authorization_code");
+	public ResponseEntity<?> googleLogin(@RequestParam("code") String code,
+			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
+			HttpServletResponse response) {
 
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		// 1. 받은 인증 코드를 사용하여 Google에 액세스 토큰 요청
+		String tokenUrl = "https://oauth2.googleapis.com/token";
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("code", code);
+		params.add("client_id", secretConfig.getGoogleClientID());
+		params.add("client_secret", secretConfig.getGoogleClientSecret());
+		params.add("redirect_uri", secretConfig.getGoogleRedirectUri());
+		params.add("grant_type", "authorization_code");
 
-	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-	    ResponseEntity<Map> responseGoogle = restTemplate.postForEntity(tokenUrl, request, Map.class);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-	    if (!responseGoogle.getStatusCode().is2xxSuccessful()) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "구글 로그인 실패"));
-	    }
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+		ResponseEntity<Map> responseGoogle = restTemplate.postForEntity(tokenUrl, request, Map.class);
 
-	    Map<String, Object> responseBody = responseGoogle.getBody();
-	    String accessToken = (String) responseBody.get("access_token");
+		if (!responseGoogle.getStatusCode().is2xxSuccessful()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(Map.of("success", false, "message", "구글 로그인 실패"));
+		}
 
-	    // 2. 액세스 토큰을 사용하여 사용자 정보 요청
-	    String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
-	    HttpHeaders userHeaders = new HttpHeaders();
-	    userHeaders.setBearerAuth(accessToken);
-	    HttpEntity<String> userRequest = new HttpEntity<>(userHeaders);
+		Map<String, Object> responseBody = responseGoogle.getBody();
+		String accessToken = (String) responseBody.get("access_token");
 
-	    ResponseEntity<Map> userResponse = restTemplate.exchange(userInfoUrl, HttpMethod.GET, userRequest, Map.class);
-	    if (!userResponse.getStatusCode().is2xxSuccessful()) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("success", false, "message", "사용자 정보 요청 실패"));
-	    }
+		// 2. 액세스 토큰을 사용하여 사용자 정보 요청
+		String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
+		HttpHeaders userHeaders = new HttpHeaders();
+		userHeaders.setBearerAuth(accessToken);
+		HttpEntity<String> userRequest = new HttpEntity<>(userHeaders);
 
-	    Map<String, Object> userInfo = userResponse.getBody();
-	    System.out.println(userInfo);
-	    String providerId = (String) userInfo.get("id");
+		ResponseEntity<Map> userResponse = restTemplate.exchange(userInfoUrl, HttpMethod.GET, userRequest, Map.class);
+		if (!userResponse.getStatusCode().is2xxSuccessful()) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+					.body(Map.of("success", false, "message", "사용자 정보 요청 실패"));
+		}
 
-	    Member member = new Member();
-	    member.setProviderId(providerId);
-	    member.setProvider("google");
+		Map<String, Object> userInfo = userResponse.getBody();
+		System.out.println(userInfo);
+		String providerId = (String) userInfo.get("id");
 
-	    // 사용자가 이미 존재하는지 확인
-	    boolean isRegistered = service.googleUserCheck(member);
+		Member member = new Member();
+		member.setProviderId(providerId);
+		member.setProvider("google");
 
-	    if (isRegistered) {
-	        // 기존 회원 로그인 처리
-	        member = service.selectGoogleInfo(member);
-	        member.setRememberMe(rememberMe);
+		// 사용자가 이미 존재하는지 확인
+		boolean isRegistered = service.googleUserCheck(member);
 
-	        String jwtAccessToken = jwtutil.createAccessToken(member);
-	        String jwtRefreshToken = jwtutil.createRefreshToken(member, rememberMe);
+		if (isRegistered) {
+			// 기존 회원 로그인 처리
+			member = service.selectGoogleInfo(member);
+			member.setRememberMe(rememberMe);
 
-	        log.info("✅ JWT 생성 완료");
+			String jwtAccessToken = jwtutil.createAccessToken(member);
+			String jwtRefreshToken = jwtutil.createRefreshToken(member, rememberMe);
 
-	        // JWT를 HttpOnly 쿠키에 저장
-	        addSessionJwtCookie(response, "access_token", jwtAccessToken);
+			log.info("✅ JWT 생성 완료");
 
-	        if (rememberMe) {
-	            System.out.println("로그인 기억");
-	            addJwtCookie(response, "refresh_token", jwtRefreshToken, 60 * 60 * 24 * 7); // 7일 유지
-	        } else {
-	            System.out.println("로그인 기억하지 않음");
-	            addSessionJwtCookie(response, "refresh_token", jwtRefreshToken); // 세션 쿠키
-	        }
+			// JWT를 HttpOnly 쿠키에 저장
+			addSessionJwtCookie(response, "access_token", jwtAccessToken);
 
-	        // ✅ 로그인 성공 후 쿠키와 함께 React로 리다이렉트 (isRegistered=true 전달)
-	        return ResponseEntity
-	                .status(HttpStatus.FOUND) // 302 Redirect
-	                .header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=true")
-	                .build();
-	    } else {
-	        // 회원가입 필요
-	        GoogleInfo googleInfo = new GoogleInfo();
-	        ObjectMapper objectMapper = new ObjectMapper();
-	        googleInfo = objectMapper.convertValue(userInfo, GoogleInfo.class);
-	        String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(googleInfo);
-	        addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
-	        // ✅ 회원가입 필요 (isRegistered=false 전달)
-	        return ResponseEntity
-	                .status(HttpStatus.FOUND) // 302 Redirect
-	                .header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=false")
-	                .build();
-	    }
+			if (rememberMe) {
+				System.out.println("로그인 기억");
+				addJwtCookie(response, "refresh_token", jwtRefreshToken, 60 * 60 * 24 * 7); // 7일 유지
+			} else {
+				System.out.println("로그인 기억하지 않음");
+				addSessionJwtCookie(response, "refresh_token", jwtRefreshToken); // 세션 쿠키
+			}
+
+			// ✅ 로그인 성공 후 쿠키와 함께 React로 리다이렉트 (isRegistered=true 전달)
+			return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
+					.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=true").build();
+		} else {
+			// 회원가입 필요
+			GoogleInfo googleInfo = new GoogleInfo();
+			ObjectMapper objectMapper = new ObjectMapper();
+			googleInfo = objectMapper.convertValue(userInfo, GoogleInfo.class);
+			String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(googleInfo);
+			addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
+			// ✅ 회원가입 필요 (isRegistered=false 전달)
+			return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
+					.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=false").build();
+		}
 	}
 
-    @GetMapping("/google_info")
-    public ResponseEntity<?> getGoogleUserInfo(@CookieValue(name = "google_temp_token", required = false) String token) {
-        if (token == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No token found");
-        }
+	@GetMapping("/google_info")
+	public ResponseEntity<?> getGoogleUserInfo(
+			@CookieValue(name = "google_temp_token", required = false) String token) {
+		if (token == null) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("No token found");
+		}
 
-        try {
-            Claims claims = jwtutil.parseToken(token); // 토큰 검증 및 디코딩
-            String id = claims.get("id", String.class);
-            String email = claims.get("email", String.class);
-            String name = claims.get("name", String.class);
+		try {
+			Claims claims = jwtutil.parseToken(token); // 토큰 검증 및 디코딩
+			String id = claims.get("id", String.class);
+			String email = claims.get("email", String.class);
+			String name = claims.get("name", String.class);
 
-            Map<String, String> userInfo = new HashMap<>();
-            userInfo.put("id", id);
-            userInfo.put("email", email);
-            userInfo.put("name", name);
-            System.out.println(userInfo);
-            return ResponseEntity.ok(userInfo);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
-        }
-    }
+			Map<String, String> userInfo = new HashMap<>();
+			userInfo.put("id", id);
+			userInfo.put("email", email);
+			userInfo.put("name", name);
+			System.out.println(userInfo);
+			return ResponseEntity.ok(userInfo);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+		}
+	}
 
 //	@RequestMapping("/googlelogin")
 //	public ResponseEntity<?> googleLogin(@RequestParam("code") String code, HttpServletResponse response,boolean rememberMe){

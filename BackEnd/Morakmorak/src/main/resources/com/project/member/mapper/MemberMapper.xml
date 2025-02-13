@@ -42,6 +42,21 @@
 		TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1},
 		#{addr2}
 		)
+
+	</insert>
+	
+	<insert id="updateInfo" parameterType="com.project.member.model.Member">
+		update member set pw = #{pw}, email = #{email}, phone= #{phone},
+		name=#{name}, nickname=#{nickname},
+		birth =TO_DATE(#{birth}, 'YYYY-MM-DD'), gender= #{gender},
+		zip_code=#{zipCode}, addr1=#{addr1}, addr2=#{addr2} where no = #{no}
+	</insert>
+	
+	<insert id="updateInfoGoogle" parameterType="com.project.member.model.Member">
+		update member set  
+		name=#{name}, nickname=#{nickname},
+		birth =TO_DATE(#{birth}, 'YYYY-MM-DD'), gender= #{gender},
+		zip_code=#{zipCode}, addr1=#{addr1}, addr2=#{addr2} where no = #{no}
 	</insert>
 
 	<insert id="registerGoogle" parameterType="com.project.member.model.Member">

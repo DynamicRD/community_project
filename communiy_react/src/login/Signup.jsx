@@ -741,7 +741,12 @@ export default function Signup() {
           {/* 버튼들 */}
           <Form.Group as={Row} className="btnClub mt-4 text-center">
             <Col sm={12} className="mb-4">
-              <Button className="registSummtBtn" variant="light" style={{color:'white'}} type="submit">
+              <Button
+                className="registSummtBtn"
+                variant="light"
+                style={{ color: 'white' }}
+                type="submit"
+              >
                 가입하기
               </Button>
               &nbsp;&nbsp;

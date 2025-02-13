@@ -90,7 +90,7 @@ function Navbar() {
                 ) : (
                   <>
                     <Link
-                      to="/mypage"
+                      to={`/mypage/${userData?.no}`} // ✅ 백틱을 사용하여 동적 값 적용
                       className="ms-3"
                       data-bs-toggle="tooltip"
                       title="마이페이지"

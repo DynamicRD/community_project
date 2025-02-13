@@ -32,7 +32,7 @@ public class JwtUtil {
 	}
 
 	public static String createRefreshToken(Member member, boolean rememberMe) {
-		return Jwts.builder().setSubject("refreshToken").claim("id", member.getId())
+		return Jwts.builder().setSubject("refreshToken").claim("no", member.getNo()).claim("id", member.getId())
 				.claim("provider", member.getProvider()).setIssuedAt(new Date())
 				// 로그인체크에따라 리프레시토큰 수명
 				.setExpiration(new Date(System.currentTimeMillis()
@@ -89,6 +89,32 @@ public class JwtUtil {
 		member.setId(validateToken(token).get("id", String.class));
 		member.setProvider(validateToken(token).get("provider", String.class));
 		return member;
+	}
+
+	public static Integer getNoFromToken(String token) {
+		 Claims claims = Jwts.parser()
+	                .setSigningKey(secretConfig.getJwtSecretKey())
+	                .parseClaimsJws(token)
+	                .getBody();
+
+	        // "no" 값 추출
+	        int no = claims.get("no", Integer.class);
+	        return no;
+	}
+	
+	public static Long getExpireDateFromToken(String token) {
+		Claims claims = Jwts.parser()
+				.setSigningKey(secretConfig.getJwtSecretKey())
+				.parseClaimsJws(token)
+				.getBody();
+		
+		// "no" 값 추출
+		 // 토큰 만료일 (exp) 추출
+        Date expirationDate = claims.getExpiration();
+
+        // 현재 시간과 비교
+        long remainingTime = expirationDate.getTime() - System.currentTimeMillis();
+		return remainingTime;
 	}
 
 }

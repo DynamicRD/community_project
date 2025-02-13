@@ -82,6 +82,41 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
+	
+	@Override
+	public void infoChange(MemberDTO memberDTO) {
+		Member member = new Member();
+		
+
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
+		// 비밀번호 암호화
+		if (memberDTO.getPass() != null) {
+			String rawPassword = memberDTO.getPass(); // 원래 비밀번호
+			String encryptedPassword = encoder.encode(rawPassword);
+			System.out.println(encryptedPassword);
+			member.setPw(encryptedPassword);
+		}
+		if (memberDTO.getName() != null) {
+			member.setName(memberDTO.getName());
+		}
+		if (memberDTO.getPhone1() != null) {
+			member.setPhone(memberDTO.getPhone1() + memberDTO.getPhone2() + memberDTO.getPhone3());
+		}
+		member.setNickname(memberDTO.getNickname());
+		member.setGender(memberDTO.getGender());
+		member.setBirth(memberDTO.getBirth());
+		member.setEmail(memberDTO.getEmail());
+		member.setZipCode(memberDTO.getAddcode());
+		member.setAddr1(memberDTO.getAddress01());
+		member.setAddr2(memberDTO.getAddress02());
+		if (memberDTO.getProvider().equals("google")) {
+			member.setProvider(memberDTO.getProvider());
+			mapper.updateInfoGoogle(member);
+		} else {
+			mapper.updateInfo(member);
+		}
+	}
 	@Override
 	public boolean phoneDuplicateCheck(MemberDTO memberDTO) {
 		Member member = new Member();

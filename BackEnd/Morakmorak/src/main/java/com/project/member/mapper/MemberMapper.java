@@ -16,6 +16,10 @@ public interface MemberMapper {
 	void register(Member member);
 	
 	void registerGoogle(Member member);
+	
+	void updateInfo(Member member);
+	
+	void updateInfoGoogle(Member member);
 
 	Member loginCheck(Member member);
 
