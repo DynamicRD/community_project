@@ -82,6 +82,32 @@ export default function Login() {
 
     window.open(kakaoUrl, 'kakao-login', 'width=600,height=600');
   };
+
+  //   const handleKakaoRedirect = async () => {
+  //     const urlParams = new URLSearchParams(window.location.search);
+  //     const authCode = urlParams.get("code");
+
+  //     if (authCode) {
+  //         console.log("Authorization Code:", authCode);
+
+  //         try {
+  //             // 백엔드로 인가 코드 전달 (액세스 토큰 요청)
+  //             const response = await fetch("http://localhost:8080/member/kakao", {
+  //                 method: "POST",
+  //                 headers: {
+  //                     "Content-Type": "application/json"
+  //                 },
+  //                 body: JSON.stringify({ code: authCode }) // 여기서 백엔드로 인가 코드 보냄
+  //             });
+
+  //             const data = await response.json();
+  //             console.log("Backend Response:", data);
+  //         } catch (error) {
+  //             console.error("Error during Kakao login:", error);
+  //         }
+  //     }
+  // };
+
   const doGoogleLogin = (rememberMe) => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;

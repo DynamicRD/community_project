@@ -30,6 +30,7 @@ import com.project.common.config.JwtTokenProvider;
 import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.google.model.GoogleInfo;
+import com.project.member.dto.AccessTokenDTO;
 import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
 import com.project.member.service.MemberService;
@@ -55,17 +56,40 @@ public class MemberController {
 
 	private SecretConfig secretConfig = new SecretConfig();
 
-	// 카카오?
 	@PostMapping("/kakao")
-	public ResponseEntity<?> kakaoLogin(@RequestBody Map<String, String> request) {
-		Map<String, String> tokens = service.kakaoLogin(request.get("accessToken"));
+	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code) {
+	    String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
 
-		ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", tokens.get("refreshToken"))
-				.httpOnly(true).secure(true).path("/").maxAge(604800).build();
+	    // 요청할 파라미터 설정
+	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+	    params.add("grant_type", "authorization_code");
+	    params.add("client_id", secretConfig.getKakaoClienID());
+	    params.add("redirect_uri", "http://localhost:8080/member/kakao"); // 실제 redirect URL로 변경
+	    params.add("code", code);
 
-		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
-				.header(HttpHeaders.AUTHORIZATION, "Bearer " + tokens.get("accessToken")).body("Login Successful");
+
+	    // HTTP 헤더 설정
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+	    RestTemplate restTemplate = new RestTemplate();
+
+	    try {
+	        // 카카오 서버에 요청 보내기
+	        ResponseEntity<String> response = restTemplate.exchange(
+	            kakaoTokenUrl, HttpMethod.POST, request, String.class
+	        );
+
+	        System.out.println("카카오 응답: " + response.getBody());
+	        return ResponseEntity.ok(response.getBody()); // 액세스 토큰을 클라이언트에 반환
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("카카오 로그인 실패");
+	    }
 	}
+
 
 	// 아이디 중복 확인
 	@GetMapping("/duplicatecheck")
