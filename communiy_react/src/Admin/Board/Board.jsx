@@ -394,30 +394,30 @@ const NoticeFaq = () => {
     <Container>
       <div className="m-5">
         <div className=" d-flex m-5">
-          <Nav.Link href="/user/announcements">
+          <Link to={'/admin/board/Notice'} className="notice_faq">
             <span className="nav_notice" style={{ fontSize: '33px' }}>
               공지사항&nbsp;&nbsp;&nbsp;|
             </span>
-          </Nav.Link>
-          <Nav.Link href="/user/announcements/faq">
+          </Link>
+          <Link to={'/admin/board/Faq'} className="notice_faq">
             <span className="nav_notice" style={{ fontSize: '33px' }}>
               &nbsp;&nbsp;&nbsp;FAQ
             </span>
-          </Nav.Link>
+          </Link>
         </div>
 
         <Container>
           <table className="announcements_table">
-            {announcementData.map((object) => (
-              <tbody key={object.no}>
+            {announcementData.map((notice) => (
+              <tbody key={notice.no}>
                 <tr>
                   <td className="table_td_title">
-                    <Nav.Link href="/user/announcements/read">
-                      <span className="ps-5">{object.title}</span>
-                    </Nav.Link>
+                    <Link to={`/admin/board/Notice/${notice.no}`}>
+                      <span className="ps-5">{notice.title}</span>
+                    </Link>
                   </td>
                   <td className="table_td_date">
-                    <span className="pe-5">{object.date}</span>
+                    <span className="pe-5">{notice.date}</span>
                   </td>
                 </tr>
                 <HorizonLine_table />

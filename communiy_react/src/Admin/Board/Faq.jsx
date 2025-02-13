@@ -1,8 +1,8 @@
 import React from 'react';
-import 'src/announcements/Announcements_faq.css';
+import '/src/announcements/Announcements_faq.css';
 import { Container, Nav, Pagination } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
-
+import { Link } from 'react-router-dom';
 const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
   today.getMonth() + 1
@@ -52,18 +52,18 @@ export default function Faq() {
   }
   return (
     <Container class="d-flex justify-content-center">
-      <div className="m-5">
+      <div className="m-5 pt-5">
         <div className=" d-flex m-5">
-          <Nav.Link href="/user/announcements">
+          <Link to={'/admin/board/Notice'} className="notice_faq">
             <span className="nav_notice" style={{ fontSize: '33px' }}>
               공지사항&nbsp;&nbsp;&nbsp;|
             </span>
-          </Nav.Link>
-          <Nav.Link href="/user/announcements/faq">
+          </Link>
+          <Link to={'/admin/board/Faq'} className="notice_faq">
             <span className="nav_notice" style={{ fontSize: '33px' }}>
               &nbsp;&nbsp;&nbsp;FAQ
             </span>
-          </Nav.Link>
+          </Link>
         </div>
         <Container>
           <Accordion defaultActiveKey="0">

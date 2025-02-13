@@ -1,3 +1,7 @@
+* {
+  text-decoration: none;
+  color: black;
+}
 .announcements_table {
   width: 100%;
   font-family: 'Freesentation-9Black';
@@ -6,7 +10,14 @@
 .nav_notice {
   font-family: 'Freesentation-9Black';
 }
-
+.notice_faq {
+  text-decoration: none;
+  color: black;
+}
+.notice_faq:hover {
+  transition: 0.5s all;
+  color: #ff6745c2;
+}
 /* @font-face {
   font-family: 'Pretendard-Regular';
   src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
