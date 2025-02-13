@@ -35,26 +35,28 @@ import GoogleSignup from './login/GoogleSignup';
 import Read from './review/Read';
 import Review from './review/Review';
 import Regist from './review/Regist';
+import ChatRoom from './chatroom/Chatroom';
+import WishList from './wishlist/wishlist';
+import FindId from './login/FindId';
+import FindPwd from './login/FindPwd';
+import ResetPassword from './login/ResetPassword';
 
 // ✅ 관리자 관련 컴포넌트
 import Dashboard from './Admin/dashboard/dashboard';
 import UserTable from './Admin/Users/UserTable';
 import Community from './Admin/Community/Community';
 import CommunityDetail from './Admin/Community/CommunityDetail';
-import ChatRoom from './chatroom/Chatroom';
-import FindId from './login/FindId';
-import FindPwd from './login/FindPwd';
-import ResetPassword from './login/ResetPassword';
-import WishList from './wishlist/wishlist';
+import Complaint from './Admin/Complaint/Complaint';
+import Board from './Admin/Board/Board';
+import ReviewDetail from './Admin/Board/ReviewDetail';
+import Stats from './Admin/Stats/Stats';
 
 function App() {
   return (
     <AuthProvider>
-      {' '}
-      {/* ✅ AuthProvider로 감싸기 */}
       <BrowserRouter>
         <Routes>
-          {/* 유저 레이아웃 */}
+          {/* ✅ 유저 레이아웃 */}
           <Route element={<UserLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -62,10 +64,7 @@ function App() {
 
             {/* 모임 관련 */}
             <Route path="/group/detail" element={<GroupDetail />} />
-            <Route
-              path="/group/regular_list"
-              element={<GroupList type="regular" />}
-            />
+            <Route path="/group/regular_list" element={<GroupList type="regular" />} />
             <Route path="/group/one_list" element={<GroupList type="one" />} />
             <Route path="/group/regist" element={<GroupRegist />} />
             <Route path="/group/update" element={<GroupUpdate />} />
@@ -74,27 +73,15 @@ function App() {
             {/* 마이페이지 관련 */}
             <Route path="/mypage/:idx" element={<MyPage />} />
             <Route path="/mypage/infochange/:idx" element={<MyInfoChange />} />
-            <Route
-              path="/mypage/profilechange/:idx"
-              element={<MyProfileChange />}
-            />
+            <Route path="/mypage/profilechange/:idx" element={<MyProfileChange />} />
             <Route path="/mypage/infodelete/:idx" element={<MyInfoDelete />} />
-            <Route
-              path="/mypage/amounthis/:idx"
-              element={<MyAmountHistory />}
-            />
+            <Route path="/mypage/amounthis/:idx" element={<MyAmountHistory />} />
             <Route path="/mypage/reviews/:idx" element={<MyReviews />} />
             <Route path="/mypage/charge/:idx" element={<MyAmountCharge />} />
             <Route path="/mypage/checkout/:idx" element={<Checkout />} />
-            <Route
-              path="/mypage/checkout/success/:idx"
-              element={<SuccessPage />}
-            />
+            <Route path="/mypage/checkout/success/:idx" element={<SuccessPage />} />
             <Route path="/mypage/checkout/fail/:idx" element={<FailPage />} />
-            <Route
-              path="/mypage/infochange/address"
-              element={<AddressInput />}
-            />
+            <Route path="/mypage/infochange/address" element={<AddressInput />} />
 
             {/* 채팅 */}
             <Route path="/chatroom" element={<ChatRoom />} />
@@ -111,10 +98,7 @@ function App() {
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />
             <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
-            <Route
-              path="/announcements/read"
-              element={<AnnouncementsNoticeRead />}
-            />
+            <Route path="/announcements/read" element={<AnnouncementsNoticeRead />} />
 
             {/* 찜 목록 */}
             <Route path="/favorites" element={<WishList />} />
@@ -132,6 +116,10 @@ function App() {
             <Route path="users" element={<UserTable />} />
             <Route path="community" element={<Community />} />
             <Route path="community/:idx" element={<CommunityDetail />} />
+            <Route path="complaint" element={<Complaint />} />
+            <Route path="board" element={<Board />} />
+            <Route path="board/:reviewid" element={<ReviewDetail />} />
+            <Route path="stats" element={<Stats />} />
           </Route>
         </Routes>
       </BrowserRouter>
