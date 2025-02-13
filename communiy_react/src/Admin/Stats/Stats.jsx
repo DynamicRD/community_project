@@ -29,7 +29,7 @@ ChartJS.register(
 
 const Stats = () => {
   const [activeTab, setActiveTab] = useState('daily');
-
+  const [selectedCommunityStat, setSelectedCommunityStat] = useState('전체');
   // 일별 수입, 방문자 통계 (Line Chart)
   const dailyData = {
     labels: [
@@ -99,32 +99,18 @@ const Stats = () => {
     ],
   };
 
-  // 모임 통계 (Stacked Bar Chart)
-  const communityData = {
-    labels: [
-      '전체',
-      '최근 한달',
-      '인기 카테고리',
-      '찜 많은 모임',
-      '방문자 많은 사이트',
-    ],
-    datasets: [
-      {
-        label: '음악',
-        data: [50, 20, 30, 10, 15],
-        backgroundColor: 'rgba(75, 192, 192, 0.7)',
-      },
-      {
-        label: '스포츠',
-        data: [30, 15, 40, 25, 10],
-        backgroundColor: 'rgba(255, 99, 132, 0.7)',
-      },
-      {
-        label: '예술',
-        data: [40, 25, 20, 30, 20],
-        backgroundColor: 'rgba(153, 102, 255, 0.7)',
-      },
-    ],
+  // 모임 통계 데이터
+  const communityStats = {
+    전체: {
+      categories: [50, 40, 30, 20, 10],
+      favorites: [60, 45, 35, 75, 55],
+      visitors: [70, 50, 40, 60, 20],
+    },
+    '최근 한달': {
+      categories: [30, 25, 20, 50, 40],
+      favorites: [40, 30, 25, 50, 60],
+      visitors: [50, 35, 30, 20, 70],
+    },
   };
 
   return (
@@ -168,35 +154,68 @@ const Stats = () => {
       {activeTab === 'community' && (
         <Card className="p-4">
           <h4>모임 통계</h4>
-          <Bar
-            data={communityData}
-            options={{
-              animation: { duration: 2000 },
-              plugins: {
-                tooltip: {
-                  callbacks: {
-                    label: function (tooltipItem) {
-                      const categories = ['음악', '스포츠', '예술'];
-                      return (
-                        categories[tooltipItem.datasetIndex] +
-                        ' - ' +
-                        tooltipItem.raw
-                      );
+          <div className="mb-3 d-flex gap-3">
+            <Button
+              variant={
+                selectedCommunityStat === '전체' ? 'primary' : 'secondary'
+              }
+              onClick={() => setSelectedCommunityStat('전체')}
+            >
+              전체
+            </Button>
+            <Button
+              variant={
+                selectedCommunityStat === '최근 한달' ? 'primary' : 'secondary'
+              }
+              onClick={() => setSelectedCommunityStat('최근 한달')}
+            >
+              최근 한달
+            </Button>
+          </div>
+          <Row>
+            <Col md={12}>
+              <h5 className="text-center">인기 카테고리</h5>
+              <Bar
+                data={{
+                  labels: ['A', 'B', 'C', 'D', 'E'],
+                  datasets: [
+                    {
+                      data: communityStats[selectedCommunityStat].categories,
+                      backgroundColor: 'rgba(75, 192, 192, 0.6)',
                     },
-                  },
-                },
-              },
-              responsive: true,
-              scales: {
-                x: {
-                  stacked: true,
-                },
-                y: {
-                  stacked: true,
-                },
-              },
-            }}
-          />
+                  ],
+                }}
+              />
+            </Col>
+            <Col md={12}>
+              <h5 className="text-center mt-5">찜 많은 모임</h5>
+              <Bar
+                data={{
+                  labels: ['V', 'W', 'X', 'Y', 'Z'],
+                  datasets: [
+                    {
+                      data: communityStats[selectedCommunityStat].favorites,
+                      backgroundColor: 'rgba(153, 102, 255, 0.6)',
+                    },
+                  ],
+                }}
+              />
+            </Col>
+            <Col md={12}>
+              <h5 className="text-center mt-5">방문자 많은 사이트</h5>
+              <Bar
+                data={{
+                  labels: ['M', 'N', 'O', 'P', 'Q'],
+                  datasets: [
+                    {
+                      data: communityStats[selectedCommunityStat].visitors,
+                      backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                    },
+                  ],
+                }}
+              />
+            </Col>
+          </Row>
         </Card>
       )}
     </Container>

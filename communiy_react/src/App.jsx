@@ -45,6 +45,8 @@ import Community from './Admin/Community/Community';
 import CommunityDetail from './Admin/Community/CommunityDetail';
 import ChatRoom from './chatroom/Chatroom';
 import Complaint from './Admin/Complaint/Complaint';
+import Board from './Admin/Board/Board';
+import ReviewDetail from './Admin/Board/ReviewDetail';
 import Stats from './Admin/Stats/Stats';
 
 function App() {
@@ -112,6 +114,8 @@ function App() {
           <Route path="community" element={<Community />} />
           <Route path="community/:id" element={<CommunityDetail />} />
           <Route path="complaint" element={<Complaint />} />
+          <Route path="board" element={<Board />} />
+          <Route path="board/:reviewid" element={<ReviewDetail />} />
           <Route path="stats" element={<Stats />} />
         </Route>
       </Routes>
