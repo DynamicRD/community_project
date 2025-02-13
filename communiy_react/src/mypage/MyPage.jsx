@@ -29,7 +29,13 @@ function MyPage() {
       }
     }
   }, [isAuthenticated, userData, navigate]);
-
+  useEffect(() => {
+    console.log(userData);
+    if (userData == null) {
+      alert(`접근 권한이 없습니다.`);
+      navigate('/');
+    }
+  }, [userData]);
   // 알림 내용
   const notifications = [
     '모임1의 참가자 리뷰가 추가되었습니다!',

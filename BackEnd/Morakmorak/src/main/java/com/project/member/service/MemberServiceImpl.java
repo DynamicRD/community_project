@@ -89,7 +89,7 @@ public class MemberServiceImpl implements MemberService {
 		
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-
+		member.setNo(memberDTO.getNo());
 		// 비밀번호 암호화
 		if (memberDTO.getPass() != null) {
 			String rawPassword = memberDTO.getPass(); // 원래 비밀번호

@@ -115,7 +115,7 @@ public class MemberController {
 	public ResponseEntity<?> infoChangeMember(@RequestBody MemberDTO memberDTO) {
 		try {
 			// 회원가입 로직 처리 (예: DB 저장)
-			service.register(memberDTO);
+			service.infoChange(memberDTO);
 			return ResponseEntity.ok().body(Collections.singletonMap("message", "회원정보 수정 성공"));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
