@@ -2,9 +2,18 @@ package com.project;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class Test {
+import com.project.common.config.SecretConfig;
 
+public class Test {
+	
+
+	
 	public static void main(String[] args) {
+		SecretConfig secretConfig = new SecretConfig();
+		System.out.println( secretConfig.getKakaoClienID());
+		System.out.println( secretConfig.getKaKaoRedirectURL());
+	    
+		
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		// 비밀번호 암호화

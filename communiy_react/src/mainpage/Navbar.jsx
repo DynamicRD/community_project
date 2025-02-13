@@ -1,35 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext'; //
 import { jwtDecode } from 'jwt-decode'; // ✅ default 대신 named import 사용
+import Cookies from 'js-cookie';
+import axios from 'axios';
 
 function Navbar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [role, setRole] = useState(null);
-  const [name, setName] = useState(null);
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem('jwtToken');
-    if (token) {
-      try {
-        const decoded = jwtDecode(token); // ✅ jwtDecode 함수 사용
-        setIsAuthenticated(true);
-        setRole(decoded.role);
-        setName(decoded.name);
-      } catch (error) {
-        console.error('JWT 디코딩 오류:', error);
-        setIsAuthenticated(false);
-      }
-    } else {
-      setIsAuthenticated(false);
-    }
-  }, []);
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/member/logout',
+        {},
+        { withCredentials: true }
+      );
 
-  const handleLogout = () => {
-    console.log(role);
-    localStorage.removeItem('jwtToken');
-    alert('로그아웃 되었습니다.');
-    window.location.reload();
+      if (response.data.success) {
+        alert('로그아웃 되었습니다.');
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error('로그아웃 실패:', error);
+      alert('로그아웃 중 오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -67,9 +62,9 @@ function Navbar() {
             {isAuthenticated ? (
               <>
                 <div>
-                  {role === 0
+                  {userData?.role === 0
                     ? '👑 관리자님 환영합니다'
-                    : `😊 ${name}님 환영합니다`}
+                    : `😊 ${userData?.name}님 환영합니다`}
                 </div>
 
                 <Link
@@ -80,7 +75,7 @@ function Navbar() {
                 >
                   <i className="bi bi-box-arrow-left fs-4"></i>
                 </Link>
-                {role === 0 ? (
+                {userData?.role === 0 ? (
                   <>
                     {' '}
                     <Link
@@ -95,7 +90,7 @@ function Navbar() {
                 ) : (
                   <>
                     <Link
-                      to="/mypage"
+                      to={`/mypage/${userData?.no}`} // ✅ 백틱을 사용하여 동적 값 적용
                       className="ms-3"
                       data-bs-toggle="tooltip"
                       title="마이페이지"

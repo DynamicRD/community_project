@@ -6,6 +6,7 @@ const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
   today.getMonth() + 1
 }월 ${today.getDate()}일`;
+
 const announcementData = [
   {
     no: 1,
@@ -38,7 +39,14 @@ const announcementData = [
     content: '문정배 최고라고 생각합니다5',
     date: formattedDate,
   },
+  {
+    no: 6,
+    title: '문정배에 대한 고찰',
+    content: '문정배 최고라고 생각합니다5',
+    date: formattedDate,
+  },
 ];
+
 export default function Announcements_notice_read() {
   return (
     <>
@@ -67,7 +75,7 @@ export default function Announcements_notice_read() {
       </Container>
       <Container className="d-flex justify-content-center">
         <div className="notice_btn">
-          <Nav.Link href="/user/announcements">
+          <Nav.Link href="/announcements">
             <span>목록으로</span>
           </Nav.Link>
         </div>

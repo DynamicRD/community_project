@@ -4,43 +4,6 @@ import './Announcements_notice.css';
 import HorizonLine_table from './HorizonLine_table';
 import Pagination from 'react-bootstrap/Pagination';
 
-const today = new Date();
-const formattedDate = `${today.getFullYear()}년 ${
-  today.getMonth() + 1
-}월 ${today.getDate()}일`;
-const announcementData = [
-  {
-    no: 1,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다1',
-    date: formattedDate,
-  },
-  {
-    no: 2,
-    title: '문정배에 대한 고찰',
-    content:
-      ' 문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배   ',
-    date: formattedDate,
-  },
-  {
-    no: 3,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다3',
-    date: formattedDate,
-  },
-  {
-    no: 4,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다4',
-    date: formattedDate,
-  },
-  {
-    no: 5,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다5',
-    date: formattedDate,
-  },
-];
 export default function Announcements_notice() {
   let item = [];
   for (let number = 1; number <= 5; number++) {
@@ -50,19 +13,62 @@ export default function Announcements_notice() {
       </Pagination.Item>
     );
   }
+
+  const today = new Date();
+  const formattedDate = `${today.getFullYear()}년 ${
+    today.getMonth() + 1
+  }월 ${today.getDate()}일`;
+
+  const announcementData = [
+    {
+      no: 1,
+      title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다1',
+      date: formattedDate,
+    },
+    {
+      no: 2,
+      title: '문정배에 대한 고찰',
+      content:
+        ' 문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배   ',
+      date: formattedDate,
+    },
+    {
+      no: 3,
+      title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다3',
+      date: formattedDate,
+    },
+    {
+      no: 4,
+      title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다4',
+      date: formattedDate,
+    },
+    {
+      no: 5,
+      title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다5',
+      date: formattedDate,
+    },
+  ];
+
   return (
     // 카테고리 적용 고민
     <Container>
       <div className="m-5">
         <div className=" d-flex m-5">
-          <Nav.Link href="/user/announcements">
+          <Nav.Link href="/announcements">
             <span className="nav_notice" style={{ fontSize: '33px' }}>
-              공지사항&nbsp;&nbsp;&nbsp;|
+              공지사항
             </span>
           </Nav.Link>
-          <Nav.Link href="/user/announcements/faq">
+          <span className="nav_notice" style={{ fontSize: '33px' }}>
+            &nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;
+          </span>
+          <Nav.Link href="/announcements/faq">
             <span className="nav_notice" style={{ fontSize: '33px' }}>
-              &nbsp;&nbsp;&nbsp;FAQ
+              FAQ
             </span>
           </Nav.Link>
         </div>
@@ -73,7 +79,7 @@ export default function Announcements_notice() {
               <tbody key={object.no}>
                 <tr>
                   <td className="table_td_title">
-                    <Nav.Link href="/user/announcements/read">
+                    <Nav.Link href="/announcements/read">
                       <span className="ps-5">{object.title}</span>
                     </Nav.Link>
                   </td>

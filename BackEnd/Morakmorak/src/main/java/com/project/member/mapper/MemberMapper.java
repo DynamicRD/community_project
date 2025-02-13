@@ -1,19 +1,40 @@
 package com.project.member.mapper;
 
+import java.util.Optional;
+
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
 
+@Mapper
 public interface MemberMapper {
-	public int idDuplicateCheck(Member member);
+	int idDuplicateCheck(Member member);
+
+	int nickDuplicateCheck(Member member);
+
+	void register(Member member);
 	
-	public int nickDuplicateCheck(Member member);
+	void registerGoogle(Member member);
 	
-	public void register(Member member);
+	void updateInfo(Member member);
 	
-	public Member loginCheck(Member member);
+	void updateInfoGoogle(Member member);
+
+	Member loginCheck(Member member);
+
+	String passCompare(Member member);
+
+	void insertMember(Member member);
+
+	Member findByEmail(String email);
+
 	
-	public String passCompare(Member member);
+	int phoneDuplicateCheck(Member member);
 	
-	public int phoneDuplicateCheck(Member member);
+	Member getMemberInfoByNo(Member member);
+	
+	int googleRegisteredCheck(Member member);
+	
+	Member getGoogleInfo(Member member);
 }

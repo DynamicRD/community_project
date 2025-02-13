@@ -5,16 +5,16 @@ export default function GoogleLoginCheck() {
     const handleGoogleLogin = async () => {
       // URL 파라미터에서 'is_new_user' 확인
       const queryParams = new URLSearchParams(window.location.search);
-      const isNewUser = queryParams.get('is_new_user');
+      const isRegistered = queryParams.get('isRegistered');
 
       // 'is_new_user' 값에 따라 다르게 처리
-      if (isNewUser === 'true') {
-        console.log('새로운 사용자입니다.');
-        const redirectUrl = '/google/signup';
+      if (isRegistered === 'true') {
+        console.log('기존 사용자입니다.');
+        const redirectUrl = '/';
         window.opener.location.href = window.location.origin + redirectUrl;
       } else {
-        console.log('기존 사용자입니다.');
-        const redirectUrl = '/google/login'; // 예시로 로그인 페이지로 리디렉션
+        console.log('신규회원입니다.');
+        const redirectUrl = '/google/signup'; // 예시로 로그인 페이지로 리디렉션
         window.opener.location.href = window.location.origin + redirectUrl;
       }
 
