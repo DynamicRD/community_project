@@ -7,21 +7,14 @@
   font-family: 'Freesentation-9Black';
 }
 
-@font-face {
-  font-family: 'Freesentation-9Black';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2')
-    format('woff2');
-  font-weight: 800;
-  font-style: normal;
-}
-
-@font-face {
+/* @font-face {
   font-family: 'Pretendard-Regular';
   src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
     format('woff');
   font-weight: 400;
   font-style: normal;
-}
+} */
+
 .table_td_title {
   font-family: 'Pretendard-Regular';
   font-weight: 900;
@@ -77,16 +70,19 @@
 }
 
 .notice_btn span {
+  background-color: #ff6745;
   margin: 0 10px;
   padding: 10px 20px;
   border: 1px solid #ccc;
   border-radius: 20px;
+  color: white;
   cursor: pointer;
   font-size: 15px;
 }
 
 .notice_btn span:hover {
-  background-color: #000000;
+  transition: 0.5s all;
+  background-color: #ff6745c2;
   color: white;
 }
 

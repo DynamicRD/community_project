@@ -8,7 +8,7 @@ const HorizonLine_table = () => {
         textAlign: 'center',
         borderBottom: '1px solid rgba(0,0,0,0.1)',
         lineHeight: '0.1em',
-        margin: '10px 0 20px',
+        margin: '10px 0 10px 0px',
       }}
     ></div>
   );

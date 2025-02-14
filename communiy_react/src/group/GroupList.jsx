@@ -7,113 +7,20 @@ import GroupItem from './GroupItem';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
+import GroupDetailItem from './component/GroupDetailItem';
 
 function GroupList({ type }) {
-  //목업데이터
-  const items = [
-    {
-      groupList: {
-        g_id: '1',
-        g_title: 'Title 1',
-        comment1: 'Comment 1',
-        img_url: '/images/card01.png',
-        category: 'culture',
-        area: 'seoul',
-        reg_date: '2025-02-01',
-        star: 4,
-      },
-    },
-    {
-      groupList: {
-        g_id: '2',
-        g_title: 'Title 2',
-        comment1: 'Comment 2',
-        img_url: '/images/slide01.png',
-        category: 'food',
-        area: 'gyeong-gi',
-        reg_date: '2025-01-15',
-        star: 5,
-      },
-    },
-    {
-      groupList: {
-        g_id: '3',
-        g_title: 'Title 3',
-        comment1: 'Comment 3',
-        img_url: '/images/card01.png',
-        category: 'hobby',
-        area: 'incheon',
-        reg_date: '2025-01-20',
-        star: 3,
-      },
-    },
-    {
-      groupList: {
-        g_id: '4',
-        g_title: 'Title 4',
-        comment1: 'Comment 4',
-        category: 'travel',
-        area: 'gangwon',
-        reg_date: '2025-01-25',
-        star: 2,
-      },
-    },
-    {
-      groupList: {
-        g_id: '5',
-        g_title: 'Title 5',
-        comment1: 'Comment 4',
-        category: 'edu',
-        area: 'chungcheong',
-        reg_date: '2025-01-10',
-        star: 1,
-      },
-    },
-    {
-      groupList: {
-        g_id: '6',
-        g_title: 'Title 6',
-        comment1: 'Comment 4',
-        category: 'culture',
-        area: 'jeolla',
-        reg_date: '2025-01-05',
-        star: 4,
-      },
-    },
-    {
-      groupList: {
-        g_id: '7',
-        g_title: 'Title 7',
-        comment1: 'Comment 4',
-        category: 'food',
-        area: 'gyeongsang',
-        reg_date: '2025-01-30',
-        star: 5,
-      },
-    },
-    {
-      groupList: {
-        g_id: '8',
-        g_title: 'Title 8',
-        comment1: 'Comment 4',
-        category: 'hobby',
-        area: 'jeju',
-        reg_date: '2025-01-28',
-        star: 3,
-      },
-    },
-    {
-      groupList: {
-        g_id: '9',
-        g_title: 'Title 9',
-        comment1: 'Comment 4',
-        category: 'travel',
-        area: 'seoul',
-        reg_date: '2025-01-18',
-        star: 2,
-      },
-    },
-  ];
+  const [items, setGroupList] = useState([]);
+
+  useEffect(() => {
+    console.log("type:"+type);
+    fetch(`http://localhost:8080/group/list?type=${type}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setGroupList(data);
+        setFilteredItems(data);
+      });
+  }, [type]);
 
   //필터기능
   const [open, setOpen] = useState(false);
@@ -123,37 +30,39 @@ function GroupList({ type }) {
   const [filteredItems, setFilteredItems] = useState(items);
   const [selectOpt, setSelectOpt] = useState('latest');
 
+  //필터
   useEffect(() => {
-    const filtered = items.filter(({ groupList }) => {
-      const categoryMatch = rdo.length === 0 || rdo.includes(groupList.category);
-      const areaMatch = rdo2.length === 0 || rdo2.includes(groupList.area);
-      const titleMatch = groupList.g_title.toLowerCase().includes(searchTerm.toLowerCase());
+    const filtered = items.filter((item) => {
+      const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
+      const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
+      const titleMatch = item.G_TITLE.toLowerCase().includes(
+        searchTerm.toLowerCase()
+      );
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
-  }, [rdo, rdo2]);
+  }, [rdo, rdo2, items]);
 
-  useEffect(() => {
-    let sortedItems = [...filteredItems];
-    if (selectOpt === 'latest') {
-      sortedItems.sort((a, b) => new Date(b.groupList.reg_date) - new Date(a.groupList.reg_date));
-    } else if (selectOpt === 'grade') {
-      sortedItems.sort((a, b) => b.groupList.star - a.groupList.star);
-    }
-    setFilteredItems(sortedItems);
-  }, [selectOpt]);
+  //정렬
+  // useEffect(() => {
+  //   let sortedItems = [...filteredItems];
+  //   if (selectOpt === 'latest') {
+  //     sortedItems.sort((a, b) => new Date(b.item.REG_DATE) - new Date(a.item.REG_DATE));
+  //   }
+  //   // else if (selectOpt === 'grade') {
+  //   //   sortedItems.sort((a, b) => b.item.star - a.groupList.star);
+  //   // }
+  //   setFilteredItems(sortedItems);
+  // }, [selectOpt]);
 
   const handelCategoryChange = (e) => {
     const { value, checked } = e.target;
-
     if (checked) {
       setRdo((prev) => [...prev, value]);
     } else {
       // 체크박스를 해제했을 때 선택된 값 배열에서 제거
       setRdo((prev) => prev.filter((item) => item !== value));
     }
-    console.log('category change');
-    console.log(rdo);
   };
 
   const handelAreaChange = (e) => {
@@ -164,29 +73,34 @@ function GroupList({ type }) {
     } else {
       setRdo2((prev) => prev.filter((item) => item !== value));
     }
-    console.log('area change');
-    console.log(rdo2);
   };
 
   const handelSelectChange = (e) => {
     setSelectOpt(e.target.value);
-    console.log(selectOpt);
   };
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const filtered = items.filter(({ groupList }) => {
-      const categoryMatch = rdo.length === 0 || rdo.includes(groupList.category);
-      const areaMatch = rdo2.length === 0 || rdo2.includes(groupList.area);
-      const titleMatch = groupList.g_title.toLowerCase().includes(searchTerm.toLowerCase());
+    const filtered = items.filter((item) => {
+      const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
+      const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
+      const titleMatch = item.G_TITLE.includes(searchTerm.toLowerCase());
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
   };
 
+  const formatDate = (dateString) => {
+    const options = { month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('ko-KR', options);
+  };
+
   return (
     <>
-      <Link to={'/group/regist'} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Link
+        to={'/group/regist'}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+      >
         <div className="group_banner">
           <span>
             모임 개설하러 가기&nbsp;
@@ -196,7 +110,7 @@ function GroupList({ type }) {
       </Link>
       <Container>
         <div className="group_list">
-          <h1 className="p-2">
+          <h1 className="p-2 group_span">
             {type === 'regular' ? `정기모임` : '동행ㆍ소모임'}
           </h1>
           <div className="filter m-2">
@@ -268,17 +182,8 @@ function GroupList({ type }) {
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-              {filteredItems.map(({ groupList }) => (
-                <GroupItem
-                  g_id={groupList.g_id}
-                  g_title={groupList.g_title}
-                  img_url={groupList.img_url}
-                  comment1={groupList.comment1}
-                  start_date={groupList.start_date}
-                  reg_date={groupList.reg_date}
-                  star={groupList.star}
-                  key={groupList.g_id}
-                />
+              {filteredItems.map((item) => (
+                <GroupItem key={item.G_ID} item={item} />
               ))}
             </div>
           </div>
@@ -310,6 +215,7 @@ function GroupList({ type }) {
             </li>
           </ul>
         </div>
+        
       </Container>
     </>
   );

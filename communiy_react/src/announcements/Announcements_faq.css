@@ -1,33 +1,10 @@
 .announcements_table {
   width: 100%;
-  font-family: 'Freesentation-9Black';
 }
 
 .nav_notice {
   font-family: 'Freesentation-9Black';
-}
-
-@font-face {
-  font-family: 'Freesentation-9Black';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2')
-    format('woff2');
-  font-weight: 800;
-  font-style: normal;
-}
-
-@font-face {
-  font-family: 'Pretendard-Regular';
-  src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
-    format('woff');
-  font-weight: 400;
-  font-style: normal;
-}
-.table_td_title {
-  font-family: 'Pretendard-Regular';
-  font-weight: 900;
-  padding: 15px 0px 15px 0px;
-  font-size: large;
-  width: 70%;
+  font-weight: 100;
 }
 
 .faq_accordion_title {
@@ -36,12 +13,12 @@
   font-size: large;
   display: flex;
   align-items: center;
-  padding: 20px 0px 20px 48px;
+  padding: 20px 0px 20px 20px;
 }
 
 .faq_accordion_body {
   font-family: 'Pretendard-Regular';
-  font-weight: 300;
+  font-weight: 100;
   font-size: medium;
   display: flex;
   align-items: center;
@@ -51,9 +28,10 @@
 }
 
 .accordion-button.active,
+.accordion-button:focus,
 .accordion-body:focus,
 .accordion-body.active {
-  background-color: rgba(197, 0, 0, 0.692);
+  background-color: #f8f8f8;
   color: rgb(0, 0, 0);
 }
 .accordion-button:not(:focus),
