@@ -7,6 +7,7 @@ import GroupItem from './GroupItem';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
+import GroupDetailItem from './component/GroupDetailItem';
 
 function GroupList({ type }) {
   const [items, setGroupList] = useState([]);
@@ -19,8 +20,7 @@ function GroupList({ type }) {
         setGroupList(data);
         setFilteredItems(data);
       });
-  }, [items]);
-  console.log(items);
+  }, [type]);
 
   //필터기능
   const [open, setOpen] = useState(false);
@@ -35,8 +35,6 @@ function GroupList({ type }) {
     const filtered = items.filter((item) => {
       const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
       const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
-      console.log('Item:', item); // 필터링 중 데이터 확인
-      console.log('G_TITLE:', item.G_TITLE); // G_TITLE 접근 확인
       const titleMatch = item.G_TITLE.toLowerCase().includes(
         searchTerm.toLowerCase()
       );
@@ -46,16 +44,16 @@ function GroupList({ type }) {
   }, [rdo, rdo2, items]);
 
   //정렬
-  useEffect(() => {
-    let sortedItems = [...filteredItems];
-    if (selectOpt === 'latest') {
-      sortedItems.sort((a, b) => new Date(b.item.REG_DATE) - new Date(a.item.REG_DATE));
-    }
-    // else if (selectOpt === 'grade') {
-    //   sortedItems.sort((a, b) => b.item.star - a.groupList.star);
-    // }
-    setFilteredItems(sortedItems);
-  }, [selectOpt]);
+  // useEffect(() => {
+  //   let sortedItems = [...filteredItems];
+  //   if (selectOpt === 'latest') {
+  //     sortedItems.sort((a, b) => new Date(b.item.REG_DATE) - new Date(a.item.REG_DATE));
+  //   }
+  //   // else if (selectOpt === 'grade') {
+  //   //   sortedItems.sort((a, b) => b.item.star - a.groupList.star);
+  //   // }
+  //   setFilteredItems(sortedItems);
+  // }, [selectOpt]);
 
   const handelCategoryChange = (e) => {
     const { value, checked } = e.target;
@@ -90,6 +88,11 @@ function GroupList({ type }) {
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
+  };
+
+  const formatDate = (dateString) => {
+    const options = { month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString('ko-KR', options);
   };
 
   return (
@@ -212,6 +215,7 @@ function GroupList({ type }) {
             </li>
           </ul>
         </div>
+        
       </Container>
     </>
   );

@@ -1,5 +1,7 @@
 package com.project.group1.service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
 
@@ -24,7 +26,12 @@ public class Group1ServiceImpl implements Group1Service {
 	}
 
 	@Override
-	public List<Map<String, Object>> read(String gId) {
+	public Map<String, Object> read(String gId) {
 		return mapper.read(gId);
+	}
+
+	@Override
+	public void update(String gId) {
+		mapper.update(gId);
 	}
 }

@@ -13,7 +13,8 @@ export default function GroupRegist() {
   const addr2 = useRef();
   const start_date = useRef();
   const last_date = useRef();
-  const comment1 = useRef();
+  const [comment1, setComment1] = useState('');
+  const handleComment1Change = (e) => setComment1(e.target.value);
   const comment2 = useRef();
   const img_url1 = useRef();
   const img_url2 = useRef();
@@ -127,12 +128,6 @@ export default function GroupRegist() {
                       size="50"
                     />
                   </Col>
-                  <Collapse in={open}>
-                    <div>
-                      {/* map 리턴해서 받아오기 */}
-                      
-                    </div>
-                  </Collapse>
                 </Form.Group>
                 {/* 상세주소 입력 */}
                 <Form.Group as={Row}>
@@ -149,7 +144,12 @@ export default function GroupRegist() {
                 controlId="exampleForm.ControlTextarea1"
               >
                 <Form.Label className="mt-3">모임장 한마디</Form.Label>
-                <Form.Control as="textarea" rows={3} ref={comment1} />
+                <Form.Control
+                  as="textarea"
+                  rows={3}
+                  value={comment1}
+                  onChange={handleComment1Change}
+                />
                 <Form.Label className="mt-3">모임 소개글</Form.Label>
                 <Form.Control as="textarea" rows={5} ref={comment2} />
               </Form.Group>
@@ -176,58 +176,41 @@ export default function GroupRegist() {
                         form.append('price', Number(price.current.value));
                         form.append('addr1', formData.location);
                         form.append('addr2', addr2.current.value);
-                        form.append('latitude', Number(formData.coordinates.lat));
-                        form.append('longitude', Number(formData.coordinates.lng));
+                        form.append(
+                          'latitude',
+                          Number(formData.coordinates.lat)
+                        );
+                        form.append(
+                          'longitude',
+                          Number(formData.coordinates.lng)
+                        );
                         form.append('placeId', formData.placeId);
-                        // Date 객체로 변환
                         const date1 = new Date(start_date.current.value);
-                        // 'YYYY-MM-DD HH:MI:SS' 형식으로 변환
-                        const formattedStartDate = `${date1.getFullYear()}-${String(
-                          date1.getMonth() + 1
-                        ).padStart(2, '0')}-${String(date1.getDate()).padStart(
-                          2,
-                          '0'
-                        )} ${String(date1.getHours()).padStart(
-                          2,
-                          '0'
-                        )}:${String(date1.getMinutes()).padStart(
-                          2,
-                          '0'
-                        )}:${String(date1.getSeconds()).padStart(2, '0')}`;
+                        const formattedStartDate = date1.toISOString();
                         form.append('start_date', formattedStartDate);
-                        // Date 객체로 변환
+
                         const date2 = new Date(last_date.current.value);
-                        // 'YYYY-MM-DD HH:MI:SS' 형식으로 변환
-                        const formattedLastDate = `${date2.getFullYear()}-${String(
-                          date2.getMonth() + 1
-                        ).padStart(2, '0')}-${String(date2.getDate()).padStart(
-                          2,
-                          '0'
-                        )} ${String(date2.getHours()).padStart(
-                          2,
-                          '0'
-                        )}:${String(date2.getMinutes()).padStart(
-                          2,
-                          '0'
-                        )}:${String(date2.getSeconds()).padStart(2, '0')}`;
+                        const formattedLastDate = date2.toISOString();
                         form.append('last_date', formattedLastDate);
-                        form.append('comment1', comment1.current.value);
+                        form.append('comment1', comment1);
                         form.append('comment2', comment2.current.value);
-                        if (img_url1.current.files.length > 0) {
-                          form.append('img_url1', img_url1.current.files[0]);
-                        }
-                        if (img_url2.current.files.length > 0) {
-                          form.append('img_url2', img_url2.current.files[0]);
-                        }
-                        if (img_url3.current.files.length > 0) {
-                          form.append('img_url3', img_url3.current.files[0]);
-                        }
+                        // if (img_url1.current.files.length > 0) {
+                        //   form.append('img_url1', img_url1.current.files[0]);
+                        // }
+                        // if (img_url2.current.files.length > 0) {
+                        //   form.append('img_url2', img_url2.current.files[0]);
+                        // }
+                        // if (img_url3.current.files.length > 0) {
+                        //   form.append('img_url3', img_url3.current.files[0]);
+                        // }
                         fetch('http://localhost:8080/group/insert', {
                           method: 'post',
-                          encType: 'multipart/form-data',
+                          // encType: 'multipart/form-data',
                           body: form,
                         }).then(() => {
-                          alert('신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.');
+                          alert(
+                            '신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.'
+                          );
                           history.go(-1);
                         });
                       }

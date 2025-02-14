@@ -8,5 +8,7 @@ public interface Group1Service {
 	
 	public List<Map<String, Object>> list(String type) throws Exception;
 
-	public List<Map<String, Object>> read(String gId); 
+	public Map<String, Object> read(String gId);
+
+	public void update(String gId); 
 }
