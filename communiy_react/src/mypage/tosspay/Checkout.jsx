@@ -5,7 +5,24 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button, Container } from 'react-bootstrap';
 
 export default function Checkout() {
-  
+  useEffect(() => {
+    if (userData && isAuthenticated !== false) {
+      const pathSegments = window.location.pathname.split('/');
+      const pageId = pathSegments[pathSegments.length - 1];
+
+      if (userData?.no.toString() !== pageId) {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+      }
+    }
+  }, [isAuthenticated, userData, navigate]);
+  useEffect(() => {
+    console.log(userData);
+    if (userData == null) {
+      alert('접근 권한이 없습니다.');
+      navigate('/');
+    }
+  }, [userData]);
   const paymentWidgetRef = useRef(null); // PaymentWidgetInstance를 참조
   const paymentMethodsWidgetRef = useRef(null); // 결제 방법 위젯을 참조
   const location = useLocation(); // useLocation 훅 호출 후 location 사용
@@ -80,7 +97,8 @@ export default function Checkout() {
           className="mt-3 mb-3 w-25"
         >
           결제하기
-        </Button>&nbsp;
+        </Button>
+        &nbsp;
         <Link to="/mypage">
           <Button variant="secondary" block className="mt-3 mb-3 w-25">
             돌아가기

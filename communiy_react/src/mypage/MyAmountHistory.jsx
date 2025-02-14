@@ -6,9 +6,6 @@ import { AuthContext } from '../context/AuthContext';
 function MyAmountHistory() {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { userId } = useParams();
-  let num = 1;
-  const [coinList, setCoinList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -30,6 +27,9 @@ function MyAmountHistory() {
       navigate('/');
     }
   }, [userData]);
+  const [coinList, setCoinList] = useState([]);
+  const { userId } = useParams();
+  let num = 1;
 
   useEffect(() => {
     const fetchCoinData = async () => {
