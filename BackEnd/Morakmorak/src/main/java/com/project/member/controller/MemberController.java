@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.common.config.JwtTokenProvider;
 import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
+import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
 import com.project.member.model.SnsInfo;

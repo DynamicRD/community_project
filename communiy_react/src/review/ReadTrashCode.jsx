@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Container, Nav } from 'react-bootstrap';
 
 import './Read.css';
 import HorizonLine from './HorizonLine';
 import { useNavigate } from 'react-router';
-import { AuthContext } from '../context/AuthContext'; //
 
 function useFetch(url) {
-  const [replyList, setReplyList] = useState(null);
   const [reviewDetail, setReviewDetail] = useState(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -15,42 +13,27 @@ function useFetch(url) {
       .then((response) => response.json())
       .then((data) => {
         setReviewDetail(data);
-        console.log('review = ', data);
-      })
-      .catch((error) => {
-        console.error('Error fetching review data:', error);
-      })
-      .finally(() => {
-        setLoading(true);
-      });
-
-    fetch('http://localhost:8080/review/reply/list')
-      .then((response) => response.json())
-      .then((data) => {
-        setReplyList(data);
-        console.log('reply = ', data);
-      })
-      .catch((error) => {
-        console.error('Error fetching reply data:', error);
       });
   }, []);
-  return [reviewDetail, loading, replyList];
+  return [reviewDetail, loading];
 }
 
-export default function Read() {
+export default function ReadTrashCode() {
   const paths = window.location.href.split('/');
+
   const url =
     'http://localhost:8080/review/' +
     paths[paths.length - 2] +
     '/' +
     paths[paths.length - 1];
 
-  const [reviewDetail, loading, replyList] = useFetch(url);
+  const [reviewDetail, loading] = useFetch(url);
 
   const navigate = useNavigate();
-  const { isAuthenticated, userData } = useContext(AuthContext);
-
-  const content = useRef();
+  const [content, setContent] = useState();
+  const onChangeTextArea = (e) => {
+    setContent(e.target.value);
+  };
   const count = 30;
 
   const getStarImages = (rating) => {
@@ -91,15 +74,34 @@ export default function Read() {
     },
   ];
 
+  const replyList = [
+    {
+      reply_title: '문정배1',
+      reply_content: '문정배 최고1',
+    },
+    {
+      reply_title: '문정배2',
+      reply_content: '문정배 최고2',
+    },
+    {
+      reply_title: '문정배3',
+      reply_content: '문정배 최고3',
+    },
+    {
+      reply_title: '문정배4',
+      reply_content: '문정배 최고4',
+    },
+  ];
+
   if (!reviewDetail) {
-    return <Container>Loading...</Container>;
+    return <div>Loading...</div>;
   } else {
     return (
       <Container>
         <div className="review_header">
           <div className="review_title">
             <p style={{ fontSize: '33px' }}>
-              <b>{reviewDetail.REVIEW_TITLE}</b>
+              <b>{reviewDetail.R_TITLE}</b>
               <span
                 style={{ fontSize: '13px' }}
                 className="mt-2 ms-2 text-black-50"
@@ -109,7 +111,7 @@ export default function Read() {
             </p>
 
             <div className="review_writer ms-2">
-              <span>{reviewDetail.REVIEW_NO}</span>
+              <span>{reviewDetail.R_ID}</span>
               <span> 조회수 : {count}</span>
             </div>
           </div>
@@ -128,7 +130,7 @@ export default function Read() {
             </div>
             <div className="review_image">
               <img
-                src={`/images/${reviewDetail.IMG_URL}`}
+                src={`data:image/jpeg;base64,${reviewDetail.IMG_URL}`}
                 alt="detail"
                 className="review_image mb-4"
               />
@@ -157,7 +159,8 @@ export default function Read() {
                   rows="5"
                   id="comment"
                   name="text"
-                  ref={content}
+                  value={content}
+                  onChange={onChangeTextArea}
                 ></textarea>
               </div>
 
@@ -165,15 +168,12 @@ export default function Read() {
                 className="register_btn ms-3"
                 onClick={() => {
                   const form = new FormData();
-                  form.append('content', content.current.value);
-                  form.append('userId', userData?.no);
-                  form.append('userNickName', userData?.nickname);
-                  form.append('reviewNo', reviewDetail.REVIEW_NO);
-                  fetch('http://localhost:8080/review/reply/insert', {
+                  form.append('content', content);
+                  fetch('http://localhost:8080/review/reply', {
                     method: 'post',
                     body: form,
                   }).then(() => {
-                    window.location.reload();
+                    navigate('/review/Home');
                   });
                 }}
               >
@@ -188,13 +188,13 @@ export default function Read() {
             <Container key={idx}>
               <div className="writer mt-4 mb-3">
                 <span>
-                  <b>{object.NICKNAME}</b>
+                  <b>{object.reply_title}</b>
                 </span>
               </div>
               <div className="review_content">
-                <p className="m-1 review_p">{object.CONTENT}</p>
+                <p className="m-1 review_p">{object.reply_content}</p>
                 <p className="m-1 review_p" id="review_date">
-                  {object.REG_DATE}
+                  2025-02-13
                 </p>
               </div>
               <HorizonLine />

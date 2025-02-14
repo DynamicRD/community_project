@@ -22,7 +22,14 @@
   font-size: large;
   width: 70%;
 }
-
+.title_link {
+  color: black;
+  text-decoration: none;
+}
+.title_link:hover {
+  transition: 0.5s all;
+  color: #ff6745c2;
+}
 .table_td_date {
   font-family: 'Pretendard-Regular';
   text-align: end;
@@ -70,7 +77,7 @@
 }
 
 .notice_btn span {
-  background-color: #ff6745;
+  background-color: black;
   margin: 0 10px;
   padding: 10px 20px;
   border: 1px solid #ccc;
@@ -85,7 +92,33 @@
   background-color: #ff6745c2;
   color: white;
 }
-
+.btn_group {
+  position: relative;
+  bottom: 40px;
+  left: 1040px;
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+}
+.btn_group2 {
+  position: relative;
+  bottom: -15px;
+  left: 795px;
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+}
+.btn_group3 {
+  position: relative;
+  left: 1040px;
+  bottom: 45px;
+}
+.btn_modify_remove {
+  width: 80px;
+}
+.btn_list {
+  text-decoration: none;
+}
 .btn1 {
   background-color: #ec6e43;
 }

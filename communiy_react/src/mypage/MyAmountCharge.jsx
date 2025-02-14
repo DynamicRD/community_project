@@ -85,7 +85,7 @@ export default function MyAmountCharge() {
         {/* 버튼들 */}
         <Form.Group as={Row} className="mb-3 text-center">
           <Col sm={12}>
-            <Button variant="primary" type="submit">
+            <Button className=".btn-custom" variant="primary" type="submit">
               충전하기
             </Button>
             &nbsp;&nbsp;
