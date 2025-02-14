@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class MemberDTO {
-	private int no;
     private String id;
     private String nickname;
     private String pass;
@@ -20,6 +19,4 @@ public class MemberDTO {
     private String addcode;
     private String address01;
     private String address02;
-    private String providerId;
-    private String provider;
 }

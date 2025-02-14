@@ -16,15 +16,8 @@ const Sidebar = () => {
         <Nav.Link as={NavLink} to="/admin/community">
           모임관리
         </Nav.Link>
-        <Nav.Link as={NavLink} to="/admin/complaint">
-          신고관리
-        </Nav.Link>
-        <Nav.Link as={NavLink} to="/admin/board">
-          게시판관리
-        </Nav.Link>
-        <Nav.Link as={NavLink} to="/admin/stats">
-          통계관리
-        </Nav.Link>
+        <Nav.Link href="#">게시판관리</Nav.Link>
+        <Nav.Link href="#">통계관리</Nav.Link>
       </Nav>
     </div>
   );

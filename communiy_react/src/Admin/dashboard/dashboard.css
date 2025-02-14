@@ -2,7 +2,6 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  margin-left: 0;
   margin: 0;
   padding: 0;
 }
@@ -70,7 +69,7 @@ a {
 }
 .main-content {
   flex-grow: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 20px;
   width: calc(100% - 250px);
   margin-left: 250px;
@@ -113,10 +112,7 @@ a {
 .container-fluid {
   width: 100%;
   max-width: 1200px;
-}
-.p-4 {
-  padding: 0;
-  margin: 0;
+  margin: auto;
 }
 /* 검색창 너비 조정 */
 .navbar input[type='text'] {

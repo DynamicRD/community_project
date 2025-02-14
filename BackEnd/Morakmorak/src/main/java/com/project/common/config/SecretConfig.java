@@ -9,11 +9,11 @@ public class SecretConfig {
     
     private final Dotenv dotenv = Dotenv.load(); // .env 파일 로드
     
-    public String getNurigoApiKey() {
+    public String getApiKey() {
         return dotenv.get("NURIGO_PESONAL_KEY");
     }
 
-    public String getNurigoSecretKey() {
+    public String getSecretKey() {
         return dotenv.get("NURIGO_SECRET_KEY");
     }
 
@@ -28,17 +28,7 @@ public class SecretConfig {
     public String getKaKaoRedirectURL() {
     	return dotenv.get("KAKAO_REDIRECT_URI");
     }
-    
-    public String getGoogleClientID() {
-    	return dotenv.get("GOOGLE_CLIENT_ID");
-    }
-    
-    public String getGoogleClientSecret() {
-    	return dotenv.get("GOOGLE_CLIENT_SECRET");
-    }
 
-    public String getGoogleRedirectUri() {
-    	return dotenv.get("GOOGLE_REDIRECT_URI");
-    }
+
 
 }
