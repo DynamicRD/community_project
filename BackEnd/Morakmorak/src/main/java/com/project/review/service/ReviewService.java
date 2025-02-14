@@ -15,5 +15,7 @@ public interface ReviewService {
 	
 	public List<Map<String, Object>> replyList() throws Exception;
 
-
+	public List<Map<String, Object>> groupList() throws Exception;
+	
+	public Map<String, Object> readGroup(int idx) throws Exception;
 }

@@ -70,7 +70,10 @@ function App() {
 
             {/* 모임 관련 */}
             <Route path="/group/detail" element={<GroupDetail />} />
-            <Route path="/group/regular_list" element={<GroupList type="regular" />} />
+            <Route
+              path="/group/regular_list"
+              element={<GroupList type="regular" />}
+            />
             <Route path="/group/one_list" element={<GroupList type="one" />} />
             <Route path="/group/regist" element={<GroupRegist />} />
             <Route path="/group/update" element={<GroupUpdate />} />
@@ -79,15 +82,27 @@ function App() {
             {/* 마이페이지 관련 */}
             <Route path="/mypage/:idx" element={<MyPage />} />
             <Route path="/mypage/infochange/:idx" element={<MyInfoChange />} />
-            <Route path="/mypage/profilechange/:idx" element={<MyProfileChange />} />
+            <Route
+              path="/mypage/profilechange/:idx"
+              element={<MyProfileChange />}
+            />
             <Route path="/mypage/infodelete/:idx" element={<MyInfoDelete />} />
-            <Route path="/mypage/amounthis/:idx" element={<MyAmountHistory />} />
+            <Route
+              path="/mypage/amounthis/:idx"
+              element={<MyAmountHistory />}
+            />
             <Route path="/mypage/reviews/:idx" element={<MyReviews />} />
             <Route path="/mypage/charge/:idx" element={<MyAmountCharge />} />
             <Route path="/mypage/checkout/:idx" element={<Checkout />} />
-            <Route path="/mypage/checkout/success/:idx" element={<SuccessPage />} />
+            <Route
+              path="/mypage/checkout/success/:idx"
+              element={<SuccessPage />}
+            />
             <Route path="/mypage/checkout/fail/:idx" element={<FailPage />} />
-            <Route path="/mypage/infochange/address" element={<AddressInput />} />
+            <Route
+              path="/mypage/infochange/address"
+              element={<AddressInput />}
+            />
 
             {/* 채팅 */}
             <Route path="/chatroom" element={<ChatRoom />} />
@@ -100,13 +115,19 @@ function App() {
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
             <Route path="/review/read/:idx" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
+            <Route path="/review/regist/:idx" element={<Regist />} />
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />
             <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
-            <Route path="/announcements/notice/read/:idx" element={<AnnouncementsNoticeRead />} />
-            <Route path="/notice/regist" element={<AnnouncementsNoticeRegist />} />
+            <Route
+              path="/announcements/notice/read/:idx"
+              element={<AnnouncementsNoticeRead />}
+            />
+            <Route
+              path="/notice/regist"
+              element={<AnnouncementsNoticeRegist />}
+            />
 
             {/* 찜 목록 */}
             <Route path="/favorites" element={<WishList />} />
@@ -128,7 +149,10 @@ function App() {
             <Route path="board" element={<Board />} />
             <Route path="board/:reviewid" element={<ReviewDetail />} />
             <Route path="stats" element={<Stats />} />
-            <Route path="notice/regist" element={<AnnouncementsNoticeRegist />} />
+            <Route
+              path="notice/regist"
+              element={<AnnouncementsNoticeRegist />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>

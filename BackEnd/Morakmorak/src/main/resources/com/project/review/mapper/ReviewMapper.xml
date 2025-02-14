@@ -2,9 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.review.mapper.ReviewMapper">
 
-
-
-
 <!--	<insert id="insertReview">
 		INSERT INTO REVIEW (R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, STAR)
 		VALUES (REVIEW_SEQ.NEXTVAL, 1, 1, #{title}, #{imageUrl, jdbcType=BLOB},
@@ -21,7 +18,7 @@
 	<insert id="insertReview">
 		INSERT INTO REVIEW (REVIEW_NO, NO, GROUP_NO, REVIEW_TITLE, IMG_URL,
 		CONTENT, STAR)
-		VALUES (REVIEW_SEQ.NEXTVAL, 1, 1, #{title}, #{fileName}, #{content},
+		VALUES (REVIEW_SEQ.NEXTVAL, #{userNo}, #{groupNo}, #{title}, #{fileName}, #{content},
 		#{star})
 	</insert>
 
@@ -40,4 +37,29 @@
 		SELECT COMMENTS_NO, NO, NICKNAME, REVIEW_NO, CONTENT, TO_CHAR(REG_DATE, 'yyyy-MM-dd HH24:MI') AS REG_DATE FROM
 		COMMENTS ORDER BY COMMENTS_NO
 	</select>
+
+	<select id="groupList" resultType="java.util.Map">
+		SELECT GROUP_NO, NO, GROUP_TITLE,TO_CHAR(START_DATE, 'yyyy-MM-dd
+		HH24:MI') AS START_DATE,TO_CHAR(LAST_DATE, 'yyyy-MM-dd HH24:MI') AS
+		LAST_DATE, PRICE FROM GROUP_MORAK ORDER BY GROUP_NO DESC
+	</select>
+	
+		<select id="readGroup" resultType="java.util.Map">
+		SELECT GROUP_NO, NO, GROUP_TITLE,TO_CHAR(START_DATE, 'yyyy-MM-dd
+		HH24:MI') AS START_DATE,TO_CHAR(LAST_DATE, 'yyyy-MM-dd HH24:MI') AS
+		LAST_DATE, PRICE FROM GROUP_MORAK WHERE GROUP_NO = #{idx}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 </mapper>
