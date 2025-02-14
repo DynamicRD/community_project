@@ -31,7 +31,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-white navbar-custom">
       <div className="container d-flex justify-content-center">
         <Link className="navbar-brand navbar-logo" to="/">
-          W CONCEPT
+         
         </Link>
         <button
           className="navbar-toggler"

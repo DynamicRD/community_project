@@ -123,13 +123,13 @@ create table comments(
     num_ref number(7,0) default 0,
     nickname varchar2(50),               --닉네임
     reg_date date default sysdate,
-    isblack varchar2(10),
+    isblacked varchar2(10) default 'N',
     primary key(comments_no)
 );
 
 
 
--- 모임-사용자
+
 create table member_group(
     member_group_no number(6),
     no number(6) not null,
@@ -137,6 +137,7 @@ create table member_group(
     status varchar2(20),             --찜, 승인대기, 멤버, 모임장
     primary key(member_group_no)
 );
+
 
 -- 리뷰게시판
 create table review(
@@ -151,9 +152,9 @@ create table review(
     star number(1) default 0,            --별점
     category varchar2(50),     --카테고리
     reg_date DATE DEFAULT SYSDATE,
-     isblack varchar2(10),
+    isblacked varchar2(10) default 'N',
     primary key(review_no)
-   
+
 );
 
 select * from member;
