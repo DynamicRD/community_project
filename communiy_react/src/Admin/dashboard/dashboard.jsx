@@ -10,7 +10,7 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="d-flex">
-        <Container fluid className="p-4">
+        <Container className="main-content">
           <Breadcrumb>
             <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
             <Breadcrumb.Item active>Overview</Breadcrumb.Item>

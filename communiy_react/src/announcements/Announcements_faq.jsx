@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './Announcements_faq.css';
-import { Container, Nav, Pagination } from 'react-bootstrap';
+import { Container, Form, Nav, Pagination } from 'react-bootstrap';
 import Accordion from 'react-bootstrap/Accordion';
 
 export default function Announcements_notice() {
@@ -13,50 +13,24 @@ export default function Announcements_notice() {
     );
   }
 
-  const today = new Date();
-  const formattedDate = `${today.getFullYear()}년 ${
-    today.getMonth() + 1
-  }월 ${today.getDate()}일`;
+  const [FaqList, setFaqList] = useState([]);
+  //공지사항 값 DB에서 가져오기
+  function getList(url) {
+    fetch(url)
+      .then((response) => {
+        console.log(response);
+        return response.json();
+      })
+      .then((data) => {
+        setFaqList(data);
+      });
+  }
 
-  const announcementData = [
-    {
-      no: 1,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다1',
-      date: formattedDate,
-    },
-    {
-      no: 2,
-      title: '문정배에 대한 고찰',
-      content:
-        ' 문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배   ',
-      date: formattedDate,
-    },
-    {
-      no: 3,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다3',
-      date: formattedDate,
-    },
-    {
-      no: 4,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다4',
-      date: formattedDate,
-    },
-    {
-      no: 5,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다5',
-      date: formattedDate,
-    },
-    {
-      no: 6,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다5',
-      date: formattedDate,
-    },
-  ];
+  //페이지 시작 시 getList 호출
+  useEffect(() => {
+    getList('http://localhost:8080/announcements/faq/list');
+  }, []);
+
   return (
     <Container class="d-flex justify-content-center">
       <div className="m-5">
@@ -77,11 +51,17 @@ export default function Announcements_notice() {
         </div>
         <Container>
           <Accordion defaultActiveKey="0">
-            {announcementData.map((object) => (
+            <div
+              style={{ fontFamily: 'Freesentation-9Black' }}
+              className="ms-5 mb-3"
+            >
+              {FaqList.length}개 자주묻는 질문
+            </div>
+            {FaqList.map((object, idx) => (
               <Accordion.Item
-                eventKey={object.no}
+                eventKey={idx}
                 flush
-                key={object.no}
+                key={object.F_ID}
                 className="mb-3"
               >
                 <Accordion.Header>
@@ -92,7 +72,7 @@ export default function Announcements_notice() {
                       height: '50px',
                     }}
                   >
-                    {object.title}
+                    {object.F_TITLE}
                   </span>
                 </Accordion.Header>
                 <Accordion.Body>
@@ -102,7 +82,7 @@ export default function Announcements_notice() {
                       width: '1100px',
                     }}
                   >
-                    {object.content}
+                    {object.CONTENT}
                   </span>
                 </Accordion.Body>
               </Accordion.Item>
