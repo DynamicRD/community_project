@@ -56,40 +56,114 @@ public class MemberController {
 
 	private SecretConfig secretConfig = new SecretConfig();
 
-	@PostMapping("/kakao")
+	@GetMapping("/kakao")
 	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code) {
-	    String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
+		String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
 
-	    // 요청할 파라미터 설정
-	    MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add("grant_type", "authorization_code");
-	    params.add("client_id", secretConfig.getKakaoClienID());
-	    params.add("redirect_uri", "http://localhost:8080/member/kakao"); // 실제 redirect URL로 변경
-	    params.add("code", code);
+		// 요청할 파라미터 설정
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		params.add("grant_type", "authorization_code");
+		params.add("client_id", secretConfig.getKakaoClienID());
+		params.add("redirect_uri", "http://localhost:8080/member/kakao"); // 실제 redirect URL로 변경
+		params.add("code", code);
 
+		// HTTP 헤더 설정
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
-	    // HTTP 헤더 설정
-	    HttpHeaders headers = new HttpHeaders();
-	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+		RestTemplate restTemplate = new RestTemplate();
 
-	    HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-	    RestTemplate restTemplate = new RestTemplate();
+		try {
+			// 카카오 서버에 요청 보내기
+			ResponseEntity<String> response = restTemplate.exchange(kakaoTokenUrl, HttpMethod.POST, request,
+					String.class);
 
-	    try {
-	        // 카카오 서버에 요청 보내기
-	        ResponseEntity<String> response = restTemplate.exchange(
-	            kakaoTokenUrl, HttpMethod.POST, request, String.class
-	        );
+			System.out.println("카카오 응답: " + response.getBody());
+			// Jackson의 ObjectMapper 생성
+			ObjectMapper objectMapper = new ObjectMapper();
 
-	        System.out.println("카카오 응답: " + response.getBody());
-	        return ResponseEntity.ok(response.getBody()); // 액세스 토큰을 클라이언트에 반환
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body("카카오 로그인 실패");
-	    }
+			// JSON 문자열을 Map으로 변환
+			Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), Map.class);
+
+			// "access_token" 값 추출
+			String accessToken = (String) responseMap.get("access_token");
+			Map<String, Object> KakaoInfo = getKakaoUserInfo(accessToken);
+			// KakaoInfo에서 필요한 정보 추출
+			String id = (String) KakaoInfo.get("id");
+
+			// "properties" 안에서 "nickname"과 "thumbnail_image" 추출
+			Map<String, Object> properties = (Map<String, Object>) KakaoInfo.get("properties");
+			String nickname = (String) properties.get("nickname");
+			String thumbnailImage = (String) properties.get("thumbnail_image");
+
+			// "kakao_account" 안에서 "email" 추출
+			Map<String, Object> kakaoAccount = (Map<String, Object>) KakaoInfo.get("kakao_account");
+			String email = (String) kakaoAccount.get("email");
+
+		
+			Member member = new Member();
+			member.setProviderId(id);
+			member.setProvider("kakao");
+
+			// 사용자가 이미 존재하는지 확인
+			boolean isRegistered = service.snsUserCheck(member);
+
+			if (isRegistered) {
+				// 기존 회원 로그인 처리
+				member = service.selectGoogleInfo(member);
+				member.setRememberMe(rememberMe);
+
+				String jwtAccessToken = jwtutil.createAccessToken(member);
+				String jwtRefreshToken = jwtutil.createRefreshToken(member, rememberMe);
+
+				log.info("✅ JWT 생성 완료");
+
+				// JWT를 HttpOnly 쿠키에 저장
+				addSessionJwtCookie(response, "access_token", jwtAccessToken);
+
+				if (rememberMe) {
+					System.out.println("로그인 기억");
+					addJwtCookie(response, "refresh_token", jwtRefreshToken, 60 * 60 * 24 * 7); // 7일 유지
+				} else {
+					System.out.println("로그인 기억하지 않음");
+					addSessionJwtCookie(response, "refresh_token", jwtRefreshToken); // 세션 쿠키
+				}
+
+				// ✅ 로그인 성공 후 쿠키와 함께 React로 리다이렉트 (isRegistered=true 전달)
+				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
+						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=true").build();
+			} else {
+				// 회원가입 필요
+				GoogleInfo googleInfo = new GoogleInfo();
+				ObjectMapper objectMapper = new ObjectMapper();
+				googleInfo = objectMapper.convertValue(userInfo, GoogleInfo.class);
+				String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(googleInfo);
+				addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
+				// ✅ 회원가입 필요 (isRegistered=false 전달)
+				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
+						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=false").build();
+			}
+			
+			
+			
+			return ResponseEntity.ok(response.getBody());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("카카오 로그인 실패");
+		}
 	}
 
+	public Map<String, Object> getKakaoUserInfo(String accessToken) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + accessToken);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		ResponseEntity<Map> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET,
+				new HttpEntity<>(headers), Map.class);
+
+		return response.getBody();
+	}
 
 	// 아이디 중복 확인
 	@GetMapping("/duplicatecheck")
@@ -176,7 +250,7 @@ public class MemberController {
 		log.info("🔹 /login 요청 - 유저 ID: {}", member.getId());
 		// DB에서 사용자 확인
 		Member member2 = service.loginCheck(member);
-		System.out.println("member2값 읽어오기"+member2);
+		System.out.println("member2값 읽어오기" + member2);
 		if (member2 == null) {
 			return ResponseEntity.status(404).body(Map.of("success", false, "message", "등록되지 않은 사용자입니다. 회원가입이 필요합니다."));
 		}
@@ -207,7 +281,7 @@ public class MemberController {
 	@GetMapping("/refresh_check")
 	public ResponseEntity<?> checkRefreshToken(
 			@CookieValue(value = "refresh_token", required = false) String refreshToken, HttpServletResponse response) {
-	
+
 		System.out.println("토큰 유효시간 검증");
 		System.out.println(refreshToken);
 		if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
@@ -215,7 +289,7 @@ public class MemberController {
 		}
 		System.out.println("토큰 아이디");
 		int no = JwtUtil.getNoFromToken(refreshToken);
-		System.out.println("no추출 완료 : " +no);
+		System.out.println("no추출 완료 : " + no);
 		Member member = new Member();
 		member.setNo(no);
 
@@ -280,7 +354,6 @@ public class MemberController {
 			@CookieValue(value = "access_token", required = false) String accessToken,
 			@CookieValue(value = "refresh_token", required = false) String refreshToken) {
 
-		
 		boolean accessTokenExists = accessToken != null;
 		boolean refreshTokenExists = refreshToken != null;
 		System.out.println(accessTokenExists);
@@ -308,7 +381,6 @@ public class MemberController {
 	}
 
 	@RequestMapping("/googlelogin")
-
 	public ResponseEntity<?> googleLogin(@RequestParam("code") String code,
 			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
 			HttpServletResponse response) {
@@ -419,81 +491,6 @@ public class MemberController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
 		}
 	}
-
-//	@RequestMapping("/googlelogin")
-//	public ResponseEntity<?> googleLogin(@RequestParam("code") String code, HttpServletResponse response,boolean rememberMe){
-//		// 1. 받은 인증 코드를 사용하여 Google에 액세스 토큰 요청
-//		String tokenUrl = "https://oauth2.googleapis.com/token";
-//		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-//		params.add("code", code);
-//		params.add("client_id", secretConfig.getGoogleClientID());
-//		params.add("client_secret", secretConfig.getGoogleClientSecret());
-//		params.add("redirect_uri", secretConfig.getGoogleRedirectUri());
-//		params.add("grant_type", "authorization_code");
-//
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-//
-//		HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-//		ResponseEntity<Map> responseGoogle = restTemplate.postForEntity(tokenUrl, request, Map.class);
-//
-//		if (!responseGoogle.getStatusCode().is2xxSuccessful()) {
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("구글 로그인 실패");
-//		}
-//
-//		Map<String, Object> responseBody = responseGoogle.getBody();
-//		String accessToken = (String) responseBody.get("access_token");
-//
-//		// 2. 액세스 토큰을 사용하여 사용자 정보 요청
-//		String userInfoUrl = "https://www.googleapis.com/oauth2/v2/userinfo";
-//		HttpHeaders userHeaders = new HttpHeaders();
-//		userHeaders.setBearerAuth(accessToken);
-//		HttpEntity<String> userRequest = new HttpEntity<>(userHeaders);
-//
-//		ResponseEntity<Map> userResponse = restTemplate.exchange(userInfoUrl, HttpMethod.GET, userRequest, Map.class);
-//		if (!userResponse.getStatusCode().is2xxSuccessful()) {
-//			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("사용자 정보 요청 실패");
-//		}
-//
-//		Map<String, Object> userInfo = userResponse.getBody();
-//		System.out.println(userInfo);
-//		String providerId = (String) userInfo.get("id");
-//
-//		Member member = new Member();
-//		member.setProviderId(providerId);
-//		member.setProvider("google");
-//
-//		// true면 가입됨
-//		boolean isRegistered = service.googleUserCheck(member);
-//
-//		// 로그인으로 진행한다
-//		if (isRegistered) {
-//			// JWT 생성
-//			member = service.selectGoogleInfo(member);
-//			member.setRememberMe(rememberMe);
-//			String jwtAccessToken = jwtutil.createAccessToken(member);
-//			String jwtRefreshToken = jwtutil.createRefreshToken(member, member.isRememberMe());
-//
-//			log.info("✅ JWT 생성 완료");
-//
-//			// JWT를 HttpOnly 쿠키에 저장
-//			addSessionJwtCookie(response, "access_token", jwtAccessToken); // 끄면 삭제
-//			if (member.isRememberMe()) {
-//				addJwtCookie(response, "refresh_token", jwtRefreshToken, 60 * 60 * 24 * 7); // 7일 유지
-//				System.out.println("로그인체크됨");
-//			} else {
-//				addSessionJwtCookie(response, "refresh_token", jwtRefreshToken); // 끄면 삭제
-//				System.out.println("로그인체크안됨");
-//
-//			}
-//			// JSON 응답에 액세스 토큰도 포함 (React에서 사용 가능)
-//			return ResponseEntity.ok(Map.of("success", true, "message", "로그인 성공!"));
-//
-//			// 회원가입으로 진행한다
-//		} else {
-//			return ResponseEntity.ok().header(userInfo).body("회원가입");
-//		}
-//	}
 
 	// --------------------------------------------------api메소드가 아닌 컨트롤러용 메소드
 	// 액세스 토큰 재발급
