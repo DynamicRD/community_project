@@ -9,10 +9,17 @@ public interface MemberService {
 	boolean nickDuplicateCheck(Member member);
 
 	void register(MemberDTO memberDTO);
+	
+	void infoChange(MemberDTO memberDTO);
 
 	boolean phoneDuplicateCheck(MemberDTO memberDTO);
 
 	Member loginCheck(Member member);
 
+	
 	Member selectMemberByNo(Member member);
+	
+	boolean snsUserCheck(Member member);
+	
+	Member selectSnsInfo(Member member);
 }

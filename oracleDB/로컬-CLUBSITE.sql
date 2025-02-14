@@ -63,6 +63,10 @@ increment by 1;
 create sequence visit_seq
 start with 1
 increment by 1;
+
+create sequence transaction_seq
+start with 1
+increment by 1;
 -- 모임장바구니
 create table basket(
     basket_no number(6) not null,
@@ -88,17 +92,19 @@ create table group_morak(
     user_max number(3),                 --최대모임원
     price number(6),                    --비용
     area varchar2(50),                  --모임구역
-    address varchar2(100),              --일반주소
+    addr1 varchar2(100),              --일반주소
+    addr2 varchar2(100),       --상세주소
     latitude varchar2(30),              --위도
     longitude varchar2(30),             --경도
-    detail_address varchar2(100),       --상세주소
     start_date date,                     --모임시작일
     last_date date,                      --모임종료일
-    comment1 varchar2(255),             --자기PR
-    comment2 varchar2(255),             --모임소개글
-    status varchar2(20),                --관리자 승인여부
+    comment1 varchar2(500),             --자기PR
+    comment2 varchar2(1000),             --모임소개글 
+    approval varchar2(20) DEFAULT 'N',                --관리자 승인여부
     views number(6),                    --조회수
-    img_url varchar2(50),               --이미지
+     img_url1 varchar2(50),               --이미지1
+    img_url2 varchar2(50),               --이미지2
+    img_url3 varchar2(50),               --이미지3
     type varchar2(20),                   --정기모임,소모임 구분
     primary key(group_no)
 );
@@ -117,12 +123,13 @@ create table comments(
     num_ref number(7,0) default 0,
     nickname varchar2(50),               --닉네임
     reg_date date default sysdate,
+    isblacked varchar2(10) default 'N',
     primary key(comments_no)
 );
 
 
 
--- 모임-사용자
+
 create table member_group(
     member_group_no number(6),
     no number(6) not null,
@@ -130,6 +137,7 @@ create table member_group(
     status varchar2(20),             --찜, 승인대기, 멤버, 모임장
     primary key(member_group_no)
 );
+
 
 -- 리뷰게시판
 create table review(
@@ -142,8 +150,11 @@ create table review(
     views number(6),                     --조회수
     comments number(4),                  --댓글수
     star number(1) default 0,            --별점
-    category varchar2(50),               --카테고리
+    category varchar2(50),     --카테고리
+    reg_date DATE DEFAULT SYSDATE,
+    isblacked varchar2(10) default 'N',
     primary key(review_no)
+
 );
 
 select * from member;
@@ -175,7 +186,9 @@ create table member(
 );
 ALTER TABLE member DROP PRIMARY KEY; -- 기존 PK(id) 삭제
 ALTER TABLE member ADD PRIMARY KEY (no); -- 새로운 PK(no) 추가
-
+ALTER TABLE member MODIFY role DEFAULT 1;
+commit;
+update member set provider = 'kakao' where no =26;
 select * from member;
 SELECT *
 		FROM Member
@@ -246,3 +259,13 @@ create table visit_log(
     primary key(visit_no)
 );
 
+--거래내역 테이블
+drop table transaction;
+create table Transaction_log(
+    transaction_no number(6),
+    no number(6),
+    type varchar2(100),
+    amount number(7),
+    reg_date date default sysdate,
+    primary key(transaction_no)
+)

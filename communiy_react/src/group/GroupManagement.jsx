@@ -6,6 +6,11 @@ import { useNavigate } from 'react-router';
 export default function GroupManagement() {
   let navigate = useNavigate();
 
+  // URL에서 쿼리 파라미터를 파싱
+  const queryParams = new URLSearchParams(location.search);
+  const g_id = queryParams.get('g_id'); // 'g_id' 파라미터 값을 가져옴
+  const [items, setGroupDetail] = useState([]);
+
   const memberList = [
     {
       id: 'gasdf1',
@@ -38,7 +43,8 @@ export default function GroupManagement() {
       self_pr: '자기소개입니다',
       group_pr: '잘 부탁드립니다.',
       gender: '여성',
-      phone: '010-1234-5678',
+      phone:'010-1234-5678',
+
     },
   ];
 
@@ -56,13 +62,8 @@ export default function GroupManagement() {
       <div className="group_management d-flex flex-column gap-4 mt-5 w-75">
         <div className="d-flex justify-content-between">
           <h1>모임 멤버 관리</h1>
-          <Button
-            onClick={() => {
-              navigate('/group/update');
-            }}
-          >
-            모임 정보 수정
-          </Button>
+
+          <Button onClick={()=>{navigate(`/group/update?g_id=${g_id}`)}}>모임 정보 수정</Button>
         </div>
         <hr />
         <div>
