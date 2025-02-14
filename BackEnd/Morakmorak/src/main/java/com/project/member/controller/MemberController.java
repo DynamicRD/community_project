@@ -30,6 +30,7 @@ import com.project.common.config.SecretConfig;
 import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
+import com.project.member.model.SnsInfo;
 import com.project.member.service.MemberService;
 
 import io.jsonwebtoken.Claims;
