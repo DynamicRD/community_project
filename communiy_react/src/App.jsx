@@ -30,13 +30,7 @@ import AddressInput from './mypage/daumAPI/AddressInput';
 import AnnouncementsNotice from './announcements/Announcements_notice';
 import AnnouncementsFaq from './announcements/Announcements_faq';
 import AnnouncementsNoticeRead from './announcements/Announcements_notice_read';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import AnnouncementsNoticeRegist from './announcements/Announcements_regist';
-=======
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
-=======
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
 import KakaoCallback from './login/KakaoCallback';
@@ -54,8 +48,8 @@ import FindId from './login/FindId';
 import FindPwd from './login/FindPwd';
 import ResetPassword from './login/ResetPassword';
 import WishList from './wishlist/wishlist';
-import RegistFileURL from './review/RegistFileURL';
-import ReviewFileURL from './review/ReviewFileURL';
+// import RegistFileURL from './review/RegistFileURL';
+// import ReviewFileURL from './review/ReviewFileURL';
 
 function App() {
   return (
@@ -107,34 +101,20 @@ function App() {
 
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
-<<<<<<< HEAD
-<<<<<<< HEAD
             <Route path="/review/read/:idx" element={<Read />} />
             <Route path="/review/regist" element={<Regist />} />
-            <Route path="/review/registTest" element={<RegistFileURL />} />
-            <Route path="/review/test" element={<ReviewFileURL />} />
-=======
+            {/* <Route path="/review/registTest" element={<RegistFileURL />} />
+            <Route path="/review/test" element={<ReviewFileURL />} /> */}
             <Route path="/review/read" element={<Read />} />
             <Route path="/review/regist" element={<Regist />} />
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
-=======
             <Route path="/review/read" element={<Read />} />
             <Route path="/review/regist" element={<Regist />} />
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />
             <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
             <Route
-<<<<<<< HEAD
-<<<<<<< HEAD
               path="/announcements/notice/read/:idx"
-=======
-              path="/announcements/read"
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
-=======
-              path="/announcements/read"
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
               element={<AnnouncementsNoticeRead />}
             />
 
@@ -154,16 +134,10 @@ function App() {
             <Route path="users" element={<UserTable />} />
             <Route path="community" element={<Community />} />
             <Route path="community/:id" element={<CommunityDetail />} />
-<<<<<<< HEAD
-<<<<<<< HEAD
             <Route
               path="notice/regist"
               element={<AnnouncementsNoticeRegist />}
             />
-=======
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
-=======
->>>>>>> ec99d934f9b0b5c450f2102ee9f6091cdb93a65c
           </Route>
         </Routes>
       </BrowserRouter>
