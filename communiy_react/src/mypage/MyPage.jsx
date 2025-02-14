@@ -147,7 +147,7 @@ function MyPage() {
           <hr />
           <div className="container bg-light text-dark p-4">
             <div className="text-end">
-              <Link to="/mypage/profilechange">
+              <Link to={`/mypage/profilechange/${userData?.no}`}>
                 <Button className="myPageBtn" variant="danger">
                   프로필 수정하기
                 </Button>
@@ -166,7 +166,7 @@ function MyPage() {
                 개인 정보 수정
               </Button>
             </Link>
-            <Link to="/mypage/amounthis">
+            <Link to={`/mypage/amounthis/${userData?.no}`}>
               <Button
                 variant="light m-3"
                 style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
@@ -174,7 +174,7 @@ function MyPage() {
                 거래 내역 확인
               </Button>
             </Link>
-            <Link to="/mypage/reviews">
+            <Link to={`/mypage/reviews/${userData?.no}`}>
               <Button
                 variant="light m-3"
                 style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
@@ -192,7 +192,7 @@ function MyPage() {
               <h5>보유금액</h5>
               <div className="h3">₩ 500,000</div>
               <div className="mt-3">
-                <Link to="/mypage/charge">
+                <Link to={`/mypage/charge/${userData?.no}`}>
                   <Button className="myPageBtn" variant="danger">
                     충전하기
                   </Button>

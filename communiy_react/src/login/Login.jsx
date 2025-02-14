@@ -81,7 +81,8 @@ export default function Login() {
 
     window.open(kakaoUrl, 'kakao-login', 'width=600,height=600');
   };
-  const doGoogleLogin = () => {
+
+  const doGoogleLogin = (rememberMe) => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     const clientPass = import.meta.env.VITE_GOOGLE_CLIENT_PASS;
     const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
