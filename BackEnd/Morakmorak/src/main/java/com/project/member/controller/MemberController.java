@@ -7,14 +7,9 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-<<<<<<< HEAD
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-=======
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
->>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -28,23 +23,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-<<<<<<< HEAD
-=======
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.common.config.JwtTokenProvider;
 import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.model.SnsInfo;
->>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
 import com.project.member.service.MemberService;
-import com.project.common.config.JwtUtil;
 
-<<<<<<< HEAD
-=======
 import io.jsonwebtoken.Claims;
->>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

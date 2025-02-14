@@ -28,8 +28,6 @@ public class SecretConfig {
     public String getKaKaoRedirectURL() {
     	return dotenv.get("KAKAO_REDIRECT_URI");
     }
-<<<<<<< HEAD
-=======
     
     public String getGoogleClientID() {
     	return dotenv.get("GOOGLE_CLIENT_ID");
@@ -38,7 +36,6 @@ public class SecretConfig {
     public String getGoogleClientSecret() {
     	return dotenv.get("GOOGLE_CLIENT_SECRET");
     }
->>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 
     public String getGoogleRedirectUri() {
     	return dotenv.get("GOOGLE_REDIRECT_URI");

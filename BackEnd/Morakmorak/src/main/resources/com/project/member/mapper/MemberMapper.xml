@@ -33,18 +33,6 @@
     </select>
 
     <insert id="register" parameterType="com.project.member.model.Member">
-<<<<<<< HEAD
-        INSERT INTO member (
-            no,id, pw, email, phone, name, nickname, 
-            birth, gender, zip_code, addr1, addr2
-        ) VALUES (
-            member_seq.nextval,#{id}, #{pw}, #{email}, #{phone}, #{name}, #{nickname}, 
-            TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1}, #{addr2}
-        )
-    </insert>
-   
-	<select id="loginCheck" parameterType="com.project.member.model.Member" resultType="com.project.member.model.Member">
-=======
 		INSERT INTO member (
 		no, pw, email, phone, name, nickname,
 		birth, gender, zip_code, addr1, addr2
@@ -85,7 +73,6 @@
 
 	<select id="loginCheck" parameterType="com.project.member.model.Member"
 		resultType="com.project.member.model.Member">
->>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 		SELECT *
 		FROM Member
 		WHERE ID = #{id} AND PROVIDER = #{provider} 
@@ -105,15 +92,11 @@
 	   <select id="snsRegisteredCheck" resultType="int">
         SELECT COUNT(*) 
         FROM member 
-<<<<<<< HEAD
-        WHERE id = #{id}
-=======
         WHERE provider_id = #{providerId} and provider = #{provider}
     </select>
 	   <select id="getSnsInfo" resultType="com.project.member.model.Member">
         SELECT *
         FROM member 
         WHERE provider_id = #{providerId} and provider = #{provider}
->>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
     </select>
 </mapper>
