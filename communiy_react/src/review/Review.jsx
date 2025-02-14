@@ -109,7 +109,7 @@ export default function Review() {
                         fontSize: '14px',
                       }}
                     >
-                      {completedMeetings[0].name}
+                      {object.GROUP_TITLE}
                     </div>
                     <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
                       <img
