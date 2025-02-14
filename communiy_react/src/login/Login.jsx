@@ -78,7 +78,7 @@ export default function Login() {
     console.log(kakaoRestApiKey);
     console.log(kakaoRedirectUrl);
 
-    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code`;
+    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code&rememberMe=${rememberMe}`;
 
     window.open(kakaoUrl, 'kakao-login', 'width=600,height=600');
   };

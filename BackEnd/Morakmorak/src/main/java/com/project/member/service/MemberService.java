@@ -18,11 +18,10 @@ public interface MemberService {
 
 	Member loginCheck(Member member);
 
-	Map<String, String> kakaoLogin(String accessToken);
 	
 	Member selectMemberByNo(Member member);
 	
-	boolean googleUserCheck(Member member);
+	boolean snsUserCheck(Member member);
 	
-	Member selectGoogleInfo(Member member);
+	Member selectSnsInfo(Member member);
 }

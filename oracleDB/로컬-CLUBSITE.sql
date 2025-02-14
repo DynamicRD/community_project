@@ -181,7 +181,9 @@ create table member(
 );
 ALTER TABLE member DROP PRIMARY KEY; -- 기존 PK(id) 삭제
 ALTER TABLE member ADD PRIMARY KEY (no); -- 새로운 PK(no) 추가
-
+ALTER TABLE member MODIFY role DEFAULT 1;
+commit;
+update member set provider = 'kakao' where no =26;
 select * from member;
 SELECT *
 		FROM Member

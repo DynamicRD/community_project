@@ -1,4 +1,4 @@
-package com.project.google.model;
+package com.project.member.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class GoogleInfo {
+public class SnsInfo {
 	private String id;
     private String email;
     

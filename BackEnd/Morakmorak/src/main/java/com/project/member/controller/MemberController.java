@@ -1,7 +1,6 @@
 package com.project.member.controller;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +10,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -29,8 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.common.config.JwtTokenProvider;
 import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
-import com.project.google.model.GoogleInfo;
-import com.project.member.dto.AccessTokenDTO;
+import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
 import com.project.member.service.MemberService;
@@ -57,7 +54,7 @@ public class MemberController {
 	private SecretConfig secretConfig = new SecretConfig();
 
 	@GetMapping("/kakao")
-	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code) {
+	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code,@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe, HttpServletResponse response) {
 		String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
 
 		// 요청할 파라미터 설정
@@ -76,21 +73,23 @@ public class MemberController {
 
 		try {
 			// 카카오 서버에 요청 보내기
-			ResponseEntity<String> response = restTemplate.exchange(kakaoTokenUrl, HttpMethod.POST, request,
+			ResponseEntity<String> kakaoResponse = restTemplate.exchange(kakaoTokenUrl, HttpMethod.POST, request,
 					String.class);
 
-			System.out.println("카카오 응답: " + response.getBody());
+			System.out.println("카카오 응답: " + kakaoResponse.getBody());
 			// Jackson의 ObjectMapper 생성
 			ObjectMapper objectMapper = new ObjectMapper();
 
 			// JSON 문자열을 Map으로 변환
-			Map<String, Object> responseMap = objectMapper.readValue(response.getBody(), Map.class);
+			Map<String, Object> responseMap = objectMapper.readValue(kakaoResponse.getBody(), Map.class);
 
 			// "access_token" 값 추출
 			String accessToken = (String) responseMap.get("access_token");
 			Map<String, Object> KakaoInfo = getKakaoUserInfo(accessToken);
 			// KakaoInfo에서 필요한 정보 추출
-			String id = (String) KakaoInfo.get("id");
+			Long id = (Long) KakaoInfo.get("id");
+			String idStr = String.valueOf(id);
+		
 
 			// "properties" 안에서 "nickname"과 "thumbnail_image" 추출
 			Map<String, Object> properties = (Map<String, Object>) KakaoInfo.get("properties");
@@ -103,15 +102,15 @@ public class MemberController {
 
 		
 			Member member = new Member();
-			member.setProviderId(id);
+			member.setProviderId(idStr);
 			member.setProvider("kakao");
 
 			// 사용자가 이미 존재하는지 확인
 			boolean isRegistered = service.snsUserCheck(member);
-
+			System.out.println("계정 사용자 체크 : "+isRegistered);
 			if (isRegistered) {
 				// 기존 회원 로그인 처리
-				member = service.selectGoogleInfo(member);
+				member = service.selectSnsInfo(member);
 				member.setRememberMe(rememberMe);
 
 				String jwtAccessToken = jwtutil.createAccessToken(member);
@@ -132,22 +131,21 @@ public class MemberController {
 
 				// ✅ 로그인 성공 후 쿠키와 함께 React로 리다이렉트 (isRegistered=true 전달)
 				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
-						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=true").build();
+						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=true&sns=kakao").build();
 			} else {
 				// 회원가입 필요
-				GoogleInfo googleInfo = new GoogleInfo();
-				ObjectMapper objectMapper = new ObjectMapper();
-				googleInfo = objectMapper.convertValue(userInfo, GoogleInfo.class);
-				String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(googleInfo);
+				SnsInfo snsInfo = new SnsInfo();
+				snsInfo.setEmail(email);
+				snsInfo.setId(idStr);
+				snsInfo.setName(nickname);
+				snsInfo.setPicture(thumbnailImage);
+				String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
 				addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 				// ✅ 회원가입 필요 (isRegistered=false 전달)
 				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
-						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=false").build();
+						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=false&sns=kakao").build();
 			}
-			
-			
-			
-			return ResponseEntity.ok(response.getBody());
+		
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("카카오 로그인 실패");
@@ -420,11 +418,11 @@ public class MemberController {
 		member.setProvider("google");
 
 		// 사용자가 이미 존재하는지 확인
-		boolean isRegistered = service.googleUserCheck(member);
+		boolean isRegistered = service.snsUserCheck(member);
 
 		if (isRegistered) {
 			// 기존 회원 로그인 처리
-			member = service.selectGoogleInfo(member);
+			member = service.selectSnsInfo(member);
 			member.setRememberMe(rememberMe);
 
 			String jwtAccessToken = jwtutil.createAccessToken(member);
@@ -448,10 +446,10 @@ public class MemberController {
 					.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=true").build();
 		} else {
 			// 회원가입 필요
-			GoogleInfo googleInfo = new GoogleInfo();
+			SnsInfo snsInfo = new SnsInfo();
 			ObjectMapper objectMapper = new ObjectMapper();
-			googleInfo = objectMapper.convertValue(userInfo, GoogleInfo.class);
-			String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(googleInfo);
+			snsInfo = objectMapper.convertValue(userInfo, SnsInfo.class);
+			String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
 			addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 			// ✅ 회원가입 필요 (isRegistered=false 전달)
 			return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
@@ -560,6 +558,17 @@ public class MemberController {
 		cookie.setMaxAge(-1);
 		cookie.setAttribute("SameSite", "Strict"); // XSRF 방지
 		response.addCookie(cookie);
+	}
+	
+	public Map<String, Object> getKakaoUserInfo(String accessToken) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Bearer " + accessToken);
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		ResponseEntity<Map> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET,
+				new HttpEntity<>(headers), Map.class);
+
+		return response.getBody();
 	}
 
 }

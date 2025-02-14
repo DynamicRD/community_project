@@ -89,12 +89,12 @@
 		FROM member
 		WHERE no = #{no}
 	</select>
-	   <select id="googleRegisteredCheck" resultType="int">
+	   <select id="snsRegisteredCheck" resultType="int">
         SELECT COUNT(*) 
         FROM member 
         WHERE provider_id = #{providerId} and provider = #{provider}
     </select>
-	   <select id="getGoogleInfo" resultType="com.project.member.model.Member">
+	   <select id="getSnsInfo" resultType="com.project.member.model.Member">
         SELECT *
         FROM member 
         WHERE provider_id = #{providerId} and provider = #{provider}

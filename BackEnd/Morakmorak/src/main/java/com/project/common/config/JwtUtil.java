@@ -2,17 +2,14 @@ package com.project.common.config;
 
 import java.util.Date;
 
-import javax.crypto.SecretKey;
-
 import org.springframework.stereotype.Component;
 
-import com.project.google.model.GoogleInfo;
+import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
@@ -40,11 +37,11 @@ public class JwtUtil {
 				.signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey()).compact();
 	}
 
-	public static String createTemporaryGoogleToken(GoogleInfo googleInfo) {
-		return Jwts.builder().setSubject("googleUser").claim("id", googleInfo.getId())
-				.claim("email", googleInfo.getEmail()).claim("verifiedEmail", googleInfo.isVerifiedEmail())
-				.claim("name", googleInfo.getName()).claim("givenName", googleInfo.getGivenName())
-				.claim("familyName", googleInfo.getFamilyName()).claim("picture", googleInfo.getPicture())
+	public static String createTemporaryGoogleToken(SnsInfo snsInfo) {
+		return Jwts.builder().setSubject("googleUser").claim("id", snsInfo.getId())
+				.claim("email", snsInfo.getEmail()).claim("verifiedEmail", snsInfo.isVerifiedEmail())
+				.claim("name", snsInfo.getName()).claim("givenName", snsInfo.getGivenName())
+				.claim("familyName", snsInfo.getFamilyName()).claim("picture", snsInfo.getPicture())
 				.setIssuedAt(new Date()) // 발급 시간
 				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 10)) // 만료 시간
 				.signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey()) // 서명

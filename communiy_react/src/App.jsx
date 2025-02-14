@@ -52,6 +52,7 @@ import Complaint from './Admin/Complaint/Complaint';
 import Board from './Admin/Board/Board';
 import ReviewDetail from './Admin/Board/ReviewDetail';
 import Stats from './Admin/Stats/Stats';
+import KakaoSignup from './login/KaKaoSignup';
 
 function App() {
   return (
@@ -107,6 +108,7 @@ function App() {
             {/* 소셜 로그인 */}
             <Route path="/login/googlecheck" element={<GoogleLoginCheck />} />
             <Route path="/google/signup" element={<GoogleSignup />} />
+            <Route path="/kakao/signup" element={<KakaoSignup />} />
 
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />

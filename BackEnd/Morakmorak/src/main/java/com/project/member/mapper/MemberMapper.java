@@ -34,7 +34,7 @@ public interface MemberMapper {
 	
 	Member getMemberInfoByNo(Member member);
 	
-	int googleRegisteredCheck(Member member);
+	int snsRegisteredCheck(Member member);
 	
-	Member getGoogleInfo(Member member);
+	Member getSnsInfo(Member member);
 }
