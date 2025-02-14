@@ -4,7 +4,6 @@ const HorizonLine_table = () => {
   return (
     <div
       style={{
-        textDecoration: 'none',
         width: '141%',
         textAlign: 'center',
         borderBottom: '1px solid rgba(0,0,0,0.1)',
