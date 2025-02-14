@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.announcements.mapper.FaqMapper">
 	<select id="listFaq" resultType="java.util.Map">
-		SELECT F_ID, F_TITLE, CONTENT, TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS
-		REG_DATE FROM FAQ ORDER BY F_ID DESC
+		SELECT FAQ_NO, FAQ_TITLE, CONTENT, TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS
+		REG_DATE FROM FAQ ORDER BY FAQ_NO DESC
 	</select>
 
 	<insert id="insertFaq">
-		INSERT INTO FAQ (F_ID, F_TITLE, CONTENT, REG_DATE) VALUES
+		INSERT INTO FAQ (FAQ_NO, FAQ_TITLE, CONTENT, REG_DATE) VALUES
 		(FAQ_SEQ.NEXTVAL, #{n_title}, #{content}, SYSDATE)
 	</insert>
 </mapper>
