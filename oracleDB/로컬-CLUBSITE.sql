@@ -94,8 +94,8 @@ create table group_morak(
     detail_address varchar2(100),       --상세주소
     start_date date,                     --모임시작일
     last_date date,                      --모임종료일
-    comment1 varchar2(255),             --자기PR
-    comment2 varchar2(255),             --모임소개글
+comment1 varchar2(500),             --자기PR
+comment2 varchar2(1000),             --모임소개글 
     status varchar2(20),                --관리자 승인여부
     views number(6),                    --조회수
     img_url varchar2(50),               --이미지
