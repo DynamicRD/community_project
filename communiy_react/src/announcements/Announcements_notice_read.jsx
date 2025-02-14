@@ -42,7 +42,7 @@ export default function Announcements_notice_read() {
         <Container>
           <div className="notice_read">
             <div className="notice_head d-flex flex-column justify-content-between">
-              <span className="notice_title mb-3">{data.N_TITLE}</span>
+              <span className="notice_title mb-3">{data.NOTICE_TITLE}</span>
               <span className="notice_date mb-4">{data.REG_DATE}</span>
               <span className="notice_hr mb-5"></span>
             </div>

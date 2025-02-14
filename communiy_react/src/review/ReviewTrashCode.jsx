@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Nav } from 'react-bootstrap';
 import Pagination from 'react-bootstrap/Pagination';
-import { AuthContext } from '../context/AuthContext'; //
 
 import './Review.css';
 
-export default function Review() {
+export default function ReviewTrashCode() {
   const completedMeetings = [
     {
       name: '테크 세미나',
@@ -54,7 +53,6 @@ export default function Review() {
       </Pagination.Item>
     );
   }
-  const { isAuthenticated, userData } = useContext(AuthContext);
   const [reviewList, setReviewList] = useState([]); // reviewList를 먼저 선언
   const [groupedReviews, setGroupedReviews] = useState([]);
 
@@ -66,7 +64,6 @@ export default function Review() {
       .then((response) => response.json())
       .then((data) => {
         setReviewList(data);
-        console.log(data);
       });
   }
 
@@ -102,7 +99,7 @@ export default function Review() {
                 key={index}
               >
                 {group.map((object) => (
-                  <div className="review_item" key={object.REVIEW_TITLE}>
+                  <div className="review_item" key={object.R_TITLE}>
                     <div
                       className="club_name d-flex align-content-cetner ms-4 mb-1"
                       style={{
@@ -111,18 +108,20 @@ export default function Review() {
                     >
                       {completedMeetings[0].name}
                     </div>
-                    <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
+                    <Nav.Link href={`/review/read/${object.R_ID}`} />
+                    <Nav.Link href={`/review/read/${object.R_ID}`}>
                       <img
-                        src={`/images/${object.IMG_URL}`}
+                        src={`data:image/jpeg;base64,${object.IMG_URL}`}
                         alt="review"
                         className="review_img"
                       />
                     </Nav.Link>
 
                     <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
-                      <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
-                        {object.REVIEW_TITLE}
+                      <Nav.Link href={`/review/read/${object.R_ID}`}>
+                        {object.R_TITLE}
                       </Nav.Link>
+                      <Nav.Link href="/review/Read">{object.title}</Nav.Link>
                       <span style={{ fontSize: '12px' }}>
                         평점&nbsp;:&nbsp;
                         {console.log(object.STAR)}
@@ -144,21 +143,12 @@ export default function Review() {
         </div>
       </Container>
       <Container>
-        {isAuthenticated ? (
-          <div className="d-flex justify-content-center align-content-center mb-3">
-            <Pagination size="sm">{item}</Pagination>
-            <Nav.Link href="/mypage/reviews" className="reviewRegist">
-              <span>작성 하기</span>
-            </Nav.Link>
-          </div>
-        ) : (
-          <div className="d-flex justify-content-center align-content-center mb-3">
-            <Pagination size="sm">{item}</Pagination>
-            <Nav.Link href="/" className="reviewRegist">
-              <span>홈으로</span>
-            </Nav.Link>
-          </div>
-        )}
+        <div className="d-flex justify-content-center align-content-center mb-3">
+          <Pagination size="sm">{item}</Pagination>
+          <Nav.Link href="/mypage/reviews" className="reviewRegist">
+            <span>작성 하기</span>
+          </Nav.Link>
+        </div>
       </Container>
     </>
   );

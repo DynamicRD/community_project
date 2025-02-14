@@ -34,9 +34,6 @@ import AnnouncementsNoticeRegist from './announcements/Announcements_regist';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
 import KakaoCallback from './login/KakaoCallback';
-import Read from './review/Read';
-import Review from './review/Review';
-import Regist from './review/Regist';
 
 // ✅ 관리자 관련 컴포넌트
 import Dashboard from './Admin/dashboard/dashboard';
@@ -48,8 +45,9 @@ import FindId from './login/FindId';
 import FindPwd from './login/FindPwd';
 import ResetPassword from './login/ResetPassword';
 import WishList from './wishlist/wishlist';
-// import RegistFileURL from './review/RegistFileURL';
-// import ReviewFileURL from './review/ReviewFileURL';
+import Review from './review/Review';
+import Regist from './review/Regist';
+import Read from './review/Read';
 
 function App() {
   return (
@@ -101,14 +99,8 @@ function App() {
 
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
+            <Route path="/review/regist" element={<Regist />} />
             <Route path="/review/read/:idx" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
-            {/* <Route path="/review/registTest" element={<RegistFileURL />} />
-            <Route path="/review/test" element={<ReviewFileURL />} /> */}
-            <Route path="/review/read" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
-            <Route path="/review/read" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />
@@ -116,6 +108,10 @@ function App() {
             <Route
               path="/announcements/notice/read/:idx"
               element={<AnnouncementsNoticeRead />}
+            />
+            <Route
+              path="/notice/regist"
+              element={<AnnouncementsNoticeRegist />}
             />
 
             {/* 찜 목록 */}
@@ -134,10 +130,6 @@ function App() {
             <Route path="users" element={<UserTable />} />
             <Route path="community" element={<Community />} />
             <Route path="community/:id" element={<CommunityDetail />} />
-            <Route
-              path="notice/regist"
-              element={<AnnouncementsNoticeRegist />}
-            />
           </Route>
         </Routes>
       </BrowserRouter>

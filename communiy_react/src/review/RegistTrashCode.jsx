@@ -1,17 +1,15 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button, Container, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './Regist.css';
 import HorizonLine from './HorizonLine';
-import axios from 'axios';
-import { AuthContext } from '../context/AuthContext'; //
 
-export default function Regist() {
-  const { isAuthenticated, userData } = useContext(AuthContext);
+export default function RegistTrashCode() {
   const navigate = useNavigate();
   const content = useRef();
   const title = useRef();
   const ratingRef = useRef();
+  const file_image = useRef();
 
   const completedMeetings = [
     {
@@ -44,42 +42,13 @@ export default function Regist() {
     },
   ];
 
-  //파일이름 설정
-  //이미지 파일 url경로 설정
-  const [image, setImage] = useState(null);
+  const [imageUrl, setImageUrl] = useState();
+
   const loadImg = (event) => {
-    setImage(event.target.files[0]);
-  };
-
-  const uploadImage = async () => {
-    if (!image) {
-      alert('이미지를 선택하세요.');
-      return;
-    }
-
-    const formData = new FormData();
-    //위에과정에서 지정한 image경로를 해당 백앤드에 전달
-
-    formData.append('image', image);
-    formData.append('title', title.current.value);
-    formData.append('content', content.current.value);
-    formData.append('star', ratingRef.current.value); // 예시로 5점
-
-    try {
-      const response = await axios.post(
-        'http://localhost:8080/review/insert',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      );
-      console.log('업로드 성공:', response.data);
-      navigate('/review');
-    } catch (error) {
-      console.error('업로드 실패:', error);
-    }
+    let value = event.target.files[0];
+    setImageUrl(value);
+    console.log(value);
+    console.log(imageUrl);
   };
 
   return (
@@ -108,7 +77,7 @@ export default function Regist() {
                 />
               </p>
               <div className="writer mb-3">
-                <span>{userData?.nickname}</span>
+                <span>문정배</span>
               </div>
             </div>
             <div className="d-flex justify-content-between">
@@ -152,8 +121,34 @@ export default function Regist() {
                 <div>
                   <Button
                     className="review_register_btn ms-3 justify-content-end me-2"
-                    onClick={() => {
-                      uploadImage();
+                    onClick={async () => {
+                      const formData = new FormData();
+                      formData.append('file', imageUrl);
+                      formData.append('title', title.current.value);
+                      formData.append('content', content.current.value);
+                      formData.append('star', ratingRef.current.value); // 예시로 5점
+
+                      try {
+                        const response = await fetch(
+                          'http://localhost:8080/review/insert',
+                          {
+                            method: 'POST',
+                            body: formData,
+                          }
+                        ).then(() => {
+                          navigate('/review');
+                        });
+
+                        if (!response.ok) {
+                          const errorData = await response.text(); // 오류 메시지 텍스트 받기
+                          console.error('서버 오류:', errorData);
+                        } else {
+                          const data = await response.json();
+                          console.log('파일 업로드 성공', data);
+                        }
+                      } catch (error) {
+                        console.error('파일 업로드 실패:', error);
+                      }
                     }}
                   >
                     작성

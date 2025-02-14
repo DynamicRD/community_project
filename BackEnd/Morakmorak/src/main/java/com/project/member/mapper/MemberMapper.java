@@ -20,8 +20,7 @@ public interface MemberMapper {
 
 	Member findByEmail(String email);
 
-	
 	public int phoneDuplicateCheck(Member member);
-	
+
 	public Member getMemberInfoByNo(Member member);
 }
