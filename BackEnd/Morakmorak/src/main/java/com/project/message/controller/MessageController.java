@@ -10,8 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,15 +39,13 @@ import net.nurigo.sdk.message.service.DefaultMessageService;
 public class MessageController {
 
 	final DefaultMessageService messageService;
-
 	static int number;
 	static int number2;
-
-	public final SecretConfig secretConfig = new SecretConfig();
-
+	private final SecretConfig secretConfig = new SecretConfig();
+	
 	public MessageController() {
 		// 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
-		this.messageService = NurigoApp.INSTANCE.initialize(secretConfig.getApiKey(), secretConfig.getSecretKey(),
+		this.messageService = NurigoApp.INSTANCE.initialize(secretConfig.getNurigoApiKey(), secretConfig.getNurigoSecretKey(),
 				"https://api.coolsms.co.kr");
 	}
 
@@ -110,28 +108,28 @@ public class MessageController {
 	@CrossOrigin
 	@PostMapping("/send-one")
 	public SingleMessageSentResponse sendOne(@RequestParam Map<String, Object> map) {
-		number = (int) (Math.random() * (1000000 - 100000 + 1) + 100000);
+		number = (int)(Math.random()*(1000000-100000+1)+100000);
 		Message message = new Message();
 		// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
 		message.setFrom("01066389944");
-		message.setTo((String) map.get("number1") + map.get("number2") + map.get("number3"));
+		message.setTo((String) map.get("number1")+map.get("number2")+map.get("number3"));
 		message.setText("[모락모락] 본인확인을 위해 인증번호 [" + number + "]을 입력해 주세요");
-		log.info("value=" + (String) map.get("number1") + map.get("number2") + map.get("number3"));
+		log.info("value=" + (String) map.get("number1")+map.get("number2")+map.get("number3"));
 		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 		System.out.println(response);
 		return response;
 	}
-
+	
 	@CrossOrigin
 	@PostMapping("/send-one2")
 	public SingleMessageSentResponse sendOne2(@RequestParam("number") String number) {
-		number2 = (int) (Math.random() * (1000000 - 100000 + 1) + 100000);
+		number2 = (int)(Math.random()*(1000000-100000+1)+100000);
 		Message message = new Message();
 		// 발신번호 및 수신번호는 반드시 01012345678 형태로 입력되어야 합니다.
 		message.setFrom("01066389944");
 		message.setTo(number);
 		message.setText("[모락모락] 본인확인을 위해 인증번호 [" + number2 + "]을 입력해 주세요");
-		log.info("value=" + number);
+		log.info("value=" +number);
 		SingleMessageSentResponse response = this.messageService.sendOne(new SingleMessageSendingRequest(message));
 		System.out.println(response);
 		return response;
@@ -143,14 +141,13 @@ public class MessageController {
 		System.out.println(number);
 		return number;
 	}
-
 	@CrossOrigin
 	@RequestMapping("/send-one/number2")
 	public int sendNumber2() {
 		System.out.println(number2);
 		return number2;
 	}
-
+	
 //	@PostMapping("/send-one")
 //	public String sendOne(@RequestParam Map<String, Object> map) {
 //		log.info("map = " + (String) map.get("number1")+map.get("number2")+map.get("number3"));
@@ -179,6 +176,8 @@ public class MessageController {
 
 		return response;
 	}
+	
+	
 
 	/**
 	 * 여러 메시지 발송 예제 한 번 실행으로 최대 10,000건 까지의 메시지가 발송 가능합니다.

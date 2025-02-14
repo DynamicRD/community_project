@@ -154,17 +154,6 @@ public class MemberController {
 		}
 	}
 
-	public Map<String, Object> getKakaoUserInfo(String accessToken) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + accessToken);
-		headers.setContentType(MediaType.APPLICATION_JSON);
-
-		ResponseEntity<Map> response = restTemplate.exchange("https://kapi.kakao.com/v2/user/me", HttpMethod.GET,
-				new HttpEntity<>(headers), Map.class);
-
-		return response.getBody();
-	}
-
 	// 아이디 중복 확인
 	@GetMapping("/duplicatecheck")
 	public Map<String, Boolean> checkDuplicate(@RequestParam("userId") String userId) { // "userId"로 변경
@@ -250,7 +239,7 @@ public class MemberController {
 		log.info("🔹 /login 요청 - 유저 ID: {}", member.getId());
 		// DB에서 사용자 확인
 		Member member2 = service.loginCheck(member);
-		System.out.println("member2값 읽어오기" + member2);
+		System.out.println("member2값 읽어오기"+member2);
 		if (member2 == null) {
 			return ResponseEntity.status(404).body(Map.of("success", false, "message", "등록되지 않은 사용자입니다. 회원가입이 필요합니다."));
 		}
@@ -281,7 +270,7 @@ public class MemberController {
 	@GetMapping("/refresh_check")
 	public ResponseEntity<?> checkRefreshToken(
 			@CookieValue(value = "refresh_token", required = false) String refreshToken, HttpServletResponse response) {
-
+	
 		System.out.println("토큰 유효시간 검증");
 		System.out.println(refreshToken);
 		if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
@@ -289,7 +278,7 @@ public class MemberController {
 		}
 		System.out.println("토큰 아이디");
 		int no = JwtUtil.getNoFromToken(refreshToken);
-		System.out.println("no추출 완료 : " + no);
+		System.out.println("no추출 완료 : " +no);
 		Member member = new Member();
 		member.setNo(no);
 
@@ -354,6 +343,7 @@ public class MemberController {
 			@CookieValue(value = "access_token", required = false) String accessToken,
 			@CookieValue(value = "refresh_token", required = false) String refreshToken) {
 
+		
 		boolean accessTokenExists = accessToken != null;
 		boolean refreshTokenExists = refreshToken != null;
 		System.out.println(accessTokenExists);
@@ -381,6 +371,7 @@ public class MemberController {
 	}
 
 	@RequestMapping("/googlelogin")
+
 	public ResponseEntity<?> googleLogin(@RequestParam("code") String code,
 			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
 			HttpServletResponse response) {
@@ -491,6 +482,8 @@ public class MemberController {
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
 		}
 	}
+
+
 
 	// --------------------------------------------------api메소드가 아닌 컨트롤러용 메소드
 	// 액세스 토큰 재발급
