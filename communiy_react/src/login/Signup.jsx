@@ -755,7 +755,7 @@ export default function Signup() {
               </Button>
               &nbsp;&nbsp;
               <Button variant="secondary" onClick={handleGoBack}>
-                돌아가기
+                돌아가기r
               </Button>
             </Col>
           </Form.Group>

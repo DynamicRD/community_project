@@ -1,5 +1,5 @@
 import './MyPage.css';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Container,
   Row,
@@ -8,34 +8,15 @@ import {
   Table,
   Pagination,
 } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom'; // Link 임포트
+import { Link } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { AuthContext } from '../context/AuthContext'; //
 
 function MyPage() {
-  const { isAuthenticated, userData } = useContext(AuthContext);
+  // 상태 관리: 알림 펼침 여부
   const [showMore, setShowMore] = useState(false);
-  const [activeTab, setActiveTab] = useState('ongoing'); // 기본값:
-  const navigate = useNavigate();
+  // 모임 타입 상태 (진행중인 모임, 종료된 모임, 찜한 모임)
+  const [activeTab, setActiveTab] = useState('ongoing'); // 기본값: 진행중인 모임
 
-  useEffect(() => {
-    if (userData && isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-
-      if (userData?.no.toString() !== pageId) {
-        alert(`접근 권한이 없습니다.`);
-        navigate('/');
-      }
-    }
-  }, [isAuthenticated, userData, navigate]);
-  useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
-      alert(`접근 권한이 없습니다.`);
-      navigate('/');
-    }
-  }, [userData]);
   // 알림 내용
   const notifications = [
     '모임1의 참가자 리뷰가 추가되었습니다!',
@@ -177,7 +158,7 @@ function MyPage() {
             </div>
           </div>
           <div className="btn-group-justified m-3">
-            <Link to={`/mypage/infochange/${userData?.no}`}>
+            <Link to="/mypage/infochange">
               <Button
                 variant="light m-3"
                 style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}

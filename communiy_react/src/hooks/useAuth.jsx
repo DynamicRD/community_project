@@ -15,12 +15,10 @@ const checkTokenExistence = async () => {
     return { accessTokenExists: false, refreshTokenExists: false };
   }
 };
+
 const checkAndRefreshToken = async () => {
   try {
-    await axios.get('http://localhost:8080/member/refresh_check', {
-      withCredentials: true, // 반드시 추가
-    });
-    console.log('액세스 토큰 재발급');
+    await axios.get('/member/check_refresh', { withCredentials: true });
     return true;
   } catch (error) {
     console.error('토큰 확인 중 오류 발생:', error);
@@ -30,7 +28,6 @@ const checkAndRefreshToken = async () => {
 
 const getData = async () => {
   try {
-    console.log('실행');
     const response = await axios.get('http://localhost:8080/member/getdata', {
       withCredentials: true,
     });
@@ -56,17 +53,13 @@ const useAuth = () => {
       try {
         const { accessTokenExists, refreshTokenExists } =
           await checkTokenExistence();
-        console.log(
-          '토큰 존재여부 확인' + accessTokenExists + refreshTokenExists
-        );
+
         if (accessTokenExists) {
           setIsAuthenticated(true);
         } else if (refreshTokenExists) {
-          console.log('리프레시 토큰만 존재합니다');
           await checkAndRefreshToken();
           setIsAuthenticated(true);
         } else {
-          console.log('토큰 둘다 없습니다');
           setIsAuthenticated(false);
         }
       } catch (error) {

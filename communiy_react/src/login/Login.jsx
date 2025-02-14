@@ -70,7 +70,6 @@ export default function Login() {
       window.removeEventListener('message', handleMessage);
     };
   }, []);
-
   const doKakaoLogin = () => {
     const kakaoRestApiKey = import.meta.env.VITE_KAKAO_REST_API_KEY;
     const kakaoRedirectUrl = import.meta.env.VITE_KAKAO_REDIRECT_URL;
@@ -83,57 +82,19 @@ export default function Login() {
     window.open(kakaoUrl, 'kakao-login', 'width=600,height=600');
   };
 
-  //   const handleKakaoRedirect = async () => {
-  //     const urlParams = new URLSearchParams(window.location.search);
-  //     const authCode = urlParams.get("code");
-
-  //     if (authCode) {
-  //         console.log("Authorization Code:", authCode);
-
-  //         try {
-  //             // 백엔드로 인가 코드 전달 (액세스 토큰 요청)
-  //             const response = await fetch("http://localhost:8080/member/kakao", {
-  //                 method: "POST",
-  //                 headers: {
-  //                     "Content-Type": "application/json"
-  //                 },
-  //                 body: JSON.stringify({ code: authCode }) // 여기서 백엔드로 인가 코드 보냄
-  //             });
-
-  //             const data = await response.json();
-  //             console.log("Backend Response:", data);
-  //         } catch (error) {
-  //             console.error("Error during Kakao login:", error);
-  //         }
-  //     }
-  // };
-
   const doGoogleLogin = (rememberMe) => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientPass = import.meta.env.VITE_GOOGLE_CLIENT_PASS;
     const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
 
     console.log(clientId);
     console.log(redirectUrl);
 
-    // URL 파라미터 생성
-    const params = new URLSearchParams({
-      client_id: clientId,
-      redirect_uri: redirectUrl,
-      response_type: 'code',
-      scope: 'openid profile email',
-      access_type: 'offline', // 리프레시 토큰을 받기 위해 추가
-      prompt: 'consent', // 매번 사용자 동의를 받도록 설정
-      state: rememberMe ? 'true' : 'false', // rememberMe 값을 state에 포함
-    });
+    const url = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&response_type=code&scope=openid%20profile%20email`;
+    //refresh 토큰 발급은 &access_type=offline&prompt=consent추가
 
-    const url = `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
-
-    // 새 창으로 로그인 요청
-    const loginWindow = window.open(
-      url,
-      'google-login',
-      'width=600,height=600'
-    );
+    // 팝업 창 띄우기
+    window.open(url, 'google-login', 'width=600,height=600');
   };
 
   return (

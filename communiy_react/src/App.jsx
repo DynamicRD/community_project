@@ -30,58 +30,67 @@ import AddressInput from './mypage/daumAPI/AddressInput';
 import AnnouncementsNotice from './announcements/Announcements_notice';
 import AnnouncementsFaq from './announcements/Announcements_faq';
 import AnnouncementsNoticeRead from './announcements/Announcements_notice_read';
+import AnnouncementsNoticeRegist from './announcements/Announcements_regist';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
+import KakaoCallback from './login/KakaoCallback';
 import Read from './review/Read';
 import Review from './review/Review';
 import Regist from './review/Regist';
-import ChatRoom from './chatroom/Chatroom';
-import WishList from './wishlist/wishlist';
-import FindId from './login/FindId';
-import FindPwd from './login/FindPwd';
-import ResetPassword from './login/ResetPassword';
 
 // ✅ 관리자 관련 컴포넌트
 import Dashboard from './Admin/dashboard/dashboard';
 import UserTable from './Admin/Users/UserTable';
 import Community from './Admin/Community/Community';
 import CommunityDetail from './Admin/Community/CommunityDetail';
-import Complaint from './Admin/Complaint/Complaint';
-import Board from './Admin/Board/Board';
-import ReviewDetail from './Admin/Board/ReviewDetail';
-import Stats from './Admin/Stats/Stats';
+import ChatRoom from './chatroom/Chatroom';
+import FindId from './login/FindId';
+import FindPwd from './login/FindPwd';
+import ResetPassword from './login/ResetPassword';
+import WishList from './wishlist/wishlist';
+// import RegistFileURL from './review/RegistFileURL';
+// import ReviewFileURL from './review/ReviewFileURL';
 
 function App() {
   return (
     <AuthProvider>
+      {' '}
+      {/* ✅ AuthProvider로 감싸기 */}
       <BrowserRouter>
         <Routes>
-          {/* ✅ 유저 레이아웃 */}
+          {/* 유저 레이아웃 */}
           <Route element={<UserLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/member/kakao/callback" element={<KakaoCallback />} />
 
             {/* 모임 관련 */}
             <Route path="/group/detail" element={<GroupDetail />} />
-            <Route path="/group/regular_list" element={<GroupList type="regular" />} />
+            <Route
+              path="/group/regular_list"
+              element={<GroupList type="regular" />}
+            />
             <Route path="/group/one_list" element={<GroupList type="one" />} />
             <Route path="/group/regist" element={<GroupRegist />} />
             <Route path="/group/update" element={<GroupUpdate />} />
             <Route path="/group/management" element={<GroupManagement />} />
 
             {/* 마이페이지 관련 */}
-            <Route path="/mypage/:idx" element={<MyPage />} />
-            <Route path="/mypage/infochange/:idx" element={<MyInfoChange />} />
-            <Route path="/mypage/profilechange/:idx" element={<MyProfileChange />} />
-            <Route path="/mypage/infodelete/:idx" element={<MyInfoDelete />} />
-            <Route path="/mypage/amounthis/:idx" element={<MyAmountHistory />} />
-            <Route path="/mypage/reviews/:idx" element={<MyReviews />} />
-            <Route path="/mypage/charge/:idx" element={<MyAmountCharge />} />
-            <Route path="/mypage/checkout/:idx" element={<Checkout />} />
-            <Route path="/mypage/checkout/success/:idx" element={<SuccessPage />} />
-            <Route path="/mypage/checkout/fail/:idx" element={<FailPage />} />
-            <Route path="/mypage/infochange/address" element={<AddressInput />} />
+            <Route path="/mypage" element={<MyPage />} />
+            <Route path="/mypage/infochange" element={<MyInfoChange />} />
+            <Route path="/mypage/profilechange" element={<MyProfileChange />} />
+            <Route path="/mypage/infodelete" element={<MyInfoDelete />} />
+            <Route path="/mypage/amounthis" element={<MyAmountHistory />} />
+            <Route path="/mypage/reviews" element={<MyReviews />} />
+            <Route path="/mypage/charge" element={<MyAmountCharge />} />
+            <Route path="/mypage/checkout" element={<Checkout />} />
+            <Route path="/mypage/checkout/success" element={<SuccessPage />} />
+            <Route path="/mypage/checkout/fail" element={<FailPage />} />
+            <Route
+              path="/mypage/infochange/address"
+              element={<AddressInput />}
+            />
 
             {/* 채팅 */}
             <Route path="/chatroom" element={<ChatRoom />} />
@@ -92,13 +101,22 @@ function App() {
 
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
+            <Route path="/review/read/:idx" element={<Read />} />
+            <Route path="/review/regist" element={<Regist />} />
+            {/* <Route path="/review/registTest" element={<RegistFileURL />} />
+            <Route path="/review/test" element={<ReviewFileURL />} /> */}
+            <Route path="/review/read" element={<Read />} />
+            <Route path="/review/regist" element={<Regist />} />
             <Route path="/review/read" element={<Read />} />
             <Route path="/review/regist" element={<Regist />} />
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />
             <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
-            <Route path="/announcements/read" element={<AnnouncementsNoticeRead />} />
+            <Route
+              path="/announcements/notice/read/:idx"
+              element={<AnnouncementsNoticeRead />}
+            />
 
             {/* 찜 목록 */}
             <Route path="/favorites" element={<WishList />} />
@@ -115,11 +133,11 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<UserTable />} />
             <Route path="community" element={<Community />} />
-            <Route path="community/:idx" element={<CommunityDetail />} />
-            <Route path="complaint" element={<Complaint />} />
-            <Route path="board" element={<Board />} />
-            <Route path="board/:reviewid" element={<ReviewDetail />} />
-            <Route path="stats" element={<Stats />} />
+            <Route path="community/:id" element={<CommunityDetail />} />
+            <Route
+              path="notice/regist"
+              element={<AnnouncementsNoticeRegist />}
+            />
           </Route>
         </Routes>
       </BrowserRouter>
