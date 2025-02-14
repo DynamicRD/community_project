@@ -57,36 +57,45 @@ export default function Announcements_notice() {
             >
               {FaqList.length}개 자주묻는 질문
             </div>
-            {FaqList.map((object, idx) => (
-              <Accordion.Item
-                eventKey={idx}
-                flush
-                key={object.F_ID}
-                className="mb-3"
+            {FaqList.length === 0 ? (
+              <div
+                className="ms-5 mb-3"
+                style={{ fontFamily: 'Freesentation-9Black' }}
               >
-                <Accordion.Header>
-                  <span
-                    className="faq_accordion_title"
-                    style={{
-                      width: '1100px',
-                      height: '50px',
-                    }}
-                  >
-                    {object.F_TITLE}
-                  </span>
-                </Accordion.Header>
-                <Accordion.Body>
-                  <span
-                    className="faq_accordion_body "
-                    style={{
-                      width: '1100px',
-                    }}
-                  >
-                    {object.CONTENT}
-                  </span>
-                </Accordion.Body>
-              </Accordion.Item>
-            ))}
+                FAQ내용이 없습니다.
+              </div>
+            ) : (
+              FaqList.map((object, idx) => (
+                <Accordion.Item
+                  eventKey={idx}
+                  flush
+                  key={object.FAQ_NO}
+                  className="mb-3"
+                >
+                  <Accordion.Header>
+                    <span
+                      className="faq_accordion_title"
+                      style={{
+                        width: '1100px',
+                        height: '50px',
+                      }}
+                    >
+                      {object.FAQ_TITLE}
+                    </span>
+                  </Accordion.Header>
+                  <Accordion.Body>
+                    <span
+                      className="faq_accordion_body "
+                      style={{
+                        width: '1100px',
+                      }}
+                    >
+                      {object.CONTENT}
+                    </span>
+                  </Accordion.Body>
+                </Accordion.Item>
+              ))
+            )}
           </Accordion>
         </Container>
       </div>
