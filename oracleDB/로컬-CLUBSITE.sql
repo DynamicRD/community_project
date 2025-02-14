@@ -63,6 +63,10 @@ increment by 1;
 create sequence visit_seq
 start with 1
 increment by 1;
+
+create sequence transaction_seq
+start with 1
+increment by 1;
 -- 모임장바구니
 create table basket(
     basket_no number(6) not null,
@@ -254,3 +258,13 @@ create table visit_log(
     primary key(visit_no)
 );
 
+--거래내역 테이블
+drop table transaction;
+create table Transaction_log(
+    transaction_no number(6),
+    no number(6),
+    type varchar2(100),
+    amount number(7),
+    reg_date date default sysdate,
+    primary key(transaction_no)
+)
