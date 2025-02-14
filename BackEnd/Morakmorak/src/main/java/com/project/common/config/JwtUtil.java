@@ -4,7 +4,10 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+<<<<<<< HEAD
+=======
 import com.project.member.model.SnsInfo;
+>>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 import com.project.member.model.Member;
 
 import io.jsonwebtoken.Claims;
@@ -14,6 +17,44 @@ import io.jsonwebtoken.SignatureAlgorithm;
 @Component
 public class JwtUtil {
 
+<<<<<<< HEAD
+   
+	private final static SecretConfig secretConfig = new SecretConfig();
+    private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 15; // 15분 (15분)
+    private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
+
+
+    public static String createAccessToken(Member member) {
+        return Jwts.builder()
+                .setSubject("userRegister")
+                .claim("id", member.getId())
+                .claim("name",member.getName())
+                .claim("role", member.getRole())
+                .claim("provider", member.getProvider())
+                .claim("phone", member.getPhone())
+                .claim("gender", String.valueOf(member.getGender()))
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))    
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
+                .compact();
+    }
+  
+    public static String kakaoGenerateAccessToken(String email) {
+        return Jwts.builder()
+                .setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256,  secretConfig.getJwtSecretKey())
+                .compact();
+    }
+  
+    public static String kakaoGenerateRefreshToken(String email) {
+        return Jwts.builder()
+        		.setSubject(email)
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
+                .compact();
+    }
+=======
 	private static SecretConfig secretConfig = new SecretConfig();
 	private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 30; // 30분
 	private static final long REFRESH_TOKEN_REMEBER_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
@@ -36,6 +77,7 @@ public class JwtUtil {
 						+ ((rememberMe) ? (REFRESH_TOKEN_REMEBER_EXPIRATION_TIME) : (REFRESH_TOKEN_EXPIRATION_TIME))))
 				.signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey()).compact();
 	}
+>>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 
 	public static String createTemporaryGoogleToken(SnsInfo snsInfo) {
 		return Jwts.builder().setSubject("googleUser").claim("id", snsInfo.getId())
@@ -48,11 +90,24 @@ public class JwtUtil {
 				.compact();
 	}
 
+<<<<<<< HEAD
+    public static String createRefreshToken(Member member) {
+        return Jwts.builder()
+        	.setSubject("refreshToken")
+                .claim("id", member.getId())
+                .claim("provider", member.getProvider())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRATION_TIME))    
+                .signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey())
+                .compact();
+    }
+=======
 	public static String kakaoGenerateAccessToken(String email) {
 		return Jwts.builder().setSubject(email)
 				.setExpiration(new Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey()).compact();
 	}
+>>>>>>> e3a48d64fac4f92c0305b8e8f632dfbd4ab9121d
 
 	public static String kakaoGenerateRefreshToken(String email) {
 		return Jwts.builder().setSubject(email)
