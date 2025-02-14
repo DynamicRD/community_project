@@ -1,30 +1,30 @@
 drop table basket;
-drop table group1;
-drop table comment1;
+drop table group_morak;
+drop table comments;
 drop table user_group;
 drop table group_info;
 drop table review;
-drop table member;
 drop table notification;
 drop table notice;
 drop table faq;
 drop table charge;
 drop table messages;
+drop table visit_log
 
-
+drop table member;
 create sequence basket_seq 
 start with 1 
 increment by 1;
 
-create sequence group1_seq 
+create sequence group_seq 
 start with 1 
 increment by 1;
 
-create sequence comment1_seq 
+create sequence comments_seq 
 start with 1 
 increment by 1;
 
-create sequence user_group_seq 
+create sequence member_group_seq 
 start with 1 
 increment by 1;
 
@@ -65,24 +65,24 @@ start with 1
 increment by 1;
 -- 모임장바구니
 create table basket(
-    b_id number(6) not null,
-    id number(6) not null,
-    g_id number(6) not null,
+    basket_no number(6) not null,
+    no number(6) not null,
+    group_no number(6) not null,
     price number(6),                    --비용
     reg_date date default sysdate,       --신청일
     start_date date,                     --모임시작일
     last_date date,                      --모임종료일
     status varchar2(20),                --찜, 승인대기, 종료
-    primary key(b_id)
+    primary key(basket_no)
 );
 
 
 
 -- 모임
-create table group1(
-    g_id number(6) not null,
-    id number(6) not null,              --모임장
-    g_title varchar2(100),                --모임명
+create table group_morak(
+    group_no number(6) not null,
+    no number(6) not null,              --모임장
+    group_title varchar2(100),                --모임명
     reg_date date default sysdate,       --개설일
     category varchar2(50),                 --카테고리
     user_max number(3),                 --최대모임원
@@ -100,16 +100,16 @@ create table group1(
     views number(6),                    --조회수
     img_url varchar2(50),               --이미지
     type varchar2(20),                   --정기모임,소모임 구분
-    primary key(g_id)
+    primary key(group_no)
 );
 
 
 
 -- 댓글(답변형)
-create table comment1(
-    c_id number(6) not null,
-    id number(6) not null,
-    r_id number(6) not null,
+create table comments(
+    comments_no number(6) not null,
+    no number(6) not null,
+    review_no number(6) not null,
     content varchar2(255),
     ref number(5,0) default 0,
     step number(3,0) default 0,
@@ -117,44 +117,33 @@ create table comment1(
     num_ref number(7,0) default 0,
     nickname varchar2(50),               --닉네임
     reg_date date default sysdate,
-    primary key(c_id)
+    primary key(comments_no)
 );
 
 
 
 -- 모임-사용자
-create table user_group(
-    u_g_id number(6),
-    id number(6) not null,
-    g_id number(6) not null,
-    status varchar2(20)                  --찜, 승인대기, 멤버, 모임장
+create table member_group(
+    member_group_no number(6),
+    no number(6) not null,
+    group_no number(6) not null,
+    status varchar2(20),             --찜, 승인대기, 멤버, 모임장
+    primary key(member_group_no)
 );
-
-
-
--- 모임 이미지
-create table group_info(
-    g_info_id number(6) not null,
-    g_id number(6) not null,
-    img_url varchar2(50),                 --사진
-    primary key(g_info_id)
-);
-
-
 
 -- 리뷰게시판
 create table review(
-    r_id number(6) not null,
-    id number(6) not null,
-    g_id number(6) not null,
-    r_title varchar2(50),
+    review_no number(6) not null,
+    no number(6) not null,
+    group_no number(6) not null,
+    review_title varchar2(50),
     img_url varchar2(50),
     content varchar2(255),
     views number(6),                     --조회수
     comments number(4),                  --댓글수
     star number(1) default 0,            --별점
     category varchar2(50),               --카테고리
-    primary key(r_id)
+    primary key(review_no)
 );
 
 select * from member;
@@ -184,71 +173,76 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
-update member set role=1 where id = 'aaaaa';
-commit;
+ALTER TABLE member DROP PRIMARY KEY; -- 기존 PK(id) 삭제
+ALTER TABLE member ADD PRIMARY KEY (no); -- 새로운 PK(no) 추가
+
+select * from member;
 SELECT *
 		FROM Member
 		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 
 
 -- 알림
 create table notification(
-    n_id number(6) not null,
-    id number(6) not null,
+    notification_no number(6) not null,
+    no number(6) not null,
     content varchar2(255),
     is_read varchar2(1) default 'N',     --읽음여부
     reg_date date default sysdate,        --알림일
-    primary key(n_id)
+    primary key(notification_no)
 );
 
 
 -- 공지사항
 create table notice(
-    n_id number(6) not null,
-    n_title varchar2(50),
+    notice_no number(6) not null,
+   notice_title varchar2(50),
     content varchar2(255),
     reg_date date default sysdate,
-    primary key(n_id)
+    primary key(notice_no)
 );
 
 
 
 -- FAQ
 create table faq(
-    n_id number(6) not null,
-    f_title varchar2(50),
+    faq_no number(6) not null,
+    faq_title varchar2(50),
     reg_date date default sysdate,
-    content varchar2(255)
+    content varchar2(255),
+    primary key(faq_no)
 );
 
 
 
 --코인 충전 내역 테이블
 create table charge(
-    id NUMBER GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    charge_no not null,
     amount number(6),          ---충전금액
     reg_date date,
-    u_id number(6) not null   ---사용자 pk
+    no number(6) not null,   ---사용자 pk
+    primary key(charge_no)
 );
 
 
 
 -- 채팅내역 DB 저장
 CREATE TABLE messages (
-    id NUMBER GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    message_no number(6),
     sender VARCHAR2(100) NOT NULL,
     content CLOB NOT NULL,
     timestamp NUMBER NOT NULL,
     room_code VARCHAR2(50) NOT NULL,
-    firebase_message_id VARCHAR2(255) UNIQUE
+    firebase_message_id VARCHAR2(255) UNIQUE,
+    primary key(message_no)
 );
 
 
 -- 방문 기록 테이블 추가
 create table visit_log(
-    v_id number(6),
+    visit_no number(6),
     ip varchar2(50),
     visit_time timestamp default current_timestamp,
     visit_url varchar2(300),
-    primary key(v_id)
+    primary key(visit_no)
 );
 
