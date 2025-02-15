@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.review.mapper.ReviewMapper">
+
+	<select id="listReview" resultType="java.util.Map">
+		SELECT R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, VIEWS, COMMENTS, STAR,
+		CATEGORY FROM REVIEW ORDER BY R_ID DESC
+	</select>
+	
+	<select id="list2" resultType="java.util.Map">
+		SELECT R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, VIEWS, COMMENTS, STAR,
+		CATEGORY FROM REVIEW2 ORDER BY R_ID DESC
+	</select>
+
+
+	<insert id="insertReview">
+		INSERT INTO REVIEW (R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, STAR)
+		VALUES (REVIEW_SEQ.NEXTVAL, 1, 1, #{title}, #{imageUrl, jdbcType=BLOB},
+		#{content}, #{star})
+	</insert>
+
+	<insert id="insert2">
+		INSERT INTO REVIEW2 (R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, STAR)
+		VALUES (REVIEW_SEQ.NEXTVAL, 1, 1, #{title}, #{imageUrl},
+		#{content}, #{star})
+	</insert>
+
+	<select id="readReview" resultType="java.util.Map">
+		SELECT R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, VIEWS, COMMENTS, STAR,
+		CATEGORY FROM REVIEW WHERE R_ID = #{idx}
+	</select>
+
+</mapper>
