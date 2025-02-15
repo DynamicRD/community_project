@@ -181,16 +181,15 @@ export default function GroupDetailItem({ item }) {
           우리 모임은요
         </p>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-  <Form.Control
-    as="textarea"
-    value={item.COMMENT2}
-    readOnly
-    style={{ border: 'none'}}
-  />
-</Form.Group>
-        <textarea>
-          {item.COMMENT2}
-          {/* 📚 역삼역 일요일 아침 북클럽 모집!🌞 
+          <Form.Control
+            as="textarea"
+            value={item.COMMENT2}
+            readOnly
+            style={{ border: 'none' }}
+          />
+        </Form.Group>
+
+        {/* 📚 역삼역 일요일 아침 북클럽 모집!🌞 
           책과 함께 여유로운 일요일
           아침을 보내고 싶으신가요? 
           이번에 역삼역 근처에서 일요일 아침, 책을
@@ -202,7 +201,6 @@ export default function GroupDetailItem({ item }) {
           소통하며, 새로운 친구를 만날 기회도 있어요! 책과 함께하는 소중한
           시간을 만들고 싶으신 분들, 많은 참여 부탁드려요! 그럼 일요일
           아침,여러분을 기다리고 있을게요! 📖💬 */}
-        </textarea>
       </div>
 
       <div className="groupMemberList">

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './GroupRegist.css';
-import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 
@@ -52,6 +52,106 @@ export default function GroupRegist() {
       }
     });
   }, []);
+
+
+  const handleLastDateChange = (e) =>{
+    if(new Date(last_date.current.value)  < new Date(start_date.current.value)){
+      alert('모임 종료일은 모임 시작일보다 빠를 수 없습니다.');
+      last_date.current.value = '';
+      last_date.current.focue();
+    }
+  }
+
+
+  const handleSubmit = () => {
+    if (!g_title.current.value) {
+      alert('모임명을 입력해주세요.');
+      g_title.current.focus();
+      return;
+    }
+    if (!type.current.value) {
+      alert('모임 타입을 선택해주세요.');
+      type.current.focus();
+      return;
+    }
+    if (!category.current.value) {
+      alert('모임 카테고리를 선택해주세요.');
+      category.current.focus();
+      return;
+    }
+    if (!user_max.current.value) {
+      alert('모임 정원을 입력해주세요.');
+      user_max.current.focus();
+      return;
+    }
+    if (!price.current.value) {
+      alert('인당 비용을 입력해주세요.');
+      price.current.focus();
+      return;
+    }
+    if (!formData.location) {
+      alert('모임 주소를 입력해주세요.');
+      inputRef.current.focus();
+      return;
+    }
+    if (!start_date.current.value) {
+      alert('모임 시작일을 입력해주세요.');
+      start_date.current.focus();
+      return;
+    }
+    if (!last_date.current.value) {
+      alert('모임 종료일을 입력해주세요.');
+      last_date.current.focus();
+      return;
+    }
+    if (!comment1) {
+      alert('모임장 한마디를 입력해주세요.');
+      return;
+    }
+    if (!comment2.current.value) {
+      alert('모임 소개글을 입력해주세요.');
+      comment2.current.focus();
+      return;
+    }
+
+    if (confirm('신청하시겠습니까?')) {
+      form.append('g_title', g_title.current.value);
+      form.append('type', type.current.value);
+      form.append('category', category.current.value);
+      form.append('user_max', Number(user_max.current.value));
+      form.append('price', Number(price.current.value));
+      form.append('addr1', formData.location);
+      form.append('addr2', addr2.current.value);
+      form.append('latitude', Number(formData.coordinates.lat));
+      form.append('longitude', Number(formData.coordinates.lng));
+      form.append('placeId', formData.placeId);
+      const date1 = new Date(start_date.current.value);
+      const formattedStartDate = date1.toISOString();
+      form.append('start_date', formattedStartDate);
+      const date2 = new Date(last_date.current.value);
+      const formattedLastDate = date2.toISOString();
+      form.append('last_date', formattedLastDate);
+      form.append('comment1', comment1);
+      form.append('comment2', comment2.current.value);
+      // if (img_url1.current.files.length > 0) {
+      //   form.append('img_url1', img_url1.current.files[0]);
+      // }
+      // if (img_url2.current.files.length > 0) {
+      //   form.append('img_url2', img_url2.current.files[0]);
+      // }
+      // if (img_url3.current.files.length > 0) {
+      //   form.append('img_url3', img_url3.current.files[0]);
+      // }
+      fetch('http://localhost:8080/group/insert', {
+        method: 'post',
+        // encType: 'multipart/form-data',
+        body: form,
+      }).then(() => {
+        alert('신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.');
+        history.go(-1);
+      });
+    }
+  };
 
   return (
     <Container className="w-75">
@@ -112,7 +212,8 @@ export default function GroupRegist() {
                   </div>
                   <div>
                     <Form.Label>모임종료일</Form.Label>
-                    <Form.Control type="datetime-local" ref={last_date} />
+                    <Form.Control type="datetime-local" ref={last_date} 
+                    onChange={handleLastDateChange}/>
                   </div>
                 </div>
                 {/* 주소 입력 */}
@@ -167,54 +268,7 @@ export default function GroupRegist() {
                 <div>
                   <Button
                     className="register_btn ms-3 justify-content-end"
-                    onClick={() => {
-                      if (confirm('신청하시겠습니까?')) {
-                        form.append('g_title', g_title.current.value);
-                        form.append('type', type.current.value);
-                        form.append('category', category.current.value);
-                        form.append('user_max', Number(user_max.current.value));
-                        form.append('price', Number(price.current.value));
-                        form.append('addr1', formData.location);
-                        form.append('addr2', addr2.current.value);
-                        form.append(
-                          'latitude',
-                          Number(formData.coordinates.lat)
-                        );
-                        form.append(
-                          'longitude',
-                          Number(formData.coordinates.lng)
-                        );
-                        form.append('placeId', formData.placeId);
-                        const date1 = new Date(start_date.current.value);
-                        const formattedStartDate = date1.toISOString();
-                        form.append('start_date', formattedStartDate);
-
-                        const date2 = new Date(last_date.current.value);
-                        const formattedLastDate = date2.toISOString();
-                        form.append('last_date', formattedLastDate);
-                        form.append('comment1', comment1);
-                        form.append('comment2', comment2.current.value);
-                        // if (img_url1.current.files.length > 0) {
-                        //   form.append('img_url1', img_url1.current.files[0]);
-                        // }
-                        // if (img_url2.current.files.length > 0) {
-                        //   form.append('img_url2', img_url2.current.files[0]);
-                        // }
-                        // if (img_url3.current.files.length > 0) {
-                        //   form.append('img_url3', img_url3.current.files[0]);
-                        // }
-                        fetch('http://localhost:8080/group/insert', {
-                          method: 'post',
-                          // encType: 'multipart/form-data',
-                          body: form,
-                        }).then(() => {
-                          alert(
-                            '신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.'
-                          );
-                          history.go(-1);
-                        });
-                      }
-                    }}
+                    onClick={handleSubmit}
                   >
                     신청하기
                   </Button>
@@ -222,7 +276,6 @@ export default function GroupRegist() {
                     className="register_btn ms-3 justify-content-end"
                     onClick={() => {
                       history.go(-1);
-                      // navigate('/group/list');
                     }}
                   >
                     취소하기

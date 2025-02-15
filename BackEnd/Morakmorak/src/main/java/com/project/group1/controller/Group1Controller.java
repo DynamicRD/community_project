@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,23 +27,29 @@ public class Group1Controller {
 	private Group1Service service;
 
 	@RequestMapping("/insert")
-	public void insert(@RequestParam Map<String, Object> map) throws Exception {
-		String startDateStr = (String) map.get("start_date");
-		String lastDateStr = (String) map.get("last_date");
+	public ResponseEntity<String> insert(@RequestParam Map<String, Object> map) throws Exception {
+		try {
+			String startDateStr = (String) map.get("start_date");
+			String lastDateStr = (String) map.get("last_date");
 
-		DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-		LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
-		LocalDateTime lastDate = LocalDateTime.parse(lastDateStr, formatter);
+			DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+			LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
+			LocalDateTime lastDate = LocalDateTime.parse(lastDateStr, formatter);
 
-		// Convert UTC to KST (Korea Standard Time)
-		ZonedDateTime startDateKST = startDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Seoul"));
-		ZonedDateTime lastDateKST = lastDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+			// Convert UTC to KST (Korea Standard Time)
+			ZonedDateTime startDateKST = startDate.atZone(ZoneId.of("UTC"))
+					.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+			ZonedDateTime lastDateKST = lastDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Seoul"));
 
-		map.put("start_date", Timestamp.valueOf(startDateKST.toLocalDateTime()));
-		map.put("last_date", Timestamp.valueOf(lastDateKST.toLocalDateTime()));
+			map.put("start_date", Timestamp.valueOf(startDateKST.toLocalDateTime()));
+			map.put("last_date", Timestamp.valueOf(lastDateKST.toLocalDateTime()));
 
-		service.insert(map);
-		log.info("insert");
+			service.insert(map);
+			return ResponseEntity.ok("신청이 완료되었습니다.");
+		} catch (Exception e) {
+			log.error("Error inserting group", e);
+			return ResponseEntity.status(500).body("신청에 실패했습니다.");
+		}
 	}
 
 	@GetMapping("/list")
@@ -75,10 +82,32 @@ public class Group1Controller {
 	public Map<String, Object> read(@RequestParam(value = "g_id") String gId) throws Exception {
 		return service.read(gId);
 	}
-	
+
 	@RequestMapping("/update")
-	public void update(@RequestParam(value = "g_id") String gId) throws Exception {
-		service.update(gId);
+	public ResponseEntity<String> update(@RequestParam Map<String, Object> map,
+			@RequestParam(value = "g_id") String gId) throws Exception {
+		try {
+			String startDateStr = (String) map.get("start_date");
+			String lastDateStr = (String) map.get("last_date");
+
+			DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
+			LocalDateTime startDate = LocalDateTime.parse(startDateStr, formatter);
+			LocalDateTime lastDate = LocalDateTime.parse(lastDateStr, formatter);
+
+			// Convert UTC to KST (Korea Standard Time)
+			ZonedDateTime startDateKST = startDate.atZone(ZoneId.of("UTC"))
+					.withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+			ZonedDateTime lastDateKST = lastDate.atZone(ZoneId.of("UTC")).withZoneSameInstant(ZoneId.of("Asia/Seoul"));
+
+			map.put("start_date", Timestamp.valueOf(startDateKST.toLocalDateTime()));
+			map.put("last_date", Timestamp.valueOf(lastDateKST.toLocalDateTime()));
+
+			service.update(map);
+			return ResponseEntity.ok("수정이 완료되었습니다.");
+		} catch (Exception e) {
+			log.error("Error updating group", e);
+			return ResponseEntity.status(500).body("수정에 실패했습니다.");
+		}
 	}
-	
+
 }

@@ -31,7 +31,9 @@ public class Group1ServiceImpl implements Group1Service {
 	}
 
 	@Override
-	public void update(String gId) {
-		mapper.update(gId);
+	public void update(Map<String, Object> map) {
+		mapper.update(map);
 	}
+
+	
 }

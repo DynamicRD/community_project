@@ -13,5 +13,5 @@ public interface Group1Mapper {
 
 	public Map<String, Object> read(String gId);
 
-	public void update(String gId); 
+	public void update(Map<String, Object> map); 
 }

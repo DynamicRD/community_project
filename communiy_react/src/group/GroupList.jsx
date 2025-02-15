@@ -13,7 +13,7 @@ function GroupList({ type }) {
   const [items, setGroupList] = useState([]);
 
   useEffect(() => {
-    console.log("type:"+type);
+    console.log('type:' + type);
     fetch(`http://localhost:8080/group/list?type=${type}`)
       .then((res) => res.json())
       .then((data) => {
@@ -182,9 +182,15 @@ function GroupList({ type }) {
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-              {filteredItems.map((item) => (
-                <GroupItem key={item.G_ID} item={item} />
-              ))}
+            {filteredItems.length > 0 ? (
+                filteredItems.map((item) => (
+                  <GroupItem key={item.G_ID} item={item} />
+                ))
+              ) : (
+                <div className='d-flex justify-content-center w-100'>
+                  <h3 className="no-meetings m-5">모임이 없습니다.</h3>
+                </div>
+              )}
             </div>
           </div>
           <ul className="pagination pagination-sm justify-content-center m-5">
@@ -215,7 +221,6 @@ function GroupList({ type }) {
             </li>
           </ul>
         </div>
-        
       </Container>
     </>
   );
