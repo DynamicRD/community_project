@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.review.mapper.ReviewMapper">
+
+
+
+
+<!--	<insert id="insertReview">
+		INSERT INTO REVIEW (R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, STAR)
+		VALUES (REVIEW_SEQ.NEXTVAL, 1, 1, #{title}, #{imageUrl, jdbcType=BLOB},
+		#{content}, #{star})
+	</insert>
+-->
+
+	<select id="listReview" resultType="java.util.Map">
+		SELECT REVIEW_NO, NO, GROUP_NO, REVIEW_TITLE, IMG_URL, CONTENT, VIEWS,
+		COMMENTS, STAR,
+		CATEGORY FROM REVIEW ORDER BY REVIEW_NO DESC
+	</select>
+
+	<insert id="insertReview">
+		INSERT INTO REVIEW (REVIEW_NO, NO, GROUP_NO, REVIEW_TITLE, IMG_URL,
+		CONTENT, STAR)
+		VALUES (REVIEW_SEQ.NEXTVAL, 1, 1, #{title}, #{fileName}, #{content},
+		#{star})
+	</insert>
+
+	<select id="readReview" resultType="java.util.Map">
+		SELECT REVIEW_NO, NO, GROUP_NO, REVIEW_TITLE, IMG_URL, CONTENT, VIEWS,
+		COMMENTS, STAR,
+		CATEGORY FROM REVIEW WHERE REVIEW_NO = #{idx}
+	</select>
+
+	<insert id="replyInsert">
+		INSERT INTO COMMENTS (COMMENTS_NO, NO, NICKNAME, REVIEW_NO, CONTENT) VALUES
+		(COMMENTS_SEQ.NEXTVAL, #{userId}, #{userNickName}, #{reviewNo}, #{content})
+	</insert>
+
+	<select id="replyList" resultType="java.util.Map">
+		SELECT COMMENTS_NO, NO, NICKNAME, REVIEW_NO, CONTENT, TO_CHAR(REG_DATE, 'yyyy-MM-dd HH24:MI') AS REG_DATE FROM
+		COMMENTS ORDER BY COMMENTS_NO
+	</select>
+</mapper>

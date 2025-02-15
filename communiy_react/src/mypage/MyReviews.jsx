@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Container, Nav, Pagination } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useNavigate } from 'react-router-dom';
@@ -14,14 +14,26 @@ export default function MyReviews() {
       </Pagination.Item>
     );
   }
-  const radioValue = useRef();
-  const radioValueChecked = () => {
-    radioValue.current = 'checked';
-    console.log(radioValue);
+
+  // 라디오 버튼 선택 값을 저장할 상태 변수
+  const [selectedRadioValue, setSelectedRadioValue] = useState(null);
+
+  // 라디오 버튼 클릭 시 값 변경
+  const radioValueChecked = (value) => {
+    setSelectedRadioValue(value);
   };
+
+  useEffect(() => {
+    if (selectedRadioValue !== null) {
+      console.log(selectedRadioValue); // 상태가 변경된 후 로그 출력
+    }
+  }, [selectedRadioValue]);
+
+  //fetch로 모임 값 가져오고
 
   const completedMeetings = [
     {
+      no: 1,
       name: '테크 세미나',
       date: '2025-01-10',
       endDate: '2025-01-10',
@@ -29,6 +41,7 @@ export default function MyReviews() {
       cost: '₩ 30,000',
     },
     {
+      no: 2,
       name: '사진 동아리',
       date: '2025-01-15',
       endDate: '2025-01-15',
@@ -36,6 +49,7 @@ export default function MyReviews() {
       cost: '₩ 20,000',
     },
     {
+      no: 3,
       name: '사진 동아리',
       date: '2025-01-15',
       endDate: '2025-01-15',
@@ -43,6 +57,7 @@ export default function MyReviews() {
       cost: '₩ 20,000',
     },
     {
+      no: 4,
       name: '사진 동아리',
       date: '2025-01-15',
       endDate: '2025-01-15',
@@ -54,17 +69,31 @@ export default function MyReviews() {
   return (
     <>
       <Container>
+        <input type="radio" name="radio" />
+        <input type="radio" name="radio" />
+        <input type="radio" name="radio" />
+
         <div className="mypage_review_list mt-5 w-100">
           <div className="d-flex justify-content-start gap-3 mb-4">
             <table className="mypage_review_table">
-              {completedMeetings.map((object) => (
-                <tbody key={object.no}>
+              {completedMeetings.map((object, index) => (
+                <tbody key={index}>
                   <tr>
                     <td>
-                      <input type="radio" name="radio" ref={radioValue} />
+                      {/* 라디오 버튼 */}
+                      <input
+                        type="radio"
+                        name="radio"
+                        value={object.no} // 각 라디오 버튼에 고유한 value를 설정
+                        checked={selectedRadioValue === object.no} // 선택된 값과 일치하면 체크
+                        onChange={() => radioValueChecked(object.no)} // 클릭 시 값 업데이트
+                      />
                     </td>
-                    <Nav.Link href="#" onClick={radioValueChecked}>
-                      <tr className="d-flex m-4">
+                    <Nav.Link
+                      href="#"
+                      onClick={() => radioValueChecked(object.no)}
+                    >
+                      <div className="d-flex m-4">
                         <td>
                           <img
                             src="/images/review1.png"
@@ -73,7 +102,7 @@ export default function MyReviews() {
                             className="mypage_review_table_img"
                           />
                         </td>
-                        <tr className="d-flex flex-column ms-4 w-100 justify-content-center">
+                        <div className="d-flex flex-column ms-4 w-100 justify-content-center">
                           <td>
                             <span
                               style={{ fontSize: '30px', fontWeight: '900' }}
@@ -81,7 +110,7 @@ export default function MyReviews() {
                               {object.name}
                             </span>
                           </td>
-                          <tr className="d-flex justify-content-between align-items-center">
+                          <div className="d-flex justify-content-between align-items-center">
                             <td style={{ fontSize: '14px' }}>
                               <span>{object.date}~</span>
                               <span> {object.endDate}</span>
@@ -92,14 +121,14 @@ export default function MyReviews() {
                             >
                               {object.role}
                             </td>
-                          </tr>
+                          </div>
                           <td>
                             <span style={{ fontWeight: '900' }}>
                               {object.cost}
                             </span>
                           </td>
-                        </tr>
-                      </tr>
+                        </div>
+                      </div>
                     </Nav.Link>
                   </tr>
                 </tbody>

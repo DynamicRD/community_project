@@ -1,5 +1,5 @@
 import './MyPage.css';
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Container,
   Row,
@@ -8,15 +8,34 @@ import {
   Table,
   Pagination,
 } from 'react-bootstrap';
-import { Link } from 'react-router-dom'; // Link 임포트
+import { Link, useNavigate } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AuthContext } from '../context/AuthContext'; //
 
 function MyPage() {
-  // 상태 관리: 알림 펼침 여부
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const [showMore, setShowMore] = useState(false);
-  // 모임 타입 상태 (진행중인 모임, 종료된 모임, 찜한 모임)
-  const [activeTab, setActiveTab] = useState('ongoing'); // 기본값: 진행중인 모임
+  const [activeTab, setActiveTab] = useState('ongoing'); // 기본값:
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (userData && isAuthenticated !== false) {
+      const pathSegments = window.location.pathname.split('/');
+      const pageId = pathSegments[pathSegments.length - 1];
+
+      if (userData?.no.toString() !== pageId) {
+        alert(`접근 권한이 없습니다.`);
+        navigate('/');
+      }
+    }
+  }, [isAuthenticated, userData, navigate]);
+  useEffect(() => {
+    console.log(userData);
+    if (userData == null) {
+      alert(`접근 권한이 없습니다.`);
+      navigate('/');
+    }
+  }, [userData]);
   // 알림 내용
   const notifications = [
     '모임1의 참가자 리뷰가 추가되었습니다!',
@@ -98,7 +117,7 @@ function MyPage() {
     return (
       <Table bordered className="mt-3">
         <thead>
-          <tr className="table-success">
+          <tr className="table-secondary">
             <th>모임명</th>
             <th>참가일시</th>
             <th>종료일자</th>
@@ -147,8 +166,10 @@ function MyPage() {
           <hr />
           <div className="container bg-light text-dark p-4">
             <div className="text-end">
-              <Link to="/mypage/profilechange">
-                <Button variant="custom">프로필 수정하기</Button>
+              <Link to={`/mypage/profilechange/${userData?.no}`}>
+                <Button className="myPageBtn" variant="danger">
+                  프로필 수정하기
+                </Button>
               </Link>
             </div>
             <div className="text-center mt-3">
@@ -156,14 +177,29 @@ function MyPage() {
             </div>
           </div>
           <div className="btn-group-justified m-3">
-            <Link to="/mypage/infochange">
-              <Button variant="light m-3">개인 정보 수정</Button>
+            <Link to={`/mypage/infochange/${userData?.no}`}>
+              <Button
+                variant="light m-3"
+                style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
+              >
+                개인 정보 수정
+              </Button>
             </Link>
-            <Link to="/mypage/amounthis">
-              <Button variant="light m-3">거래 내역 확인</Button>
+            <Link to={`/mypage/amounthis/${userData?.no}`}>
+              <Button
+                variant="light m-3"
+                style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
+              >
+                거래 내역 확인
+              </Button>
             </Link>
-            <Link to="/mypage/reviews">
-              <Button variant="light m-3">작성 리뷰 확인</Button>
+            <Link to={`/mypage/reviews/${userData?.no}`}>
+              <Button
+                variant="light m-3"
+                style={{ border: '1px solid rgba(255, 47, 0, 0.65)' }}
+              >
+                작성 리뷰 확인
+              </Button>
             </Link>
           </div>
         </div>
@@ -175,8 +211,10 @@ function MyPage() {
               <h5>보유금액</h5>
               <div className="h3">₩ 500,000</div>
               <div className="mt-3">
-                <Link to="/mypage/charge">
-                  <Button>충전하기</Button>
+                <Link to={`/mypage/charge/${userData?.no}`}>
+                  <Button className="myPageBtn" variant="danger">
+                    충전하기
+                  </Button>
                 </Link>
               </div>
             </div>
@@ -197,8 +235,8 @@ function MyPage() {
 
           {/* 더보기 / 접기 버튼 */}
           <Button
-            variant="custom"
-            className="mt-3"
+            className="myPageBtn mt-3"
+            variant="danger"
             onClick={() => setShowMore(!showMore)}
           >
             {showMore ? '접기' : '더보기'}
@@ -209,19 +247,34 @@ function MyPage() {
         <div className="border-section mt-4">
           <div className="btn-group m-2">
             <Button
-              className="m-2"
+              className="typeClub m-2"
+              variant="light"
+              style={{
+                borderRadius: '5px',
+                color: 'white',
+              }}
               onClick={() => setActiveTab('ongoing')}
             >
               진행중인 모임
             </Button>
             <Button
-              className="m-2"
+              className="typeClub m-2"
+              variant="light"
+              style={{
+                borderRadius: '5px',
+                color: 'white',
+              }}
               onClick={() => setActiveTab('completed')}
             >
               종료된 모임
             </Button>
             <Button
-              className="m-2"
+              className="typeClub m-2"
+              variant="light"
+              style={{
+                borderRadius: '5px',
+                color: 'white',
+              }}
               onClick={() => setActiveTab('saved')}
             >
               찜한 모임
@@ -231,7 +284,7 @@ function MyPage() {
           {/* 해당 모임 테이블 렌더링 */}
           {renderTable()}
 
-          <Pagination className="d-flex justify-content-center">
+          <Pagination className="d-flex justify-content-center ">
             <Pagination.Prev />
             <Pagination.Item>{1}</Pagination.Item>
             <Pagination.Item>{2}</Pagination.Item>
@@ -241,7 +294,7 @@ function MyPage() {
           <div className="text-center">
             {' '}
             <Link to="/mypage/infodelete">
-              <Button variant="danger" block className="mt-3">
+              <Button block className="myPageBtn mt-3" variant="danger">
                 회원탈퇴
               </Button>
             </Link>

@@ -16,5 +16,4 @@ public class VisitLog {
     private String ip;
     private LocalDateTime visitTime;
     private String url;
-    
 }

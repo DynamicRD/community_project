@@ -98,7 +98,6 @@ export default function Signup() {
     addcode: '',
     address01: '',
     address02: '',
-
     valid: '',
   });
 
@@ -296,6 +295,7 @@ export default function Signup() {
     console.log(isNicknameAvailable);
     console.log(isIdAvailable);
     console.log(isPhoneChecked);
+    console.log(isPhoneDuplicateChecked);
 
     if (
       isValid &&
@@ -349,26 +349,30 @@ export default function Signup() {
   };
 
   return (
-    <Container className="mt-5 mb-5 bg-light p-5">
+    <Container className="registForm mt-5 mb-5">
       <div className="infochange">
-        <h2 className="text-center">회원가입</h2>
-        <Form onSubmit={handleSubmit}>
+        <h2 className="text-center mt-5">회원가입</h2>
+        <Form onSubmit={handleSubmit} className="OnSubmitForm">
           {/* 아이디 입력 */}
-          <Form.Group as={Row} className="mb-3">
-            <Form.Label column sm={2}>
-              아이디
-            </Form.Label>
+          <Form.Group as={Row} className="inputIdGroup mb-2">
+            <Form.Label column>아이디</Form.Label>
             <Col sm={10}>
-              <InputGroup>
+              <InputGroup className="inputIdGroup" bsPrefix="./LoginPage.css">
                 <FormControl
                   type="text"
                   name="id"
                   value={formData.id}
                   onChange={handleChange}
+                  style={{
+                    width: '68%',
+                    borderRight: 'none',
+                    borderRadius: '5px 0px 0px 5px',
+                  }}
                 />
                 <Button
                   variant="outline-secondary"
                   onClick={handleDuplicateCheck}
+                  className="inputIdBtn"
                 >
                   중복확인
                 </Button>
@@ -378,21 +382,27 @@ export default function Signup() {
           </Form.Group>
 
           {/* 닉네임 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               닉네임
             </Form.Label>
             <Col sm={10}>
-              <InputGroup>
+              <InputGroup className="inputIdGroup" bsPrefix="./LoginPage.css">
                 <FormControl
                   type="text"
                   name="nickname"
                   value={formData.nickname}
                   onChange={handleChange}
+                  style={{
+                    width: '68%',
+                    borderRight: 'none',
+                    borderRadius: '5px 0px 0px 5px',
+                  }}
                 />
                 <Button
                   variant="outline-secondary"
                   onClick={handleNickDuplicateCheck}
+                  className="inputIdBtn"
                 >
                   중복확인
                 </Button>
@@ -404,7 +414,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 비밀번호 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               비밀번호
             </Form.Label>
@@ -415,12 +425,14 @@ export default function Signup() {
                 value={formData.pass}
                 onChange={handleChange}
               />
-              {errors.pass && <div className="text-danger">{errors.pass}</div>}
+              {errors.pass && (
+                <div className="errors_pass text-danger">{errors.pass}</div>
+              )}
             </Col>
           </Form.Group>
 
           {/* 비밀번호 확인 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               비밀번호 확인
             </Form.Label>
@@ -438,7 +450,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 이름 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               이름
             </Form.Label>
@@ -454,7 +466,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 성별 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               성별
             </Form.Label>
@@ -488,7 +500,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 전화번호 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               전화번호
             </Form.Label>
@@ -498,7 +510,7 @@ export default function Signup() {
                   name="phone1"
                   value={formData.phone1}
                   onChange={handleChange}
-                  className="phone-select"
+                  className="phone-select me-1"
                 >
                   <option value="02">02</option>
                   <option value="010">010</option>
@@ -507,24 +519,28 @@ export default function Signup() {
                 <FormControl
                   type="text"
                   name="phone2"
+                  id="phone"
                   value={formData.phone2}
                   onChange={handleChange}
-                  className="phone-input"
+                  className="phone-input me-1"
                 />
                 <span>-</span>
                 <FormControl
                   type="text"
                   name="phone3"
+                  id="phone"
                   value={formData.phone3}
                   onChange={handleChange}
                   className="phone-input"
+                  style={{
+                    borderRight: 'none',
+                    borderRadius: '5px 0px 0px 5px',
+                  }}
                 />
                 {/* 인증번호 전송 버튼 */}
                 <Button
                   variant="outline-secondary"
-                  style={{
-                    width: '270px',
-                  }}
+                  className="numberSummit"
                   onClick={async () => {
                     const form = new FormData();
                     form.append('number1', formData.phone1);
@@ -564,13 +580,7 @@ export default function Signup() {
                     }
                   }}
                 >
-                  <span
-                    style={{
-                      fontSize: '15px',
-                    }}
-                  >
-                    인증번호발송
-                  </span>
+                  <span>번호발송</span>
                 </Button>
               </div>
 
@@ -584,44 +594,52 @@ export default function Signup() {
           </Form.Group>
 
           {/* 인증번호 체크 버튼 */}
-          <div style={{ display: isVisible === true ? 'block' : 'none' }}>
-            <Form.Label column sm={2}>
-              인증번호입력
-            </Form.Label>
-            <input
-              type="text"
-              name="valid"
-              ref={valid}
-              className="validCode me-4"
-              style={{ width: '100px' }}
-              onChange={handleChange}
-            />
-            <Button
-              variant="outline-secondary"
-              onClick={() => {
-                fetch('http://localhost:8080/send-one/number')
-                  .then((response) => {
-                    return response.json();
-                  })
-                  .then((data) => {
-                    if (Number(valid.current.value) === data) {
-                      setIsPhoneChecked(true);
-                      alert('인증이 완료 되었습니다');
-                    } else {
-                      alert('인증에 실패하였습니다');
-                      valid.current.value = '';
-                      valid.current.focus();
-                    }
-                  });
-              }}
-            >
-              인증확인
-            </Button>
-            {errors.valid && <div className="text-danger">{errors.valid}</div>}
+          <div
+            style={{ display: isVisible === true ? 'block' : 'none' }}
+            className="mb-2"
+          >
+            <Form.Group as={Row} className="mb-2">
+              <Form.Label column sm={2}>
+                인증번호입력
+              </Form.Label>
+              <input
+                type="text"
+                name="valid"
+                ref={valid}
+                className="validCode"
+                style={{ width: '120px', padding: '6px' }}
+                onChange={handleChange}
+              />
+              <Button
+                variant="outline-secondary"
+                className="validButton"
+                onClick={() => {
+                  fetch('http://localhost:8080/send-one/number')
+                    .then((response) => {
+                      return response.json();
+                    })
+                    .then((data) => {
+                      if (Number(valid.current.value) === data) {
+                        setIsPhoneChecked(true);
+                        alert('인증이 완료 되었습니다');
+                      } else {
+                        alert('인증에 실패하였습니다');
+                        valid.current.value = '';
+                        valid.current.focus();
+                      }
+                    });
+                }}
+              >
+                인증확인
+              </Button>
+              {errors.valid && (
+                <div className="errorValid text-danger">{errors.valid}</div>
+              )}
+            </Form.Group>
           </div>
 
           {/* 생년월일 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               생년월일
             </Form.Label>
@@ -640,7 +658,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 이메일 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               이메일
             </Form.Label>
@@ -658,11 +676,11 @@ export default function Signup() {
           </Form.Group>
 
           {/* 우편번호 찾기 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               우편번호
             </Form.Label>
-            <Col sm={4}>
+            <Col sm={5}>
               <InputGroup>
                 <FormControl
                   type="text"
@@ -688,7 +706,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 주소 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               주소
             </Form.Label>
@@ -705,7 +723,7 @@ export default function Signup() {
           </Form.Group>
 
           {/* 상세주소 입력 */}
-          <Form.Group as={Row} className="mb-3">
+          <Form.Group as={Row} className="mb-2">
             <Form.Label column sm={2}>
               상세주소
             </Form.Label>
@@ -721,9 +739,14 @@ export default function Signup() {
           </Form.Group>
 
           {/* 버튼들 */}
-          <Form.Group as={Row} className="mb-3 text-center">
-            <Col sm={12}>
-              <Button variant="primary" type="submit">
+          <Form.Group as={Row} className="btnClub mt-4 text-center">
+            <Col sm={12} className="mb-4">
+              <Button
+                className="registSummtBtn"
+                variant="light"
+                style={{ color: 'white' }}
+                type="submit"
+              >
                 가입하기
               </Button>
               &nbsp;&nbsp;

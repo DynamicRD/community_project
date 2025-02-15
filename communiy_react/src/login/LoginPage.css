@@ -30,5 +30,60 @@
 }
 
 .buttonLogin:hover {
+  transition: 0.3s all;
   background-color: #ff461dd2;
+}
+
+.inputIdGroup {
+  display: flex;
+  align-items: center;
+}
+
+.inputIdBtn {
+  font-size: 16px;
+  padding: 6px;
+  border-radius: 0px 5px 5px 0px;
+  width: 70px;
+  border: 1px solid #6c757d;
+  color: #6c757d;
+}
+
+.inputIdBtn:hover {
+  transition: 0.2s all;
+  background-color: #6c757d;
+  color: white;
+}
+
+.inputIdForm {
+  height: 35px;
+  padding: 7px;
+  font-size: 15px;
+  width: 70%;
+}
+.inputIdForm:focus {
+  border: 3px solid #bdd7fa;
+}
+
+.numberSummit {
+  padding: 6px 0px 6px 0px;
+  border-radius: 0px 5px 5px 0px;
+
+  width: 84px;
+  border: 1px solid #6c757d;
+  color: #6c757d;
+}
+
+.validButton {
+  width: 90px;
+  border-radius: 0px 5px 5px 0px;
+}
+
+.validCode {
+  margin-left: 12px;
+  border-radius: 5px 0px 0px 5px;
+  border-right: none;
+}
+
+.OnSubmitForm {
+  margin-left: 110px;
 }

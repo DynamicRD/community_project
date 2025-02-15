@@ -35,7 +35,7 @@ public class VisitInterceptor implements HandlerInterceptor {
 
 		// 방문 기록을 저장
 		service.insert(visitLog);
-		System.out.println(visitLog);
+//		System.out.println(visitLog);
 
 		// 요청 처리 계속 진행
 		return true;

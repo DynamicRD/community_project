@@ -1,14 +1,16 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { Button, Container, Nav } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import './Regist.css';
 import HorizonLine from './HorizonLine';
+import axios from 'axios';
+import { AuthContext } from '../context/AuthContext'; //
 
 export default function Regist() {
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
   const content = useRef();
   const title = useRef();
-  const selectRef = useRef();
   const ratingRef = useRef();
 
   const completedMeetings = [
@@ -42,6 +44,44 @@ export default function Regist() {
     },
   ];
 
+  //파일이름 설정
+  //이미지 파일 url경로 설정
+  const [image, setImage] = useState(null);
+  const loadImg = (event) => {
+    setImage(event.target.files[0]);
+  };
+
+  const uploadImage = async () => {
+    if (!image) {
+      alert('이미지를 선택하세요.');
+      return;
+    }
+
+    const formData = new FormData();
+    //위에과정에서 지정한 image경로를 해당 백앤드에 전달
+
+    formData.append('image', image);
+    formData.append('title', title.current.value);
+    formData.append('content', content.current.value);
+    formData.append('star', ratingRef.current.value); // 예시로 5점
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/review/insert',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('업로드 성공:', response.data);
+      navigate('/review');
+    } catch (error) {
+      console.error('업로드 실패:', error);
+    }
+  };
+
   return (
     <Container>
       <div className="review_register">
@@ -68,13 +108,17 @@ export default function Regist() {
                 />
               </p>
               <div className="writer mb-3">
-                <span>문정배</span>
+                <span>{userData?.nickname}</span>
               </div>
             </div>
             <div className="d-flex justify-content-between">
               <div>
-                <select name="rating" id="review_rating" ref={ratingRef}>
-                  <option value="0">☆☆☆☆☆</option>
+                <select
+                  name="rating"
+                  id="review_rating"
+                  ref={ratingRef}
+                  defaultValue={5}
+                >
                   <option value="1">★☆☆☆☆</option>
                   <option value="2">★★☆☆☆</option>
                   <option value="3">★★★☆☆</option>
@@ -99,23 +143,17 @@ export default function Regist() {
               </div>
               <div className="d-flex  justify-content-between align-items-center">
                 <div className="review_register_button  mb-3">
-                  <input type="file" className="file" />
+                  <input
+                    type="file"
+                    className="file"
+                    onChange={(e) => loadImg(e)}
+                  />
                 </div>
                 <div>
                   <Button
                     className="review_register_btn ms-3 justify-content-end me-2"
                     onClick={() => {
-                      const form = new FormData();
-                      form.append('category', selectRef.current.value);
-                      form.append('title', title.current.value);
-                      form.append('content', content.current.value);
-                      form.append('star', ratingRef.current.value);
-                      fetch('http://localhost:8080/review/insert', {
-                        method: 'post',
-                        body: form,
-                      }).then(() => {
-                        navigate('/review');
-                      });
+                      uploadImage();
                     }}
                   >
                     작성

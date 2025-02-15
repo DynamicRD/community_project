@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { Loader } from "@googlemaps/js-api-loader";
 
-export default function GoogleMap({address, lat, lng}) {
+export default function GoogleMap({addr1, latitude, longitude}) {
   useEffect(() => {
     // Google Maps API 로드
     const loader = new Loader({
@@ -11,8 +11,8 @@ export default function GoogleMap({address, lat, lng}) {
 
     loader.load().then(() => {
       // API가 로드된 후에 google 객체 사용 가능
-      const mapLat = parseFloat(lat) || 37.5007861; // lat 값이 없다면 기본 서울 위도
-      const mapLng = parseFloat(lng) || 127.0368861; // lng 값이 없다면 기본 서울 경도
+      const mapLat = parseFloat(latitude) || 37.5007861; // lat 값이 없다면 기본 서울 위도
+      const mapLng = parseFloat(longitude) || 127.0368861; // lng 값이 없다면 기본 서울 경도
 
       // google 객체를 사용하려면 window.google로 접근
       const map = new window.google.maps.Map(document.getElementById("map"), {
@@ -23,11 +23,11 @@ export default function GoogleMap({address, lat, lng}) {
       const marker = new window.google.maps.Marker({
         position: { lat: mapLat, lng: mapLng },
         map: map,
-        title: address || "주소 없음", // address가 없으면 기본 텍스트
+        title: addr1 || "주소 없음", // address가 없으면 기본 텍스트
       });
 
       const infoWindow = new window.google.maps.InfoWindow({
-        content: `<p>${address || "주소 없음"}</p>`,
+        content: `<p>${addr1 || "주소 없음"}</p>`,
       });
 
       marker.addListener("click", () => {
@@ -36,7 +36,7 @@ export default function GoogleMap({address, lat, lng}) {
     }).catch((error) => {
       console.error("Error loading Google Maps API:", error);
     });
-  }, [address, lat, lng]);
+  }, [addr1, latitude, longitude]);
 
   return (
     <>

@@ -1,51 +1,66 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
-import { Link } from 'react-router';
-
-// 목업 데이터
-const mockData = [
-  {
-    historyNo: 1,
-    amount: 5000,
-    category: '충전', // 분류 항목
-    regDate: '2025-02-01T12:00:00',
-  },
-  {
-    historyNo: 2,
-    amount: 10000,
-    category: '환불', // 분류 항목
-    regDate: '2025-02-02T15:30:00',
-  },
-  {
-    historyNo: 3,
-    amount: 15000,
-    category: '모임참여', // 분류 항목
-    regDate: '2025-02-03T10:45:00',
-  },
-];
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 function MyAmountHistory() {
-  const [coinList, setCoinList] = useState([]);
+  const { isAuthenticated, userData } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // useEffect 안에서 목업 데이터를 설정
   useEffect(() => {
-    const fetchCoinData = () => {
+    if (userData && isAuthenticated !== false) {
+      const pathSegments = window.location.pathname.split('/');
+      const pageId = pathSegments[pathSegments.length - 1];
+
+      if (userData?.no.toString() !== pageId) {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+      }
+    }
+  }, [isAuthenticated, userData, navigate]);
+  useEffect(() => {
+    console.log(userData);
+    if (userData == null) {
+      alert('접근 권한이 없습니다.');
+      navigate('/');
+    }
+  }, [userData]);
+  const [coinList, setCoinList] = useState([]);
+  const { userId } = useParams();
+  let num = 1;
+
+  useEffect(() => {
+    const fetchCoinData = async () => {
       try {
-        // 목업 데이터를 coinList에 설정
-        setCoinList(mockData);
+        const response = await fetch(
+          `http://localhost:8080/mypage/transactionHistory?no=${userData?.no}`,
+          {
+            method: 'GET',
+
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error('데이터를 불러오는 데 실패했습니다.');
+        }
+
+        const data = await response.json();
+        setCoinList(data);
       } catch (err) {
-        setError('데이터를 불러오는 데 오류가 발생했습니다.');
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
     fetchCoinData();
-  }, []);
+  }, [userId]);
 
-  // 날짜 형식화 함수 (단순히 ISO 형식으로 변환)
   const formatDate = (date) => {
     const formattedDate = new Date(date);
     return formattedDate.toISOString().slice(0, 19).replace('T', ' ');
@@ -53,45 +68,43 @@ function MyAmountHistory() {
 
   return (
     <Container className="mt-5 p-5 w-75">
-      <div>
-        <main style={{ textAlign: 'center' }}>
-          <h2>거래 내역</h2>
+      <main style={{ textAlign: 'center' }}>
+        <h2>거래 내역</h2>
 
-          {loading ? (
-            <p>로딩 중...</p>
-          ) : error ? (
-            <p>{error}</p>
-          ) : coinList.length === 0 ? (
-            <p>목록이 비어 있습니다.</p>
-          ) : (
-            <Table bordered hover striped responsive="md" className="mt-4">
-              <thead>
-                <tr>
-                  <th>번호</th>
-                  <th>분류</th>
-                  <th>금액</th>
-                  <th>날짜</th>
+        {loading ? (
+          <p>로딩 중...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : coinList.length === 0 ? (
+          <p>목록이 비어 있습니다.</p>
+        ) : (
+          <Table bordered hover striped responsive="md" className="mt-4">
+            <thead>
+              <tr>
+                <th>번호</th>
+                <th>분류</th>
+                <th>금액</th>
+                <th>날짜</th>
+              </tr>
+            </thead>
+            <tbody>
+              {coinList.map((chargeCoin) => (
+                <tr key={chargeCoin.type}>
+                  <td>{num++}</td>
+                  <td>{chargeCoin.type}</td>
+                  <td>{chargeCoin.amount}</td>
+                  <td>{formatDate(chargeCoin.regDate)}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {coinList.map((chargeCoin) => (
-                  <tr key={chargeCoin.historyNo}>
-                    <td>{chargeCoin.historyNo}</td>
-                    <td>{chargeCoin.category}</td>
-                    <td>{chargeCoin.amount}</td>
-                    <td>{formatDate(chargeCoin.regDate)}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          )}
-          <Link to="/mypage">
-            <Button variant="secondary" block className="mt-3">
-              돌아가기
-            </Button>
-          </Link>
-        </main>
-      </div>
+              ))}
+            </tbody>
+          </Table>
+        )}
+        <Link to={`/mypage/${userData?.no}`}>
+          <Button variant="secondary" className="mt-3">
+            돌아가기
+          </Button>
+        </Link>
+      </main>
     </Container>
   );
 }

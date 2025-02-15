@@ -7,21 +7,14 @@
   font-family: 'Freesentation-9Black';
 }
 
-@font-face {
-  font-family: 'Freesentation-9Black';
-  src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404@1.0/Freesentation-9Black.woff2')
-    format('woff2');
-  font-weight: 800;
-  font-style: normal;
-}
-
-@font-face {
+/* @font-face {
   font-family: 'Pretendard-Regular';
   src: url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
     format('woff');
   font-weight: 400;
   font-style: normal;
-}
+} */
+
 .table_td_title {
   font-family: 'Pretendard-Regular';
   font-weight: 900;
@@ -29,7 +22,14 @@
   font-size: large;
   width: 70%;
 }
-
+.title_link {
+  color: black;
+  text-decoration: none;
+}
+.title_link:hover {
+  transition: 0.5s all;
+  color: #ff6745c2;
+}
 .table_td_date {
   font-family: 'Pretendard-Regular';
   text-align: end;
@@ -77,19 +77,48 @@
 }
 
 .notice_btn span {
+  background-color: black;
   margin: 0 10px;
   padding: 10px 20px;
   border: 1px solid #ccc;
   border-radius: 20px;
+  color: white;
   cursor: pointer;
   font-size: 15px;
 }
 
 .notice_btn span:hover {
-  background-color: #000000;
+  transition: 0.5s all;
+  background-color: #ff6745c2;
   color: white;
 }
-
+.btn_group {
+  position: relative;
+  bottom: 40px;
+  left: 1040px;
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+}
+.btn_group2 {
+  position: relative;
+  bottom: -15px;
+  left: 795px;
+  width: 180px;
+  display: flex;
+  justify-content: space-between;
+}
+.btn_group3 {
+  position: relative;
+  left: 1040px;
+  bottom: 45px;
+}
+.btn_modify_remove {
+  width: 80px;
+}
+.btn_list {
+  text-decoration: none;
+}
 .btn1 {
   background-color: #ec6e43;
 }
