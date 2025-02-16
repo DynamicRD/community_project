@@ -149,6 +149,7 @@ public class MemberController {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("카카오 로그인 실패");
 		}
 	}
