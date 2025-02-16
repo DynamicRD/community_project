@@ -10,7 +10,7 @@ export default function GroupItem({item}) {
       <Link to={`/group/detail?group_no=${item.GROUP_NO}`} style={{ textDecoration: 'none', color: 'inherit' }}> 
         <div className="col">
           <div className="card h-100">
-            <img src={item.IMG_URL} className="card-img-top img-fluid" 
+            <img  src={`/images/${item.IMG_URL1}`}className="card-img-top img-fluid" 
               style={{height:"264.83px", width:"394px"}} alt="..." />
             <div className="card-body">
               <h5 className="card-title">{item.GROUP_TITLE}</h5>

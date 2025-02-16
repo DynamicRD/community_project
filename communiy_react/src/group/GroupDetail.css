@@ -43,6 +43,14 @@
   border-radius: 5px;
 }
 
+.group_detail .centered-image {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%; /* 원하는 크기로 조정 */
+  max-height: 500px;
+}
+
 .group_detail > .information p,
 .group_detail > .map .detail_address {
   color: gray;

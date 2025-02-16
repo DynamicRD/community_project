@@ -31,15 +31,53 @@ export default function GroupUpdate() {
   const price = useRef();
   const addr1 = useRef();
   const addr2 = useRef();
-  const lat = useRef();
-  const alt = useRef();
   const start_date = useRef();
   const last_date = useRef();
   const comment1 = useRef();
   const comment2 = useRef();
-  const img_url1 = useRef();
-  const img_url2 = useRef();
-  const img_url3 = useRef();
+  const [img_url1, setImg_url1] = useState();
+  const [img_url2, setImg_url2] = useState();
+  const [img_url3, setImg_url3] = useState();
+  const [imgUrl1Preview, setImgUrl1Preview] = useState(null);
+  const [imgUrl2Preview, setImgUrl2Preview] = useState(null);
+  const [imgUrl3Preview, setImgUrl3Preview] = useState(null);
+
+  const handleFileChange1 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url1(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl1Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileChange2 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url2(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl2Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileChange3 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url3(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl3Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const [formData, setFormData] = useState({
     location: '',
     coordinates: { lat: items.latitude || '', lng: items.longitude || '' },
@@ -63,18 +101,27 @@ export default function GroupUpdate() {
       last_date.current.value = lastDate.toISOString().slice(0, 16);
       comment1.current.value = items.COMMENT1 || '';
       comment2.current.value = items.COMMENT2 || '';
-      img_url1.current.value = items.IMG_URL1 || '';
-      img_url2.current.value = items.IMG_URL2 || '';
-      img_url3.current.value = items.IMG_URL3 || '';
+      setImg_url1(items.IMG_URL1 || '');
+      setImg_url2(items.IMG_URL2 || '');
+      setImg_url3(items.IMG_URL3 || '');
+      setImgUrl1Preview(items.IMG_URL1 ? `/images/${items.IMG_URL1}` : null);
+      setImgUrl2Preview(items.IMG_URL2 ? `/images/${items.IMG_URL2}` : null);
+      setImgUrl3Preview(items.IMG_URL3 ? `/images/${items.IMG_URL3}` : null);
     }
   }, [items]);
+
+  useEffect(() => {
+    setImg_url1(items.IMG_URL1 || '');
+    setImg_url2(items.IMG_URL2 || '');
+    setImg_url3(items.IMG_URL3 || '');
+  }, [items.IMG_URL1, items.IMG_URL2, items.IMG_URL3]);
 
   /**  Google Places API 자동완성 설정 */
   const autoCompleteRef = useRef(null);
 
   useEffect(() => {
     if (!window.google) return;
-  
+
     autoCompleteRef.current = new window.google.maps.places.Autocomplete(
       addr1.current
     );
@@ -175,9 +222,21 @@ export default function GroupUpdate() {
       form.append('last_date', formattedLastDate);
       form.append('comment1', comment1.current.value);
       form.append('comment2', comment2.current.value);
-      // form.append('img_url1', img_url1.current.value);
-      // form.append('img_url2', img_url2.current.value);
-      // form.append('img_url3', img_url3.current.value);
+      if (img_url1) {
+        form.append('img_url1', img_url1);
+      } else {
+        form.append('img_url1', items.IMG_URL1 || '');
+      }
+      if (img_url2) {
+        form.append('img_url2', img_url2);
+      } else {
+        form.append('img_url2', items.IMG_URL2 || '');
+      }
+      if (img_url3) {
+        form.append('img_url3', img_url3);
+      } else {
+        form.append('img_url3', items.IMG_URL3 || '');
+      }
 
       fetch(`http://localhost:8080/group/update?group_no=${group_no}`, {
         method: 'post',
@@ -321,11 +380,46 @@ export default function GroupUpdate() {
             <div className="register_body">
               <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
-                  <p>모임 대표 이미지 등록</p>
-                  <input type="file" ref={img_url1} className="mb-3" />
+                  <p>모임 대표 이미지 수정</p>
+                  <input
+                    type="file"
+                    className="mb-3"
+                    onChange={handleFileChange1}
+                  />
+                  <br />
+                  {imgUrl1Preview && (
+                    <img
+                      src={imgUrl1Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
+                  <hr />
                   <p>모임 상세 이미지 등록</p>
-                  <input type="file" ref={img_url2} />
-                  <input type="file" ref={img_url3} />
+                  <input
+                    type="file"
+                    className="mb-3"
+                    onChange={handleFileChange2}
+                  />
+                  {imgUrl2Preview && (
+                    <img
+                      src={imgUrl2Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
+                  <input
+                    type="file"
+                    className="mb-3"
+                    onChange={handleFileChange3}
+                  />
+                  {imgUrl3Preview && (
+                    <img
+                      src={imgUrl3Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
                 </div>
                 <div>
                   <Button

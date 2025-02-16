@@ -8,17 +8,17 @@
 		price, area, addr1, addr2,
 		latitude, longitude,
 		start_date,
-		last_date, comment1, comment2, type
+		last_date, comment1, comment2, type, img_url1, img_url2, img_url3
 		) VALUES (
 		group_seq.nextval, 1,
-		#{g_title}, #{category}, #{user_max},
+		#{group_title}, #{category}, #{user_max},
 		#{price}, substr(#{addr1}, 6, 2),
 		#{addr1}, #{addr2},
 		#{latitude}, #{longitude},
 		#{start_date,
 		jdbcType=DATE}, #{last_date, jdbcType=DATE},
 		#{comment1}, #{comment2},
-		#{type}
+		#{type}, #{img_url1, jdbcType=BLOB}, #{img_url2, jdbcType=BLOB},#{img_url3, jdbcType=BLOB}
 		)
 	</insert>
 
@@ -27,7 +27,8 @@
 		price, area,
 		comment2, type,
 		TO_CHAR(start_date, 'FMMonth FMDD"일"') AS
-		start_date
+		start_date,
+		img_url1
 		FROM GROUP_MORAK
 		WHERE type=#{type}
 	</select>
@@ -46,7 +47,8 @@
 		USER_MAX = #{user_max}, PRICE = #{price}, ADDR1 = #{addr1},
 		ADDR2 = #{addr2}, COMMENT1 = #{comment1}, COMMENT2 = #{comment2},
 		TYPE = #{type}, CATEGORY = #{category},
-		LATITUDE = #{latitude}, LONGITUDE = #{longitude}
+		LATITUDE = #{latitude}, LONGITUDE = #{longitude},
+		IMG_URL1 = #{img_url1, jdbcType=BLOB},IMG_URL2 = #{img_url2, jdbcType=BLOB}, IMG_URL3 = #{img_url3, jdbcType=BLOB}
 		WHERE group_no = #{group_no}
 	</update>
 </mapper>

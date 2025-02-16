@@ -20,7 +20,7 @@ import {
   faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MemberProfileView from './MemberProfileView';
 import GoogleMap from './GoogleMap';
 
@@ -94,17 +94,28 @@ export default function GroupDetailItem({ item }) {
     return `${month}/${day} ${dayOfWeek} ${hours}:${minutes}`;
   };
 
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    // 페이지 로드 시 textarea 높이를 자동으로 조정
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';  // 먼저 높이를 초기화
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;  // 텍스트 길이에 맞게 높이 조정
+    }
+  }, [item.COMMENT2]);  // COMMENT2 내용이 변경될 때마다 실행
+
   return (
     <div className="group_detail">
       <div className="information col">
         <div>
-          <Link to={`/group/${item.type}_list`}>
+          <Link to={`/group/${item.TYPE}_list`}>
             <h4>{item.TYPE === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
           </Link>
           <img
             className="img-fluid"
-            src="/images/group_image1.jpg"
+            src={`/images/${item.IMG_URL1}`}
             alt="모임 이미지"
+            style={{ width: '100%', height: '400px' }}
           />
         </div>
         <div className="information_detail">
@@ -176,14 +187,37 @@ export default function GroupDetailItem({ item }) {
         >
           우리 모임은요
         </p>
+        {item.IMG_URL2 && (
+          <img
+            className="img-fluid centered-image"
+            src={`/images/${item.IMG_URL2}`}
+            
+          />
+        )}
+        {item.IMG_URL3 && (
+          <img
+            className="img-fluid centered-image"
+            src={`/images/${item.IMG_URL3}`}
+            
+          />
+        )}
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-  <Form.Control
-    as="textarea"
-    value={item.COMMENT2}
-    readOnly
-    style={{ border: 'none', height: 'auto', overflow: 'hidden' }}
-  />
-</Form.Group>
+          <Form.Control
+            as="textarea"
+            value={item.COMMENT2}
+            readOnly
+            ref={textareaRef}
+          //   onChange={handleTextChange}
+          // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
+          style={{
+            border: 'none',
+            height: 'auto',
+            overflow: 'hidden',
+            resize: 'none', // 사용자가 직접 크기를 조정하지 못하게 설정
+          }}
+            
+          />
+        </Form.Group>
 
         {/* 📚 역삼역 일요일 아침 북클럽 모집!🌞 
           책과 함께 여유로운 일요일
