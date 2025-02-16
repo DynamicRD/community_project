@@ -1,59 +1,48 @@
 import { useContext, useEffect } from 'react';
 import { Button, Container } from 'react-bootstrap';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
 export default function SuccessPage() {
   const [searchParams] = useSearchParams();
-  const { isAuthenticated, userData } = useContext(AuthContext);
+  const { isAuthenticated, userData } = useContext(AuthContext); // useContext 호출이 빠져있어서 추가
+  const location = useLocation();
+
+  // URL의 쿼리 파라미터에서 'amount' 값을 가져옵니다.
+  const queryParams = new URLSearchParams(location.search);
+  const amount = queryParams.get('amount');
   const navigate = useNavigate();
+
   useEffect(() => {
-    if (userData && isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-
-      if (userData?.no.toString() !== pageId) {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-      }
+    if (amount && userData && userData.no) {
+      fetch('http://localhost:8080/mypage/charge', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          no: userData.no,
+          money: Number(amount),
+        }),
+      })
+        .then(async (res) => {
+          const text = await res.text(); // 응답을 먼저 텍스트로 받기
+          try {
+            const json = JSON.parse(text); // JSON 변환 시도
+            console.log('충전 성공:', json);
+          } catch (error) {
+            console.error('JSON 파싱 실패, 서버 응답:', text);
+          }
+        })
+        .catch((err) => console.error('충전 요청 실패:', err));
     }
-  }, [isAuthenticated, userData, navigate]);
-  useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
-      alert('접근 권한이 없습니다.');
-      navigate('/');
-    }
-  }, [userData]);
-  // 서버로 승인 요청 (여기서는 실제 요청을 보내는 로직을 작성할 수 있습니다)
-  // useEffect(() => {
-  //   const chargeMoney = async () => {
-  //     try {
-  //       const response = await fetch(
-  //         `http://localhost:8080/mypage/chargeMoney?no=${
-  //           userData?.no
-  //         }&cash=${2}`,
-  //         {
-  //           method: 'GET',
+  }, [amount, userData]);
 
-  //           headers: {
-  //             'Content-Type': 'application/json',
-  //           },
-  //         }
-  //       );
-
-  //       if (!response.ok) {
-  //         throw new Error('데이터를 불러오는 데 실패했습니다.');
-  //       }
-  //     } catch (err) {
-
-  //     } finally {
-
-  //     }
-  //   };
-
-  //   fetchCoinData();
-  // }, []);
   return (
     <Container className="mt-5">
       <h1>충전 성공</h1>
@@ -61,8 +50,8 @@ export default function SuccessPage() {
       <div>{`결제 금액: ${Number(
         searchParams.get('amount')
       ).toLocaleString()}원`}</div>
-      <Link to="/mypage">
-        <Button variant="secondary" block className="mt-3">
+      <Link to={`/mypage/${userData?.no}`}>
+        <Button variant="secondary" className="mt-3">
           돌아가기
         </Button>
       </Link>

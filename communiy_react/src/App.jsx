@@ -93,7 +93,7 @@ function App() {
             />
             <Route path="/mypage/reviews/:idx" element={<MyReviews />} />
             <Route path="/mypage/charge/:idx" element={<MyAmountCharge />} />
-            <Route path="/mypage/checkout" element={<Checkout />} />
+            <Route path="/mypage/checkout/:idx" element={<Checkout />} />
             <Route
               path="/mypage/checkout/success/:idx"
               element={<SuccessPage />}

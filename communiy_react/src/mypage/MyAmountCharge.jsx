@@ -61,16 +61,15 @@ export default function MyAmountCharge() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 금액이 유효한지 체크 (정수이며 1 이상)
     const money = parseInt(formData.money, 10);
 
     if (isNaN(money) || money < 1000) {
-      setError('천원 이상부터 충전할수 있습니다.');
-      return; // 유효하지 않으면 제출을 막고 에러 메시지 표시
+      setError('천원 이상부터 충전할 수 있습니다.');
+      return;
     }
 
-    // 금액을 쿼리 파라미터로 전달하며 '/mypage/checkout'로 이동
-    navigate(`/mypage/checkout?money=${money}/${userData?.no}`);
+    // URL에 노출되지 않도록 state를 통해 데이터 전달
+    navigate(`/mypage/checkout/${userData.no}`, { state: { money } });
   };
 
   return (

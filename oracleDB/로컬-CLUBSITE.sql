@@ -280,3 +280,4 @@ INSERT INTO Transaction_log (transaction_no, no, type, amount)
 VALUES (2, 22, 'Deposit', 50000);
 commit;
 select * from transaction_log;
+insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);

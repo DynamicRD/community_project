@@ -12,10 +12,12 @@ import {
 } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 export default function MyProfileChange() {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
+
   useEffect(() => {
     if (userData && isAuthenticated !== false) {
       const pathSegments = window.location.pathname.split('/');
@@ -27,17 +29,18 @@ export default function MyProfileChange() {
       }
     }
   }, [isAuthenticated, userData, navigate]);
+
   useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
+    if (!userData) {
       alert(`접근 권한이 없습니다.`);
       navigate('/');
     }
   }, [userData]);
+
   const [formData, setFormData] = useState({
-    id: '',
     pr: '',
-    profileImage: null, // 이미지 파일을 추가
+    profileImage: null,
+    no: userData.no,
   });
 
   const handleChange = (e) => {
@@ -46,7 +49,7 @@ export default function MyProfileChange() {
     if (type === 'file') {
       setFormData({
         ...formData,
-        profileImage: files[0], // 파일을 상태에 저장
+        profileImage: files[0],
       });
     } else {
       setFormData({
@@ -58,18 +61,50 @@ export default function MyProfileChange() {
 
   const handleReset = () => {
     setFormData({
-      id: '',
       pr: '',
-      profileImage: null, // 이미지 초기화
+      profileImage: null,
     });
+
+    document.getElementById('profileImageInput').value = ''; // input 초기화
   };
 
   const handleGoBack = () => {
     navigate(`/mypage/${userData?.no}`);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!formData.profileImage) {
+      alert('이미지를 선택하세요.');
+      return;
+    } else if (!formData.pr) {
+      alert('자기소개를 작성해주세요.');
+      return;
+    }
+
+    const data = new FormData();
+    data.append('pr', formData.pr);
+    data.append('no', formData.no);
+    data.append('image', formData.profileImage);
+
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/mypage/profileupdate',
+        data,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+
+      console.log('프로필 수정 성공:', response.data);
+      navigate(`/mypage/${userData.no}`);
+    } catch (error) {
+      console.error('업로드 실패:', error);
+      alert('업로드 실패');
+    }
   };
 
   return (
@@ -78,14 +113,14 @@ export default function MyProfileChange() {
         <Container className="mt-5 w-50">
           <h2 className="text-center">프로필 정보 수정</h2>
           <Form onSubmit={handleSubmit}>
-            {/* 프로필 사진 업로드 */}
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm={4}>
                 프로필 사진 업로드
               </Form.Label>
               <Col sm={10}>
-                <InputGroup className="inputIdGroup" bsPrefix="./LoginPage.css">
+                <InputGroup className="inputIdGroup">
                   <FormControl
+                    id="profileImageInput"
                     type="file"
                     name="profileImage"
                     onChange={handleChange}
@@ -103,7 +138,6 @@ export default function MyProfileChange() {
               </Col>
             </Form.Group>
 
-            {/* 자기소개 입력 */}
             <Form.Group as={Row} className="mb-3">
               <Form.Label column sm={4}>
                 자기소개
@@ -118,7 +152,6 @@ export default function MyProfileChange() {
               </Col>
             </Form.Group>
 
-            {/* 버튼들 */}
             <Form.Group as={Row} className="mb-3 text-center">
               <Col sm={12}>
                 <Button className="registSummtBtn" type="submit">

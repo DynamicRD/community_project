@@ -8,4 +8,35 @@
 		FROM Transaction_log
 		WHERE no = #{no}
 	</select>
+	<update id="insertProfile">
+		UPDATE member
+		SET self_pr = #{pr}, IMG_URL = #{fileName}
+		WHERE no = #{no}
+	</update>
+	<update id="chargeAmount">
+		UPDATE member
+		SET money = money + #{money}
+		WHERE no = #{no}
+	</update>
+    <select id="selectProfileImg"
+		resultType="String">
+		SELECT IMG_URL
+		FROM member
+		WHERE no = #{no}
+	</select>
+	<insert id="insertHistory">
+		insert into Transaction_log values (transaction_seq.nextval,#{no},#{type},#{amount},sysdate)
+	</insert>
+	<select id="getGroupMembersByUserNo" resultType="com.project.mypage.model.GroupMember">
+        SELECT 
+            mg.no,
+            gm.group_title AS groupName,
+            gm.start_date AS startDate,
+            gm.last_date AS endDate,
+            mg.status AS statues,
+            gm.price AS amount
+        FROM member_group mg
+        JOIN group_morak gm ON mg.group_no = gm.group_no
+        WHERE mg.no = #{no}
+    </select>
 </mapper>
