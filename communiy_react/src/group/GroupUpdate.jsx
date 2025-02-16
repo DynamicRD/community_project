@@ -10,11 +10,11 @@ export default function GroupUpdate() {
 
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);
-  const g_id = queryParams.get('g_id'); // 'g_id' 파라미터 값을 가져옴
+  const group_no = queryParams.get('group_no'); // 'g_id' 파라미터 값을 가져옴
   const [items, setGroupDetail] = useState({});
 
   useEffect(() => {
-    fetch(`http://localhost:8080/group/detail?g_id=${g_id}`)
+    fetch(`http://localhost:8080/group/detail?group_no=${group_no}`)
       .then((res) => res.json())
       .then((data) => {
         setGroupDetail(data);
@@ -22,9 +22,9 @@ export default function GroupUpdate() {
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, [g_id]);
+  }, [group_no]);
 
-  const g_title = useRef();
+  const group_title = useRef();
   const type = useRef();
   const category = useRef();
   const user_max = useRef();
@@ -48,7 +48,7 @@ export default function GroupUpdate() {
 
   useEffect(() => {
     if (Object.keys(items).length > 0) {
-      g_title.current.value = items.G_TITLE || '';
+      group_title.current.value = items.GROUP_TITLE || '';
       type.current.value = items.TYPE || '';
       category.current.value = items.CATEGORY || '';
       user_max.current.value = items.USER_MAX || '';
@@ -97,9 +97,9 @@ export default function GroupUpdate() {
   }, []);
 
   const handleSubmit = () => {
-    if (!g_title.current.value) {
+    if (!group_title.current.value) {
       alert('모임명을 입력해주세요.');
-      g_title.current.focus();
+      group_title.current.focus();
       return;
     }
     if (!type.current.value) {
@@ -157,7 +157,7 @@ export default function GroupUpdate() {
 
     if (confirm('수정하시겠습니까?')) {
       const form = new FormData();
-      form.append('g_title', g_title.current.value);
+      form.append('group_title', group_title.current.value);
       form.append('type', type.current.value);
       form.append('category', category.current.value);
       form.append('user_max', Number(user_max.current.value));
@@ -179,7 +179,7 @@ export default function GroupUpdate() {
       // form.append('img_url2', img_url2.current.value);
       // form.append('img_url3', img_url3.current.value);
 
-      fetch(`http://localhost:8080/group/update?g_id=${g_id}`, {
+      fetch(`http://localhost:8080/group/update?group_no=${group_no}`, {
         method: 'post',
         body: form,
       })
@@ -191,7 +191,7 @@ export default function GroupUpdate() {
         })
         .then((message) => {
           alert(message);
-          navigate(`/group/detail?g_id=${g_id}`);
+          navigate(`/group/detail?group_no=${group_no}`);
         })
         .catch((error) => {
           alert(error.message);
@@ -206,7 +206,7 @@ export default function GroupUpdate() {
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
               <b>
-                <span>{items.G_TITLE}</span> 모임 정보 수정
+                <span>{items.GROUP_TITLE}</span> 모임 정보 수정
               </b>
             </p>
           </div>
@@ -238,7 +238,7 @@ export default function GroupUpdate() {
                   <option value="edu">교육</option>
                 </Form.Select>
                 <Form.Label className="mt-3">모임명</Form.Label>
-                <Form.Control type="text" className="w-50" ref={g_title} />
+                <Form.Control type="text" className="w-50" ref={group_title} />
                 <div className="d-flex flex-row">
                   <div className="mt-3">
                     <Form.Label>모임정원</Form.Label>

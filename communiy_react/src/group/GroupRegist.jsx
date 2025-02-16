@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './GroupRegist.css';
 import { Button, Col, Container, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
 import Form from 'react-bootstrap/Form';
 
 export default function GroupRegist() {
-  const g_title = useRef();
+  const group_title = useRef();
   const type = useRef();
   const category = useRef();
   const user_max = useRef();
@@ -64,9 +63,9 @@ export default function GroupRegist() {
 
 
   const handleSubmit = () => {
-    if (!g_title.current.value) {
+    if (!group_title.current.value) {
       alert('모임명을 입력해주세요.');
-      g_title.current.focus();
+      group_title.current.focus();
       return;
     }
     if (!type.current.value) {
@@ -115,7 +114,7 @@ export default function GroupRegist() {
     }
 
     if (confirm('신청하시겠습니까?')) {
-      form.append('g_title', g_title.current.value);
+      form.append('group_title', group_title.current.value);
       form.append('type', type.current.value);
       form.append('category', category.current.value);
       form.append('user_max', Number(user_max.current.value));
@@ -146,10 +145,20 @@ export default function GroupRegist() {
         method: 'post',
         // encType: 'multipart/form-data',
         body: form,
-      }).then(() => {
-        alert('신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.');
-        history.go(-1);
-      });
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('신청에 실패했습니다. 다시 시도해주세요.');
+          }
+          return response.text();
+        })
+        .then((message) => {
+          alert(message);
+          history.go(-1);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
     }
   };
 
@@ -190,7 +199,7 @@ export default function GroupRegist() {
                   <option value="edu">교육</option>
                 </Form.Select>
                 <Form.Label className="mt-3">모임명</Form.Label>
-                <Form.Control type="text" className="w-50" ref={g_title} />
+                <Form.Control type="text" className="w-50" ref={group_title} />
                 <div className="d-flex flex-row">
                   <div className="mt-3">
                     <Form.Label>모임정원</Form.Label>

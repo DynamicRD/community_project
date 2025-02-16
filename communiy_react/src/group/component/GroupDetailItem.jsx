@@ -112,13 +112,17 @@ export default function GroupDetailItem({ item }) {
           <div>
             <p>
               <FontAwesomeIcon icon={faList} />
-              &nbsp;카테고리
+              &nbsp;{item.CATEGORY === 'culture' && '문화/예술'}
+              {item.CATEGORY === 'food' && '푸드/드링크'}
+              {item.CATEGORY === 'edu' && '교육'}
+              {item.CATEGORY === 'travel' && '여행'}
+              {item.CATEGORY === 'hobby' && '취미'}
             </p>
             <span
               className="group_span"
               style={{ fontSize: '35px', padding: '10px 0px' }}
             >
-              {item.G_TITLE}
+              {item.GROUP_TITLE}
             </span>
           </div>
           <div>
@@ -147,17 +151,9 @@ export default function GroupDetailItem({ item }) {
           <p
             style={{ fontSize: '33px', marginBottom: '0px', fontWeight: '700' }}
           >
-            🌟 {item.G_TITLE} 모임장 한마디 🌟
+            🌟 {item.GROUP_TITLE} 모임장 한마디 🌟
           </p>
           {item.COMMENT1}
-          <br></br>
-          안녕하세요, 역삼역 일요일 아침 북클럽에 오신 여러분을 환영합니다! 📚
-          <br></br>
-          <br></br>
-          새로운 시각을 얻고 싶은 분이라면 누구든지 환영입니다. 부담 없이 오셔서
-          즐겁고 의미 있는 시간을 보내요! 😊<br></br>
-          일요일 아침, 역삼역에서 여러분을 기다리고 있겠습니다. 함께 책 속으로
-          떠나보아요! 📖✨
         </div>
         <div className="profile mt-5">
           <div className="d-flex align-items-center">
@@ -181,13 +177,13 @@ export default function GroupDetailItem({ item }) {
           우리 모임은요
         </p>
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-          <Form.Control
-            as="textarea"
-            value={item.COMMENT2}
-            readOnly
-            style={{ border: 'none' }}
-          />
-        </Form.Group>
+  <Form.Control
+    as="textarea"
+    value={item.COMMENT2}
+    readOnly
+    style={{ border: 'none', height: 'auto', overflow: 'hidden' }}
+  />
+</Form.Group>
 
         {/* 📚 역삼역 일요일 아침 북클럽 모집!🌞 
           책과 함께 여유로운 일요일
@@ -244,9 +240,9 @@ export default function GroupDetailItem({ item }) {
           <FontAwesomeIcon icon={faLocationDot} />
           &nbsp;모임장소
         </p>
-        <h4>{item.ADDR2}</h4>
+        <h5>{item.ADDR1}</h5>
 
-        <p className="detail_address">{item.ADDR1}</p>
+        <p className="detail_address">{item.ADDR2}</p>
 
         <GoogleMap
           addr1={item.ADDR1}

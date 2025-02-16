@@ -1,4 +1,4 @@
-package com.project.group1.model;
+package com.project.group_morak.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter;
 import lombok.Data;
 
 @Data
-public class Group1 {
-    private int gId;
+public class GroupMorak {
+    private int groupNo;
     private int id;
     private String gTitle;
     private LocalDateTime regDate; // LocalDateTime으로 변경

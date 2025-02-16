@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faComments, faHeart } from '@fortawesome/free-solid-svg-icons';
 
-export default function GroupDetailButton({g_id}) {
+export default function GroupDetailButton({group_no}) {
 //신청폼 띄우기
 const [formShow, setFormShow] = useState(false);
 
@@ -18,7 +18,7 @@ const [chatShow, setChatShow] = useState(false);
 const navigate = useNavigate();
 const [userRole, setUserRole] = useState('group_leader');
 const handleButtonClick = () => {
-  navigate(`/group/management?g_id=${g_id}`);
+  navigate(`/group/management?group_no=${group_no}`);
 };
 
 

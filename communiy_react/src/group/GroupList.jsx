@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import './GroupList.css';
-import { Col, Container, Row } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
+import { Container } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
-import GroupItem from './GroupItem';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
-import GroupDetailItem from './component/GroupDetailItem';
+import GroupItem from './component/GroupItem';
 
 function GroupList({ type }) {
   const [items, setGroupList] = useState([]);
@@ -35,7 +33,7 @@ function GroupList({ type }) {
     const filtered = items.filter((item) => {
       const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
       const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
-      const titleMatch = item.G_TITLE.toLowerCase().includes(
+      const titleMatch = item.GROUP_TITLE.toLowerCase().includes(
         searchTerm.toLowerCase()
       );
       return categoryMatch && areaMatch && titleMatch;
@@ -184,7 +182,7 @@ function GroupList({ type }) {
             <div className="row row-cols-1 row-cols-md-3 g-4">
             {filteredItems.length > 0 ? (
                 filteredItems.map((item) => (
-                  <GroupItem key={item.G_ID} item={item} />
+                  <GroupItem key={item.GROUP_NO} item={item} />
                 ))
               ) : (
                 <div className='d-flex justify-content-center w-100'>

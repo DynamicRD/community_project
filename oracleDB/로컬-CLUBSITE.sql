@@ -81,7 +81,7 @@ create table basket(
 );
 
 
-
+select * from group_morak;
 -- 모임
 create table group_morak(
     group_no number(6) not null,
@@ -109,7 +109,7 @@ create table group_morak(
     primary key(group_no)
 );
 
-
+commit;
 
 -- 댓글(답변형)
 create table comments(

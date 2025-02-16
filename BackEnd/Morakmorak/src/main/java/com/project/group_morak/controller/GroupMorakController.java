@@ -1,4 +1,4 @@
-package com.project.group1.controller;
+package com.project.group_morak.controller;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -15,16 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.project.group1.service.Group1Service;
+import com.project.group_morak.service.GroupMorakService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/group")
-public class Group1Controller {
+public class GroupMorakController {
 	@Autowired
-	private Group1Service service;
+	private GroupMorakService service;
 
 	@RequestMapping("/insert")
 	public ResponseEntity<String> insert(@RequestParam Map<String, Object> map) throws Exception {
@@ -79,13 +79,13 @@ public class Group1Controller {
 	}
 
 	@RequestMapping("/detail")
-	public Map<String, Object> read(@RequestParam(value = "g_id") String gId) throws Exception {
-		return service.read(gId);
+	public Map<String, Object> read(@RequestParam(value = "group_no") String groupNo) throws Exception {
+		return service.read(groupNo);
 	}
 
 	@RequestMapping("/update")
 	public ResponseEntity<String> update(@RequestParam Map<String, Object> map,
-			@RequestParam(value = "g_id") String gId) throws Exception {
+			@RequestParam(value = "group_no") String groupNo) throws Exception {
 		try {
 			String startDateStr = (String) map.get("start_date");
 			String lastDateStr = (String) map.get("last_date");

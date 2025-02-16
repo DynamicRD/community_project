@@ -8,7 +8,7 @@ export default function GroupManagement() {
 
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);
-  const g_id = queryParams.get('g_id'); // 'g_id' 파라미터 값을 가져옴
+  const group_no = queryParams.get('group_no'); // 'g_id' 파라미터 값을 가져옴
   const [items, setGroupDetail] = useState([]);
 
   const memberList = [
@@ -61,7 +61,7 @@ export default function GroupManagement() {
       <div className="group_management d-flex flex-column gap-4 mt-5 w-75">
         <div className='d-flex justify-content-between'>
           <h1>모임 멤버 관리</h1>
-          <Button onClick={()=>{navigate(`/group/update?g_id=${g_id}`)}}>모임 정보 수정</Button>
+          <Button onClick={()=>{navigate(`/group/update?group_no=${group_no}`)}}>모임 정보 수정</Button>
         </div>
           <hr />
         <div>
