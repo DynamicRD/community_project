@@ -1,0 +1,37 @@
+package com.project.admin.service;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.project.admin.mapper.CommentAdminMapper;
+import com.project.admin.model.CommentAdmin;
+
+import lombok.RequiredArgsConstructor;
+
+@Service
+@RequiredArgsConstructor
+public class CommentAdminServiceImpl implements CommentAdminService {
+	private final CommentAdminMapper commentMapper;
+
+    @Override
+    public List<CommentAdmin> getComments() {
+        return commentMapper.getComments();
+    }
+
+    @Override
+    public void addComment(CommentAdmin comment) {
+        commentMapper.addComment(comment);
+    }
+
+    @Override
+    public void deleteComment(Long id) {
+        commentMapper.deleteComment(id);
+    }
+
+    @Override
+    public void toggleBlind(Long id) {
+        commentMapper.toggleBlind(id);
+    }
+
+}
