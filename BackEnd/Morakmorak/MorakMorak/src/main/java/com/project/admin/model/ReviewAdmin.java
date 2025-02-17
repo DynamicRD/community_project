@@ -4,12 +4,13 @@ import lombok.Data;
 
 @Data
 public class ReviewAdmin {
-    private Long id;
-    private String title;
+    private Long no;
+    private Long reviewNo;
+    private String reviewTitle;
     private String writer;
-    private String img;
+    private String imgUrl;
     private String content;
-    private int rating;
-    private boolean hidden;
+    private int star;
+    private String isblacked;
 }
 

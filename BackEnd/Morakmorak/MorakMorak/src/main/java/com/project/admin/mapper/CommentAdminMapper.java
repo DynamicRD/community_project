@@ -10,6 +10,6 @@ import com.project.admin.model.CommentAdmin;
 public interface CommentAdminMapper {
 	List<CommentAdmin> getComments();
     void addComment(CommentAdmin comment);
-    void deleteComment(Long id);
-    void toggleBlind(Long id);
+    void deleteComment(Long no);
+    void toggleBlind(Long no);
 }

@@ -25,13 +25,13 @@ public class CommentAdminServiceImpl implements CommentAdminService {
     }
 
     @Override
-    public void deleteComment(Long id) {
-        commentMapper.deleteComment(id);
+    public void deleteComment(Long no) {
+        commentMapper.deleteComment(no);
     }
 
     @Override
-    public void toggleBlind(Long id) {
-        commentMapper.toggleBlind(id);
+    public void toggleBlind(Long no) {
+        commentMapper.toggleBlind(no);
     }
 
 }

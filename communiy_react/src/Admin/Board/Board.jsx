@@ -154,112 +154,36 @@ const ReviewSection = () => {
 const CommentSection = () => {
   const initialComments = [
     {
-      id: 1,
-      reviewId: 1,
-      writer: '김유신',
-      title: '좋아요',
+      no: 1,
+      reviewNo: 1,
+      nickname: '김유신',
       content: '좋은 후기네요!',
-      date: '2024-02-10',
-      status: '정상',
+      reg_date: '2024-02-10',
+      isblacked: 'N',
     },
     {
-      id: 2,
-      reviewId: 1,
-      writer: '이순신',
-      title: '좋습니다',
-      content: '도움이 되는 정보였습니다.',
-      date: '2024-02-09',
-      status: '정상',
+      no: 2,
+      reviewNo: 2,
+      nickname: '이순신',
+      content: '정말 유익한 정보였습니다.',
+      reg_date: '2024-02-11',
+      isblacked: 'Y',
     },
     {
-      id: 3,
-      reviewId: 2,
-      writer: '홍길동',
-      title: '별로에요',
-      content: '이 모임 별로였어요.',
-      date: '2024-02-08',
-      status: '신고됨',
+      no: 3,
+      reviewNo: 3,
+      nickname: '강감찬',
+      content: '다음에도 또 올게요!',
+      reg_date: '2024-02-12',
+      isblacked: 'N',
     },
     {
-      id: 4,
-      reviewId: 3,
-      writer: '김유신',
-      title: '좋아요',
-      content: '좋은 후기네요!',
-      date: '2024-02-10',
-      status: '정상',
-    },
-    {
-      id: 5,
-      reviewId: 4,
-      writer: '이순신',
-      title: '좋습니다',
-      content: '도움이 되는 정보였습니다.',
-      date: '2024-02-09',
-      status: '정상',
-    },
-    {
-      id: 6,
-      reviewId: 5,
-      writer: '홍길동',
-      title: '별로에요',
-      content: '이 모임 별로였어요.',
-      date: '2024-02-08',
-      status: '신고됨',
-    },
-    {
-      id: 7,
-      reviewId: 6,
-      writer: '김유신',
-      title: '좋아요',
-      content: '좋은 후기네요!',
-      date: '2024-02-10',
-      status: '정상',
-    },
-    {
-      id: 8,
-      reviewId: 7,
-      writer: '이순신',
-      title: '좋습니다',
-      content: '도움이 되는 정보였습니다.',
-      date: '2024-02-09',
-      status: '정상',
-    },
-    {
-      id: 9,
-      reviewId: 8,
-      writer: '홍길동',
-      title: '별로에요',
-      content: '이 모임 별로였어요.',
-      date: '2024-02-08',
-      status: '신고됨',
-    },
-    {
-      id: 10,
-      reviewId: 9,
-      writer: '김유신',
-      title: '좋아요',
-      content: '좋은 후기네요!',
-      date: '2024-02-10',
-      status: '정상',
-    },
-    {
-      id: 11,
-      reviewId: 10,
-      writer: '이순신',
-      title: '좋습니다',
-      content: '도움이 되는 정보였습니다.',
-      date: '2024-02-09',
-      status: '정상',
-    },
-    {
-      id: 12,
-      reviewId: 11,
-      writer: '홍길동',
-      title: '별로에요',
-      content: '이 모임 별로였어요.',
-      date: '2024-02-08',
-      status: '신고됨',
+      no: 4,
+      reviewNo: 4,
+      nickname: '을지문덕',
+      content: '아주 유용한 글입니다.',
+      reg_date: '2024-02-13',
+      isblacked: 'Y',
     },
   ];
 
@@ -268,25 +192,23 @@ const CommentSection = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 10;
 
+  // **검색 필터**
   const filteredComments = comments.filter(
     (comment) =>
-      comment.writer.includes(search) ||
-      comment.content.includes(search) ||
-      comment.title.includes(search)
+      comment.nickname.includes(search) || comment.content.includes(search)
   );
+
   // **블라인드 상태 토글 함수**
-  const toggleBlindStatus = (id) => {
+  const toggleBlindStatus = (no) => {
     setComments((prevComments) =>
       prevComments.map((comment) =>
-        comment.id === id
-          ? {
-              ...comment,
-              status: comment.status === '신고됨' ? '정상' : '신고됨',
-            }
+        comment.no === no
+          ? { ...comment, isblacked: comment.isblacked === 'Y' ? 'N' : 'Y' }
           : comment
       )
     );
   };
+
   const totalPages = Math.ceil(filteredComments.length / commentsPerPage);
   const startIndex = (currentPage - 1) * commentsPerPage;
   const paginatedComments = filteredComments.slice(
@@ -294,8 +216,9 @@ const CommentSection = () => {
     startIndex + commentsPerPage
   );
 
-  const deleteComment = (id) => {
-    setComments(comments.filter((comment) => comment.id !== id));
+  // **댓글 삭제**
+  const deleteComment = (no) => {
+    setComments(comments.filter((comment) => comment.no !== no));
   };
 
   return (
@@ -305,7 +228,7 @@ const CommentSection = () => {
       <Form className="mb-3">
         <Form.Control
           type="text"
-          placeholder="댓글 검색 (작성자, 제목, 내용)"
+          placeholder="댓글 검색 (작성자, 내용)"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -317,7 +240,6 @@ const CommentSection = () => {
             <th>ID</th>
             <th>후기 ID</th>
             <th>작성자</th>
-            <th>제목</th>
             <th>내용</th>
             <th>작성일</th>
             <th>상태</th>
@@ -325,41 +247,41 @@ const CommentSection = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedComments.map((comment) => (
-            <tr
-              key={comment.id}
-              className={comment.status === '신고됨' ? 'table-danger' : ''}
-            >
-              <td>{comment.id}</td>
-              <td>{comment.reviewId}</td>
-              <td>{comment.writer}</td>
-              <td>{comment.title}</td>
-              <td>{comment.content}</td>
-              <td>{comment.date}</td>
-              <td>{comment.status}</td>
-              <td>
-                <Button
-                  variant={comment.status === '신고됨' ? 'primary' : 'danger'}
-                  size="sm"
-                  onClick={() => toggleBlindStatus(comment.id)}
-                >
-                  {comment.status === '신고됨'
-                    ? '블라인드 해제'
-                    : '블라인드 처리'}
-                </Button>
-              </td>
-            </tr>
-          ))}
-          ) :{' '}
-          {
+          {paginatedComments.length > 0 ? (
+            paginatedComments.map((comment) => (
+              <tr
+                key={comment.no}
+                className={comment.isblacked === 'Y' ? 'table-danger' : ''}
+              >
+                <td>{comment.no}</td>
+                <td>{comment.reviewNo}</td>
+                <td>{comment.nickname}</td>
+                <td>{comment.content}</td>
+                <td>{comment.reg_date}</td>
+                <td>{comment.isblacked === 'Y' ? '블라인드' : '정상'}</td>
+                <td>
+                  <Button
+                    variant={comment.isblacked === 'Y' ? 'primary' : 'danger'}
+                    size="sm"
+                    onClick={() => toggleBlindStatus(comment.no)}
+                  >
+                    {comment.isblacked === 'Y'
+                      ? '블라인드 해제'
+                      : '블라인드 처리'}
+                  </Button>
+                </td>
+              </tr>
+            ))
+          ) : (
             <tr>
-              <td colSpan="8" className="text-center">
+              <td colSpan="7" className="text-center">
                 검색 결과가 없습니다.
               </td>
             </tr>
-          }
+          )}
         </tbody>
       </Table>
+
       {/* 페이징 UI */}
       <Pagination className="mt-4 justify-content-center">
         <Pagination.Prev

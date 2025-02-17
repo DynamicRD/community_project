@@ -1,14 +1,18 @@
 package com.project.admin.model;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 
 import lombok.Data;
 @Data
 public class CommentAdmin {
-	private Long id;
-    private Long reviewId;
-    private String writer;
+	private Long no;
+    private Long commentsNo;
+    private Long reviewNo;
+    private String nickname;
     private String content;
-    private LocalDateTime createdAt;
-    private String status;
+    private Date regDate;
+    private String isblacked;
+    
+    
 }
