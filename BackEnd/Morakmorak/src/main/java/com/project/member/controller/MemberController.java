@@ -30,6 +30,7 @@ import com.project.common.config.SecretConfig;
 import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
 import com.project.member.model.MemberDTO;
+import com.project.member.model.SnsInfo;
 import com.project.member.service.MemberService;
 
 import io.jsonwebtoken.Claims;
@@ -148,6 +149,7 @@ public class MemberController {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("카카오 로그인 실패");
 		}
 	}

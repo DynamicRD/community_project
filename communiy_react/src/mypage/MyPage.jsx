@@ -11,18 +11,20 @@ import {
 import { Link, useNavigate } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContext } from '../context/AuthContext'; //
+import axios from 'axios';
 
 function MyPage() {
-  const { isAuthenticated, userData } = useContext(AuthContext);
+  const [meetings, setMeetings] = useState([]); // 모임 데이터 상태
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState('ongoing'); // 기본값:
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (userData && isAuthenticated !== false) {
       const pathSegments = window.location.pathname.split('/');
       const pageId = pathSegments[pathSegments.length - 1];
-
+      console.log(userData?.selfPr);
       if (userData?.no.toString() !== pageId) {
         alert(`접근 권한이 없습니다.`);
         navigate('/');
@@ -30,12 +32,19 @@ function MyPage() {
     }
   }, [isAuthenticated, userData, navigate]);
   useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
-      alert(`접근 권한이 없습니다.`);
-      navigate('/');
+    if (!userData) return; // userData가 로드될 때까지 기다림
+
+    if (isAuthenticated !== false) {
+      const pathSegments = window.location.pathname.split('/');
+      const pageId = pathSegments[pathSegments.length - 1];
+
+      if (userData?.no.toString() !== pageId) {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+      }
     }
-  }, [userData]);
+  }, [isAuthenticated, userData, navigate]);
+
   // 알림 내용
   const notifications = [
     '모임1의 참가자 리뷰가 추가되었습니다!',
@@ -45,70 +54,84 @@ function MyPage() {
     '모임5의 일정이 확정되었습니다.',
   ];
 
-  // 모임 데이터
-  const ongoingMeetings = [
-    {
-      name: '독서클럽',
-      date: '2025-01-25',
-      endDate: '2025-01-26',
-      role: '모임장',
-      cost: '₩ 10,000',
-    },
-    {
-      name: '영화모임',
-      date: '2025-02-01',
-      endDate: '2025-02-02',
-      role: '평회원',
-      cost: '₩ 15,000',
-    },
-  ];
+  useEffect(() => {
+    if (!userData) return;
 
-  const completedMeetings = [
-    {
-      name: '테크 세미나',
-      date: '2025-01-10',
-      endDate: '2025-01-10',
-      role: '참석자',
-      cost: '₩ 30,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-  ];
+    axios
+      .get(`http://localhost:8080/mypage/group/${userData.no}`)
+      .then((response) => {
+        console.log('모임 데이터:', response.data);
+        setMeetings(response.data);
+      })
+      .catch((error) => {
+        console.error('모임 데이터 로드 실패:', error);
+      });
+  }, [userData]);
 
-  const savedMeetings = [
-    {
-      name: '문학 모임',
-      date: '2025-02-05',
-      endDate: '2025-02-06',
-      role: '참석 예정',
-      cost: '₩ 12,000',
-    },
-    {
-      name: '여행 모임',
-      date: '2025-02-10',
-      endDate: '2025-02-11',
-      role: '참석 예정',
-      cost: '₩ 25,000',
-    },
-  ];
+  // // 모임 데이터
+  // const ongoingMeetings = [
+  //   {
+  //     name: '독서클럽',
+  //     date: '2025-01-25',
+  //     endDate: '2025-01-26',
+  //     role: '모임장',
+  //     cost: '₩ 10,000',
+  //   },
+  //   {
+  //     name: '영화모임',
+  //     date: '2025-02-01',
+  //     endDate: '2025-02-02',
+  //     role: '평회원',
+  //     cost: '₩ 15,000',
+  //   },
+  // ];
 
+  // const completedMeetings = [
+  //   {
+  //     name: '테크 세미나',
+  //     date: '2025-01-10',
+  //     endDate: '2025-01-10',
+  //     role: '참석자',
+  //     cost: '₩ 30,000',
+  //   },
+  //   {
+  //     name: '사진 동아리',
+  //     date: '2025-01-15',
+  //     endDate: '2025-01-15',
+  //     role: '모임장',
+  //     cost: '₩ 20,000',
+  //   },
+  // ];
+
+  // const savedMeetings = [
+  //   {
+  //     name: '문학 모임',
+  //     date: '2025-02-05',
+  //     endDate: '2025-02-06',
+  //     role: '참석 예정',
+  //     cost: '₩ 12,000',
+  //   },
+  //   {
+  //     name: '여행 모임',
+  //     date: '2025-02-10',
+  //     endDate: '2025-02-11',
+  //     role: '참석 예정',
+  //     cost: '₩ 25,000',
+  //   },
+  // ];
   // 선택된 모임 테이블 렌더링
+
   const renderTable = () => {
     let meetings = [];
     switch (activeTab) {
       case 'ongoing':
-        meetings = ongoingMeetings;
+        meetings;
         break;
       case 'completed':
-        meetings = completedMeetings;
+        meetings;
         break;
       case 'saved':
-        meetings = savedMeetings;
+        meetings;
         break;
       default:
         break;
@@ -139,7 +162,12 @@ function MyPage() {
       </Table>
     );
   };
-
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('ko-KR', {
+      style: 'currency',
+      currency: 'KRW',
+    }).format(value);
+  };
   return (
     <Container className="mt-5 w-75">
       <div className="myPage">
@@ -148,18 +176,19 @@ function MyPage() {
           <Row>
             <Col md={2}>
               <img
-                src="./img/01.jpg"
+                src={`../../public/images/${userData?.imgUrl}`}
                 className="rounded-circle"
                 alt="Profile Picture"
                 style={{
                   height: '100px',
                   border: '4px solid white',
                   padding: '5px',
+                  width: '100px',
                 }}
               />
             </Col>
             <Col md={10}>
-              <h3>ZEUS</h3>
+              <h3>{userData?.name}</h3>
               <p>모임사이트 웰컴 멤버</p>
             </Col>
           </Row>
@@ -172,8 +201,13 @@ function MyPage() {
                 </Button>
               </Link>
             </div>
+
             <div className="text-center mt-3">
-              <p>자기소개가 없습니다.</p>
+              {userData?.selfPr ? (
+                <p>{userData?.selfPr}</p>
+              ) : (
+                <p>자기소개가 없습니다.</p>
+              )}
             </div>
           </div>
           <div className="btn-group-justified m-3">
@@ -209,7 +243,11 @@ function MyPage() {
           <Col md={12}>
             <div className="mainpage border-section text-center ">
               <h5>보유금액</h5>
-              <div className="h3">₩ 500,000</div>
+              <div className="h3">
+                {userData && userData?.money
+                  ? formatCurrency(userData?.money)
+                  : '₩ 0'}
+              </div>
               <div className="mt-3">
                 <Link to={`/mypage/charge/${userData?.no}`}>
                   <Button className="myPageBtn" variant="danger">

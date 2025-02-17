@@ -247,6 +247,7 @@ export default function KakaoSignup() {
           alert('가입되었습니다.');
           navigate('/');
         } else {
+          console.log(data.message);
           alert(`회원가입 실패: ${data.message || '알 수 없는 오류'}`);
         }
       } catch (error) {
