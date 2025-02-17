@@ -126,7 +126,7 @@ function MyPage() {
           <Row>
             <Col md={2}>
               <img
-                src={`../../public/images/${userData?.imgUrl}`}
+                src={`D:/community_project/communiy_react/public/images/${userData?.imgUrl}`}
                 className="rounded-circle"
                 alt="Profile Picture"
                 style={{
