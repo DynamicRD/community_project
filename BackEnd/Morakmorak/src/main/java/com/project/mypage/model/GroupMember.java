@@ -13,3 +13,4 @@ public class GroupMember {
 	private int amount;
 	private String groupName;
 }
+
