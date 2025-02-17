@@ -6,37 +6,6 @@ import { AuthContext } from '../context/AuthContext'; //
 import './Review.css';
 
 export default function Review() {
-  const completedMeetings = [
-    {
-      name: '테크 세미나',
-      date: '2025-01-10',
-      endDate: '2025-01-10',
-      role: '참석자',
-      cost: '₩ 30,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-  ];
-
   const getStarImages = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -96,56 +65,62 @@ export default function Review() {
         </div>
         <div className="review_board mt-4">
           <ul id="board_list" className="list-unstyled">
-            {groupedReviews.map((group, index) => (
-              <divs
-                className="d-flex justify-content-start gap-5 mb-4"
-                key={index}
-              >
-                {group.map((object) => (
-                  <div className="review_item" key={object.REVIEW_TITLE}>
-                    <div
-                      className="club_name d-flex align-content-cetner ms-4 mb-1"
-                      style={{
-                        fontSize: '14px',
-                      }}
-                    >
-                      {object.GROUP_TITLE}
-                    </div>
-                    <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
-                      <img
-                        src={`/images/${object.IMG_URL}`}
-                        alt="review"
-                        className="review_img"
-                      />
-                    </Nav.Link>
-
-                    <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
+            {groupedReviews.length !== null || 0 ? (
+              groupedReviews.map((group, index) => (
+                <divs
+                  className="d-flex justify-content-start gap-5 mb-4"
+                  key={index}
+                >
+                  {group.map((object) => (
+                    <div className="review_item" key={object.REVIEW_TITLE}>
+                      <div
+                        className="club_name d-flex align-content-cetner ms-4 mb-1"
+                        style={{
+                          fontSize: '14px',
+                        }}
+                      >
+                        {object.GROUP_TITLE}
+                      </div>
                       <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
-                        {object.REVIEW_TITLE}
+                        <img
+                          src={`/images/${object.IMG_URL}`}
+                          alt="review"
+                          className="review_img"
+                        />
                       </Nav.Link>
-                      <span style={{ fontSize: '12px' }}>
-                        평점&nbsp;:&nbsp;
-                        {console.log(object.STAR)}
-                        {getStarImages(object.STAR).map((star, index) => (
-                          <img
-                            key={index}
-                            src={star}
-                            alt="star"
-                            className="star"
-                          />
-                        ))}
-                      </span>
+
+                      <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
+                        <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
+                          {object.REVIEW_TITLE}
+                        </Nav.Link>
+                        <span style={{ fontSize: '12px' }}>
+                          평점&nbsp;:&nbsp;
+                          {console.log(object.STAR)}
+                          {getStarImages(object.STAR).map((star, index) => (
+                            <img
+                              key={index}
+                              src={star}
+                              alt="star"
+                              className="star"
+                            />
+                          ))}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </divs>
-            ))}
+                  ))}
+                </divs>
+              ))
+            ) : (
+              <span>
+                <b>작성된 리뷰가 없습니다</b>
+              </span>
+            )}
           </ul>
         </div>
       </Container>
       <Container>
         {isAuthenticated ? (
-          <div className="d-flex justify-content-center align-content-center mb-3">
+          <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
             <Pagination size="sm">{item}</Pagination>
             <Nav.Link
               href={`/mypage/reviews/${userData?.no}`}
@@ -155,7 +130,7 @@ export default function Review() {
             </Nav.Link>
           </div>
         ) : (
-          <div className="d-flex justify-content-center align-content-center mb-3">
+          <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
             <Pagination size="sm">{item}</Pagination>
             <Nav.Link href="/" className="reviewRegist">
               <span>홈으로</span>
