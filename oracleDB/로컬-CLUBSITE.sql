@@ -113,6 +113,7 @@ alter table group_morak modify img_url2 varchar2(100);
 alter table group_morak modify img_url3 varchar2(100);
 alter table member_group add pr varchar2(500);
 
+
 -- 댓글(답변형)
 create table comments(
     comments_no number(6) not null,
