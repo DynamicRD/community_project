@@ -51,4 +51,13 @@
 		IMG_URL1 = #{img_url1, jdbcType=BLOB},IMG_URL2 = #{img_url2, jdbcType=BLOB}, IMG_URL3 = #{img_url3, jdbcType=BLOB}
 		WHERE group_no = #{group_no}
 	</update>
+	
+	<insert id="join">
+		INSERT INTO MEMBER_GROUP
+		VALUES(member_group_seq.nextval, #{no}, #{group_no}, #{status}, #{pr})
+	</insert>
+	
+	<!-- <update id="join">
+		UPDATE MEMBER SET MONEY = MONEY - #{price}
+	</update> -->
 </mapper>

@@ -12,11 +12,11 @@ function GroupDetail() {
 
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);
-  const group_no = queryParams.get('group_no'); // 'g_id' 파라미터 값을 가져옴
+  const group_no = queryParams.get('group_no'); // 파라미터 값을 가져옴
   const [items, setGroupDetail] = useState([]);
 
   useEffect(() => {
-    const group_nos = group_no.split(','); // g_id가 쉼표로 구분된 문자열이라고 가정
+    const group_nos = group_no.split(','); // 쉼표로 구분된 문자열이라고 가정
     Promise.all(
       group_nos.map((id) =>
         fetch(`http://localhost:8080/group/detail?group_no=${id}`).then((res) =>

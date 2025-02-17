@@ -12,4 +12,8 @@ public interface GroupMorakService {
 
 	public void update(Map<String, Object> map);
 
+	public void join(Map<String, Object> map);
+
+	public void changePoint(Map<String, Object> map);
+
 }

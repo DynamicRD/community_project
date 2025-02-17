@@ -1,19 +1,9 @@
-import {
-  Button,
-  Container,
-  Form,
-  ListGroup,
-  Modal,
-  Nav,
-  Image,
-} from 'react-bootstrap';
+import { Button, Form, ListGroup, Image } from 'react-bootstrap';
 import '../GroupDetail.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendar,
-  faComments,
-  faHeart,
   faList,
   faLocationDot,
   faSackDollar,
@@ -99,10 +89,10 @@ export default function GroupDetailItem({ item }) {
   useEffect(() => {
     // 페이지 로드 시 textarea 높이를 자동으로 조정
     if (textareaRef.current) {
-      textareaRef.current.style.height = 'auto';  // 먼저 높이를 초기화
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;  // 텍스트 길이에 맞게 높이 조정
+      textareaRef.current.style.height = 'auto'; // 먼저 높이를 초기화
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // 텍스트 길이에 맞게 높이 조정
     }
-  }, [item.COMMENT2]);  // COMMENT2 내용이 변경될 때마다 실행
+  }, [item.COMMENT2]); // COMMENT2 내용이 변경될 때마다 실행
 
   return (
     <div className="group_detail">
@@ -191,14 +181,12 @@ export default function GroupDetailItem({ item }) {
           <img
             className="img-fluid centered-image"
             src={`/images/${item.IMG_URL2}`}
-            
           />
         )}
         {item.IMG_URL3 && (
           <img
             className="img-fluid centered-image"
             src={`/images/${item.IMG_URL3}`}
-            
           />
         )}
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -207,30 +195,16 @@ export default function GroupDetailItem({ item }) {
             value={item.COMMENT2}
             readOnly
             ref={textareaRef}
-          //   onChange={handleTextChange}
-          // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
-          style={{
-            border: 'none',
-            height: 'auto',
-            overflow: 'hidden',
-            resize: 'none', // 사용자가 직접 크기를 조정하지 못하게 설정
-          }}
-            
+            //   onChange={handleTextChange}
+            // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
+            style={{
+              border: 'none',
+              height: 'auto',
+              overflow: 'hidden',
+              resize: 'none', // 사용자가 직접 크기를 조정하지 못하게 설정
+            }}
           />
         </Form.Group>
-
-        {/* 📚 역삼역 일요일 아침 북클럽 모집!🌞 
-          책과 함께 여유로운 일요일
-          아침을 보내고 싶으신가요? 
-          이번에 역삼역 근처에서 일요일 아침, 책을
-          좋아하는 사람들과 함께 만날 북클럽을 모집합니다! 참여대상: 책을
-          사랑하는 누구나! 다양한 장르의 책을 좋아하시는 분들 환영. 모임
-          방식: 한 권의 책을 선정하여 함께 읽고, 각자 읽은 내용을
-          공유합니다. 책에 대한 의견을 나누고, 서로의 생각을 들을 수 있는
-          편안한 분위기에서 자유롭게 대화합니다. 다양한 사람들과 책을 통해
-          소통하며, 새로운 친구를 만날 기회도 있어요! 책과 함께하는 소중한
-          시간을 만들고 싶으신 분들, 많은 참여 부탁드려요! 그럼 일요일
-          아침,여러분을 기다리고 있을게요! 📖💬 */}
       </div>
 
       <div className="groupMemberList">

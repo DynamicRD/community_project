@@ -35,5 +35,9 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.update(map);
 	}
 
-	
+	@Override
+	public void join(Map<String, Object> map) {
+		mapper.join(map);
+	}
+
 }

@@ -13,5 +13,7 @@ public interface GroupMorakMapper {
 
 	public Map<String, Object> read(String groupNo);
 
-	public void update(Map<String, Object> map); 
+	public void update(Map<String, Object> map);
+
+	public void join(Map<String, Object> map); 
 }
