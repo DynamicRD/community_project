@@ -1,4 +1,4 @@
-package com.project.group1.service;
+package com.project.group_morak.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -8,12 +8,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.group1.mapper.Group1Mapper;
+import com.project.group_morak.mapper.GroupMorakMapper;
 
 @Service
-public class Group1ServiceImpl implements Group1Service {
+public class GroupMorakServiceImpl implements GroupMorakService {
 	@Autowired
-	private Group1Mapper mapper;
+	private GroupMorakMapper mapper;
 
 	@Override
 	public void insert(Map<String, Object> map) throws Exception {
@@ -26,12 +26,18 @@ public class Group1ServiceImpl implements Group1Service {
 	}
 
 	@Override
-	public Map<String, Object> read(String gId) {
-		return mapper.read(gId);
+	public Map<String, Object> read(String groupNo) {
+		return mapper.read(groupNo);
 	}
 
 	@Override
-	public void update(String gId) {
-		mapper.update(gId);
+	public void update(Map<String, Object> map) {
+		mapper.update(map);
 	}
+
+	@Override
+	public void join(Map<String, Object> map) {
+		mapper.join(map);
+	}
+
 }
