@@ -111,7 +111,7 @@ create table group_morak(
 alter table group_morak modify img_url1 varchar2(100);
 alter table group_morak modify img_url2 varchar2(100);
 alter table group_morak modify img_url3 varchar2(100);
-
+alter table member_group add pr varchar2(500);
 
 -- 댓글(답변형)
 create table comments(
@@ -131,10 +131,10 @@ create table comments(
 
 
 
-
+drop table member_group;
 create table member_group(
     member_group_no number(6),
-    no number(6) not null,
+    no number(6) not null unique,
     group_no number(6) not null,
     status varchar2(20),             --찜, 승인대기, 멤버, 모임장
     primary key(member_group_no)
