@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './GroupList.css';
 import { Container } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
@@ -6,8 +6,10 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
 import GroupItem from './component/GroupItem';
+import { AuthContext } from '../context/AuthContext';
 
 function GroupList({ type }) {
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const [items, setGroupList] = useState([]);
 
   useEffect(() => {
@@ -96,8 +98,16 @@ function GroupList({ type }) {
   return (
     <>
       <Link
-        to={'/group/regist'}
+        to={isAuthenticated ? '/group/regist' : '#'}
         style={{ textDecoration: 'none', color: 'inherit' }}
+        onClick={(e) => {
+          if (!isAuthenticated) {
+            e.preventDefault(); // 기본 링크 동작을 막음
+            alert('로그인 후 이용 가능합니다.');
+            // 로그인 페이지로 리디렉션 (예: 로그인 페이지 URL이 '/login'일 경우)
+            window.location.href = '/login';
+          }
+        }}
       >
         <div className="group_banner">
           <span>
@@ -180,12 +190,12 @@ function GroupList({ type }) {
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-            {filteredItems.length > 0 ? (
+              {filteredItems.length > 0 ? (
                 filteredItems.map((item) => (
                   <GroupItem key={item.GROUP_NO} item={item} />
                 ))
               ) : (
-                <div className='d-flex justify-content-center w-100'>
+                <div className="d-flex justify-content-center w-100">
                   <h3 className="no-meetings m-5">모임이 없습니다.</h3>
                 </div>
               )}

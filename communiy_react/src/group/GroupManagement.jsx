@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
 import GroupJoinFormView from './component/GroupJoinFormView';
 import { useNavigate } from 'react-router';
@@ -10,6 +10,10 @@ export default function GroupManagement() {
   const queryParams = new URLSearchParams(location.search);
   const group_no = queryParams.get('group_no'); // 'g_id' 파라미터 값을 가져옴
   const [items, setGroupDetail] = useState([]);
+
+  // useEffect(()=>{
+  //   fetch(`http:/localhost:8080/group/management?group_no=${group_no}`).then
+  // })
 
   const memberList = [
     {
