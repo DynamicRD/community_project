@@ -4,6 +4,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -61,8 +62,15 @@ public class MypageServiceImpl implements MypageService {
 
 
 	@Override
-	public List<GroupMember> getGroupMembers(int no) {
-		 return mapper.getGroupMembersByUserNo(no);
+	public List<List<GroupMember>> getGroupMembers(int no) {
+		 List<List<GroupMember>> resultList = new ArrayList<>();
+
+		    // 각 리스트를 resultList에 추가
+		    resultList.add(mapper.getGroupMembersByUserNoEnd(no));
+		    resultList.add(mapper.getGroupMembersByUserNoHeart(no));
+		    resultList.add(mapper.getGroupMembersByUserNoOngoing(no));
+
+		    return resultList;
 	}
 	
 	

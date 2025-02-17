@@ -6,7 +6,7 @@ import HorizonLine from './HorizonLine';
 import { useNavigate } from 'react-router';
 import { AuthContext } from '../context/AuthContext'; //
 
-function useFetch(url) {
+function useFetch(url, urlPath) {
   const [replyList, setReplyList] = useState(null);
   const [reviewDetail, setReviewDetail] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ function useFetch(url) {
         setLoading(true);
       });
 
-    fetch('http://localhost:8080/review/reply/list')
+    fetch(urlPath)
       .then((response) => response.json())
       .then((data) => {
         setReplyList(data);
@@ -39,13 +39,15 @@ function useFetch(url) {
 
 export default function Read() {
   const paths = window.location.href.split('/');
+  const pathIdx = window.location.pathname.split('/').pop();
+  const urlPath = 'http://localhost:8080/review/reply/list/' + pathIdx;
   const url =
     'http://localhost:8080/review/' +
     paths[paths.length - 2] +
     '/' +
     paths[paths.length - 1];
 
-  const [reviewDetail, loading, replyList] = useFetch(url);
+  const [reviewDetail, loading, replyList] = useFetch(url, urlPath);
 
   const navigate = useNavigate();
   const { isAuthenticated, userData } = useContext(AuthContext);
@@ -60,36 +62,6 @@ export default function Read() {
     }
     return stars;
   };
-  const completedMeetings = [
-    {
-      name: '테크 세미나',
-      date: '2025-01-10',
-      endDate: '2025-01-10',
-      role: '참석자',
-      cost: '₩ 30,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-  ];
 
   if (!reviewDetail) {
     return <Container>Loading...</Container>;
@@ -104,12 +76,12 @@ export default function Read() {
                 style={{ fontSize: '13px' }}
                 className="mt-2 ms-2 text-black-50"
               >
-                {completedMeetings[0].name}
+                {reviewDetail.GROUP_TITLE}
               </span>
             </p>
 
             <div className="review_writer ms-2">
-              <span>{reviewDetail.REVIEW_NO}</span>
+              <span>{reviewDetail.NICKNAME}</span>
               <span> 조회수 : {count}</span>
             </div>
           </div>
@@ -141,65 +113,105 @@ export default function Read() {
             </div>
           </div>
 
-          <div className="mt-3">
-            <form action="#">
-              <div className="mb-2 mt-3">
-                <Container>
-                  <div className="d-flex flex-column justify-content-between">
-                    <span className="reply_hr mt-3 mb-3"></span>
-                  </div>
-                </Container>
-                <label htmlFor="comment" className="mb-3 ms-2">
-                  댓글
-                </label>
-                <textarea
-                  className="form-control"
-                  rows="5"
-                  id="comment"
-                  name="text"
-                  ref={content}
-                ></textarea>
-              </div>
+          {!isAuthenticated ? (
+            <div className="mt-3">
+              <form action="#">
+                <div className="mb-2 mt-3">
+                  <Container>
+                    <div className="d-flex flex-column justify-content-between">
+                      <span className="reply_hr mt-3 mb-3"></span>
+                    </div>
+                  </Container>
+                  <label htmlFor="comment" className="mb-3 ms-2">
+                    댓글
+                  </label>
+                  <textarea
+                    className="form-control"
+                    rows="5"
+                    id="comment"
+                    name="text"
+                    ref={content}
+                  ></textarea>
+                </div>
 
-              <Button
-                className="register_btn ms-3"
-                onClick={() => {
-                  const form = new FormData();
-                  form.append('content', content.current.value);
-                  form.append('userId', userData?.no);
-                  form.append('userNickName', userData?.nickname);
-                  form.append('reviewNo', reviewDetail.REVIEW_NO);
-                  fetch('http://localhost:8080/review/reply/insert', {
-                    method: 'post',
-                    body: form,
-                  }).then(() => {
-                    window.location.reload();
-                  });
-                }}
-              >
-                작성
-              </Button>
-            </form>
-          </div>
+                <Button
+                  className="register_btn ms-3"
+                  onClick={() => {
+                    alert('로그인 후 작성 가능합니다');
+                  }}
+                >
+                  작성
+                </Button>
+              </form>
+            </div>
+          ) : (
+            <div className="mt-3">
+              <form action="#">
+                <div className="mb-2 mt-3">
+                  <Container>
+                    <div className="d-flex flex-column justify-content-between">
+                      <span className="reply_hr mt-3 mb-3"></span>
+                    </div>
+                  </Container>
+                  <label htmlFor="comment" className="mb-3 ms-2">
+                    댓글
+                  </label>
+                  <textarea
+                    className="form-control"
+                    rows="5"
+                    id="comment"
+                    name="text"
+                    ref={content}
+                  ></textarea>
+                </div>
+
+                <Button
+                  className="register_btn ms-3"
+                  onClick={() => {
+                    const form = new FormData();
+                    form.append('content', content.current.value);
+                    form.append('userId', userData?.no);
+                    form.append('userNickName', userData?.nickname);
+                    form.append('reviewNo', reviewDetail.REVIEW_NO);
+                    fetch('http://localhost:8080/review/reply/insert', {
+                      method: 'post',
+                      body: form,
+                    }).then(() => {
+                      window.location.reload();
+                    });
+                  }}
+                >
+                  작성
+                </Button>
+              </form>
+            </div>
+          )}
 
           {/* reply */}
-
-          {replyList.map((object, idx) => (
-            <Container key={idx}>
+          {replyList.length !== 0 || null ? (
+            replyList.map((object, idx) => (
+              <Container key={idx}>
+                <div className="writer mt-4 mb-3">
+                  <span>
+                    <b>{object.NICKNAME}</b>
+                  </span>
+                </div>
+                <div className="review_content">
+                  <p className="m-1 review_p">{object.CONTENT}</p>
+                  <p className="m-1 review_p" id="review_date">
+                    {object.REG_DATE}
+                  </p>
+                </div>
+                <HorizonLine />
+              </Container>
+            ))
+          ) : (
+            <Container>
               <div className="writer mt-4 mb-3">
-                <span>
-                  <b>{object.NICKNAME}</b>
-                </span>
+                <span>작성된 댓글이 없습니다.</span>
               </div>
-              <div className="review_content">
-                <p className="m-1 review_p">{object.CONTENT}</p>
-                <p className="m-1 review_p" id="review_date">
-                  {object.REG_DATE}
-                </p>
-              </div>
-              <HorizonLine />
             </Container>
-          ))}
+          )}
         </div>
       </Container>
     );

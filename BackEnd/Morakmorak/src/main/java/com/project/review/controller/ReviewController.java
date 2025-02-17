@@ -157,16 +157,16 @@ public class ReviewController {
 		service.replyInsert(map);
 	}
 
-	@GetMapping(value = "/reply/list")
-	public List<Map<String, Object>> replyList() throws Exception {
-		return service.replyList();
+	@GetMapping(value = "/reply/list/{idx}")
+	public List<Map<String, Object>> replyList(@PathVariable(name = "idx") int idx) throws Exception {
+		return service.replyList(idx);
 	}
 
 	@GetMapping(value = "/group/list")
 	public List<Map<String, Object>> groupList() throws Exception {
 		return service.groupList();
 	}
-	
+
 	@GetMapping(value = "/Regist/{idx}")
 	public Map<String, Object> readGroup(@PathVariable(name = "idx") int idx) throws Exception {
 		Map<String, Object> listMap = service.readGroup(idx);

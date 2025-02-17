@@ -79,7 +79,8 @@ create table basket(
     status varchar2(20),                --찜, 승인대기, 종료
     primary key(basket_no)
 );
-
+ALTER TABLE BASKET
+ADD CONSTRAINT unique_basket UNIQUE (NO, GROUP_NO);
 
 select * from group_morak;
 -- 모임
@@ -102,9 +103,9 @@ create table group_morak(
     comment2 varchar2(1000),             --모임소개글 
     approval varchar2(20) DEFAULT 'N',                --관리자 승인여부
     views number(6),                    --조회수
-     img_url1 varchar2(50),               --이미지1
-    img_url2 varchar2(50),               --이미지2
-    img_url3 varchar2(50),               --이미지3
+     img_url1 varchar2(100),               --이미지1
+    img_url2 varchar2(100),               --이미지2
+    img_url3 varchar2(100),               --이미지3
     type varchar2(20),                   --정기모임,소모임 구분
     primary key(group_no)
 );

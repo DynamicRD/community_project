@@ -21,23 +21,12 @@ function MyPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userData && isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      console.log(userData?.selfPr);
-      if (userData?.no.toString() !== pageId) {
-        alert(`접근 권한이 없습니다.`);
-        navigate('/');
-      }
-    }
-  }, [isAuthenticated, userData, navigate]);
-  useEffect(() => {
+    console.log('userData 대기중');
     if (!userData) return; // userData가 로드될 때까지 기다림
 
     if (isAuthenticated !== false) {
       const pathSegments = window.location.pathname.split('/');
       const pageId = pathSegments[pathSegments.length - 1];
-
       if (userData?.no.toString() !== pageId) {
         alert('접근 권한이 없습니다.');
         navigate('/');
@@ -67,71 +56,21 @@ function MyPage() {
         console.error('모임 데이터 로드 실패:', error);
       });
   }, [userData]);
-
-  // // 모임 데이터
-  // const ongoingMeetings = [
-  //   {
-  //     name: '독서클럽',
-  //     date: '2025-01-25',
-  //     endDate: '2025-01-26',
-  //     role: '모임장',
-  //     cost: '₩ 10,000',
-  //   },
-  //   {
-  //     name: '영화모임',
-  //     date: '2025-02-01',
-  //     endDate: '2025-02-02',
-  //     role: '평회원',
-  //     cost: '₩ 15,000',
-  //   },
-  // ];
-
-  // const completedMeetings = [
-  //   {
-  //     name: '테크 세미나',
-  //     date: '2025-01-10',
-  //     endDate: '2025-01-10',
-  //     role: '참석자',
-  //     cost: '₩ 30,000',
-  //   },
-  //   {
-  //     name: '사진 동아리',
-  //     date: '2025-01-15',
-  //     endDate: '2025-01-15',
-  //     role: '모임장',
-  //     cost: '₩ 20,000',
-  //   },
-  // ];
-
-  // const savedMeetings = [
-  //   {
-  //     name: '문학 모임',
-  //     date: '2025-02-05',
-  //     endDate: '2025-02-06',
-  //     role: '참석 예정',
-  //     cost: '₩ 12,000',
-  //   },
-  //   {
-  //     name: '여행 모임',
-  //     date: '2025-02-10',
-  //     endDate: '2025-02-11',
-  //     role: '참석 예정',
-  //     cost: '₩ 25,000',
-  //   },
-  // ];
-  // 선택된 모임 테이블 렌더링
+  const endedGroups = meetings?.[0] || []; // 종료된 그룹
+  const heartedGroups = meetings?.[1] || []; // 찜한 그룹
+  const ongoingGroups = meetings?.[2] || []; // 진행 중인 그룹
 
   const renderTable = () => {
     let meetings = [];
     switch (activeTab) {
       case 'ongoing':
-        meetings;
+        meetings = ongoingGroups;
         break;
       case 'completed':
-        meetings;
+        meetings = endedGroups;
         break;
       case 'saved':
-        meetings;
+        meetings = heartedGroups;
         break;
       default:
         break;
@@ -151,11 +90,11 @@ function MyPage() {
         <tbody>
           {meetings.map((meeting, index) => (
             <tr key={index}>
-              <td>{meeting.name}</td>
-              <td>{meeting.date}</td>
+              <td>{meeting.groupName}</td>
+              <td>{meeting.startDate}</td>
               <td>{meeting.endDate}</td>
-              <td>{meeting.role}</td>
-              <td>{meeting.cost}</td>
+              <td>{meeting.statues}</td>
+              <td>{meeting.amount}</td>
             </tr>
           ))}
         </tbody>
@@ -176,7 +115,7 @@ function MyPage() {
           <Row>
             <Col md={2}>
               <img
-                src={`../../public/images/${userData?.imgUrl}`}
+                src={`D:/community_project/communiy_react/public/images/${userData?.imgUrl}`}
                 className="rounded-circle"
                 alt="Profile Picture"
                 style={{
@@ -331,7 +270,7 @@ function MyPage() {
           </Pagination>
           <div className="text-center">
             {' '}
-            <Link to="/mypage/infodelete">
+            <Link to={`/mypage/withdrawal/${userData.no}`}>
               <Button block className="myPageBtn mt-3" variant="danger">
                 회원탈퇴
               </Button>

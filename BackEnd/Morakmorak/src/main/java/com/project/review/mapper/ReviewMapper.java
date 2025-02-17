@@ -13,7 +13,7 @@ public interface ReviewMapper {
 	
 	public void replyInsert(Map<String, Object> map) throws Exception;
 	
-	public List<Map<String, Object>> replyList() throws Exception;
+	public List<Map<String, Object>> replyList(int idx) throws Exception;
 
 	public List<Map<String, Object>> groupList() throws Exception;
 	
