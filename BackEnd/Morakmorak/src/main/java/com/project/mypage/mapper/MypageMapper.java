@@ -18,5 +18,9 @@ public interface MypageMapper {
 
 	void insertHistory(TransactionLog transactionLog) throws Exception;
 
-	List<GroupMember> getGroupMembersByUserNo(int no);
+	List<GroupMember> getGroupMembersByUserNoHeart(int no);
+
+	List<GroupMember> getGroupMembersByUserNoOngoing(int no);
+
+	List<GroupMember> getGroupMembersByUserNoEnd(int no);
 }

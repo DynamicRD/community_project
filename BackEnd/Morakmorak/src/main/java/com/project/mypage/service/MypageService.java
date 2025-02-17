@@ -14,5 +14,5 @@ public interface MypageService {
 
 	void chargeAmount(Member member) throws Exception;
 
-	List<GroupMember> getGroupMembers(int userNo);
+	List<List<GroupMember>> getGroupMembers(int userNo);
 }
