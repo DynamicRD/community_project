@@ -1,9 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Button, Container, Nav, Pagination } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useNavigate } from 'react-router-dom';
 import HorizonLine from './HorizonLine';
 import './MyPage.css';
+import { AuthContext } from '../context/AuthContext'; //
 
 export default function MyReviews() {
   let item = [];
@@ -31,40 +32,24 @@ export default function MyReviews() {
 
   //fetch로 모임 값 가져오고
 
-  const completedMeetings = [
-    {
-      no: 1,
-      name: '테크 세미나',
-      date: '2025-01-10',
-      endDate: '2025-01-10',
-      role: '참석자',
-      cost: '₩ 30,000',
-    },
-    {
-      no: 2,
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      no: 3,
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      no: 4,
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-  ];
+  const { isAuthenticated, userData } = useContext(AuthContext);
+  const [groupedReviews, setGroupedReviews] = useState([]);
+
+  // 리뷰값 DB에서 가져오기
+  const [completedMeetings, setCompletedMeetings] = useState([]);
+  function getList(url) {
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setCompletedMeetings(data);
+        console.log(data);
+      });
+  }
+
+  // 페이지 시작 시 getList 호출
+  useEffect(() => {
+    getList('http://localhost:8080/review/group/list');
+  }, []);
 
   return (
     <>
@@ -84,14 +69,14 @@ export default function MyReviews() {
                       <input
                         type="radio"
                         name="radio"
-                        value={object.no} // 각 라디오 버튼에 고유한 value를 설정
-                        checked={selectedRadioValue === object.no} // 선택된 값과 일치하면 체크
-                        onChange={() => radioValueChecked(object.no)} // 클릭 시 값 업데이트
+                        value={object.GROUP_NO} // 각 라디오 버튼에 고유한 value를 설정
+                        checked={selectedRadioValue === object.GROUP_NO} // 선택된 값과 일치하면 체크
+                        onChange={() => radioValueChecked(object.GROUP_NO)} // 클릭 시 값 업데이트
                       />
                     </td>
                     <Nav.Link
                       href="#"
-                      onClick={() => radioValueChecked(object.no)}
+                      onClick={() => radioValueChecked(object.GROUP_NO)}
                     >
                       <div className="d-flex m-4">
                         <td>
@@ -107,24 +92,24 @@ export default function MyReviews() {
                             <span
                               style={{ fontSize: '30px', fontWeight: '900' }}
                             >
-                              {object.name}
+                              {object.GROUP_TITLE}
                             </span>
                           </td>
                           <div className="d-flex justify-content-between align-items-center">
                             <td style={{ fontSize: '14px' }}>
-                              <span>{object.date}~</span>
-                              <span> {object.endDate}</span>
+                              <span>{object.START_DATE}~</span>
+                              <span> {object.LAST_DATE}</span>
                             </td>
                             <td
                               style={{ fontSize: '17px', fontWeight: '900' }}
                               className="me-5"
                             >
-                              {object.role}
+                              {userData?.nickname}
                             </td>
                           </div>
                           <td>
                             <span style={{ fontWeight: '900' }}>
-                              {object.cost}
+                              {object.PRICE}원
                             </span>
                           </td>
                         </div>
@@ -140,7 +125,10 @@ export default function MyReviews() {
       <Container className="mb-5">
         <div className="d-flex justify-content-center align-content-center mb-3">
           <Pagination size="sm">{item}</Pagination>
-          <Nav.Link href="/review/Regist" className="reviewList">
+          <Nav.Link
+            href={`/review/Regist/${selectedRadioValue}`}
+            className="reviewList"
+          >
             <span>작성 하기</span>
           </Nav.Link>
         </div>

@@ -115,7 +115,7 @@ function App() {
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
             <Route path="/review/read/:idx" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
+            <Route path="/review/regist/:idx" element={<Regist />} />
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />

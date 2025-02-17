@@ -109,7 +109,7 @@ export default function Review() {
                         fontSize: '14px',
                       }}
                     >
-                      {completedMeetings[0].name}
+                      {object.GROUP_TITLE}
                     </div>
                     <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
                       <img
@@ -147,7 +147,10 @@ export default function Review() {
         {isAuthenticated ? (
           <div className="d-flex justify-content-center align-content-center mb-3">
             <Pagination size="sm">{item}</Pagination>
-            <Nav.Link href="/mypage/reviews" className="reviewRegist">
+            <Nav.Link
+              href={`/mypage/reviews/${userData?.no}`}
+              className="reviewRegist"
+            >
               <span>작성 하기</span>
             </Nav.Link>
           </div>

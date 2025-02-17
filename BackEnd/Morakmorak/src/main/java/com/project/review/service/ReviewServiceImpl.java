@@ -44,4 +44,15 @@ public class ReviewServiceImpl implements ReviewService {
 		return mapper.replyList();
 	}
 
+	
+	@Override
+	public List<Map<String, Object>> groupList() throws Exception {
+		return mapper.groupList();
+	}
+
+	@Override
+	public Map<String, Object> readGroup(int idx) throws Exception {
+
+		return mapper.readGroup(idx);
+	}
 }

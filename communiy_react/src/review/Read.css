@@ -32,6 +32,13 @@
 }
 
 .review_main {
+  border: none;
+  scrollbar-width: none;
+  width: 70%;
+}
+.review_main:focus {
+  border: none;
+  scrollbar-width: none;
   width: 70%;
 }
 
