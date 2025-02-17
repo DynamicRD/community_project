@@ -40,4 +40,14 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.join(map);
 	}
 
+	@Override
+	public void changeMoney(Map<String, Object> map) {
+		mapper.changeMoney(map);
+	}
+
+	@Override
+	public void insertBasket(Map<String, Object> map) {
+		mapper.insertBasket(map);
+	}
+
 }

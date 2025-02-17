@@ -195,7 +195,7 @@ export default function GroupDetailItem({ item }) {
             value={item.COMMENT2}
             readOnly
             ref={textareaRef}
-            //   onChange={handleTextChange}
+            // onChange={handleTextChange}
             // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
             style={{
               border: 'none',

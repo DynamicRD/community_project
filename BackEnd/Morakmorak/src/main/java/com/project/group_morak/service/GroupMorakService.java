@@ -14,6 +14,7 @@ public interface GroupMorakService {
 
 	public void join(Map<String, Object> map);
 
-//	public void changePoint(Map<String, Object> map);
+	public void changeMoney(Map<String, Object> map);
 
+	public void insertBasket(Map<String, Object> map);
 }

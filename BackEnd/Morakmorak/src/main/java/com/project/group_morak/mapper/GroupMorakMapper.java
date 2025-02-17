@@ -15,5 +15,9 @@ public interface GroupMorakMapper {
 
 	public void update(Map<String, Object> map);
 
-	public void join(Map<String, Object> map); 
+	public void join(Map<String, Object> map);
+
+	public void changeMoney(Map<String, Object> map);
+
+	public void insertBasket(Map<String, Object> map); 
 }
