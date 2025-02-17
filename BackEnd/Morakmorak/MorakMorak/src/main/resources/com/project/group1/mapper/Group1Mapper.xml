@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.group1.mapper.Group1Mapper">
+	<insert id="insert">
+		INSERT INTO GROUP1 (
+		g_id, id, g_title, category, user_max,
+		price, area, addr1, addr2,
+		latitude, longitude,
+		start_date, last_date, comment1, comment2, type
+		) VALUES (
+		group1_seq.nextval, 1, #{g_title}, #{category}, #{user_max},
+		#{price}, substr(#{addr1}, 6, 2), #{addr1}, #{addr2},
+		#{latitude}, #{longitude},
+		#{start_date, jdbcType=DATE}, #{last_date, jdbcType=DATE},
+		#{comment1}, #{comment2}, #{type}
+		)
+	</insert>
+
+	<select id="list">
+		SELECT g_id, g_title, category, user_max,
+		price, area, comment2, type,
+		TO_CHAR(start_date, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS start_date
+		FROM GROUP1
+		WHERE type=#{type}
+	</select>
+
+	<select id="read">
+		SELECT g_id, id, g_title, type, user_max, price,
+		addr2, addr1, comment1, comment2,
+		TO_CHAR(start_date,
+		'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS start_date,
+		TO_CHAR(last_date, 'YYYY-MM-DD"T"HH24:MI:SS"Z"') AS last_date,
+		latitude, longitude
+		FROM
+		GROUP1
+		WHERE g_id= #{gId}
+	</select>
+	
+	<update id="update">
+		UPDATE GROUP1 SET 
+		FROM GROUP1
+		WHERE g_id= #{gId}
+	</update>
+</mapper>
