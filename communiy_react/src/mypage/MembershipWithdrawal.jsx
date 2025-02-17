@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../mypage/MyInfoChange.css'; // 작성한 CSS 파일 임포트
+import './myInfoChange.css';
 import {
   Container,
   Form,
@@ -10,12 +10,12 @@ import {
   FormControl,
   Button,
 } from 'react-bootstrap';
-import { Link, useNavigate } from 'react-router-dom';
-import AddressInput from '../mypage/daumAPI/AddressInput';
-import { AuthContext } from '../context/AuthContext'; //
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
+import AddressInput from './daumAPI/AddressInput';
 
-export default function MyInfoChange() {
+export default function MembershipWithdrawal() {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
   useEffect(() => {
@@ -486,39 +486,8 @@ export default function MyInfoChange() {
   return (
     <Container className="registForm mt-5 mb-5">
       <div className="infochange">
-        <h2 className="text-center mt-5">개인정보 수정</h2>
+        <h2 className="text-center mt-5">회원탈퇴</h2>
         <Form onSubmit={handleSubmit} className="OnSubmitForm">
-          {/* 닉네임 입력 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              닉네임
-            </Form.Label>
-            <Col sm={10}>
-              <InputGroup className="inputIdGroup" bsPrefix="./LoginPage.css">
-                <FormControl
-                  type="text"
-                  name="nickname"
-                  value={formData.nickname}
-                  onChange={handleChange}
-                  style={{
-                    width: '68%',
-                    borderRight: 'none',
-                    borderRadius: '5px 0px 0px 5px',
-                  }}
-                />
-                <Button
-                  variant="outline-secondary"
-                  onClick={handleNickDuplicateCheck}
-                  className="inputIdBtn"
-                >
-                  중복확인
-                </Button>
-              </InputGroup>
-              {errors.nickname && (
-                <div className="text-danger">{errors.nickname}</div>
-              )}
-            </Col>
-          </Form.Group>
           {userData?.provider == 'none' ? (
             <>
               <Form.Group as={Row} className="mb-2">
@@ -538,79 +507,6 @@ export default function MyInfoChange() {
                 </Col>
               </Form.Group>
 
-              {/* 비밀번호 확인 */}
-              <Form.Group as={Row} className="mb-2">
-                <Form.Label column sm={2}>
-                  새 비밀번호 확인
-                </Form.Label>
-                <Col sm={10}>
-                  <Form.Control
-                    type="password"
-                    name="repass"
-                    value={formData.repass}
-                    onChange={handleChange}
-                  />
-                  {errors.repass && (
-                    <div className="text-danger">{errors.repass}</div>
-                  )}
-                </Col>
-              </Form.Group>
-            </>
-          ) : (
-            <></>
-          )}
-          {/* 비밀번호 입력 */}
-          {/* 이름 입력 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              이름
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-              />
-              {errors.name && <div className="text-danger">{errors.name}</div>}
-            </Col>
-          </Form.Group>
-          {/* 성별 입력 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              성별
-            </Form.Label>
-            <Col sm={10}>
-              <Row>
-                <Col sm="auto">
-                  <Form.Check
-                    type="radio"
-                    label="남자"
-                    name="gender"
-                    value="남자"
-                    checked={formData.gender === '남자'}
-                    onChange={handleGenderChange}
-                  />
-                </Col>
-                <Col sm="auto">
-                  <Form.Check
-                    type="radio"
-                    label="여자"
-                    name="gender"
-                    value="여자"
-                    checked={formData.gender === '여자'}
-                    onChange={handleGenderChange}
-                  />
-                </Col>
-              </Row>
-              {errors.gender && (
-                <div className="text-danger">{errors.gender}</div>
-              )}
-            </Col>
-          </Form.Group>
-          {/* 전화번호 입력 */}
-          {userData?.provider == 'none' ? (
-            <>
               <Form.Group as={Row} className="mb-2">
                 <Form.Label column sm={2}>
                   전화번호
@@ -749,119 +645,71 @@ export default function MyInfoChange() {
               </div>
             </>
           ) : (
-            <></>
+            <>
+              <h5>회원탈퇴를 진행하기 위해 이메일을 인증해주세요</h5>
+              <br />
+              {/* 이메일 입력 */}
+              <Form.Group as={Row} className="mb-2">
+                <Form.Label column sm={2}>
+                  이메일
+                </Form.Label>
+                <Col sm={9}>
+                  {userData?.provider == 'none' ? (
+                    <>
+                      <Form.Control
+                        type="text"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      {' '}
+                      <Form.Control
+                        type="text"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        readOnly
+                      />
+                      {/* 인증번호 전송 버튼 */}
+                      <Button
+                        variant="outline-secondary"
+                        className="numberSummit"
+                        onClick={async () => {
+                          const form = new FormData();
+                          form.append('email', formData.email);
+
+                          try {
+                            const response = await fetch(
+                              'http://localhost:8080/mypage/de',
+                              {
+                                method: 'POST',
+                                headers: {
+                                  'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(formData), // formData를 JSON으로 변환하여 전송
+                              }
+                            );
+                          } catch (error) {
+                            console.error('이메일 인증:', error);
+                            alert('서버와의 통신 중 오류가 발생했습니다.');
+                          }
+                        }}
+                      >
+                        <span>인증발송</span>
+                      </Button>
+                    </>
+                  )}
+                  {errors.email && (
+                    <div className="text-danger">{errors.email}</div>
+                  )}
+                </Col>
+              </Form.Group>
+            </>
           )}
 
-          {/* 생년월일 입력 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              생년월일
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="text"
-                name="birth"
-                value={formData.birth}
-                onChange={handleChange}
-                placeholder="ex: 0000-00-00"
-              />
-              {errors.birth && (
-                <div className="text-danger">{errors.birth}</div>
-              )}
-            </Col>
-          </Form.Group>
-          {/* 이메일 입력 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              이메일
-            </Form.Label>
-            <Col sm={10}>
-              {userData?.provider == 'none' ? (
-                <>
-                  <Form.Control
-                    type="text"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                  />
-                </>
-              ) : (
-                <>
-                  {' '}
-                  <Form.Control
-                    type="text"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    readOnly
-                  />
-                </>
-              )}
-              {errors.email && (
-                <div className="text-danger">{errors.email}</div>
-              )}
-            </Col>
-          </Form.Group>
-          {/* 우편번호 찾기 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              우편번호
-            </Form.Label>
-            <Col sm={5}>
-              <InputGroup>
-                <FormControl
-                  type="text"
-                  name="addcode"
-                  value={formData.addcode}
-                  onChange={handleChange}
-                  readOnly // 사용자가 수정할 수 없지만 복사 가능
-                />
-
-                <Button variant="outline-secondary" onClick={handleButtonClick}>
-                  찾기
-                </Button>
-
-                {/* isAddressInputVisible가 true일 때만 AddressInput을 렌더링 */}
-                {isAddressInputVisible && (
-                  <AddressInput onComplete={handlePostcodeComplete} />
-                )}
-              </InputGroup>
-              {errors.addcode && (
-                <div className="text-danger">{errors.addcode}</div>
-              )}
-            </Col>
-          </Form.Group>
-          {/* 주소 입력 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              주소
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="text"
-                name="address01"
-                value={formData.address01}
-                onChange={handleChange}
-                size="50"
-                readOnly // 사용자가 수정할 수 없지만 복사 가능
-              />
-            </Col>
-          </Form.Group>
-          {/* 상세주소 입력 */}
-          <Form.Group as={Row} className="mb-2">
-            <Form.Label column sm={2}>
-              상세주소
-            </Form.Label>
-            <Col sm={10}>
-              <Form.Control
-                type="text"
-                name="address02"
-                value={formData.address02}
-                onChange={handleChange}
-                size="30"
-              />
-            </Col>
-          </Form.Group>
           {/* 버튼들 */}
           <Form.Group as={Row} className="btnClub mt-4 text-center">
             <Col sm={12} className="mb-4">
@@ -871,7 +719,7 @@ export default function MyInfoChange() {
                 style={{ color: 'white' }}
                 type="submit"
               >
-                수정하기
+                탈퇴하기
               </Button>
               &nbsp;&nbsp;
               <Button variant="secondary" type="reset" onClick={handleReset}>
