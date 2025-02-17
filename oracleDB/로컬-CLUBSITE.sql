@@ -128,7 +128,7 @@ create table comments(
     isblacked varchar2(10) default 'N',
     primary key(comments_no)
 );
-
+select * from member;
 
 
 drop table member_group;
