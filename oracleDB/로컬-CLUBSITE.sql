@@ -81,7 +81,7 @@ create table basket(
 );
 
 
-
+select * from group_morak;
 -- 모임
 create table group_morak(
     group_no number(6) not null,
@@ -108,10 +108,12 @@ create table group_morak(
     type varchar2(20),                   --정기모임,소모임 구분
     primary key(group_no)
 );
+
 alter table group_morak modify img_url1 varchar2(100);
 alter table group_morak modify img_url2 varchar2(100);
 alter table group_morak modify img_url3 varchar2(100);
 alter table member_group add pr varchar2(500);
+
 
 
 -- 댓글(답변형)
@@ -129,7 +131,7 @@ create table comments(
     isblacked varchar2(10) default 'N',
     primary key(comments_no)
 );
-
+select * from member;
 
 
 drop table member_group;

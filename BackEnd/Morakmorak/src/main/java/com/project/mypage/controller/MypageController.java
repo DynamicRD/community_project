@@ -38,61 +38,59 @@ public class MypageController {
 	@Autowired
 	private MypageService service;
 
-    @GetMapping("/transactionHistory")
-    public ResponseEntity<List<TransactionLog>> getUserCoinHistory(@RequestParam("no") int no) {
-        List<TransactionLog> historyList = service.selectTransactionLog(no);
-        return ResponseEntity.ok(historyList);
-    }
+	@GetMapping("/transactionHistory")
+	public ResponseEntity<List<TransactionLog>> getUserCoinHistory(@RequestParam("no") int no) {
+		List<TransactionLog> historyList = service.selectTransactionLog(no);
+		return ResponseEntity.ok(historyList);
+	}
 
-    
-    @PostMapping(value = "/profileupdate")
-    public ResponseEntity<?> insertReview2(
-            @RequestParam Map<String, Object> map,
-            @RequestParam("image") MultipartFile file) throws Exception {
-        
-        if (file.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일을 선택해 주세요.");
-        }
+	@PostMapping(value = "/profileupdate")
+	public ResponseEntity<?> insertReview2(@RequestParam Map<String, Object> map,
+			@RequestParam("image") MultipartFile file) throws Exception {
 
-        // 저장할 파일 이름 지정 (UUID + 원본 확장자)
-        String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-        String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-        String fileName = UUID.randomUUID().toString() + fileExtension;
+		if (file.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일을 선택해 주세요.");
+		}
 
-        // 업로드 폴더 경로 설정
-        String uploadDir = "D:/community_project/communiy_react/public/images/";
-        File directory = new File(uploadDir);
-        if (!directory.exists()) {
-            directory.mkdirs();
-        }
+		// 저장할 파일 이름 지정 (UUID + 원본 확장자)
+		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
+		String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
+		String fileName = UUID.randomUUID().toString() + fileExtension;
 
-        // 이미지 저장 경로 설정
-        Path path = Paths.get(uploadDir + fileName);
-        log.info("파일 저장 경로: " + path);
+		// 업로드 폴더 경로 설정
+		String uploadDir = "D:/community_project/communiy_react/public/images/";
+		File directory = new File(uploadDir);
+		if (!directory.exists()) {
+			directory.mkdirs();
+		}
 
-        // 파일 저장 (덮어쓰기 방지 옵션 추가)
-        Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
+		// 이미지 저장 경로 설정
+		Path path = Paths.get(uploadDir + fileName);
+		log.info("파일 저장 경로: " + path);
 
-        // 클라이언트가 접근할 수 있는 경로 반환
-        map.put("fileName", fileName);
-        service.insertProfile(map);
+		// 파일 저장 (덮어쓰기 방지 옵션 추가)
+		Files.copy(file.getInputStream(), path, StandardCopyOption.REPLACE_EXISTING);
 
-        return ResponseEntity.ok("파일 업로드 성공: " + fileName);
-    }
-    
+		// 클라이언트가 접근할 수 있는 경로 반환
+		map.put("fileName", fileName);
+		service.insertProfile(map);
+
+		return ResponseEntity.ok("파일 업로드 성공: " + fileName);
+	}
+
 	@PostMapping("/charge")
-    public ResponseEntity<?> chargePoint(@RequestBody Member member) {
-        try {
-            service.chargeAmount(member);
-            return ResponseEntity.ok().body("포인트 충전 완료");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("충전 실패: " + e.getMessage());
-        }
-    }
-	
-	 @GetMapping("/group/{no}")
-	    public ResponseEntity<List<GroupMember>> getUserMeetings(@PathVariable int no) {
-	        List<GroupMember> meetings = service.getGroupMembers(no);
-	        return ResponseEntity.ok(meetings);
-	    }
+	public ResponseEntity<?> chargePoint(@RequestBody Member member) {
+		try {
+			service.chargeAmount(member);
+			return ResponseEntity.ok().body("포인트 충전 완료");
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body("충전 실패: " + e.getMessage());
+		}
+	}
+
+	@GetMapping("/group/{no}")
+	public ResponseEntity<List<List<GroupMember>>> getUserMeetings(@PathVariable int no) {
+		List<List<GroupMember>> meetings = service.getGroupMembers(no);
+		return ResponseEntity.ok(meetings);
+	}
 }

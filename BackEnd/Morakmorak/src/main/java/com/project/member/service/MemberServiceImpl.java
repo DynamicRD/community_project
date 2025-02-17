@@ -49,9 +49,14 @@ public class MemberServiceImpl implements MemberService {
 	public void register(MemberDTO memberDTO) {
 		Member member = new Member();
 		member.setId(memberDTO.getId());
-
+        System.out.println(memberDTO.getId());
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+		if(memberDTO.getProvider() == null)
+		{
+			memberDTO.setProvider("none");
+			member.setProvider("none");
+		}
 		// 비밀번호 암호화
 		if (memberDTO.getPass() != null) {
 			String rawPassword = memberDTO.getPass(); // 원래 비밀번호
