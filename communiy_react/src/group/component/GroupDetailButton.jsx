@@ -17,7 +17,7 @@ export default function GroupDetailButton({ group_no }) {
 
   //권한별 버튼 설정
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState('member');
+  const [userRole, setUserRole] = useState('group_leader');
   const handleButtonClick = () => {
     navigate(`/group/management?group_no=${group_no}`);
   };

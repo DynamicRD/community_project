@@ -245,4 +245,15 @@ public class GroupMorakController {
 	        return ResponseEntity.status(500).body("처리에 실패했습니다.");
 	    }
 	}
+	
+	@RequestMapping("/management")
+	public List<Map<String, Object>> memberList(@RequestParam(value = "group_no") String groupNo) {
+//		try {
+			return service.memberList(groupNo);
+//			
+//	    }catch (Exception e) {
+//			log.error("Error inserting group", e);
+//			return ResponseEntity.status(500).body("신청에 실패했습니다.");
+//		}
+	}
 }

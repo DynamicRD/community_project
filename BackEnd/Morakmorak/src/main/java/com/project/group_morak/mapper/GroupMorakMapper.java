@@ -19,5 +19,7 @@ public interface GroupMorakMapper {
 
 	public void changeMoney(Map<String, Object> map);
 
-	public void insertBasket(Map<String, Object> map); 
+	public void insertBasket(Map<String, Object> map);
+
+	public List<Map<String, Object>> memberList(String groupNo); 
 }

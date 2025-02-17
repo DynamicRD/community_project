@@ -40,10 +40,20 @@
 	</select>
 
 	<select id="read">
-		SELECT *
-		FROM
-		GROUP_MORAK
-		WHERE group_no= #{groupNo}
+		SELECT
+		G.*,
+		MG.*,
+		MG.NO AS MEMBER_NO,
+		M.NICKNAME,
+		M.IMG_URL AS PROFILE_IMG,
+		M.STAR_SUM,
+		COUNT(CASE WHEN MG.STATUS = 'MEMBER' THEN 1 END) OVER (PARTITION BY G.GROUP_NO) AS
+		MEMBER_COUNT
+		FROM GROUP_MORAK G
+		LEFT JOIN MEMBER_GROUP MG ON G.GROUP_NO = MG.GROUP_NO
+		INNER JOIN MEMBER M ON G.NO = M.NO
+		WHERE G.GROUP_NO = #{groupNo}
+		<!-- SELECT * FROM GROUP_MORAK WHERE group_no= #{groupNo} -->
 	</select>
 
 	<update id="update">
@@ -82,5 +92,9 @@
 		FROM GROUP_MORAK G
 		WHERE G.GROUP_NO = #{group_no}
 	</insert>
+	
+	<select id="memberList">
+		
+	</select>
 
 </mapper>

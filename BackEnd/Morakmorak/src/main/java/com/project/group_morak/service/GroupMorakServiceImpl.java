@@ -50,4 +50,9 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.insertBasket(map);
 	}
 
+	@Override
+	public List<Map<String, Object>> memberList(String groupNo) {
+		return mapper.memberList(groupNo);
+	}
+
 }
