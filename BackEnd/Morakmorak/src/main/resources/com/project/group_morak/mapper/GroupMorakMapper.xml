@@ -28,6 +28,7 @@
 		comment2, type,
 		TO_CHAR(start_date, 'FMMonth FMDD"일"') AS
 		start_date,
+		reg_date,
 		img_url1
 		FROM GROUP_MORAK
 		WHERE type=#{type}

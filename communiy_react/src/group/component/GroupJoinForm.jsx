@@ -44,11 +44,11 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
           onClick={() => {
             if (confirm('신청하시겠습니까?')) {
               const form = new FormData();
-              form.append('group_no', Number(items.GROUP_NO));
-              form.append('status', 'waiting');
               form.append('no', userData?.no); // 회원 아이디
-              form.append('pr', pr); // 신청 폼
+              form.append('group_no', Number(items.GROUP_NO));
               form.append('price', Number(items.PRICE));
+              form.append('status', 'waiting');
+              form.append('pr', pr); // 신청 폼
               fetch('http://localhost:8080/group/join', {
                 method: 'post',
                 body: form,

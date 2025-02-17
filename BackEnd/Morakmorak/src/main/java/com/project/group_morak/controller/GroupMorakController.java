@@ -219,7 +219,7 @@ public class GroupMorakController {
 	public ResponseEntity<String> statusUpdate(@RequestParam Map<String, Object> map) {
 		try {
 			service.join(map);
-			service.changePoint(map);
+//			service.changePoint(map);
 			
 			return ResponseEntity.ok("신청이 완료되었습니다. 모임장의 승인 후 활동이 가능합니다.");
 		} catch (Exception e) {

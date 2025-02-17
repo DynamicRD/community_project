@@ -42,16 +42,16 @@ function GroupList({ type }) {
   }, [rdo, rdo2, items]);
 
   //정렬
-  // useEffect(() => {
-  //   let sortedItems = [...filteredItems];
-  //   if (selectOpt === 'latest') {
-  //     sortedItems.sort((a, b) => new Date(b.item.REG_DATE) - new Date(a.item.REG_DATE));
-  //   }
-  //   // else if (selectOpt === 'grade') {
-  //   //   sortedItems.sort((a, b) => b.item.star - a.groupList.star);
-  //   // }
-  //   setFilteredItems(sortedItems);
-  // }, [selectOpt]);
+  useEffect(() => {
+    let sortedItems = [...filteredItems];
+    if (selectOpt === 'latest') {
+      sortedItems.sort((a, b) => new Date(b.item.REG_DATE) - new Date(a.item.REG_DATE));
+    }
+    // else if (selectOpt === 'grade') {
+    //   sortedItems.sort((a, b) => b.item.star - a.groupList.star);
+    // }
+    setFilteredItems(sortedItems);
+  }, [selectOpt]);
 
   const handelCategoryChange = (e) => {
     const { value, checked } = e.target;
@@ -82,7 +82,7 @@ function GroupList({ type }) {
     const filtered = items.filter((item) => {
       const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
       const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
-      const titleMatch = item.G_TITLE.includes(searchTerm.toLowerCase());
+      const titleMatch = item.GROUP_TITLE.includes(searchTerm.toLowerCase());
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
