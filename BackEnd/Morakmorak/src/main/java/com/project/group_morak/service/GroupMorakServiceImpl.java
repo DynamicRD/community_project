@@ -40,4 +40,10 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.join(map);
 	}
 
+	@Override
+	public void changePoint(Map<String, Object> map) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -49,7 +49,7 @@ public class MemberServiceImpl implements MemberService {
 	public void register(MemberDTO memberDTO) {
 		Member member = new Member();
 		member.setId(memberDTO.getId());
-
+        System.out.println(memberDTO.getId());
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
 		if(memberDTO.getProvider() == null)
