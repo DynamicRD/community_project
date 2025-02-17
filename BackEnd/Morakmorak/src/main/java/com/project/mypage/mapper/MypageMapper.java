@@ -1,9 +1,22 @@
 package com.project.mypage.mapper;
 
 import java.util.List;
+import java.util.Map;
 
+import com.project.member.model.Member;
+import com.project.mypage.model.GroupMember;
 import com.project.mypage.model.TransactionLog;
 
 public interface MypageMapper {
-	public List<TransactionLog> selectTransactionLog(int no);
+	List<TransactionLog> selectTransactionLog(int no);
+
+	void insertProfile(Map<String, Object> map) throws Exception;
+
+	String selectProfileImg(Map<String, Object> map) throws Exception;
+
+	void chargeAmount(Member member) throws Exception;
+
+	void insertHistory(TransactionLog transactionLog) throws Exception;
+
+	List<GroupMember> getGroupMembersByUserNo(int no);
 }

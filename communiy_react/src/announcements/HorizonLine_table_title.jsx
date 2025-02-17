@@ -4,7 +4,7 @@ const HorizonLine_table_title = ({ text }) => {
   return (
     <div
       style={{
-        width: '100%',
+        width: '141%',
         textAlign: 'center',
         borderBottom: '1px solid #aaa',
         lineHeight: '0.1em',

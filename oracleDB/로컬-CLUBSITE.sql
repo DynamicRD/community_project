@@ -109,7 +109,12 @@ create table group_morak(
     primary key(group_no)
 );
 
-commit;
+alter table group_morak modify img_url1 varchar2(100);
+alter table group_morak modify img_url2 varchar2(100);
+alter table group_morak modify img_url3 varchar2(100);
+alter table member_group add pr varchar2(500);
+
+
 
 -- 댓글(답변형)
 create table comments(
@@ -126,13 +131,13 @@ create table comments(
     isblacked varchar2(10) default 'N',
     primary key(comments_no)
 );
+select * from member;
 
 
-
-
+drop table member_group;
 create table member_group(
     member_group_no number(6),
-    no number(6) not null,
+    no number(6) not null unique,
     group_no number(6) not null,
     status varchar2(20),             --찜, 승인대기, 멤버, 모임장
     primary key(member_group_no)
@@ -184,16 +189,21 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
-ALTER TABLE member DROP PRIMARY KEY; -- 기존 PK(id) 삭제
-ALTER TABLE member ADD PRIMARY KEY (no); -- 새로운 PK(no) 추가
-ALTER TABLE member MODIFY role DEFAULT 1;
 commit;
 update member set provider = 'kakao' where no =26;
 select * from member;
+
 SELECT *
 		FROM Member
 		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 
-
+        INSERT INTO member (
+		no, email, name, nickname, birth, gender, zip_code, addr1, addr2,
+		provider, provider_id
+		) VALUES ( 
+		member_seq.nextval, 1,2, 3,
+		sysdate, 1, 1, 1,
+		1, 1, 1
+		);
 -- 알림
 create table notification(
     notification_no number(6) not null,
@@ -229,7 +239,7 @@ create table faq(
 
 --코인 충전 내역 테이블
 create table charge(
-    charge_no not null,
+    charge_no number(6)  not null,
     amount number(6),          ---충전금액
     reg_date date,
     no number(6) not null,   ---사용자 pk
@@ -268,4 +278,9 @@ create table Transaction_log(
     amount number(7),
     reg_date date default sysdate,
     primary key(transaction_no)
-)
+);
+INSERT INTO Transaction_log (transaction_no, no, type, amount)  
+VALUES (2, 22, 'Deposit', 50000);
+commit;
+select * from transaction_log;
+insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);

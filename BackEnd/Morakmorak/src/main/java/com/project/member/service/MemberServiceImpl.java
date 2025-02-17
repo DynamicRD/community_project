@@ -52,6 +52,11 @@ public class MemberServiceImpl implements MemberService {
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+		if(memberDTO.getProvider() == null)
+		{
+			memberDTO.setProvider("none");
+			member.setProvider("none");
+		}
 		// 비밀번호 암호화
 		if (memberDTO.getPass() != null) {
 			String rawPassword = memberDTO.getPass(); // 원래 비밀번호
@@ -66,14 +71,13 @@ public class MemberServiceImpl implements MemberService {
 			member.setPhone(memberDTO.getPhone1() + memberDTO.getPhone2() + memberDTO.getPhone3());
 		}
 		member.setNickname(memberDTO.getNickname());
-		System.out.println("생일 " + memberDTO.getBirth());
 		member.setGender(memberDTO.getGender());
 		member.setBirth(memberDTO.getBirth());
 		member.setEmail(memberDTO.getEmail());
 		member.setZipCode(memberDTO.getAddcode());
 		member.setAddr1(memberDTO.getAddress01());
 		member.setAddr2(memberDTO.getAddress02());
-		if (memberDTO.getProvider().equals("google")) {
+		if (memberDTO.getProvider().equals("google")||memberDTO.getProvider().equals("kakao")) {
 			member.setProvider(memberDTO.getProvider());
 			member.setProviderId(memberDTO.getProviderId());
 			mapper.registerGoogle(member);

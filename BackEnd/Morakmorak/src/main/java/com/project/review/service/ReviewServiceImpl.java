@@ -21,11 +21,6 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<Map<String, Object>> listReview() throws Exception {
 		return mapper.listReview();
 	}
-	
-	@Override
-	public List<Map<String, Object>> list2() throws Exception {
-		return mapper.list2();
-	}
 
 	@Override
 	public Map<String, Object> readReview(int idx) throws Exception {
@@ -38,8 +33,26 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public void insert2(Map<String, Object> map) throws Exception {
-		mapper.insert2(map);
+	public void replyInsert(Map<String, Object> map) throws Exception {
+		log.info("Servcie map = " + map);
+		mapper.replyInsert(map);
+		
 	}
 
+	@Override
+	public List<Map<String, Object>> replyList() throws Exception {
+		return mapper.replyList();
+	}
+
+	
+	@Override
+	public List<Map<String, Object>> groupList() throws Exception {
+		return mapper.groupList();
+	}
+
+	@Override
+	public Map<String, Object> readGroup(int idx) throws Exception {
+
+		return mapper.readGroup(idx);
+	}
 }

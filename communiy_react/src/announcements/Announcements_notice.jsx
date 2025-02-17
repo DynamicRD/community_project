@@ -24,6 +24,7 @@ export default function Announcements_notice() {
       })
       .then((data) => {
         setNoticeList(data);
+        console.log(data);
       });
   }
 
@@ -60,25 +61,34 @@ export default function Announcements_notice() {
             >
               {noticeList.length}개 공지사항
             </div>
-            {noticeList.map((object) => (
-              <tbody key={object.N_ID}>
-                <tr>
-                  <td className="table_td_title">
-                    <Nav.Link
-                      href={`/announcements/notice/read/${object.N_ID}`}
-                    >
-                      <span style={{ display: 'block' }} className="ps-5 p-3">
-                        {object.N_TITLE}
-                      </span>
-                    </Nav.Link>
-                  </td>
-                  <td className="table_td_date">
-                    <span className="pe-5">{object.REG_DATE}</span>
-                  </td>
-                </tr>
-                <HorizonLine_table />
-              </tbody>
-            ))}
+            {noticeList.length <= 0 ? (
+              <div
+                className="ms-5 mb-3"
+                style={{ fontFamily: 'Freesentation-9Black' }}
+              >
+                공지사항이 없습니다.
+              </div>
+            ) : (
+              noticeList.map((object) => (
+                <tbody key={object.NOTICE_NO}>
+                  <tr>
+                    <td className="table_td_title">
+                      <Nav.Link
+                        href={`/announcements/notice/read/${object.NOTICE_NO}`}
+                      >
+                        <span style={{ display: 'block' }} className="ps-5 p-3">
+                          {object.NOTICE_TITLE}
+                        </span>
+                      </Nav.Link>
+                    </td>
+                    <td className="table_td_date">
+                      <span className="pe-5">{object.REG_DATE}</span>
+                    </td>
+                  </tr>
+                  <HorizonLine_table />
+                </tbody>
+              ))
+            )}
           </table>
         </Container>
         <div className="d-flex justify-content-center align-content-center mt-4">

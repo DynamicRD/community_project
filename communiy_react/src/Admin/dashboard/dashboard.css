@@ -1,3 +1,7 @@
+* {
+  z-index: 99;
+}
+
 .dashboard {
   width: 100%;
   height: 100%;
@@ -70,7 +74,7 @@ a {
 }
 .main-content {
   flex-grow: 1;
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: 20px;
   width: calc(100% - 250px);
   margin-left: 250px;
@@ -92,6 +96,7 @@ a {
   overflow-x: hidden; /* 가로 스크롤 숨김 */
   transition: margin-left 0.3s ease-in-out; /* 애니메이션 효과 */
   flex-grow: 1;
+  z-index: 100;
 }
 
 /* 반응형 대응: 화면이 작아질 때 */
@@ -167,7 +172,7 @@ a {
   fill: rgba(215, 2, 6, 0.2); /* 투명한 배경 */
 }
 .footer {
-  position: absolute;
+  position: relative;
   bottom: 0px;
   display: flex;
   justify-content: space-between;

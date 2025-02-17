@@ -50,6 +50,7 @@ const getData = async () => {
 const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태 추가
 
   useEffect(() => {
     const fetchAuthData = async () => {
@@ -71,6 +72,9 @@ const useAuth = () => {
         }
       } catch (error) {
         console.error('토큰 확인 중 오류 발생:', error);
+        setIsAuthenticated(false); // 오류가 발생하면 인증 상태 false로 설정
+      } finally {
+        setIsLoading(false); // 로딩 상태 끝내기
       }
     };
 
@@ -79,7 +83,7 @@ const useAuth = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!isAuthenticated) return; // ✅ 인증되지 않으면 요청 실행 X
+      if (!isAuthenticated) return; // 인증되지 않으면 요청 실행 X
 
       const user = await getData();
       if (user) {
@@ -87,10 +91,13 @@ const useAuth = () => {
       }
     };
 
-    fetchUserData();
-  }, [isAuthenticated]); // ✅ isAuthenticated가 true일 때만 실행되도록 변경
+    if (!isLoading) {
+      // 로딩 상태가 끝나면 유저 데이터를 가져오도록 설정
+      fetchUserData();
+    }
+  }, [isAuthenticated, isLoading]); // isAuthenticated와 isLoading에 의존성 추가
 
-  return { isAuthenticated, userData };
+  return { isAuthenticated, userData, isLoading };
 };
 
 export default useAuth;

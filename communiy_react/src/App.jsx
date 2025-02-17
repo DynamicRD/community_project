@@ -34,6 +34,8 @@ import AnnouncementsNoticeRegist from './announcements/Announcements_regist';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
 import KakaoCallback from './login/KakaoCallback';
+
+// ✅ 리뷰, 찜 목록, 채팅, 아이디/비번 찾기 관련
 import Read from './review/Read';
 import Review from './review/Review';
 import Regist from './review/Regist';
@@ -113,7 +115,7 @@ function App() {
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
             <Route path="/review/read/:idx" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
+            <Route path="/review/regist/:idx" element={<Regist />} />
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />
@@ -121,6 +123,10 @@ function App() {
             <Route
               path="/announcements/notice/read/:idx"
               element={<AnnouncementsNoticeRead />}
+            />
+            <Route
+              path="/notice/regist"
+              element={<AnnouncementsNoticeRegist />}
             />
 
             {/* 찜 목록 */}

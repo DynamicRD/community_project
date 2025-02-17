@@ -86,8 +86,8 @@
 }
 
 .reviewList {
-  position: absolute;
-  right: 520px;
+  position: relative;
+  left: 350px;
 }
 
 .reviewList span {

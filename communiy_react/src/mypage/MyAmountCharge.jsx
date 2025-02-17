@@ -1,14 +1,34 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Container, Row, Col, Button, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { AuthContext } from '../context/AuthContext';
 
 export default function MyAmountCharge() {
+  const { isAuthenticated, userData } = useContext(AuthContext);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (userData && isAuthenticated !== false) {
+      const pathSegments = window.location.pathname.split('/');
+      const pageId = pathSegments[pathSegments.length - 1];
+
+      if (userData?.no.toString() !== pageId) {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+      }
+    }
+  }, [isAuthenticated, userData, navigate]);
+  useEffect(() => {
+    console.log(userData);
+    if (userData == null) {
+      alert('접근 권한이 없습니다.');
+      navigate('/');
+    }
+  }, [userData]);
   const [formData, setFormData] = useState({
     money: '',
   });
   const [error, setError] = useState(''); // 에러 메시지 상태 추가
-  const navigate = useNavigate();
 
   // 금액 입력값 변경 핸들러
   const handleChange = (e) => {
@@ -41,16 +61,15 @@ export default function MyAmountCharge() {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // 금액이 유효한지 체크 (정수이며 1 이상)
     const money = parseInt(formData.money, 10);
 
     if (isNaN(money) || money < 1000) {
-      setError('천원 이상부터 충전할수 있습니다.');
-      return; // 유효하지 않으면 제출을 막고 에러 메시지 표시
+      setError('천원 이상부터 충전할 수 있습니다.');
+      return;
     }
 
-    // 금액을 쿼리 파라미터로 전달하며 '/mypage/checkout'로 이동
-    navigate(`/mypage/checkout?money=${money}`);
+    // URL에 노출되지 않도록 state를 통해 데이터 전달
+    navigate(`/mypage/checkout/${userData.no}`, { state: { money } });
   };
 
   return (
@@ -85,7 +104,15 @@ export default function MyAmountCharge() {
         {/* 버튼들 */}
         <Form.Group as={Row} className="mb-3 text-center">
           <Col sm={12}>
-            <Button variant="primary" type="submit">
+            <Button
+              variant="light m-3"
+              style={{
+                border: '1px solid rgba(255, 47, 0, 0.65)',
+                backgroundColor: '#ff2d00',
+                color: 'white',
+              }}
+              type="submit"
+            >
               충전하기
             </Button>
             &nbsp;&nbsp;
