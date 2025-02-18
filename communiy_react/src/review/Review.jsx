@@ -23,6 +23,7 @@ export default function Review() {
       </Pagination.Item>
     );
   }
+  //import { AuthContext } from '../context/AuthContext'; //
   const { isAuthenticated, userData } = useContext(AuthContext);
   const [reviewList, setReviewList] = useState([]); // reviewList를 먼저 선언
   const [groupedReviews, setGroupedReviews] = useState([]);

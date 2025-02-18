@@ -77,7 +77,7 @@ export default function MyReviews() {
                       <div className="d-flex m-4">
                         <td>
                           <img
-                            src="/images/review1.png"
+                            src={`/images/${object.IMG_URL1}`}
                             alt="이미지"
                             style={{ width: '120px' }}
                             className="mypage_review_table_img"

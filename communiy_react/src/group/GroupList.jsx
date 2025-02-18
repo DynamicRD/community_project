@@ -180,12 +180,12 @@ function GroupList({ type }) {
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-            {filteredItems.length > 0 ? (
+              {filteredItems.length > 0 ? (
                 filteredItems.map((item) => (
                   <GroupItem key={item.GROUP_NO} item={item} />
                 ))
               ) : (
-                <div className='d-flex justify-content-center w-100'>
+                <div className="d-flex justify-content-center w-100">
                   <h3 className="no-meetings m-5">모임이 없습니다.</h3>
                 </div>
               )}

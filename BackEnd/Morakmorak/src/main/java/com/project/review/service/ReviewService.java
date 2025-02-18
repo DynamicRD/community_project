@@ -15,7 +15,7 @@ public interface ReviewService {
 	
 	public void replyInsert(Map<String, Object> map) throws Exception;
 	
-	public List<Map<String, Object>> replyList(@PathVariable(name = "idx") int idx) throws Exception;
+	public List<Map<String, Object>> replyList(int idx) throws Exception;
 
 	public List<Map<String, Object>> groupList() throws Exception;
 	

@@ -15,10 +15,11 @@
 		#{price}, substr(#{addr1}, 6, 2),
 		#{addr1}, #{addr2},
 		#{latitude}, #{longitude},
-		#{start_date,
+		#{start_date,	
 		jdbcType=DATE}, #{last_date, jdbcType=DATE},
 		#{comment1}, #{comment2},
-		#{type}, #{img_url1, jdbcType=BLOB}, #{img_url2, jdbcType=BLOB},#{img_url3, jdbcType=BLOB}
+		#{type}, #{img_url1, jdbcType=BLOB}, #{img_url2,
+		jdbcType=BLOB},#{img_url3, jdbcType=BLOB}
 		)
 	</insert>
 

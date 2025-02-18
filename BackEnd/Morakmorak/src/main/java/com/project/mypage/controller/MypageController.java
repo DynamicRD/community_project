@@ -35,6 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/mypage")
 @CrossOrigin
 public class MypageController {
+	
 	@Autowired
 	private MypageService service;
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.favorite.mapper.FavoriteMapper">
+
+	<select id="favoriteList" resultType="java.util.Map">
+		SELECT BASKET_NO, MG.NO AS NO, MG.GROUP_NO AS GROUP_NO, M.NICKNAME AS NICKNAME,
+		G.GROUP_TITLE AS GROUP_TITLE, G.IMG_URL1 AS IMG_URL, G.COMMENT1 AS COMMENT1,
+		G.START_DATE AS START_DATE, G.REG_DATE AS REG_DATE, G.LAST_DATE AS LAST_DATE,
+		G.CATEGORY AS CATEGORY, MG.PRICE AS PRICE FROM BASKET MG
+		LEFT JOIN MEMBER M 
+		ON MG.NO = M.NO
+		LEFT JOIN GROUP_MORAK G 
+		ON MG.GROUP_NO = G.GROUP_NO
+		WHERE MG.STATUS = 1
+		ORDER BY BASKET_NO
+	</select>
+</mapper>

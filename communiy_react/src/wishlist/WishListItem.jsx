@@ -33,10 +33,10 @@ export default function WishListItem({
   } else {
     return (
       <div className="col">
-        <div className="card h-100">
+        <div className="card_heartImg card h-100">
           <div
             className="favorite"
-            onClick={(handleFavoriteClick, handleHeartClick)} // // 하트아이콘 클릭시 새로고침 함수 설정 (DB연동하여 클릭시 status값이 변경되도록 하고 이후 새로고침실행)
+            onClick={(handleFavoriteClick, handleHeartClick)} // //
           >
             {statusValue === 0 ? (
               <FaRegHeart className="heartIcon" />
@@ -49,15 +49,15 @@ export default function WishListItem({
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <img
-              src={img_url}
-              className="card-img-top"
+              src="/images/1739754157992_문정배 사진.jpg"
+              className="WishListImg card-img-top"
               style={{ height: '264.83px', width: '394px' }}
               alt="..."
             />
             <div className="card-body">
               <h5 className="card-title">{g_title}</h5>
-              <p className="card-text">{comment1}</p>
-              <p className="card-text">{category}</p>
+              {/* <p className="card-text">{comment1}</p> */}
+              {/* <p className="card-text">{category}</p> */}
               <p className="card-text">{area}</p>
               <p className="card-text">{start_date}</p>
             </div>
