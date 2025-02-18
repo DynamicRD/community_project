@@ -7,6 +7,8 @@ import com.project.member.model.Member;
 import com.project.mypage.model.GroupMember;
 import com.project.mypage.model.TransactionLog;
 
+import jakarta.mail.MessagingException;
+
 public interface MypageService {
 	List<TransactionLog> selectTransactionLog(int no);
 
@@ -15,4 +17,6 @@ public interface MypageService {
 	void chargeAmount(Member member) throws Exception;
 
 	List<List<GroupMember>> getGroupMembers(int userNo);
+	
+	void sendEmail(String toEmail, int verifyNum) throws MessagingException;
 }
