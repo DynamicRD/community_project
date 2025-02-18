@@ -30,7 +30,7 @@ public class MypageServiceImpl implements MypageService {
 	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
 	
 	@Autowired
-//	private JavaMailSender mailSender;
+	private JavaMailSender mailSender;
 	private SecretConfig secretConfig = new SecretConfig();
 	
 	@Override
