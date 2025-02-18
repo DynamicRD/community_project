@@ -40,7 +40,7 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.join(map);
 	}
 
-	@Override
+
 	public void changeMoney(Map<String, Object> map) {
 		mapper.changeMoney(map);
 	}
@@ -53,6 +53,7 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 	@Override
 	public List<Map<String, Object>> memberList(String groupNo) {
 		return mapper.memberList(groupNo);
+
 	}
 
 	@Override

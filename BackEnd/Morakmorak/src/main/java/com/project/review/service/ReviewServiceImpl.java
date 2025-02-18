@@ -40,8 +40,8 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<Map<String, Object>> replyList() throws Exception {
-		return mapper.replyList();
+	public List<Map<String, Object>> replyList(int idx) throws Exception {
+		return mapper.replyList(idx);
 	}
 
 	
@@ -52,7 +52,6 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public Map<String, Object> readGroup(int idx) throws Exception {
-
 		return mapper.readGroup(idx);
 	}
 }

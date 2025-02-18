@@ -44,17 +44,18 @@ export default function SuccessPage() {
   }, [amount, userData]);
 
   return (
-    <Container className="mt-5">
-      <h1>충전 성공</h1>
-      <div>{`주문 아이디: ${searchParams.get('orderId')}`}</div>
-      <div>{`결제 금액: ${Number(
-        searchParams.get('amount')
-      ).toLocaleString()}원`}</div>
-      <Link to={`/mypage/${userData?.no}`}>
-        <Button variant="secondary" className="mt-3">
-          돌아가기
-        </Button>
-      </Link>
+    <Container className="mt-5 mb-5 w-25 d-flex">
+      <div className="infochange p-5">
+        <h1>충전 성공</h1>
+        <div>{`결제 금액: ${Number(
+          searchParams.get('amount')
+        ).toLocaleString()}원`}</div>
+        <a href={`/mypage/${userData?.no}`}>
+          <Button variant="secondary" className="mt-3">
+            돌아가기
+          </Button>
+        </a>
+      </div>
     </Container>
   );
 }

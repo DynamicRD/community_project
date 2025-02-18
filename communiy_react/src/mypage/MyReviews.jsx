@@ -54,10 +54,6 @@ export default function MyReviews() {
   return (
     <>
       <Container>
-        <input type="radio" name="radio" />
-        <input type="radio" name="radio" />
-        <input type="radio" name="radio" />
-
         <div className="mypage_review_list mt-5 w-100">
           <div className="d-flex justify-content-start gap-3 mb-4">
             <table className="mypage_review_table">
