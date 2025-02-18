@@ -5,5 +5,7 @@ import java.util.Map;
 
 public interface FavoriteService {
 
-	public List<Map<String, Object>> favoriteList() throws Exception;
+	public List<Map<String, Object>> favoriteList(int idx) throws Exception;
+	
+	public void favoriteUpdateStatus(int idx) throws Exception;
 }

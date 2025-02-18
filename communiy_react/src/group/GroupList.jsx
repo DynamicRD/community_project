@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './GroupList.css';
 import { Container } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
@@ -6,10 +6,8 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
 import GroupItem from './component/GroupItem';
-import { AuthContext } from '../context/AuthContext';
 
 function GroupList({ type }) {
-  const { isAuthenticated, userData } = useContext(AuthContext);
   const [items, setGroupList] = useState([]);
 
   useEffect(() => {
@@ -98,16 +96,8 @@ function GroupList({ type }) {
   return (
     <>
       <Link
-        to={isAuthenticated ? '/group/regist' : '#'}
+        to={'/group/regist'}
         style={{ textDecoration: 'none', color: 'inherit' }}
-        onClick={(e) => {
-          if (!isAuthenticated) {
-            e.preventDefault(); // 기본 링크 동작을 막음
-            alert('로그인 후 이용 가능합니다.');
-            // 로그인 페이지로 리디렉션 (예: 로그인 페이지 URL이 '/login'일 경우)
-            window.location.href = '/login';
-          }
-        }}
       >
         <div className="group_banner">
           <span>

@@ -27,8 +27,9 @@ public class MypageServiceImpl implements MypageService {
 	@Autowired
 	private MypageMapper mapper;
 	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
+	
 	@Autowired
-	private JavaMailSender mailSender;
+//	private JavaMailSender mailSender;
 	private SecretConfig secretConfig = new SecretConfig();
 	
 	@Override
@@ -84,15 +85,15 @@ public class MypageServiceImpl implements MypageService {
 
 	@Override
 	public void sendEmail(String toEmail, int verifyNum) throws MessagingException {
-		 MimeMessage message = mailSender.createMimeMessage();
-	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
-
-	        helper.setFrom(secretConfig.getSendEmail());
-	        helper.setTo(toEmail);
-	        helper.setSubject("[모락모락] 회원탈퇴를 위한 이메일 인증코드입니다.");
-	        helper.setText("인증번호 6자리 "+verifyNum+"을 입력해주세요", true); // HTML 지원
-
-	        mailSender.send(message);
+//		 MimeMessage message = mailSender.createMimeMessage();
+//	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+//
+//	        helper.setFrom(secretConfig.getSendEmail());
+//	        helper.setTo(toEmail);
+//	        helper.setSubject("[모락모락] 회원탈퇴를 위한 이메일 인증코드입니다.");
+//	        helper.setText("인증번호 6자리 "+verifyNum+"을 입력해주세요", true); // HTML 지원
+//
+//	        mailSender.send(message);
 		
 	}
 

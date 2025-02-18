@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.favorite.service.FavoriteService;
@@ -18,8 +19,14 @@ public class FavoriteController {
 	@Autowired
 	private FavoriteService service;
 
-	@GetMapping("/favorites")
-	public List<Map<String, Object>> favoriteList() throws Exception {
-		return service.favoriteList();
+	@GetMapping("/favorites/{idx}")
+	public List<Map<String, Object>> favoriteList(@PathVariable(name = "idx") int idx) throws Exception {
+		List<Map<String, Object>> listMap = service.favoriteList(idx);
+		return listMap;
+	}
+
+	@GetMapping("/favorites/delete/{idx}")
+	public void favoriteUpdateStatus(@PathVariable(name = "idx") int idx) throws Exception {
+		service.favoriteUpdateStatus(idx);
 	}
 }

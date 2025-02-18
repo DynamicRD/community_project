@@ -10,6 +10,7 @@
   z-index: 100;
   padding: 5px;
   cursor: pointer;
+  margin-left: 10px;
 }
 
 .heartIcon {
@@ -29,4 +30,9 @@
 .page-link:active {
   background-color: #6c757db7;
   color: white;
+}
+
+.WishListNo_meetings {
+  font-weight: 900;
+  font-size: 25px;
 }
