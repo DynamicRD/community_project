@@ -71,6 +71,10 @@ increment by 1;
 create sequence report_seq
 start with 1
 increment by 1;
+
+create sequence notification_seq
+start with 1
+increment by 1;
 -- 모임장바구니
 create table basket(
     basket_no number(6) not null,
@@ -148,9 +152,7 @@ create table member_group(
     status varchar2(20),             --승인대기, 멤버, 모임장
     primary key(member_group_no)
 );
---같은 유저가 같은 모임 두번 신청 못하게 unique처리
-ALTER TABLE MEMBER_GROUP
-ADD CONSTRAINT UNIQUE_MEMBER_GROUP UNIQUE (NO, GROUP_NO);
+
 
 
 -- 리뷰게시판
@@ -222,8 +224,8 @@ create table notification(
     reg_date date default sysdate,        --알림일
     primary key(notification_no)
 );
-
-
+insert into notification (notification_no,no,content) values (notification_seq.nextval, 45,'안녕하세요');
+commit;
 -- 공지사항
 create table notice(
     notice_no number(6) not null,
