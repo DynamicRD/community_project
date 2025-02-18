@@ -30,8 +30,6 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
-	private final JwtUtil jwtUtil;
-	private final RestTemplate restTemplate = new RestTemplate();
 
 	@Override
 	public boolean duplicateCheck(Member member) {
@@ -148,15 +146,6 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
-	// 🔹 카카오 Access Token 요청 메서드 추가
-	private String getAccessToken(String authCode) {
-		String tokenUrl = "https://kauth.kakao.com/oauth/token" + "&client_id=" + secretConfig.getKakaoClienID()
-				+ "&redirect_uri=" + secretConfig.getKaKaoRedirectURL() + "&code=" + authCode;
-
-		ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, null, Map.class);
-		return (String) response.getBody().get("access_token");
-	}
-
 	@Override
 	public Member selectMemberByNo(Member member) {
 		member = mapper.getMemberInfoByNo(member);
@@ -173,6 +162,27 @@ public class MemberServiceImpl implements MemberService {
 	public Member selectSnsInfo(Member member) {
 		member = mapper.getSnsInfo(member);
 		return member;
+	}
+
+	@Override
+	public boolean passCheck(Member member) {
+		String savedPass = mapper.passCompare(member);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		boolean isMatch = encoder.matches(member.getPw(), savedPass);
+		return isMatch;
+	}
+
+	@Override
+	public void deleteMember(Member member) {
+		mapper.deleteMemeber(member);
+	}
+
+	@Override
+	public boolean passCheckNo(Member member) {
+		String savedPass = mapper.passCompareNo(member);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		boolean isMatch = encoder.matches(member.getPw(), savedPass);
+		return isMatch;
 	}
 
 }

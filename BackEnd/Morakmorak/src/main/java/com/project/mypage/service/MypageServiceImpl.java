@@ -17,6 +17,7 @@ import com.project.common.config.SecretConfig;
 import com.project.member.model.Member;
 import com.project.mypage.mapper.MypageMapper;
 import com.project.mypage.model.GroupMember;
+import com.project.mypage.model.Notification;
 import com.project.mypage.model.TransactionLog;
 
 import jakarta.mail.MessagingException;
@@ -91,9 +92,22 @@ public class MypageServiceImpl implements MypageService {
 	        helper.setTo(toEmail);
 	        helper.setSubject("[모락모락] 회원탈퇴를 위한 이메일 인증코드입니다.");
 	        helper.setText("인증번호 6자리 "+verifyNum+"을 입력해주세요", true); // HTML 지원
-
+	        System.out.println("메세지 전송직전");
 	        mailSender.send(message);
+	        System.out.println("메세지 전송됨");
 		
+	}
+
+
+	@Override
+	public List<Notification> selectNotification(int no) {
+		return mapper.selectNotification(no);
+	}
+
+
+	@Override
+	public void readNotification(int no) {
+		mapper.readNotification(no);
 	}
 
 

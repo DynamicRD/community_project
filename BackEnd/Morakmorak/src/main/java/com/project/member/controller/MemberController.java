@@ -572,5 +572,27 @@ public class MemberController {
 
 		return response.getBody();
 	}
+	
+	@PostMapping("/withdrawal")
+	public ResponseEntity<?> withdrawlMember(@RequestBody MemberDTO memberDTO) {
+		Member member = new Member();
+		member.setPw(memberDTO.getPass());
+		member.setNo(memberDTO.getNo());
+		boolean passCheck = service.passCheckNo(member);
+		if(passCheck || memberDTO.getPass().equals("")) {
+			try {
+				// 회원탈퇴
+				service.deleteMember(member);
+				return ResponseEntity.ok().body(Collections.singletonMap("message", "회원탈퇴 성공"));
+			} catch (Exception e) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body(Collections.singletonMap("message", "회원탈퇴 실패: " + e.getMessage()));
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Collections.singletonMap("message", "비밀번호 불일치"));
+		}
+		
+	}
 
 }
