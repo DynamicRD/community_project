@@ -82,7 +82,7 @@ export default function Checkout() {
         orderName: '포인트 충전',
         customerName: '김토스',
         customerEmail: 'customer123@gmail.com',
-        successUrl: `http://localhost:5173/mypage/checkout/success/${userData.no}`,
+        successUrl: `http://localhost:8080/mypage/charge/${userData.no}`,
         failUrl: `http://localhost:5173/mypage/checkout/fail/${userData.no}`,
         customerMobilePhone: '01012234123',
       });

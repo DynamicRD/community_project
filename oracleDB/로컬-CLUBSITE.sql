@@ -10,8 +10,9 @@ drop table faq;
 drop table charge;
 drop table messages;
 drop table visit_log
-
 drop table member;
+
+
 create sequence basket_seq 
 start with 1 
 increment by 1;
@@ -65,6 +66,14 @@ start with 1
 increment by 1;
 
 create sequence transaction_seq
+start with 1
+increment by 1;
+
+create sequence report_seq
+start with 1
+increment by 1;
+
+create sequence notification_seq
 start with 1
 increment by 1;
 -- 모임장바구니
@@ -133,16 +142,20 @@ create table comments(
     primary key(comments_no)
 );
 select * from member;
+update member set id = 'aaaaa' where phone = 01049245948;
+delete from member where no = 41;
+commit;
 
-
-drop table member_group;
 create table member_group(
     member_group_no number(6),
-    no number(6) not null unique,
+    no number(6) not null,
     group_no number(6) not null,
-    status varchar2(20),             --찜, 승인대기, 멤버, 모임장
+    status varchar2(20),             --승인대기, 멤버, 모임장
     primary key(member_group_no)
 );
+--같은 유저가 같은 모임 두번 신청 못하게 unique처리
+ALTER TABLE MEMBER_GROUP
+ADD CONSTRAINT UNIQUE_MEMBER_GROUP UNIQUE (NO, GROUP_NO);
 
 
 -- 리뷰게시판
@@ -214,8 +227,8 @@ create table notification(
     reg_date date default sysdate,        --알림일
     primary key(notification_no)
 );
-
-
+insert into notification (notification_no,no,content) values (notification_seq.nextval, 45,'안녕하세요');
+commit;
 -- 공지사항
 create table notice(
     notice_no number(6) not null,
@@ -259,7 +272,7 @@ CREATE TABLE messages (
     firebase_message_id VARCHAR2(255) UNIQUE,
     primary key(message_no)
 );
-
+select * from messages;
 
 -- 방문 기록 테이블 추가
 create table visit_log(
@@ -285,3 +298,14 @@ VALUES (2, 22, 'Deposit', 50000);
 commit;
 select * from transaction_log;
 insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);
+
+-- 신고
+create table report(
+    rep_no number(6),
+    reporter varchar2(50),
+    reported varchar2(50),
+    reason varchar2(255),
+    rep_date date,
+    rep_status varchar2(1),
+    primary key(rep_id)
+    );

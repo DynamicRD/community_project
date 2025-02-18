@@ -44,4 +44,8 @@ public class SecretConfig {
     public String getSendEmail() {
     	return dotenv.get("GOOGLE_EMAIL");
     }
+    
+    public String getTossId() {
+    	return dotenv.get("TOSS_ORDER_ID");
+    }
 }
