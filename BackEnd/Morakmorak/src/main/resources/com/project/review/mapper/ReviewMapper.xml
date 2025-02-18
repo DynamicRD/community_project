@@ -54,7 +54,7 @@
 	<select id="groupList" resultType="java.util.Map">
 		SELECT GROUP_NO, NO, GROUP_TITLE, TO_CHAR(START_DATE, 'yyyy-MM-dd
 		HH24:MI') AS START_DATE,TO_CHAR(LAST_DATE, 'yyyy-MM-dd HH24:MI') AS
-		LAST_DATE, PRICE FROM GROUP_MORAK ORDER BY GROUP_NO DESC
+		LAST_DATE, PRICE, IMG_URL1 FROM GROUP_MORAK ORDER BY GROUP_NO DESC
 	</select>
 
 	<select id="readGroup" resultType="java.util.Map">

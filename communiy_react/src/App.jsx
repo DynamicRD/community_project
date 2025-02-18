@@ -40,7 +40,7 @@ import Read from './review/Read';
 import Review from './review/Review';
 import Regist from './review/Regist';
 import ChatRoom from './chatroom/Chatroom';
-import WishList from './wishlist/wishlist';
+import WishList from './wishlist/WishList';
 import FindId from './login/FindId';
 import FindPwd from './login/FindPwd';
 import ResetPassword from './login/ResetPassword';
