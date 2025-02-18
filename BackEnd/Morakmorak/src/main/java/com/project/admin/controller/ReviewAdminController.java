@@ -41,8 +41,8 @@ public class ReviewAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateReview(@PathVariable Long id, @RequestBody ReviewAdmin review) {
-        review.setId(id);
+    public ResponseEntity<Void> updateReview(@PathVariable Long no, @RequestBody ReviewAdmin review) {
+        review.setNo(no);
         reviewService.updateReview(review);
         return ResponseEntity.ok().build();
     }
