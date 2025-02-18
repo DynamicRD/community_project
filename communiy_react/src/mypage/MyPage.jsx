@@ -21,23 +21,12 @@ function MyPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userData && isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      console.log(userData?.selfPr);
-      if (userData?.no.toString() !== pageId) {
-        alert(`접근 권한이 없습니다.`);
-        navigate('/');
-      }
-    }
-  }, [isAuthenticated, userData, navigate]);
-  useEffect(() => {
+    console.log('userData 대기중');
     if (!userData) return; // userData가 로드될 때까지 기다림
 
     if (isAuthenticated !== false) {
       const pathSegments = window.location.pathname.split('/');
       const pageId = pathSegments[pathSegments.length - 1];
-
       if (userData?.no.toString() !== pageId) {
         alert('접근 권한이 없습니다.');
         navigate('/');
@@ -126,7 +115,7 @@ function MyPage() {
           <Row>
             <Col md={2}>
               <img
-                src={`../../public/images/${userData?.imgUrl}`}
+                src={`D:/community_project/communiy_react/public/images/${userData?.imgUrl}`}
                 className="rounded-circle"
                 alt="Profile Picture"
                 style={{
@@ -281,7 +270,7 @@ function MyPage() {
           </Pagination>
           <div className="text-center">
             {' '}
-            <Link to="/mypage/infodelete">
+            <Link to={`/mypage/withdrawal/${userData.no}`}>
               <Button block className="myPageBtn mt-3" variant="danger">
                 회원탈퇴
               </Button>

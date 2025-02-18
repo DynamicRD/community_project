@@ -39,7 +39,7 @@
 		gm.price AS amount
 		FROM member_group mg
 		JOIN group_morak gm ON mg.group_no = gm.group_no
-		WHERE mg.no = #{no}, AND mg.status = '찜'
+		WHERE mg.no = #{no} AND mg.status = '찜'
 		ORDER BY gm.start_date
 	</select>
 	<select id="getGroupMembersByUserNoOngoing"
@@ -71,7 +71,7 @@
 		JOIN group_morak gm ON mg.group_no = gm.group_no
 		WHERE mg.no = #{no}
 		AND CURRENT_DATE > gm.last_date
-		ORDER BY gm.start_date;
+		ORDER BY gm.start_date
 	</select>
 
 </mapper>

@@ -19,12 +19,14 @@ export default function MyProfileChange() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userData && isAuthenticated !== false) {
+    console.log('userData 대기중');
+    if (!userData) return; // userData가 로드될 때까지 기다림
+
+    if (isAuthenticated !== false) {
       const pathSegments = window.location.pathname.split('/');
       const pageId = pathSegments[pathSegments.length - 1];
-
       if (userData?.no.toString() !== pageId) {
-        alert(`접근 권한이 없습니다.`);
+        alert('접근 권한이 없습니다.');
         navigate('/');
       }
     }
@@ -100,7 +102,7 @@ export default function MyProfileChange() {
       );
 
       console.log('프로필 수정 성공:', response.data);
-      navigate(`/mypage/${userData.no}`);
+      window.location.href = `/mypage/${userData.no}`;
     } catch (error) {
       console.error('업로드 실패:', error);
       alert('업로드 실패');

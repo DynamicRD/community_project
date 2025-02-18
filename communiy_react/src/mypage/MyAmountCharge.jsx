@@ -54,7 +54,7 @@ export default function MyAmountCharge() {
 
   // 돌아가기 버튼 핸들러
   const handleGoBack = () => {
-    navigate('/mypage');
+    navigate(`/mypage/${userData.no}`);
   };
 
   // 폼 제출 핸들러
@@ -73,59 +73,58 @@ export default function MyAmountCharge() {
   };
 
   return (
-    <Container className="mt-5 mb-5 w-25">
-      <h2>포인트 충전하기</h2>
+    <Container className="mt-5 mb-5 w-25 d-flex">
+      <div className="infochange p-5">
+        <h2>포인트 충전하기</h2>
 
-      {/* 금액 입력 */}
-      <Form onSubmit={handleSubmit}>
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={2}>
-            금액
-          </Form.Label>
-          <Col sm={10}>
-            <Form.Control
-              type="text"
-              name="money"
-              value={formData.money}
-              onChange={handleChange}
-            />
-          </Col>
-        </Form.Group>
-
-        {/* 에러 메시지 표시 */}
-        {error && (
-          <Form.Group as={Row}>
-            <Col sm={{ span: 10, offset: 2 }}>
-              <p className="text-danger">{error}</p>
+        {/* 금액 입력 */}
+        <Form onSubmit={handleSubmit}>
+          <Form.Group as={Row} className="mb-3">
+            <Form.Label column sm={2}>
+              금액
+            </Form.Label>
+            <Col sm={10}>
+              <Form.Control
+                type="text"
+                name="money"
+                value={formData.money}
+                onChange={handleChange}
+              />
             </Col>
           </Form.Group>
-        )}
 
-        {/* 버튼들 */}
-        <Form.Group as={Row} className="mb-3 text-center">
-          <Col sm={12}>
-            <Button
-              variant="light m-3"
-              style={{
-                border: '1px solid rgba(255, 47, 0, 0.65)',
-                backgroundColor: '#ff2d00',
-                color: 'white',
-              }}
-              type="submit"
-            >
-              충전하기
-            </Button>
-            &nbsp;&nbsp;
-            <Button variant="secondary" type="button" onClick={handleReset}>
-              다시입력
-            </Button>
-            &nbsp;&nbsp;
-            <Button variant="secondary" type="button" onClick={handleGoBack}>
-              돌아가기
-            </Button>
-          </Col>
-        </Form.Group>
-      </Form>
+          {/* 에러 메시지 표시 */}
+          {error && (
+            <Form.Group as={Row}>
+              <Col sm={{ span: 10, offset: 2 }}>
+                <p className="text-danger">{error}</p>
+              </Col>
+            </Form.Group>
+          )}
+
+          {/* 버튼들 */}
+          <Form.Group as={Row} className="mb-3 text-center">
+            <Col sm={12}>
+              <Button
+                className="registSummtBtn"
+                variant="light"
+                style={{ color: 'white' }}
+                type="submit"
+              >
+                충전하기
+              </Button>
+              &nbsp;&nbsp;
+              <Button variant="secondary" type="button" onClick={handleReset}>
+                다시입력
+              </Button>
+              &nbsp;&nbsp;
+              <Button variant="secondary" type="button" onClick={handleGoBack}>
+                돌아가기
+              </Button>
+            </Col>
+          </Form.Group>
+        </Form>
+      </div>
     </Container>
   );
 }

@@ -137,7 +137,7 @@ export default function GroupDetailItem({ item }) {
             </h4>
             <h4>
               <FontAwesomeIcon icon={faUserGroup} />
-              &nbsp; 모집 인원 3 / {item.USER_MAX}명
+              &nbsp; 모집 인원 {item.MEMBER_COUNT} / {item.USER_MAX}명
             </h4>
             <h4>
               <FontAwesomeIcon icon={faSackDollar} />
@@ -159,13 +159,13 @@ export default function GroupDetailItem({ item }) {
         <div className="profile mt-5">
           <div className="d-flex align-items-center">
             <img
-              src="/images/group_leader_profile.jpeg"
+              src={`/images/${item.PROFILE_IMG}`}
               alt="모임장 프로필"
               className="rounded-circle"
             />
-            <h3 className="p-">(모임장 닉네임) 모임장</h3>
+            <h3 className="p-">{item.NICKNAME} 모임장</h3>
           </div>
-          <h4>평균별점 5.0</h4>
+          <h4>{item.STAR_SUM===0?'아직 등록된 평점이 없습니다.':`평균별점 ${item.STAR_SUM}`}</h4>
         </div>
       </div>
 
@@ -195,7 +195,7 @@ export default function GroupDetailItem({ item }) {
             value={item.COMMENT2}
             readOnly
             ref={textareaRef}
-            //   onChange={handleTextChange}
+            // onChange={handleTextChange}
             // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
             style={{
               border: 'none',
@@ -211,7 +211,7 @@ export default function GroupDetailItem({ item }) {
         <p
           style={{ fontSize: '35px', marginBottom: '10px', fontWeight: '700' }}
         >
-          현재 참여중인 멤버(3/{item.USER_MAX})
+          현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
         </p>
         <ListGroup as="ol">
           {memberList.map((member) => {

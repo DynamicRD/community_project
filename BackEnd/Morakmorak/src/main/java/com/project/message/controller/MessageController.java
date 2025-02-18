@@ -45,7 +45,7 @@ public class MessageController {
 	
 	public MessageController() {
 		// 반드시 계정 내 등록된 유효한 API 키, API Secret Key를 입력해주셔야 합니다!
-		this.messageService = NurigoApp.INSTANCE.initialize(secretConfig.getNurigoApiKey(), secretConfig.getNurigoSecretKey(),
+		this.messageService = NurigoApp.INSTANCE.initialize("NCSW00Q3G7SZFQ1I", "LQ0DNASFVYA1XA6VNGFGPLQCUMHHGGXO",
 				"https://api.coolsms.co.kr");
 	}
 

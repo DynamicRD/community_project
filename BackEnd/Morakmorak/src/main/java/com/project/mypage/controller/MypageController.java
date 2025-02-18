@@ -12,6 +12,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ import com.project.mypage.model.GroupMember;
 import com.project.mypage.model.TransactionLog;
 import com.project.mypage.service.MypageService;
 
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,7 +40,8 @@ public class MypageController {
 	
 	@Autowired
 	private MypageService service;
-
+	
+	
 	@GetMapping("/transactionHistory")
 	public ResponseEntity<List<TransactionLog>> getUserCoinHistory(@RequestParam("no") int no) {
 		List<TransactionLog> historyList = service.selectTransactionLog(no);
@@ -94,4 +97,17 @@ public class MypageController {
 		List<List<GroupMember>> meetings = service.getGroupMembers(no);
 		return ResponseEntity.ok(meetings);
 	}
+	
+	@GetMapping("/email")
+	public void sendEmail(@RequestParam("email") String email,@RequestParam("no") String no) {
+	
+		try {
+			service.sendEmail(email, 0);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 }

@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.project.group_morak.mapper.GroupMorakMapper">
+<mapper
+	namespace="com.project.group_morak.mapper.GroupMorakMapper">
 	<insert id="insert">
 		INSERT INTO GROUP_MORAK (
-		group_no, no, group_title, category,
+		group_no, no, group_title,
+		category,
 		user_max,
 		price, area, addr1, addr2,
 		latitude, longitude,
 		start_date,
-		last_date, comment1, comment2, type, img_url1, img_url2, img_url3
+		last_date, comment1, comment2, type, img_url1, img_url2,
+		img_url3
 		) VALUES (
 		group_seq.nextval, 1,
-		#{group_title}, #{category}, #{user_max},
+		#{group_title}, #{category},
+		#{user_max},
 		#{price}, substr(#{addr1}, 6, 2),
 		#{addr1}, #{addr2},
 		#{latitude}, #{longitude},
-		#{start_date,	
-		jdbcType=DATE}, #{last_date, jdbcType=DATE},
+		#{start_date,
+		jdbcType=DATE}, #{last_date,
+		jdbcType=DATE},
 		#{comment1}, #{comment2},
-		#{type}, #{img_url1, jdbcType=BLOB}, #{img_url2,
-		jdbcType=BLOB},#{img_url3, jdbcType=BLOB}
+		#{type}, #{img_url1,
+		jdbcType=BLOB}, #{img_url2, jdbcType=BLOB},#{img_url3, jdbcType=BLOB}
 		)
 	</insert>
 
@@ -35,30 +40,61 @@
 	</select>
 
 	<select id="read">
-		SELECT *
-		FROM
-		GROUP_MORAK
-		WHERE group_no= #{groupNo}
+		SELECT
+		G.*,
+		MG.*,
+		MG.NO AS MEMBER_NO,
+		M.NICKNAME,
+		M.IMG_URL AS PROFILE_IMG,
+		M.STAR_SUM,
+		COUNT(CASE WHEN MG.STATUS = 'MEMBER' THEN 1 END) OVER (PARTITION BY G.GROUP_NO) AS
+		MEMBER_COUNT
+		FROM GROUP_MORAK G
+		LEFT JOIN MEMBER_GROUP MG ON G.GROUP_NO = MG.GROUP_NO
+		INNER JOIN MEMBER M ON G.NO = M.NO
+		WHERE G.GROUP_NO = #{groupNo}
+		<!-- SELECT * FROM GROUP_MORAK WHERE group_no= #{groupNo} -->
 	</select>
 
 	<update id="update">
 		UPDATE GROUP_MORAK SET
-		GROUP_TITLE = #{group_title}, START_DATE = #{start_date, jdbcType=DATE},
-		LAST_DATE = #{last_date, jdbcType=DATE},
-		USER_MAX = #{user_max}, PRICE = #{price}, ADDR1 = #{addr1},
-		ADDR2 = #{addr2}, COMMENT1 = #{comment1}, COMMENT2 = #{comment2},
+		GROUP_TITLE = #{group_title},
+		START_DATE = #{start_date, jdbcType=DATE},
+		LAST_DATE = #{last_date,
+		jdbcType=DATE},
+		USER_MAX = #{user_max}, PRICE = #{price}, ADDR1 =
+		#{addr1},
+		ADDR2 = #{addr2}, COMMENT1 = #{comment1}, COMMENT2 =
+		#{comment2},
 		TYPE = #{type}, CATEGORY = #{category},
-		LATITUDE = #{latitude}, LONGITUDE = #{longitude},
-		IMG_URL1 = #{img_url1, jdbcType=BLOB},IMG_URL2 = #{img_url2, jdbcType=BLOB}, IMG_URL3 = #{img_url3, jdbcType=BLOB}
+		LATITUDE =
+		#{latitude}, LONGITUDE = #{longitude},
+		IMG_URL1 = #{img_url1,
+		jdbcType=BLOB},IMG_URL2 = #{img_url2, jdbcType=BLOB}, IMG_URL3 =
+		#{img_url3, jdbcType=BLOB}
 		WHERE group_no = #{group_no}
 	</update>
-	
+
 	<insert id="join">
 		INSERT INTO MEMBER_GROUP
-		VALUES(member_group_seq.nextval, #{no}, #{group_no}, #{status}, #{pr})
+		VALUES(member_group_seq.nextval, #{no}, #{group_no}, 'WAITING', #{pr})
+	</insert>
+
+	<update id="changeMoney">
+		UPDATE MEMBER SET MONEY = MONEY - #{price} WHERE NO =
+		#{no}
+	</update>
+
+	<insert id="insertBasket">
+		INSERT INTO BASKET
+		SELECT basket_seq.nextval, #{no},
+		#{group_no}, G.PRICE, SYSDATE, G.START_DATE, G.LAST_DATE, 'BASKET'
+		FROM GROUP_MORAK G
+		WHERE G.GROUP_NO = #{group_no}
 	</insert>
 	
-	<!-- <update id="join">
-		UPDATE MEMBER SET MONEY = MONEY - #{price}
-	</update> -->
+	<select id="memberList">
+		
+	</select>
+
 </mapper>

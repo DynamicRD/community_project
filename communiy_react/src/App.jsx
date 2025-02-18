@@ -55,6 +55,7 @@ import Board from './Admin/Board/Board';
 import ReviewDetail from './Admin/Board/ReviewDetail';
 import Stats from './Admin/Stats/Stats';
 import KakaoSignup from './login/KaKaoSignup';
+import MembershipWithdrawal from './mypage/MembershipWithdrawal';
 
 function App() {
   return (
@@ -102,6 +103,10 @@ function App() {
             <Route
               path="/mypage/infochange/address"
               element={<AddressInput />}
+            />
+            <Route
+              path="/mypage/withdrawal/:idx"
+              element={<MembershipWithdrawal />}
             />
 
             {/* 채팅 */}

@@ -41,4 +41,7 @@ public class SecretConfig {
     	return dotenv.get("GOOGLE_REDIRECT_URI");
     }
 
+    public String getSendEmail() {
+    	return dotenv.get("GOOGLE_EMAIL");
+    }
 }
