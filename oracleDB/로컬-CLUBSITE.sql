@@ -67,6 +67,10 @@ increment by 1;
 create sequence transaction_seq
 start with 1
 increment by 1;
+
+create sequence report_seq
+start with 1
+increment by 1;
 -- 모임장바구니
 create table basket(
     basket_no number(6) not null,
@@ -133,16 +137,20 @@ create table comments(
     primary key(comments_no)
 );
 select * from member;
+update member set id = 'aaaaa' where phone = 01049245948;
+delete from member where no = 41;
+commit;
 
-
-drop table member_group;
 create table member_group(
     member_group_no number(6),
-    no number(6) not null unique,
+    no number(6) not null,
     group_no number(6) not null,
-    status varchar2(20),             --찜, 승인대기, 멤버, 모임장
+    status varchar2(20),             --승인대기, 멤버, 모임장
     primary key(member_group_no)
 );
+--같은 유저가 같은 모임 두번 신청 못하게 unique처리
+ALTER TABLE MEMBER_GROUP
+ADD CONSTRAINT UNIQUE_MEMBER_GROUP UNIQUE (NO, GROUP_NO);
 
 
 -- 리뷰게시판
@@ -285,3 +293,14 @@ VALUES (2, 22, 'Deposit', 50000);
 commit;
 select * from transaction_log;
 insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);
+
+-- 신고
+create table report(
+    rep_no number(6),
+    reporter varchar2(50),
+    reported varchar2(50),
+    reason varchar2(255),
+    rep_date date,
+    rep_status varchar2(1),
+    primary key(rep_id)
+    );
