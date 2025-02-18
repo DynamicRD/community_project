@@ -15,7 +15,13 @@ public class FavoriteServiceImpl implements FavoriteService {
 	private FavoriteMapper mapper;
 
 	@Override
-	public List<Map<String, Object>> favoriteList() throws Exception {
-		return mapper.favoriteList();
+	public List<Map<String, Object>> favoriteList(int idx) throws Exception {
+		return mapper.favoriteList(idx);
+	}
+
+	@Override
+	public void favoriteUpdateStatus(int idx) throws Exception {
+		mapper.favoriteUpdateStatus(idx);
+
 	}
 }

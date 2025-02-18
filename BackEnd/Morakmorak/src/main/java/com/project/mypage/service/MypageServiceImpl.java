@@ -28,8 +28,9 @@ public class MypageServiceImpl implements MypageService {
 	@Autowired
 	private MypageMapper mapper;
 	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
+	
 	@Autowired
-	private JavaMailSender mailSender;
+//	private JavaMailSender mailSender;
 	private SecretConfig secretConfig = new SecretConfig();
 	
 	@Override
@@ -85,6 +86,7 @@ public class MypageServiceImpl implements MypageService {
 
 	@Override
 	public void sendEmail(String toEmail, int verifyNum) throws MessagingException {
+
 		 MimeMessage message = mailSender.createMimeMessage();
 	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
 
@@ -95,6 +97,7 @@ public class MypageServiceImpl implements MypageService {
 	        System.out.println("메세지 전송직전");
 	        mailSender.send(message);
 	        System.out.println("메세지 전송됨");
+
 		
 	}
 
