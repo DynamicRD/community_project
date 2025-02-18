@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.announcements.mapper.NoticeMapper">
+	
+	<select id="listNotice" resultType="java.util.Map">
+		SELECT NOTICE_NO, NOTICE_TITLE, CONTENT, TO_CHAR(REG_DATE, 'YYYY-MM-DD') AS REG_DATE FROM NOTICE ORDER BY NOTICE_NO DESC
+	</select>
+
+	<insert id="insertNotice">
+		INSERT INTO NOTICE (NOTICE_NO, NOTICE_TITLE, CONTENT, REG_DATE) VALUES
+		(NOTICE_SEQ.NEXTVAL, #{n_title}, #{content}, SYSDATE)
+	</insert>
+	
+	<select id="readNotice" resultType="java.util.Map">
+		SELECT NOTICE_NO, NOTICE_TITLE, CONTENT, TO_CHAR(REG_DATE, 'YYYY-MM-DD HH24:MI:SS') AS REG_DATE FROM NOTICE WHERE NOTICE_NO = #{idx}
+	</select>
+</mapper>
