@@ -112,13 +112,26 @@
 	</select>
 	
 	<select id="memberStatusUpdate">
-		UPDATE MEMBER_GROUP SET STATUS = #{status, jdbcType=VARCHAR} 
+		UPDATE MEMBER_GROUP SET STATUS = #{status, jdbcType=VARCHAR}
 		WHERE NO = #{no} AND GROUP_NO = #{group_no}
 	</select>
-	
+
 	<insert id="memberReport">
-		INSERT INTO REPORT(rep_no, reporter_no, reported_no, reason) 
+		INSERT INTO REPORT(rep_no, reporter_no, reported_no, reason)
 		VALUES(report_seq.NEXTVAL, #{reporter_no}, #{reported_no}, #{reason})
 	</insert>
-
+	<select id="getGroupsByCategory"
+		resultType="com.project.group_morak.model.GroupMorak">
+		SELECT
+		gm.group_no,
+		gm.group_title,
+		gm.area,
+		gm.img_url1,
+		gm.start_date
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		WHERE gm.category = #{category}
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 6 ROWS ONLY
+	</select>
 </mapper>

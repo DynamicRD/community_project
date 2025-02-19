@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.group_morak.model.GroupMorak;
 import com.project.group_morak.service.GroupMorakService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -31,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/group")
 public class GroupMorakController {
-	
+
 	@Autowired
 	private GroupMorakService service;
 
@@ -41,7 +42,7 @@ public class GroupMorakController {
 			@RequestParam(value = "img_url2", required = false) MultipartFile file2,
 			@RequestParam(value = "img_url3", required = false) MultipartFile file3) throws Exception {
 		try {
-			String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
+			String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString() + "/";
 			// 파일을 업로드할 폴더 지정
 			File directory = new File(uploadPath);
 			if (!directory.exists()) {
@@ -146,7 +147,7 @@ public class GroupMorakController {
 			String[] existingFilePaths = { (String) currentData.get("IMG_URL1"), (String) currentData.get("IMG_URL2"),
 					(String) currentData.get("IMG_URL3") };
 
-			String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
+			String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString() + "/";
 			// 파일을 업로드할 폴더 지정
 			File directory = new File(uploadPath);
 			if (!directory.exists()) {
@@ -163,8 +164,7 @@ public class GroupMorakController {
 				if (file != null && !file.isEmpty()) {
 					if (existingFilePaths[i] != null && !existingFilePaths[i].isEmpty()) {
 						// 기존 이미지 파일 삭제
-						File existingFile = new File(
-								uploadPath + existingFilePaths[i]);
+						File existingFile = new File(uploadPath + existingFilePaths[i]);
 						if (existingFile.exists()) {
 							boolean deleted = existingFile.delete();
 							if (deleted) {
@@ -184,7 +184,7 @@ public class GroupMorakController {
 					Files.copy(file.getInputStream(), path);
 
 					// 클라이언트가 접근할 수 있는 경로 반환
-					imgUrls[i] = "group_morak/" +fileName;
+					imgUrls[i] = "group_morak/" + fileName;
 				} else {
 					// 파일이 업로드되지 않은 경우 기존 파일 경로 유지
 					imgUrls[i] = existingFilePaths[i];
@@ -226,62 +226,68 @@ public class GroupMorakController {
 		try {
 			service.join(map);
 			service.changeMoney(map);
-			
+
 			return ResponseEntity.ok("신청이 완료되었습니다. 모임장의 승인 후 활동이 가능합니다.");
 		} catch (DataIntegrityViolationException e) { // 유니크 제약 조건 위반 예외 처리
-	        log.error("Duplicate basket entry", e);
-	        return ResponseEntity.status(400).body("이미 신청한 모임입니다.");
-	    }catch (Exception e) {
+			log.error("Duplicate basket entry", e);
+			return ResponseEntity.status(400).body("이미 신청한 모임입니다.");
+		} catch (Exception e) {
 			log.error("Error inserting group", e);
 			return ResponseEntity.status(500).body("신청에 실패했습니다.");
 		}
 	}
-	
+
 	@RequestMapping("/basket")
 	public ResponseEntity<String> insertBasket(@RequestParam Map<String, Object> map) {
-	    try {
-	        service.insertBasket(map); 
-	        return ResponseEntity.ok("찜 목록에 저장되었습니다.");
-	    } catch (DataIntegrityViolationException e) { // 유니크 제약 조건 위반 예외 처리
-	        log.error("Duplicate basket entry", e);
-	        return ResponseEntity.status(400).body("이미 찜한 모임입니다.");
-	    } catch (Exception e) {
-	        log.error("Error inserting group", e);
-	        return ResponseEntity.status(500).body("처리에 실패했습니다.");
-	    }
+		try {
+			service.insertBasket(map);
+			return ResponseEntity.ok("찜 목록에 저장되었습니다.");
+		} catch (DataIntegrityViolationException e) { // 유니크 제약 조건 위반 예외 처리
+			log.error("Duplicate basket entry", e);
+			return ResponseEntity.status(400).body("이미 찜한 모임입니다.");
+		} catch (Exception e) {
+			log.error("Error inserting group", e);
+			return ResponseEntity.status(500).body("처리에 실패했습니다.");
+		}
 	}
-	
+
 	@RequestMapping("/memberList")
 	public List<Map<String, Object>> memberList(@RequestParam(value = "group_no") String groupNo) {
-			return service.memberList(groupNo);
+		return service.memberList(groupNo);
 	}
-	
+
 	@RequestMapping("/auth")
-	public String groupAuth(@RequestParam Map<String, Object>map) {
-			return service.groupAuth(map);
-		
+	public String groupAuth(@RequestParam Map<String, Object> map) {
+		return service.groupAuth(map);
+
 	}
-	
+
 	@RequestMapping("/statusUpdate")
 	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
-			try {
-				service.memberStatusUpdate(map);
-				return ResponseEntity.ok("처리가 완료되었습니다.");
-			}catch(Exception e) {
-				log.error("Error group member status updating ", e);
-		        return ResponseEntity.status(500).body("처리에 실패했습니다.");
-			}
+		try {
+			service.memberStatusUpdate(map);
+			return ResponseEntity.ok("처리가 완료되었습니다.");
+		} catch (Exception e) {
+			log.error("Error group member status updating ", e);
+			return ResponseEntity.status(500).body("처리에 실패했습니다.");
+		}
 	}
-	
+
 	@RequestMapping("/memberReport")
-	public ResponseEntity<String> memberReport(@RequestParam Map<String, Object>map) {
+	public ResponseEntity<String> memberReport(@RequestParam Map<String, Object> map) {
 		try {
 			service.memberReport(map);
 			return ResponseEntity.ok("처리가 완료되었습니다.");
-		}catch(Exception e) {
+		} catch (Exception e) {
 			log.error("Error member Reporting ", e);
-	        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+			return ResponseEntity.status(500).body("처리에 실패했습니다.");
 		}
 	}
-			
+
+	@GetMapping("/mainselect")
+	public List<GroupMorak> getGroups(@RequestParam(defaultValue = "all") String category,
+			@RequestParam(defaultValue = "6") int limit) {
+		return service.getGroupsByCategory(category, limit);
+	}
+
 }

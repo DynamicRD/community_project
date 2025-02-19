@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './GroupList.css';
 import { Container, Pagination } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
@@ -6,8 +6,10 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
 import GroupItem from './component/GroupItem';
+import { AuthContext } from '../context/AuthContext'; //
 
 function GroupList({ type }) {
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const [items, setGroupList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
@@ -21,7 +23,6 @@ function GroupList({ type }) {
       });
   }, [type]);
 
-  
   // 필터링 상태 변수
   const [open, setOpen] = useState(false);
   const [rdo, setRdo] = useState([]);
@@ -84,7 +85,9 @@ function GroupList({ type }) {
       sortedItems.sort((a, b) => new Date(b.REG_DATE) - new Date(a.REG_DATE));
     } else if (selectOpt === 'start_date') {
       // 시작 날짜 순 정렬
-      sortedItems.sort((a, b) => new Date(a.START_DATE) - new Date(b.START_DATE));
+      sortedItems.sort(
+        (a, b) => new Date(a.START_DATE) - new Date(b.START_DATE)
+      );
     }
     setFilteredItems(sortedItems); // 정렬된 items를 filteredItems에 설정
   }, [selectOpt, items]); // selectOpt나 items가 변경될 때마다 실행
@@ -115,7 +118,6 @@ function GroupList({ type }) {
             window.location.href = '/login';
           }
         }}
-
       >
         <div className="group_banner">
           <span>

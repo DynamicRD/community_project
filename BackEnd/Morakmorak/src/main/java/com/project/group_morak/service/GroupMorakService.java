@@ -3,6 +3,8 @@ package com.project.group_morak.service;
 import java.util.List;
 import java.util.Map;
 
+import com.project.group_morak.model.GroupMorak;
+
 public interface GroupMorakService {
 	public void insert(Map<String, Object> map) throws Exception; 
 	
@@ -28,4 +30,5 @@ public interface GroupMorakService {
 
 	public String groupAuth(Map<String, Object> map);
 
+	public List<GroupMorak> getGroupsByCategory(String category, int limit);
 }
