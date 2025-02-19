@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router';
 
 export default function GroupManagement() {
   const navigate = useNavigate();
-
+  
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);
   const group_no = queryParams.get('group_no'); // 'g_id' 파라미터 값을 가져옴
@@ -15,7 +15,7 @@ export default function GroupManagement() {
 
   // 멤버 목록 가져오기
   useEffect(() => {
-    fetch(`http://localhost:8080/group/management?group_no=${group_no}`)
+    fetch(`http://localhost:8080/group/memberList?group_no=${group_no}`)
       .then((res) => res.json())
       .then((data) => {
         // 승인 대기 목록

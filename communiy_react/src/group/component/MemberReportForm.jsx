@@ -1,7 +1,5 @@
-import { faCircleExclamation } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useRef } from 'react';
-import { Button, Form, Image, InputGroup, Modal } from 'react-bootstrap';
+import { Button, Form, Modal } from 'react-bootstrap';
 import { AuthContext } from '../../context/AuthContext';
 
 export default function MemberReportForm({ show, onHide, member }) {

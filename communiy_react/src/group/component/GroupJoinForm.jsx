@@ -48,6 +48,10 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
         <Button
           variant="primary"
           onClick={() => {
+            if (!pr.trim()) {
+              alert('한마디를 작성해주세요.');
+              return;
+            }
             if (confirm('신청하시겠습니까?')) {
               const form = new FormData();
               form.append('group_no', Number(items.GROUP_NO));
