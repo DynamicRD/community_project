@@ -18,6 +18,11 @@
 		SET money = money + #{money}
 		WHERE no = #{no}
 	</update>
+	<update id="readNotification">
+		UPDATE notification
+		SET  is_read = 'Y'
+		WHERE no = #{no}
+	</update>
 	<select id="selectProfileImg"
 		resultType="String">
 		SELECT IMG_URL
@@ -72,6 +77,11 @@
 		WHERE mg.no = #{no}
 		AND CURRENT_DATE > gm.last_date
 		ORDER BY gm.start_date
+	</select>
+	<select id="selectNotification"
+		resultType="com.project.mypage.model.Notification">
+		SELECT
+		no,content,is_read,reg_date from notification where no = #{no}
 	</select>
 
 </mapper>

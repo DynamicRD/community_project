@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.project.member.model.Member;
 import com.project.mypage.model.GroupMember;
+import com.project.mypage.model.Notification;
 import com.project.mypage.model.TransactionLog;
 
 public interface MypageMapper {
@@ -23,4 +24,8 @@ public interface MypageMapper {
 	List<GroupMember> getGroupMembersByUserNoOngoing(int no);
 
 	List<GroupMember> getGroupMembersByUserNoEnd(int no);
+
+	List<Notification> selectNotification(int no); 
+	
+	void readNotification(int no);
 }

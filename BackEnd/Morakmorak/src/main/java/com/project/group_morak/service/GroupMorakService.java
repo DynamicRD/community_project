@@ -14,6 +14,13 @@ public interface GroupMorakService {
 
 	public void join(Map<String, Object> map);
 
-	public void changePoint(Map<String, Object> map);
+	public void changeMoney(Map<String, Object> map);
 
+	public void insertBasket(Map<String, Object> map);
+
+	public List<Map<String, Object>> memberList(String groupNo);
+
+	public void memberStatusUpdate(Map<String, Object> map);
+
+	public void memberReport(Map<String, Object> map);
 }

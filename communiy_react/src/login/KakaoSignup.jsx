@@ -59,6 +59,7 @@ export default function KakaoSignup() {
     address02: '',
     providerID: '',
     provider: 'kakao',
+    picture: '',
   });
 
   useEffect(() => {
@@ -82,6 +83,7 @@ export default function KakaoSignup() {
           nickname: data.name, // ID를 닉네임으로 기본 설정 (원하는 대로 변경 가능)
           email: data.email,
           providerId: data.id,
+          picture: data.picture,
         }));
       } catch (error) {
         console.error('Error fetching Google user info:', error);

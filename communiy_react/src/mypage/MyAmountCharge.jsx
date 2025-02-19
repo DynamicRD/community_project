@@ -8,23 +8,18 @@ export default function MyAmountCharge() {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
   useEffect(() => {
-    if (userData && isAuthenticated !== false) {
+    console.log('userData 대기중');
+    if (!userData) return; // userData가 로드될 때까지 기다림
+
+    if (isAuthenticated !== false) {
       const pathSegments = window.location.pathname.split('/');
       const pageId = pathSegments[pathSegments.length - 1];
-
       if (userData?.no.toString() !== pageId) {
         alert('접근 권한이 없습니다.');
         navigate('/');
       }
     }
   }, [isAuthenticated, userData, navigate]);
-  useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
-      alert('접근 권한이 없습니다.');
-      navigate('/');
-    }
-  }, [userData]);
   const [formData, setFormData] = useState({
     money: '',
   });
@@ -73,7 +68,7 @@ export default function MyAmountCharge() {
   };
 
   return (
-    <Container className="mt-5 mb-5 w-25 d-flex">
+    <Container className="mt-5 mb-5 w-50 d-flex">
       <div className="infochange p-5">
         <h2>포인트 충전하기</h2>
 

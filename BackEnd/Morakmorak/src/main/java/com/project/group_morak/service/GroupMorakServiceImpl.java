@@ -40,10 +40,30 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.join(map);
 	}
 
+
+	public void changeMoney(Map<String, Object> map) {
+		mapper.changeMoney(map);
+	}
+
 	@Override
-	public void changePoint(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		
+	public void insertBasket(Map<String, Object> map) {
+		mapper.insertBasket(map);
+	}
+
+	@Override
+	public List<Map<String, Object>> memberList(String groupNo) {
+		return mapper.memberList(groupNo);
+
+	}
+
+	@Override
+	public void memberStatusUpdate(Map<String, Object> map) {
+		mapper.memberStatusUpdate(map);
+	}
+
+	@Override
+	public void memberReport(Map<String, Object> map) {
+		mapper.memberReport(map);
 	}
 
 }

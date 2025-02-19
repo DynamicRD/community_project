@@ -29,7 +29,7 @@ import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
+import com.project.member.model.MemberRegist;
 import com.project.member.model.SnsInfo;
 import com.project.member.service.MemberService;
 
@@ -140,7 +140,8 @@ public class MemberController {
 				snsInfo.setId(idStr);
 				snsInfo.setName(nickname);
 				snsInfo.setPicture(thumbnailImage);
-				String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
+				System.out.println(snsInfo);
+				String jwtTempGoogleToken = jwtutil.createTemporarySnsToken(snsInfo);
 				addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 				// ✅ 회원가입 필요 (isRegistered=false 전달)
 				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
@@ -186,7 +187,7 @@ public class MemberController {
 
 	// 회원가입 진행
 	@PostMapping("/register")
-	public ResponseEntity<?> registerMember(@RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<?> registerMember(@RequestBody MemberRegist memberDTO) {
 		try {
 			// 회원가입 로직 처리 (예: DB 저장)
 			service.register(memberDTO);
@@ -199,7 +200,7 @@ public class MemberController {
 
 	// 회원가입 진행
 	@PostMapping("/infochange")
-	public ResponseEntity<?> infoChangeMember(@RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<?> infoChangeMember(@RequestBody MemberRegist memberDTO) {
 		try {
 			// 회원가입 로직 처리 (예: DB 저장)
 			service.infoChange(memberDTO);
@@ -212,7 +213,7 @@ public class MemberController {
 
 	// 전화번호 중복 확인
 	@PostMapping("/phoneduplicatecheck")
-	public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberDTO memberDTO) {
+	public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberRegist memberDTO) {
 		Map<String, Boolean> response = new HashMap<>();
 
 		if (service.phoneDuplicateCheck(memberDTO)) {
@@ -371,7 +372,6 @@ public class MemberController {
 	}
 
 	@RequestMapping("/googlelogin")
-
 	public ResponseEntity<?> googleLogin(@RequestParam("code") String code,
 			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
 			HttpServletResponse response) {
@@ -451,7 +451,7 @@ public class MemberController {
 			SnsInfo snsInfo = new SnsInfo();
 			ObjectMapper objectMapper = new ObjectMapper();
 			snsInfo = objectMapper.convertValue(userInfo, SnsInfo.class);
-			String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
+			String jwtTempGoogleToken = jwtutil.createTemporarySnsToken(snsInfo);
 			addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 			// ✅ 회원가입 필요 (isRegistered=false 전달)
 			return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
@@ -471,11 +471,13 @@ public class MemberController {
 			String id = claims.get("id", String.class);
 			String email = claims.get("email", String.class);
 			String name = claims.get("name", String.class);
-
+			String picture = claims.get("picture",String.class);
+			
 			Map<String, String> userInfo = new HashMap<>();
 			userInfo.put("id", id);
 			userInfo.put("email", email);
 			userInfo.put("name", name);
+			userInfo.put("picture", picture);
 			System.out.println(userInfo);
 			return ResponseEntity.ok(userInfo);
 		} catch (Exception e) {
@@ -571,6 +573,28 @@ public class MemberController {
 				new HttpEntity<>(headers), Map.class);
 
 		return response.getBody();
+	}
+	
+	@PostMapping("/withdrawal")
+	public ResponseEntity<?> withdrawlMember(@RequestBody MemberRegist memberDTO) {
+		Member member = new Member();
+		member.setPw(memberDTO.getPass());
+		member.setNo(memberDTO.getNo());
+		boolean passCheck = service.passCheckNo(member);
+		if(passCheck || memberDTO.getPass().equals("")) {
+			try {
+				// 회원탈퇴
+				service.deleteMember(member);
+				return ResponseEntity.ok().body(Collections.singletonMap("message", "회원탈퇴 성공"));
+			} catch (Exception e) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body(Collections.singletonMap("message", "회원탈퇴 실패: " + e.getMessage()));
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Collections.singletonMap("message", "비밀번호 불일치"));
+		}
+		
 	}
 
 }

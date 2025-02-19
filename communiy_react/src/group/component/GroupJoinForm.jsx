@@ -13,6 +13,12 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
       });
   }, [group_no]);
   const [pr, setPr] = useState();
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('ko-KR', {
+      style: 'currency',
+      currency: 'KRW',
+    }).format(value);
+  };
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -34,14 +40,22 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
           </Form.Group>
         </Form>
         <div>
-          <p>현재 보유 포인트 10,000원</p>
-          <p className="text-danger">차감 예정 포인트 {items.PRICE}원</p>
+          <p>
+            현재 보유 포인트 {formatCurrency(userData?.money)}원<br />
+            <span className="text-danger">
+              차감 예정 포인트 {formatCurrency(items.PRICE)}원
+            </span>
+          </p>
         </div>
       </Modal.Body>
       <Modal.Footer>
         <Button
           variant="primary"
           onClick={() => {
+            if (!pr.trim()) {
+              alert('한마디를 작성해주세요.');
+              return;
+            }
             if (confirm('신청하시겠습니까?')) {
               const form = new FormData();
               form.append('group_no', Number(items.GROUP_NO));
@@ -55,16 +69,32 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
               })
                 .then((response) => {
                   if (!response.ok) {
-                    throw new Error('신청에 실패했습니다. 다시 시도해주세요.');
+                    // 응답이 실패하면 JSON 형식으로 오류 메시지를 받음
+                    return response.text().then((errorData) => {
+                      try {
+                        // 서버에서 문자열로 받은 응답을 JSON으로 파싱 시도
+                        const parsedError = JSON.parse(errorData);
+                        throw new Error(
+                          parsedError.message ||
+                            '처리에 실패했습니다. 다시 시도해주세요.'
+                        );
+                      } catch (e) {
+                        // JSON 파싱 실패 시 그냥 문자열로 처리
+                        throw new Error(
+                          errorData || '처리에 실패했습니다. 다시 시도해주세요.'
+                        );
+                      }
+                    });
                   }
-                  return response.text();
+                  return response.text(); // 정상 응답일 경우
                 })
                 .then((message) => {
-                  alert(message);
+                  alert(message); // 성공 시 반환된 메시지
                   onHide(true);
                 })
                 .catch((error) => {
-                  alert(error.message);
+                  alert(error.message); // 서버에서 넘긴 오류 메시지
+                  onHide(true);
                 });
             }
           }}

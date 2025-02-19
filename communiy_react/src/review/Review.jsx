@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Container, Nav } from 'react-bootstrap';
 import Pagination from 'react-bootstrap/Pagination';
-import { AuthContext } from '../context/AuthContext'; //
+import { AuthContext } from '../context/AuthContext';
 
 import './Review.css';
 
@@ -23,6 +23,7 @@ export default function Review() {
       </Pagination.Item>
     );
   }
+  //import { AuthContext } from '../context/AuthContext';
   const { isAuthenticated, userData } = useContext(AuthContext);
   const [reviewList, setReviewList] = useState([]); // reviewList를 먼저 선언
   const [groupedReviews, setGroupedReviews] = useState([]);
@@ -49,7 +50,7 @@ export default function Review() {
     for (let i = 0; i < reviewList.length; i += 3) {
       groupReviews.push(reviewList.slice(i, i + 3));
     }
-    setGroupedReviews(groupReviews); // 그룹화된 리뷰 상태 업데이트 (바뀐 부분)
+    setGroupedReviews(groupReviews);
   }, [reviewList]);
 
   return (
@@ -65,7 +66,7 @@ export default function Review() {
         </div>
         <div className="review_board mt-4">
           <ul id="board_list" className="list-unstyled">
-            {groupedReviews.length !== null || 0 ? (
+            {groupedReviews.length > 0 ? (
               groupedReviews.map((group, index) => (
                 <divs
                   className="d-flex justify-content-start gap-5 mb-4"
@@ -111,32 +112,31 @@ export default function Review() {
                 </divs>
               ))
             ) : (
-              <span>
-                <b>작성된 리뷰가 없습니다</b>
-              </span>
+              <div className="d-flex justify-content-center w-100">
+                <span className="WishListNo_meetings m-5">
+                  리뷰가 없습니다. 리뷰를 작성 해 주세요!
+                </span>
+              </div>
             )}
           </ul>
         </div>
       </Container>
       <Container>
-        {isAuthenticated ? (
-          <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
-            <Pagination size="sm">{item}</Pagination>
+        <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
+          <Pagination size="sm">{item}</Pagination>
+          {isAuthenticated ? (
             <Nav.Link
               href={`/mypage/reviews/${userData?.no}`}
               className="reviewRegist"
             >
               <span>작성 하기</span>
             </Nav.Link>
-          </div>
-        ) : (
-          <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
-            <Pagination size="sm">{item}</Pagination>
+          ) : (
             <Nav.Link href="/" className="reviewRegist">
               <span>홈으로</span>
             </Nav.Link>
-          </div>
-        )}
+          )}
+        </div>
       </Container>
     </>
   );

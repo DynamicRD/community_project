@@ -2,6 +2,7 @@ package com.project.member.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -12,12 +13,16 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import java.io.*;
+import java.nio.file.*;
 import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.mapper.MemberMapper;
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
+import com.project.member.model.MemberRegist;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +35,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
-	private final JwtUtil jwtUtil;
-	private final RestTemplate restTemplate = new RestTemplate();
-
+	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
+	
 	@Override
 	public boolean duplicateCheck(Member member) {
 		int count = mapper.idDuplicateCheck(member); // 오타 수정
@@ -46,7 +50,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void register(MemberDTO memberDTO) {
+	public void register(MemberRegist memberDTO) {
 		Member member = new Member();
 		member.setId(memberDTO.getId());
         System.out.println(memberDTO.getId());
@@ -78,9 +82,31 @@ public class MemberServiceImpl implements MemberService {
 		member.setAddr1(memberDTO.getAddress01());
 		member.setAddr2(memberDTO.getAddress02());
 		if (memberDTO.getProvider().equals("google")||memberDTO.getProvider().equals("kakao")) {
+			String imageUrl = memberDTO.getPicture();
+			// URL에서 파일명 추출
+	        String originalFileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+
+	        // UUID 추가
+	        String newFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+	        String FilePath = UPLOAD_DIR+newFileName+".jpg";
+			 try {
+		            RestTemplate restTemplate = new RestTemplate();
+		            ResponseEntity<Resource> response = restTemplate.getForEntity(imageUrl, Resource.class);
+		            Resource resource = response.getBody();
+
+		            if (resource != null) {
+		                InputStream inputStream = resource.getInputStream();
+		                Files.copy(inputStream, Paths.get(FilePath), StandardCopyOption.REPLACE_EXISTING);
+		                System.out.println("이미지 다운로드 성공: " + FilePath);
+		                
+		            }
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
 			member.setProvider(memberDTO.getProvider());
 			member.setProviderId(memberDTO.getProviderId());
-			mapper.registerGoogle(member);
+			member.setImgUrl(FilePath);
+			mapper.registerSns(member);
 		} else {
 			mapper.register(member);
 		}
@@ -88,7 +114,7 @@ public class MemberServiceImpl implements MemberService {
 
 	
 	@Override
-	public void infoChange(MemberDTO memberDTO) {
+	public void infoChange(MemberRegist memberDTO) {
 		Member member = new Member();
 		
 
@@ -116,13 +142,13 @@ public class MemberServiceImpl implements MemberService {
 		member.setAddr2(memberDTO.getAddress02());
 		if (memberDTO.getProvider().equals("google")) {
 			member.setProvider(memberDTO.getProvider());
-			mapper.updateInfoGoogle(member);
+			mapper.updateInfoSns(member);
 		} else {
 			mapper.updateInfo(member);
 		}
 	}
 	@Override
-	public boolean phoneDuplicateCheck(MemberDTO memberDTO) {
+	public boolean phoneDuplicateCheck(MemberRegist memberDTO) {
 		Member member = new Member();
 		member.setPhone(memberDTO.getPhone1() + memberDTO.getPhone2() + memberDTO.getPhone3());
 		int count = mapper.phoneDuplicateCheck(member);
@@ -148,15 +174,6 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
-	// 🔹 카카오 Access Token 요청 메서드 추가
-	private String getAccessToken(String authCode) {
-		String tokenUrl = "https://kauth.kakao.com/oauth/token" + "&client_id=" + secretConfig.getKakaoClienID()
-				+ "&redirect_uri=" + secretConfig.getKaKaoRedirectURL() + "&code=" + authCode;
-
-		ResponseEntity<Map> response = restTemplate.postForEntity(tokenUrl, null, Map.class);
-		return (String) response.getBody().get("access_token");
-	}
-
 	@Override
 	public Member selectMemberByNo(Member member) {
 		member = mapper.getMemberInfoByNo(member);
@@ -173,6 +190,27 @@ public class MemberServiceImpl implements MemberService {
 	public Member selectSnsInfo(Member member) {
 		member = mapper.getSnsInfo(member);
 		return member;
+	}
+
+	@Override
+	public boolean passCheck(Member member) {
+		String savedPass = mapper.passCompare(member);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		boolean isMatch = encoder.matches(member.getPw(), savedPass);
+		return isMatch;
+	}
+
+	@Override
+	public void deleteMember(Member member) {
+		mapper.deleteMemeber(member);
+	}
+
+	@Override
+	public boolean passCheckNo(Member member) {
+		String savedPass = mapper.passCompareNo(member);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		boolean isMatch = encoder.matches(member.getPw(), savedPass);
+		return isMatch;
 	}
 
 }

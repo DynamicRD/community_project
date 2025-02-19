@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -216,15 +217,60 @@ public class GroupMorakController {
 	}
 
 	@RequestMapping("/join")
-	public ResponseEntity<String> statusUpdate(@RequestParam Map<String, Object> map) {
+	public ResponseEntity<String> join(@RequestParam Map<String, Object> map) {
 		try {
 			service.join(map);
-			service.changePoint(map);
+			service.changeMoney(map);
 			
 			return ResponseEntity.ok("신청이 완료되었습니다. 모임장의 승인 후 활동이 가능합니다.");
-		} catch (Exception e) {
+		} catch (DataIntegrityViolationException e) { // 유니크 제약 조건 위반 예외 처리
+	        log.error("Duplicate basket entry", e);
+	        return ResponseEntity.status(400).body("이미 신청한 모임입니다.");
+	    }catch (Exception e) {
 			log.error("Error inserting group", e);
 			return ResponseEntity.status(500).body("신청에 실패했습니다.");
 		}
 	}
+	
+	@RequestMapping("/basket")
+	public ResponseEntity<String> insertBasket(@RequestParam Map<String, Object> map) {
+	    try {
+	        service.insertBasket(map); 
+	        return ResponseEntity.ok("찜 목록에 저장되었습니다.");
+	    } catch (DataIntegrityViolationException e) { // 유니크 제약 조건 위반 예외 처리
+	        log.error("Duplicate basket entry", e);
+	        return ResponseEntity.status(400).body("이미 찜한 모임입니다.");
+	    } catch (Exception e) {
+	        log.error("Error inserting group", e);
+	        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+	    }
+	}
+	
+	@RequestMapping("/memberList")
+	public List<Map<String, Object>> memberList(@RequestParam(value = "group_no") String groupNo) {
+			return service.memberList(groupNo);
+	}
+	
+	@RequestMapping("/statusUpdate")
+	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
+			try {
+				service.memberStatusUpdate(map);
+				return ResponseEntity.ok("처리가 완료되었습니다.");
+			}catch(Exception e) {
+				log.error("Error group member status updating ", e);
+		        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+			}
+	}
+	
+	@RequestMapping("/memberReport")
+	public ResponseEntity<String> memberReport(@RequestParam Map<String, Object>map) {
+		try {
+			service.memberReport(map);
+			return ResponseEntity.ok("처리가 완료되었습니다.");
+		}catch(Exception e) {
+			log.error("Error member Reporting ", e);
+	        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+		}
+	}
+			
 }
