@@ -30,5 +30,5 @@ public interface GroupMorakService {
 
 	public String groupAuth(Map<String, Object> map);
 
-	public List<GroupMorak> getGroupsByCategory(String category, int limit);
+	public List<GroupMorak> getGroupsByCategory(String category);
 }

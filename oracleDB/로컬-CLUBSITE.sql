@@ -124,8 +124,18 @@ alter table group_morak modify img_url2 varchar2(100);
 alter table group_morak modify img_url3 varchar2(100);
 alter table member_group add pr varchar2(500);
 
-
-
+SELECT
+		gm.group_no,
+		gm.group_title,
+		gm.area,
+		gm.img_url1,
+		gm.start_date
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		WHERE gm.category = 'culture'
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 6 ROWS ONLY;
+select * from member;
 -- 댓글(답변형)
 create table comments(
     comments_no number(6) not null,

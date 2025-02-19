@@ -34,5 +34,7 @@ public interface GroupMorakMapper {
 
 	public void memberReport(Map<String, Object> map);
 	
-	public List<GroupMorak> getGroupsByCategory(String category, int limit);
+	public List<GroupMorak> getGroupsByCategory(String category);
+	
+	public List<GroupMorak> getGroupsByCategoryAll();
 }

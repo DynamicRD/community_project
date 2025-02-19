@@ -14,7 +14,13 @@ const GroupsList = () => {
     { key: 'travel', name: '여행' },
     { key: 'edu', name: '교육' },
   ];
-
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = String(date.getFullYear()).slice(-2); // 25
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 02
+    const day = String(date.getDate()).padStart(2, '0'); // 27
+    return `${year}/${month}/${day}`;
+  };
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [groups, setGroups] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -27,9 +33,10 @@ const GroupsList = () => {
     setLoading(true);
     try {
       const response = await axios.get(
-        `http://localhost:8080/group/mainselect?category=${category}&limit=6`
+        `http://localhost:8080/group/mainselect?category=${category}`
       );
       setGroups(response.data);
+      console.log(groups);
     } catch (error) {
       console.error('데이터를 불러오는 중 오류 발생:', error);
       setGroups([]);
@@ -66,22 +73,22 @@ const GroupsList = () => {
             {groups.map((group, index) => (
               <div key={index} className="col-6 col-md-2 mb-4">
                 <Link
-                  to={`/group/detail?group=${group.id}`}
+                  to={`/group/detail?group_no=${group.groupNo}`}
                   style={{ textDecoration: 'none', color: 'inherit' }}
                 >
                   <div className="card">
                     <img
-                      src={`http://localhost:8080/upload/${group.image}`}
+                      src={`http://localhost:8080/upload/${group.imgUrl1}`}
                       className="card-img-top img-fluid p-3"
                       style={{ height: '180px', objectFit: 'cover' }}
-                      alt={group.gTitle}
+                      alt={group.gtitle}
                     />
                     <div className="card-body text-center">
                       <h6 className="card-title">
-                        <strong>{group.gTitle}</strong>
+                        <strong>{group.gtitle}</strong>
                       </h6>
                       <p className="card-text">
-                        {group.startDate} / {group.area}
+                        {formatDate(group.startDate)} / {group.addr1}
                       </p>
                     </div>
                   </div>

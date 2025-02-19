@@ -1,5 +1,6 @@
 package com.project.group_morak.controller;
 
+import java.io.Console;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -94,6 +95,7 @@ public class GroupMorakController {
 			// 서비스 호출
 			service.insert(map);
 			service.insertLeader(map);
+			System.out.println(map);
 			return ResponseEntity.ok("신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.");
 		} catch (Exception e) {
 			log.error("Error inserting group", e);
@@ -285,9 +287,9 @@ public class GroupMorakController {
 	}
 
 	@GetMapping("/mainselect")
-	public List<GroupMorak> getGroups(@RequestParam(defaultValue = "all") String category,
-			@RequestParam(defaultValue = "6") int limit) {
-		return service.getGroupsByCategory(category, limit);
+	public List<GroupMorak> getGroups(@RequestParam(defaultValue = "all") String category) {
+		System.out.println(service.getGroupsByCategory(category));
+		return service.getGroupsByCategory(category);
 	}
 
 }

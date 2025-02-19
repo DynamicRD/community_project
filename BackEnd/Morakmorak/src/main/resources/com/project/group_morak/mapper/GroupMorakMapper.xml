@@ -13,7 +13,7 @@
 		last_date, comment1, comment2, type, img_url1, img_url2,
 		img_url3
 		) VALUES (
-		group_seq.nextval, 1,
+		group_seq.nextval, #{no},
 		#{group_title}, #{category},
 		#{user_max},
 		#{price}, #{area},
@@ -123,15 +123,29 @@
 	<select id="getGroupsByCategory"
 		resultType="com.project.group_morak.model.GroupMorak">
 		SELECT
-		gm.group_no,
-		gm.group_title,
-		gm.area,
-		gm.img_url1,
-		gm.start_date
+		gm.group_no AS groupNo,
+		gm.group_title AS gTitle,
+		gm.start_date AS startDate,
+		gm.img_url1 AS imgUrl1,
+		gm.area AS addr1
 		FROM group_morak gm
 		JOIN member m ON gm.no = m.no
 		WHERE gm.category = #{category}
 		ORDER BY m.star_sum DESC
 		FETCH FIRST 6 ROWS ONLY
 	</select>
+	<select id="getGroupsByCategoryAll"
+		resultType="com.project.group_morak.model.GroupMorak">
+		SELECT
+		gm.group_no AS groupNo,
+		gm.group_title AS gTitle,
+		gm.start_date AS startDate,
+		gm.img_url1 AS imgUrl1,
+		gm.area AS addr1
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 6 ROWS ONLY
+	</select>
+
 </mapper>
