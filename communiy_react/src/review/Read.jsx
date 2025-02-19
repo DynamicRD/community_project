@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import { AuthContext } from '../context/AuthContext'; //
 
 function useFetch(url, urlPath) {
-  const [replyList, setReplyList] = useState(null);
+  const [replyList, setReplyList] = useState([]);
   const [reviewDetail, setReviewDetail] = useState(null);
   const [loading, setLoading] = useState(false);
   useEffect(() => {
@@ -61,7 +61,7 @@ export default function Read() {
     return stars;
   };
 
-  if (!reviewDetail) {
+  if (reviewDetail === null) {
     return <Container>Loading...</Container>;
   } else {
     return (
@@ -98,7 +98,7 @@ export default function Read() {
             </div>
             <div className="review_image">
               <img
-                src={`/images/${reviewDetail.IMG_URL}`}
+                src={`http://localhost:8080/upload/${reviewDetail.IMG_URL}`}
                 alt="detail"
                 className="review_image mb-4"
               />
@@ -188,6 +188,7 @@ export default function Read() {
                 </div>
 
                 <Button
+                  variant="danger"
                   className="register_btn ms-3"
                   onClick={() => {
                     const form = new FormData();
@@ -210,7 +211,13 @@ export default function Read() {
           )}
 
           {/* reply */}
-          {replyList.length > 0 ? (
+          {replyList.length <= 0 ? (
+            <Container>
+              <div className="writer mt-4 mb-3">
+                <span>작성된 댓글이 없습니다.</span>
+              </div>
+            </Container>
+          ) : (
             replyList.map((object, idx = 0) => (
               <Container key={idx}>
                 <div className="writer mt-4 mb-3">
@@ -256,12 +263,6 @@ export default function Read() {
                 <HorizonLine />
               </Container>
             ))
-          ) : (
-            <Container>
-              <div className="writer mt-4 mb-3">
-                <span>작성된 댓글이 없습니다.</span>
-              </div>
-            </Container>
           )}
         </div>
       </Container>

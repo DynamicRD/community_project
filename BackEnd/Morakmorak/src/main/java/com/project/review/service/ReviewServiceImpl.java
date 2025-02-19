@@ -47,7 +47,6 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	@Override
 	public List<Map<String, Object>> groupList(int idx) throws Exception {
-		log.info("mapper = " + idx);
 		return mapper.groupList(idx);
 	}
 

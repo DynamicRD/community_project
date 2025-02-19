@@ -84,7 +84,7 @@ export default function Review() {
                       </div>
                       <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
                         <img
-                          src={`/images/${object.IMG_URL}`}
+                          src={`http://localhost:8080/upload/${object.IMG_URL}`}
                           alt="review"
                           className="review_img"
                         />

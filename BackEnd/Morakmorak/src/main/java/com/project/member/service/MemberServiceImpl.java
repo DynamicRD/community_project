@@ -47,11 +47,10 @@ public class MemberServiceImpl implements MemberService {
 	public void register(MemberDTO memberDTO) {
 		Member member = new Member();
 		member.setId(memberDTO.getId());
-        System.out.println(memberDTO.getId());
+		System.out.println(memberDTO.getId());
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
-		if(memberDTO.getProvider() == null)
-		{
+		if (memberDTO.getProvider() == null) {
 			memberDTO.setProvider("none");
 			member.setProvider("none");
 		}
@@ -75,7 +74,7 @@ public class MemberServiceImpl implements MemberService {
 		member.setZipCode(memberDTO.getAddcode());
 		member.setAddr1(memberDTO.getAddress01());
 		member.setAddr2(memberDTO.getAddress02());
-		if (memberDTO.getProvider().equals("google")||memberDTO.getProvider().equals("kakao")) {
+		if (memberDTO.getProvider().equals("google") || memberDTO.getProvider().equals("kakao")) {
 			member.setProvider(memberDTO.getProvider());
 			member.setProviderId(memberDTO.getProviderId());
 			mapper.registerGoogle(member);
@@ -84,11 +83,9 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
-	
 	@Override
 	public void infoChange(MemberDTO memberDTO) {
 		Member member = new Member();
-		
 
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		member.setNo(memberDTO.getNo());
@@ -119,6 +116,7 @@ public class MemberServiceImpl implements MemberService {
 			mapper.updateInfo(member);
 		}
 	}
+
 	@Override
 	public boolean phoneDuplicateCheck(MemberDTO memberDTO) {
 		Member member = new Member();
@@ -183,6 +181,29 @@ public class MemberServiceImpl implements MemberService {
 		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 		boolean isMatch = encoder.matches(member.getPw(), savedPass);
 		return isMatch;
+	}
+
+	@Override
+	public Map<String, Object> findMemberId(Map<String, Object> map) {
+		return mapper.findMemberId(map);
+	}
+
+	@Override
+	public Map<String, Object> findMemberPw(Map<String, Object> map) {
+		return mapper.findMemberPw(map);
+	}
+
+	@Override
+	public void changeMemberPw(Map<String, Object> map) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String encryptedPassword = null;
+		if (map.get("newPass") != null) {
+			String rawPassword = (String) map.get("newPass"); // 원래 비밀번호
+			encryptedPassword = encoder.encode(rawPassword);
+			System.out.println(encryptedPassword);
+		}
+		map.put("encryptedPassword", encryptedPassword);
+		mapper.changeMemberPw(map);
 	}
 
 }

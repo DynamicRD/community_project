@@ -106,4 +106,18 @@
     <delete id="deleteMemeber">
    		delete from member where no = #{no}
     </delete>
+    
+    <select id="findMemberId" resultType="java.util.Map">
+		SELECT ID FROM MEMBER WHERE NAME = #{name} AND PHONE = #{phone}
+	</select>
+
+	<select id="findMemberPw" resultType="java.util.Map">
+		SELECT ID, NAME, PHONE FROM MEMBER WHERE ID = #{name} AND PHONE = #{phone}
+	</select>
+
+	<update id="changeMemberPw">
+		UPDATE MEMBER SET PW = #{encryptedPassword} WHERE ID = #{id} AND PHONE = #{phone}
+	</update>
+    
+    
 </mapper>

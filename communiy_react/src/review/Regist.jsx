@@ -5,6 +5,7 @@ import './Regist.css';
 import HorizonLine from './HorizonLine';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext'; //
+import { FaRegStar } from 'react-icons/fa';
 
 //그룹 명단 가져오는 함수
 function useFetch(url) {
@@ -78,7 +79,7 @@ export default function Regist() {
         }
       );
       console.log('업로드 성공:', response.data);
-      navigate('/review');
+      // navigate('/review');
     } catch (error) {
       console.error('업로드 실패:', error);
     }
@@ -89,94 +90,103 @@ export default function Regist() {
   } else {
     return (
       <Container>
-        <div className="review_register">
-          <div className="board">
-            <div className="review_title">
-              <p style={{ fontSize: '25px' }}>
-                <b>리뷰 작성하기</b>
-                <div>
-                  <span className="meetingsName">
-                    {completedMeetings.GROUP_TITLE}
-                  </span>
-                </div>
-              </p>
-            </div>
-            <HorizonLine />
-            <div className="register_title">
+        {isAuthenticated !== true ? (
+          <>
+            {alert('로그인 후 이용 바랍니다')}
+            {navigate('/login')};
+          </>
+        ) : (
+          <>
+            <div className="review_register">
               <div className="board">
-                <p style={{ fontSize: '20px' }}>
-                  <input
-                    type="text"
-                    className="review_input_title mt-4"
-                    placeholder="제목"
-                    ref={title}
-                  />
-                </p>
-                <div className="writer mb-3">
-                  <span>{userData?.nickname}</span>
+                <div className="review_title">
+                  <p style={{ fontSize: '25px' }}>
+                    <b>리뷰 작성하기</b>
+                    <div>
+                      <span className="meetingsName">
+                        {completedMeetings.GROUP_TITLE}
+                      </span>
+                    </div>
+                  </p>
                 </div>
-              </div>
-              <div className="d-flex justify-content-between">
-                <div>
-                  <select
-                    name="rating"
-                    id="review_rating"
-                    ref={ratingRef}
-                    defaultValue={5}
-                  >
-                    <option value="1">★☆☆☆☆</option>
-                    <option value="2">★★☆☆☆</option>
-                    <option value="3">★★★☆☆</option>
-                    <option value="4">★★★★☆</option>
-                    <option value="5">★★★★★</option>
-                  </select>
-                </div>
-              </div>
-              <div className="register_body">
-                <div className="mb-2 mt-2">
-                  <label htmlFor="content" className="mb-3">
-                    <textarea
-                      className="form-control content"
-                      cols="200"
-                      rows="10"
-                      id="review_content"
-                      name="text"
-                      placeholder="내용작성"
-                      ref={content}
-                    ></textarea>
-                  </label>
-                </div>
-                <div className="d-flex  justify-content-between align-items-center">
-                  <div className="review_register_button  mb-3">
-                    <input
-                      type="file"
-                      className="file"
-                      onChange={(e) => loadImg(e)}
-                    />
+                <HorizonLine />
+                <div className="register_title">
+                  <div className="board">
+                    <p style={{ fontSize: '20px' }}>
+                      <input
+                        type="text"
+                        className="review_input_title mt-4"
+                        placeholder="제목"
+                        ref={title}
+                      />
+                    </p>
+                    <div className="writer mb-3">
+                      <span>{userData?.nickname}</span>
+                    </div>
                   </div>
-                  <div>
-                    <Button
-                      className="review_register_btn ms-3 justify-content-end me-2"
-                      onClick={() => {
-                        uploadImage();
-                      }}
-                    >
-                      작성
-                    </Button>
-                    <Button
-                      className="review_register_btn"
-                      onClick={() => {
-                        navigate('/review');
-                      }}
-                    >
-                      목록
-                    </Button>
+                  <div className="d-flex justify-content-between">
+                    <div>
+                      <select
+                        name="rating"
+                        id="review_rating"
+                        ref={ratingRef}
+                        defaultValue={5}
+                      >
+                        <option value="1">★☆☆☆☆</option>
+                        <option value="2">★★☆☆☆</option>
+                        <option value="3">★★★☆☆</option>
+                        <option value="4">★★★★☆</option>
+                        <option value="5">★★★★★</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div className="register_body">
+                    <div className="mb-2 mt-2">
+                      <label htmlFor="content" className="mb-3">
+                        <textarea
+                          className="form-control content"
+                          cols="200"
+                          rows="10"
+                          id="review_content"
+                          name="text"
+                          placeholder="내용작성"
+                          ref={content}
+                        ></textarea>
+                      </label>
+                    </div>
+                    <div className="d-flex  justify-content-between align-items-center">
+                      <div className="review_register_button  mb-3">
+                        <input
+                          type="file"
+                          className="file"
+                          onChange={(e) => loadImg(e)}
+                        />
+                      </div>
+                      <div>
+                        <Button
+                          className="review_register_btn ms-3 justify-content-end me-2"
+                          onClick={() => {
+                            uploadImage();
+                          }}
+                        >
+                          작성
+                        </Button>
+                        <Button
+                          className="review_register_btn"
+                          onClick={() => {
+                            navigate('/review');
+                          }}
+                        >
+                          목록
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </Container>
     );
   }
