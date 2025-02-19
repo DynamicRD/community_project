@@ -3,6 +3,14 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
 
 const ProductList = () => {
+  const categories = [
+    '전체',
+    '문화/예술',
+    '푸드/드링크',
+    '취미',
+    '여행',
+    '교육',
+  ];
   const products = [
     { name: '상품1', price: '₩100,000', image: 'product01.png' },
     { name: '상품2', price: '₩100,000', image: 'product02.png' },
@@ -12,23 +20,32 @@ const ProductList = () => {
     { name: '상품6', price: '₩100,000', image: 'product06.png' },
   ];
   return (
-    <section className="container my-5">
-      <h2 className="h4">인기순</h2>
-      <div className="row">
-        {products.map((product, index) => (
-          <div key={index} className="col-md-4 product-card">
-            <img
-              src={`../images/${product.image}`}
-              className="w-100"
-              alt={product.name}
-            />
-            <h3 className="h6 mt-2">{product.name}</h3>
-            <p className="text-muted">{product.price}</p>
-          </div>
-        ))}
-        <i className="arrow1 bi bi-arrow-right-circle d-flex justify-content-lg-end"></i>
-      </div>
-    </section>
+    <>
+      <section className="theme-category">
+        <div>
+          {categories.map((category, index) => (
+            <span key={index}>{category}</span>
+          ))}
+        </div>
+      </section>
+      <section className="container my-5">
+        <h2 className="h4">인기순</h2>
+        <div className="row">
+          {products.map((product, index) => (
+            <div key={index} className="col-md-4 product-card">
+              <img
+                src={`../images/${product.image}`}
+                className="w-100"
+                alt={product.name}
+              />
+              <h3 className="h6 mt-2">{product.name}</h3>
+              <p className="text-muted">{product.price}</p>
+            </div>
+          ))}
+          <i className="arrow1 bi bi-arrow-right-circle d-flex justify-content-lg-end"></i>
+        </div>
+      </section>
+    </>
   );
 };
 export default ProductList;

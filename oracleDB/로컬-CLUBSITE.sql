@@ -204,10 +204,22 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
+INSERT INTO member (
+    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
+    star_sum, black, reg_date, img_url, self_pr
+) VALUES (
+    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
+    'none', 'none', 'admin', 'admin', 
+    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), 'male', 
+    100000, '12345', 'Seoul', 'Admin Street 1', 
+    0, 0, SYSDATE, '', '관리자 계정입니다.'
+);
+commit;
+
 commit;
 update member set provider = 'kakao' where no =26;
 select * from member;
-
+delete from member where no = 73;
 SELECT *
 		FROM Member
 		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 
@@ -274,7 +286,7 @@ CREATE TABLE messages (
     primary key(message_no)
 );
 select * from messages;
-
+drop table visit_log;
 -- 방문기록
 create table visit_log(
     v_id number(6),
@@ -283,7 +295,7 @@ create table visit_log(
     visit_url varchar2(300),
     primary key(v_id)
     );
-
+commit;
 --거래내역 테이블
 drop table transaction;
 create table Transaction_log(
@@ -307,6 +319,6 @@ create table report(
     reported varchar2(50),
     reason varchar2(255),
     rep_date date,
-    rep_status varchar2(1),
-    primary key(rep_id)
+    rep_status varchar2(1) default 'N',
+    primary key(rep_no)
     );
