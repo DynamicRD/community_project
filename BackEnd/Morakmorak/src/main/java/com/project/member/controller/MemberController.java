@@ -502,7 +502,7 @@ public class MemberController {
 				// 회원탈퇴
 				try {
 		            // 파일 경로 설정
-					String uploadDir = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+					String uploadDir = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString() + "/";
 		            Path filePath = Paths.get(uploadDir+memberRegist.getPicture());
 		            File file = filePath.toFile();
 		            // 파일 존재 여부 확인 후 삭제
