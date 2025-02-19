@@ -8,4 +8,5 @@ import org.apache.ibatis.annotations.Mapper;
 @Mapper
 public interface MemberAdminMapper {
 	List<Map<String, Object>> getUsers();
+	List<Map<String, Object>> getGroups();
 }

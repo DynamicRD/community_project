@@ -20,4 +20,9 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 	    public List<Map<String, Object>> getUsers() {
 	        return memberAdminMapper.getUsers();
 	    }
+	    
+	    @Override
+	    public List<Map<String, Object>> getGroups() {
+	    	return memberAdminMapper.getGroups();
+	    }
 }

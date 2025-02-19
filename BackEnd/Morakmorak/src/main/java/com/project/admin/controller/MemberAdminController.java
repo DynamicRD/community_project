@@ -27,4 +27,8 @@ public class MemberAdminController {
     public List<Map<String, Object>> getUsers() {
         return memberAdminService.getUsers();
     }
+    @GetMapping("/community")
+    public List<Map<String, Object>> getGroups() {
+    	return memberAdminService.getGroups();
+    }
 }
