@@ -295,7 +295,7 @@ export default function FindId() {
                             type="text"
                             name="valid"
                             ref={phoneNumber}
-                            className="validCode me-1"
+                            className="validCode2 me-1"
                             style={{
                               width: '78%',
                               padding: '10px',
@@ -409,7 +409,17 @@ export default function FindId() {
                         <>입력한 정보에 대한 아이디가 존재하지 않습니다</>
                       ) : (
                         <>
-                          회원님의 아이디는 <b>{responseIdValue.ID}</b> 입니다
+                          <div className="d-flex flex-column justify-content-center text-center">
+                            <div className="mb-3">
+                              <span>회원님의 아이디는</span>
+                            </div>
+                            <div>
+                              <b>{responseIdValue.ID} </b>
+                            </div>
+                            <div className="mt-3">
+                              <span>입니다</span>
+                            </div>
+                          </div>
                         </>
                       )}
                     </span>
@@ -422,7 +432,7 @@ export default function FindId() {
                       }}
                     >
                       <button
-                        className="buttonLogin"
+                        className="buttonLogin mb-3"
                         onClick={() => {
                           navigate('/login');
                         }}
