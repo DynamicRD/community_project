@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './GroupList.css';
-import { Container } from 'react-bootstrap';
+import { Container, Pagination } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,18 +9,20 @@ import GroupItem from './component/GroupItem';
 
 function GroupList({ type }) {
   const [items, setGroupList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
   useEffect(() => {
-    console.log('type:' + type);
     fetch(`http://localhost:8080/group/list?type=${type}`)
       .then((res) => res.json())
       .then((data) => {
         setGroupList(data);
-        setFilteredItems(data);
+        setFilteredItems(data); // 초기 데이터 설정
       });
   }, [type]);
 
-  //필터기능
+  
+  // 필터링 상태 변수
   const [open, setOpen] = useState(false);
   const [rdo, setRdo] = useState([]);
   const [rdo2, setRdo2] = useState([]);
@@ -28,7 +30,7 @@ function GroupList({ type }) {
   const [filteredItems, setFilteredItems] = useState(items);
   const [selectOpt, setSelectOpt] = useState('latest');
 
-  //필터
+  // 필터링 로직
   useEffect(() => {
     const filtered = items.filter((item) => {
       const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
@@ -39,33 +41,29 @@ function GroupList({ type }) {
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
-  }, [rdo, rdo2, items]);
+  }, [rdo, rdo2, searchTerm, items]);
 
-  //정렬
-  // useEffect(() => {
-  //   let sortedItems = [...filteredItems];
-  //   if (selectOpt === 'latest') {
-  //     sortedItems.sort((a, b) => new Date(b.item.REG_DATE) - new Date(a.item.REG_DATE));
-  //   }
-  //   // else if (selectOpt === 'grade') {
-  //   //   sortedItems.sort((a, b) => b.item.star - a.groupList.star);
-  //   // }
-  //   setFilteredItems(sortedItems);
-  // }, [selectOpt]);
+  // 페이지네이션 관련 계산
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const paginatedReports = filteredItems.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
+  // 카테고리 필터 변경
   const handelCategoryChange = (e) => {
     const { value, checked } = e.target;
     if (checked) {
       setRdo((prev) => [...prev, value]);
     } else {
-      // 체크박스를 해제했을 때 선택된 값 배열에서 제거
       setRdo((prev) => prev.filter((item) => item !== value));
     }
   };
 
+  // 지역 필터 변경
   const handelAreaChange = (e) => {
     const { value, checked } = e.target;
-
     if (checked) {
       setRdo2((prev) => [...prev, value]);
     } else {
@@ -73,24 +71,36 @@ function GroupList({ type }) {
     }
   };
 
+  // 정렬 옵션 변경
   const handelSelectChange = (e) => {
     setSelectOpt(e.target.value);
   };
 
+  // 정렬 기능
+  useEffect(() => {
+    let sortedItems = [...items]; // filteredItems 대신 items를 사용
+    if (selectOpt === 'latest') {
+      // 최신 등록 순 정렬
+      sortedItems.sort((a, b) => new Date(b.REG_DATE) - new Date(a.REG_DATE));
+    } else if (selectOpt === 'start_date') {
+      // 시작 날짜 순 정렬
+      sortedItems.sort((a, b) => new Date(a.START_DATE) - new Date(b.START_DATE));
+    }
+    setFilteredItems(sortedItems); // 정렬된 items를 filteredItems에 설정
+  }, [selectOpt, items]); // selectOpt나 items가 변경될 때마다 실행
+
+  // 검색 기능
   const handleSearch = (e) => {
     e.preventDefault();
     const filtered = items.filter((item) => {
       const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
       const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
-      const titleMatch = item.G_TITLE.includes(searchTerm.toLowerCase());
+      const titleMatch = item.G_TITLE.toLowerCase().includes(
+        searchTerm.toLowerCase()
+      );
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
-  };
-
-  const formatDate = (dateString) => {
-    const options = { month: 'long', day: 'numeric' };
-    return new Date(dateString).toLocaleDateString('ko-KR', options);
   };
 
   return (
@@ -98,6 +108,14 @@ function GroupList({ type }) {
       <Link
         to={'/group/regist'}
         style={{ textDecoration: 'none', color: 'inherit' }}
+        onClick={(e) => {
+          if (!isAuthenticated) {
+            e.preventDefault();
+            alert('로그인 후 이용 가능합니다.');
+            window.location.href = '/login';
+          }
+        }}
+
       >
         <div className="group_banner">
           <span>
@@ -106,7 +124,7 @@ function GroupList({ type }) {
           </span>
         </div>
       </Link>
-      <Container>
+      <Container style={{ maxWidth: '85%' }}>
         <div className="group_list">
           <h1 className="p-2 group_span">
             {type === 'regular' ? `정기모임` : '동행ㆍ소모임'}
@@ -137,21 +155,23 @@ function GroupList({ type }) {
                 </div>
                 <h5>지역</h5>
                 <div onChange={handelAreaChange}>
-                  <input type="checkbox" value="seoul" name="area" />
+                  <input type="checkbox" value="서울" name="area" />
                   &nbsp;서울
-                  <input type="checkbox" value="gyeong-gi" name="area" />
+                  <input type="checkbox" value="경기" name="area" />
                   &nbsp;경기
-                  <input type="checkbox" value="incheon" name="area" />
+                  <input type="checkbox" value="인천" name="area" />
                   &nbsp;인천
-                  <input type="checkbox" value="gangwon" name="area" />
+                  <input type="checkbox" value="강원" name="area" />
                   &nbsp;강원
-                  <input type="checkbox" value="chungcheong" name="area" />
+                  <input type="checkbox" value="충청" name="area" />
                   &nbsp;충청
-                  <input type="checkbox" value="jeolla" name="area" />
+                  <input type="checkbox" value="전라" name="area" />
                   &nbsp;전라
-                  <input type="checkbox" value="gyeongsang" name="area" />
+                  <input type="checkbox" value="경상" name="area" />
                   &nbsp;경상
-                  <input type="checkbox" value="jeju" name="area" />
+                  <input type="checkbox" value="부산" name="area" />
+                  &nbsp; 부산
+                  <input type="checkbox" value="제주" name="area" />
                   &nbsp;제주
                 </div>
               </div>
@@ -174,50 +194,48 @@ function GroupList({ type }) {
             </div>
             <select onChange={handelSelectChange}>
               <option value="latest">최신 등록 순</option>
-              <option value="grade">별점 순</option>
+              <option value="start_date">시작 날짜 빠른 순</option>
             </select>
           </div>
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item) => (
+              {paginatedReports.length > 0 ? (
+                paginatedReports.map((item) => (
                   <GroupItem key={item.GROUP_NO} item={item} />
                 ))
               ) : (
                 <div className="d-flex justify-content-center w-100">
-                  <h3 className="no-meetings m-5 group_span">모임이 없습니다.</h3>
+                  <h3 className="no-meetings m-5 group_span">
+                    모임이 없습니다.
+                  </h3>
                 </div>
               )}
             </div>
           </div>
-          <ul className="pagination pagination-sm justify-content-center m-5">
-            <li className="page-item">
-              <a className="page-link" href="#">
-                &lt;
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                1
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                2
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                3
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                &gt;
-              </a>
-            </li>
-          </ul>
+          <Pagination className="justify-content-center">
+            <Pagination.Prev
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={currentPage === 1 ? 'disabled' : ''}
+            />
+            {[...Array(totalPages)].map((_, index) => (
+              <Pagination.Item
+                key={index + 1}
+                active={index + 1 === currentPage} // 현재 페이지일 때만 active
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className={currentPage === totalPages ? 'disabled' : ''}
+            />
+          </Pagination>
         </div>
       </Container>
     </>

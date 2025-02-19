@@ -6,6 +6,8 @@ import java.util.Map;
 public interface GroupMorakService {
 	public void insert(Map<String, Object> map) throws Exception; 
 	
+	public void insertLeader(Map<String, Object> map);
+	
 	public List<Map<String, Object>> list(String type) throws Exception;
 
 	public Map<String, Object> read(String groupNo);
@@ -23,4 +25,7 @@ public interface GroupMorakService {
 	public void memberStatusUpdate(Map<String, Object> map);
 
 	public void memberReport(Map<String, Object> map);
+
+	public String groupAuth(Map<String, Object> map);
+
 }

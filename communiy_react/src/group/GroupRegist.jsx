@@ -1,21 +1,25 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import './GroupRegist.css';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
+import { AuthContext } from '../context/AuthContext';
 
 export default function GroupRegist() {
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const group_title = useRef();
   const type = useRef();
   const category = useRef();
   const user_max = useRef();
   const price = useRef();
   const addr2 = useRef();
+  const [area, setArea] = useState();
   const start_date = useRef();
   const last_date = useRef();
   const [comment1, setComment1] = useState('');
   const handleComment1Change = (e) => setComment1(e.target.value);
   const comment2 = useRef();
-  const [form, setForm] = useState(new FormData());
+
+
   // 이미지 업로드
   const [img_url1, setImg_url1] = useState(null);
   const [img_url2, setImg_url2] = useState(null);
@@ -88,9 +92,42 @@ export default function GroupRegist() {
           },
           placeId: place.place_id,
         }));
+       
       }
     });
   }, []);
+
+  //area 변환
+  const areas = {
+    서울: ['서울'],
+    경기: ['경기', '경기도'],
+    강원: ['강원', '강원도'],
+    경상: ['경상', '경상도'],
+    부산: ['부산', '부산광역시'],
+    전라: ['전라', '전라도'],
+    충청: ['충청', '충청도'],
+    제주: ['제주'],
+  };
+
+  function extractArea(location) {
+    for (let [key, values] of Object.entries(areas)) {
+      for (let value of values) {
+        if (location.includes(value)) {
+          return key; // 해당 지역이 포함되면 지역 이름 반환
+        }
+      }
+    }
+    return null; // 일치하는 지역이 없으면 null 반환
+  }
+
+  // area 상태가 업데이트될 때마다 실행되는 useEffect
+  useEffect(() => {
+    if (formData.location) {
+      const extractedArea = extractArea(formData.location);
+      setArea(extractedArea);  // 지역 업데이트
+      console.log('Extracted area: ', area); // 추출된 지역 확인
+    }
+  }, [formData.location]); // formData.location이 변경될 때마다 실행
 
   // 유효성 검사
   const handleStartDateChange = (e) => {
@@ -106,7 +143,9 @@ export default function GroupRegist() {
   };
 
   const handleLastDateChange = (e) => {
-    if (new Date(last_date.current.value) < new Date(start_date.current.value)) {
+    if (
+      new Date(last_date.current.value) < new Date(start_date.current.value)
+    ) {
       alert('모임 종료일은 모임 시작일보다 빠를 수 없습니다.');
       last_date.current.value = '';
       last_date.current.focus();
@@ -170,6 +209,7 @@ export default function GroupRegist() {
 
     if (confirm('신청하시겠습니까?')) {
       const form = new FormData();
+      form.append('no', userData.no);
       form.append('group_title', group_title.current.value);
       form.append('type', type.current.value);
       form.append('category', category.current.value);
@@ -177,9 +217,9 @@ export default function GroupRegist() {
       form.append('price', Number(price.current.value));
       form.append('addr1', formData.location);
       form.append('addr2', addr2.current.value);
+      form.append('area', area);
       form.append('latitude', Number(formData.coordinates.lat));
       form.append('longitude', Number(formData.coordinates.lng));
-      form.append('placeId', formData.placeId);
       const date1 = new Date(start_date.current.value);
       const formattedStartDate = date1.toISOString();
       form.append('start_date', formattedStartDate);
@@ -224,7 +264,7 @@ export default function GroupRegist() {
         <div className="board">
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
-              <b>모임 개설 신청하기</b>
+              <p className='group_span'>모임 개설 신청하기</p>
             </p>
           </div>
           <div className="group_register_form">
@@ -272,20 +312,26 @@ export default function GroupRegist() {
                 </div>
                 <div className="d-flex flex-row mt-3">
                   <div className="me-5">
-                    <Form.Label>모임시작일</Form.Label>
-                    <Form.Control type="datetime-local" ref={start_date} 
-                    onChange={handleStartDateChange}/>
+                    <Form.Label>모임 시작일</Form.Label>
+                    <Form.Control
+                      type="datetime-local"
+                      ref={start_date}
+                      onChange={handleStartDateChange}
+                    />
                   </div>
                   <div>
-                    <Form.Label>모임종료일</Form.Label>
-                    <Form.Control type="datetime-local" ref={last_date} 
-                    onChange={handleLastDateChange}/>
+                    <Form.Label>모임 종료일</Form.Label>
+                    <Form.Control
+                      type="datetime-local"
+                      ref={last_date}
+                      onChange={handleLastDateChange}
+                    />
                   </div>
                 </div>
                 {/* 주소 입력 */}
                 <Form.Group as={Row} className="mt-4 mb-3">
                   <Form.Label column sm={2}>
-                    모임주소
+                    모임 주소
                   </Form.Label>
                   <Col sm={10}>
                     <Form.Control
@@ -326,7 +372,12 @@ export default function GroupRegist() {
               <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
                   <p>모임 대표 이미지 등록</p>
-                  <input type="file" className="mb-3" onChange={handleFileChange1} /><br/>
+                  <input
+                    type="file"
+                    className="mb-3"
+                    onChange={handleFileChange1}
+                  />
+                  <br />
                   {imgUrl1Preview && (
                     <img
                       src={imgUrl1Preview}
@@ -334,9 +385,13 @@ export default function GroupRegist() {
                       style={{ width: '100px', height: '100px' }}
                     />
                   )}
-                  <hr/>
+                  <hr />
                   <p>모임 상세 이미지 등록</p>
-                  <input type="file" className="mb-3" onChange={handleFileChange2} />
+                  <input
+                    type="file"
+                    className="mb-3"
+                    onChange={handleFileChange2}
+                  />
                   {imgUrl2Preview && (
                     <img
                       src={imgUrl2Preview}
@@ -344,7 +399,11 @@ export default function GroupRegist() {
                       style={{ width: '100px', height: '100px' }}
                     />
                   )}
-                  <input type="file" className="mb-3" onChange={handleFileChange3} />
+                  <input
+                    type="file"
+                    className="mb-3"
+                    onChange={handleFileChange3}
+                  />
                   {imgUrl3Preview && (
                     <img
                       src={imgUrl3Preview}
