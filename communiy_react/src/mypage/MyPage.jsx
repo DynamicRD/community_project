@@ -87,6 +87,7 @@ function MyPage() {
       .catch((error) => {
         console.error('알림 데이터 로드 실패:', error);
       });
+    console.log(userData.imgUrl);
   }, [userData]);
 
   useEffect(() => {

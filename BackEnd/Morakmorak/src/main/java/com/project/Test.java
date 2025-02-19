@@ -29,6 +29,15 @@ public class Test {
 
 		String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString();
 		System.out.println("업로드 폴더 경로: " + uploadPath);
+		
+		String uploadDir =	Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
+	      
+        String newFileName = "1739943712124_ACg8ocIqp6zZACeaOgYiZZzSKy0Gx1Qg2eejcS3epDpAFBUCbanOIQ=s96-c";
+        
+        	File oldFile = new File(uploadDir+newFileName);
+        	newFileName = newFileName+".jpg";
+        	File newFile = new File(uploadDir+newFileName);
+  
 
 	}
 
