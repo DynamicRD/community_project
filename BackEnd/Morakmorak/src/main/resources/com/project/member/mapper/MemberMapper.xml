@@ -51,21 +51,21 @@
 		zip_code=#{zipCode}, addr1=#{addr1}, addr2=#{addr2} where no = #{no}
 	</insert>
 	
-	<insert id="updateInfoGoogle" parameterType="com.project.member.model.Member">
+	<insert id="updateInfoSns" parameterType="com.project.member.model.Member">
 		update member set  
 		name=#{name}, nickname=#{nickname},
 		birth =TO_DATE(#{birth}, 'YYYY-MM-DD'), gender= #{gender},
 		zip_code=#{zipCode}, addr1=#{addr1}, addr2=#{addr2} where no = #{no}
 	</insert>
 
-	<insert id="registerGoogle" parameterType="com.project.member.model.Member">
+	<insert id="registerSns" parameterType="com.project.member.model.Member">
 		INSERT INTO member (
 		no, email, name, nickname, birth, gender, zip_code, addr1, addr2,
-		provider, provider_id
+		provider, provider_id,img_url
 		) VALUES ( 
 		member_seq.nextval, #{email}, #{name}, #{nickname},
 		TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1},
-		#{addr2}, #{provider}, #{providerId}
+		#{addr2}, #{provider}, #{providerId},#{imgUrl}
 		)
 	</insert>
 

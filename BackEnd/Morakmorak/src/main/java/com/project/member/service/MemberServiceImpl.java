@@ -2,6 +2,7 @@ package com.project.member.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -12,7 +13,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-
+import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+import java.io.*;
+import java.nio.file.*;
 import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.mapper.MemberMapper;
@@ -30,7 +35,8 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
-
+	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
+	
 	@Override
 	public boolean duplicateCheck(Member member) {
 		int count = mapper.idDuplicateCheck(member); // 오타 수정
@@ -76,9 +82,31 @@ public class MemberServiceImpl implements MemberService {
 		member.setAddr1(memberDTO.getAddress01());
 		member.setAddr2(memberDTO.getAddress02());
 		if (memberDTO.getProvider().equals("google")||memberDTO.getProvider().equals("kakao")) {
+			String imageUrl = memberDTO.getPicture();
+			// URL에서 파일명 추출
+	        String originalFileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
+
+	        // UUID 추가
+	        String newFileName = UUID.randomUUID().toString() + "_" + originalFileName;
+	        String FilePath = UPLOAD_DIR+newFileName+".jpg";
+			 try {
+		            RestTemplate restTemplate = new RestTemplate();
+		            ResponseEntity<Resource> response = restTemplate.getForEntity(imageUrl, Resource.class);
+		            Resource resource = response.getBody();
+
+		            if (resource != null) {
+		                InputStream inputStream = resource.getInputStream();
+		                Files.copy(inputStream, Paths.get(FilePath), StandardCopyOption.REPLACE_EXISTING);
+		                System.out.println("이미지 다운로드 성공: " + FilePath);
+		                
+		            }
+		        } catch (Exception e) {
+		            e.printStackTrace();
+		        }
 			member.setProvider(memberDTO.getProvider());
 			member.setProviderId(memberDTO.getProviderId());
-			mapper.registerGoogle(member);
+			member.setImgUrl(FilePath);
+			mapper.registerSns(member);
 		} else {
 			mapper.register(member);
 		}
@@ -114,7 +142,7 @@ public class MemberServiceImpl implements MemberService {
 		member.setAddr2(memberDTO.getAddress02());
 		if (memberDTO.getProvider().equals("google")) {
 			member.setProvider(memberDTO.getProvider());
-			mapper.updateInfoGoogle(member);
+			mapper.updateInfoSns(member);
 		} else {
 			mapper.updateInfo(member);
 		}

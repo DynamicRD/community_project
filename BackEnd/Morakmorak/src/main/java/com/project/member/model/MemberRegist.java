@@ -22,4 +22,5 @@ public class MemberRegist {
     private String address02;
     private String providerId;
     private String provider;
+    private String picture;
 }

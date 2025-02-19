@@ -140,7 +140,8 @@ public class MemberController {
 				snsInfo.setId(idStr);
 				snsInfo.setName(nickname);
 				snsInfo.setPicture(thumbnailImage);
-				String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
+				System.out.println(snsInfo);
+				String jwtTempGoogleToken = jwtutil.createTemporarySnsToken(snsInfo);
 				addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 				// ✅ 회원가입 필요 (isRegistered=false 전달)
 				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
@@ -371,7 +372,6 @@ public class MemberController {
 	}
 
 	@RequestMapping("/googlelogin")
-
 	public ResponseEntity<?> googleLogin(@RequestParam("code") String code,
 			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
 			HttpServletResponse response) {
@@ -451,7 +451,7 @@ public class MemberController {
 			SnsInfo snsInfo = new SnsInfo();
 			ObjectMapper objectMapper = new ObjectMapper();
 			snsInfo = objectMapper.convertValue(userInfo, SnsInfo.class);
-			String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
+			String jwtTempGoogleToken = jwtutil.createTemporarySnsToken(snsInfo);
 			addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 			// ✅ 회원가입 필요 (isRegistered=false 전달)
 			return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
@@ -471,11 +471,13 @@ public class MemberController {
 			String id = claims.get("id", String.class);
 			String email = claims.get("email", String.class);
 			String name = claims.get("name", String.class);
-
+			String picture = claims.get("picture",String.class);
+			
 			Map<String, String> userInfo = new HashMap<>();
 			userInfo.put("id", id);
 			userInfo.put("email", email);
 			userInfo.put("name", name);
+			userInfo.put("picture", picture);
 			System.out.println(userInfo);
 			return ResponseEntity.ok(userInfo);
 		} catch (Exception e) {
