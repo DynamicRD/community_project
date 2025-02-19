@@ -246,14 +246,31 @@ public class GroupMorakController {
 	    }
 	}
 	
-	@RequestMapping("/management")
+	@RequestMapping("/memberList")
 	public List<Map<String, Object>> memberList(@RequestParam(value = "group_no") String groupNo) {
-//		try {
 			return service.memberList(groupNo);
-//			
-//	    }catch (Exception e) {
-//			log.error("Error inserting group", e);
-//			return ResponseEntity.status(500).body("신청에 실패했습니다.");
-//		}
 	}
+	
+	@RequestMapping("/statusUpdate")
+	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
+			try {
+				service.memberStatusUpdate(map);
+				return ResponseEntity.ok("처리가 완료되었습니다.");
+			}catch(Exception e) {
+				log.error("Error group member status updating ", e);
+		        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+			}
+	}
+	
+	@RequestMapping("/memberReport")
+	public ResponseEntity<String> memberReport(@RequestParam Map<String, Object>map) {
+		try {
+			service.memberReport(map);
+			return ResponseEntity.ok("처리가 완료되었습니다.");
+		}catch(Exception e) {
+			log.error("Error member Reporting ", e);
+	        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+		}
+	}
+			
 }

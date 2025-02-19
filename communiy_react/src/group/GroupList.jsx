@@ -186,7 +186,7 @@ function GroupList({ type }) {
                 ))
               ) : (
                 <div className="d-flex justify-content-center w-100">
-                  <h3 className="no-meetings m-5">모임이 없습니다.</h3>
+                  <h3 className="no-meetings m-5 group_span">모임이 없습니다.</h3>
                 </div>
               )}
             </div>

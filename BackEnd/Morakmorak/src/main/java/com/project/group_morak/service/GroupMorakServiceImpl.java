@@ -56,4 +56,14 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 
 	}
 
+	@Override
+	public void memberStatusUpdate(Map<String, Object> map) {
+		mapper.memberStatusUpdate(map);
+	}
+
+	@Override
+	public void memberReport(Map<String, Object> map) {
+		mapper.memberReport(map);
+	}
+
 }
