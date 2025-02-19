@@ -34,15 +34,14 @@
 
     <insert id="register" parameterType="com.project.member.model.Member">
 		INSERT INTO member (
-		no, pw, email, phone, name, nickname,
+		no, id,pw, email, phone, name, nickname,
 		birth, gender, zip_code, addr1, addr2
 		) VALUES (
-		member_seq.nextval, #{pw}, #{email}, #{phone}, #{name},
+		member_seq.nextval,#{id}, #{pw}, #{email}, #{phone}, #{name},
 		#{nickname},
 		TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1},
 		#{addr2}
 		)
-
 	</insert>
 	
 	<insert id="updateInfo" parameterType="com.project.member.model.Member">
@@ -52,21 +51,21 @@
 		zip_code=#{zipCode}, addr1=#{addr1}, addr2=#{addr2} where no = #{no}
 	</insert>
 	
-	<insert id="updateInfoGoogle" parameterType="com.project.member.model.Member">
+	<insert id="updateInfoSns" parameterType="com.project.member.model.Member">
 		update member set  
 		name=#{name}, nickname=#{nickname},
 		birth =TO_DATE(#{birth}, 'YYYY-MM-DD'), gender= #{gender},
 		zip_code=#{zipCode}, addr1=#{addr1}, addr2=#{addr2} where no = #{no}
 	</insert>
 
-	<insert id="registerGoogle" parameterType="com.project.member.model.Member">
+	<insert id="registerSns" parameterType="com.project.member.model.Member">
 		INSERT INTO member (
 		no, email, name, nickname, birth, gender, zip_code, addr1, addr2,
-		provider, provider_id
+		provider, provider_id,img_url
 		) VALUES ( 
 		member_seq.nextval, #{email}, #{name}, #{nickname},
 		TO_DATE(#{birth}, 'YYYY-MM-DD'), #{gender}, #{zipCode}, #{addr1},
-		#{addr2}, #{provider}, #{providerId}
+		#{addr2}, #{provider}, #{providerId},#{imgUrl}
 		)
 	</insert>
 
@@ -75,12 +74,17 @@
 		resultType="com.project.member.model.Member">
 		SELECT *
 		FROM Member
-		WHERE ID = #{id} AND PROVIDER = #{provider} 
+		WHERE ID = #{id} AND PROVIDER = #{provider}
 	</select>
-	    <select id="passCompare" resultType="String">
+	<select id="passCompare" resultType="String">
 		SELECT pw
 		FROM member
 		WHERE id = #{id}
+	</select>
+	<select id="passCompareNo" resultType="String">
+		SELECT pw
+		FROM member
+		WHERE no = #{no}
 	</select>
 
 	<select id="getMemberInfoByNo" parameterType="com.project.member.model.Member"
@@ -99,4 +103,7 @@
         FROM member 
         WHERE provider_id = #{providerId} and provider = #{provider}
     </select>
+    <delete id="deleteMemeber">
+   		delete from member where no = #{no}
+    </delete>
 </mapper>

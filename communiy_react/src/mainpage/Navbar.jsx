@@ -19,7 +19,7 @@ function Navbar() {
 
       if (response.data.success) {
         alert('로그아웃 되었습니다.');
-        window.location.reload();
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('로그아웃 실패:', error);
@@ -31,7 +31,7 @@ function Navbar() {
     <nav className="navbar navbar-expand-lg navbar-light bg-white navbar-custom">
       <div className="container d-flex justify-content-center">
         <Link className="navbar-brand navbar-logo" to="/">
-          W CONCEPT
+          모락모樂
         </Link>
         <button
           className="navbar-toggler"

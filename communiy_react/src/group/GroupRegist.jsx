@@ -1,11 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './GroupRegist.css';
-import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 
 export default function GroupRegist() {
-  const g_title = useRef();
+  const group_title = useRef();
   const type = useRef();
   const category = useRef();
   const user_max = useRef();
@@ -16,10 +15,50 @@ export default function GroupRegist() {
   const [comment1, setComment1] = useState('');
   const handleComment1Change = (e) => setComment1(e.target.value);
   const comment2 = useRef();
-  const img_url1 = useRef();
-  const img_url2 = useRef();
-  const img_url3 = useRef();
   const [form, setForm] = useState(new FormData());
+  // 이미지 업로드
+  const [img_url1, setImg_url1] = useState(null);
+  const [img_url2, setImg_url2] = useState(null);
+  const [img_url3, setImg_url3] = useState(null);
+  const [imgUrl1Preview, setImgUrl1Preview] = useState(null);
+  const [imgUrl2Preview, setImgUrl2Preview] = useState(null);
+  const [imgUrl3Preview, setImgUrl3Preview] = useState(null);
+
+  const handleFileChange1 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url1(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl1Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileChange2 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url2(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl2Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileChange3 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url3(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl3Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   /**  Google Places API 자동완성 설정 */
   const autoCompleteRef = useRef(null);
@@ -52,6 +91,132 @@ export default function GroupRegist() {
       }
     });
   }, []);
+
+  // 유효성 검사
+  const handleStartDateChange = (e) => {
+    const today = new Date();
+    const threeDaysLater = new Date(today.setDate(today.getDate() + 3));
+    const selectedStartDate = new Date(start_date.current.value);
+
+    if (selectedStartDate < threeDaysLater) {
+      alert('모임 시작일은 오늘부터 3일 후부터 가능합니다.');
+      start_date.current.value = '';
+      start_date.current.focus();
+    }
+  };
+
+  const handleLastDateChange = (e) => {
+    if (new Date(last_date.current.value) < new Date(start_date.current.value)) {
+      alert('모임 종료일은 모임 시작일보다 빠를 수 없습니다.');
+      last_date.current.value = '';
+      last_date.current.focus();
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!group_title.current.value) {
+      alert('모임명을 입력해주세요.');
+      group_title.current.focus();
+      return;
+    }
+    if (!type.current.value) {
+      alert('모임 타입을 선택해주세요.');
+      type.current.focus();
+      return;
+    }
+    if (!category.current.value) {
+      alert('모임 카테고리를 선택해주세요.');
+      category.current.focus();
+      return;
+    }
+    if (!user_max.current.value) {
+      alert('모임 정원을 입력해주세요.');
+      user_max.current.focus();
+      return;
+    }
+    if (!price.current.value) {
+      alert('인당 비용을 입력해주세요.');
+      price.current.focus();
+      return;
+    }
+    if (!formData.location) {
+      alert('모임 주소를 입력해주세요.');
+      inputRef.current.focus();
+      return;
+    }
+    if (!start_date.current.value) {
+      alert('모임 시작일을 입력해주세요.');
+      start_date.current.focus();
+      return;
+    }
+    if (!last_date.current.value) {
+      alert('모임 종료일을 입력해주세요.');
+      last_date.current.focus();
+      return;
+    }
+    if (!comment1) {
+      alert('모임장 한마디를 입력해주세요.');
+      return;
+    }
+    if (!comment2.current.value) {
+      alert('모임 소개글을 입력해주세요.');
+      comment2.current.focus();
+      return;
+    }
+    if (!img_url1) {
+      alert('모임 대표 이미지를 등록해주세요.');
+      return;
+    }
+
+    if (confirm('신청하시겠습니까?')) {
+      const form = new FormData();
+      form.append('group_title', group_title.current.value);
+      form.append('type', type.current.value);
+      form.append('category', category.current.value);
+      form.append('user_max', Number(user_max.current.value));
+      form.append('price', Number(price.current.value));
+      form.append('addr1', formData.location);
+      form.append('addr2', addr2.current.value);
+      form.append('latitude', Number(formData.coordinates.lat));
+      form.append('longitude', Number(formData.coordinates.lng));
+      form.append('placeId', formData.placeId);
+      const date1 = new Date(start_date.current.value);
+      const formattedStartDate = date1.toISOString();
+      form.append('start_date', formattedStartDate);
+      const date2 = new Date(last_date.current.value);
+      const formattedLastDate = date2.toISOString();
+      form.append('last_date', formattedLastDate);
+      form.append('comment1', comment1);
+      form.append('comment2', comment2.current.value);
+      if (img_url1) {
+        form.append('img_url1', img_url1);
+      }
+      if (img_url2) {
+        form.append('img_url2', img_url2);
+      }
+      if (img_url3) {
+        form.append('img_url3', img_url3);
+      }
+      fetch('http://localhost:8080/group/insert', {
+        method: 'post',
+        encType: 'multipart/form-data',
+        body: form,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('신청에 실패했습니다. 다시 시도해주세요.');
+          }
+          return response.text();
+        })
+        .then((message) => {
+          alert(message);
+          history.go(-1);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
+  };
 
   return (
     <Container className="w-75">
@@ -90,7 +255,7 @@ export default function GroupRegist() {
                   <option value="edu">교육</option>
                 </Form.Select>
                 <Form.Label className="mt-3">모임명</Form.Label>
-                <Form.Control type="text" className="w-50" ref={g_title} />
+                <Form.Control type="text" className="w-50" ref={group_title} />
                 <div className="d-flex flex-row">
                   <div className="mt-3">
                     <Form.Label>모임정원</Form.Label>
@@ -108,11 +273,13 @@ export default function GroupRegist() {
                 <div className="d-flex flex-row mt-3">
                   <div className="me-5">
                     <Form.Label>모임시작일</Form.Label>
-                    <Form.Control type="datetime-local" ref={start_date} />
+                    <Form.Control type="datetime-local" ref={start_date} 
+                    onChange={handleStartDateChange}/>
                   </div>
                   <div>
                     <Form.Label>모임종료일</Form.Label>
-                    <Form.Control type="datetime-local" ref={last_date} />
+                    <Form.Control type="datetime-local" ref={last_date} 
+                    onChange={handleLastDateChange}/>
                   </div>
                 </div>
                 {/* 주소 입력 */}
@@ -159,62 +326,37 @@ export default function GroupRegist() {
               <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
                   <p>모임 대표 이미지 등록</p>
-                  <input type="file" ref={img_url1} className="mb-3" />
+                  <input type="file" className="mb-3" onChange={handleFileChange1} /><br/>
+                  {imgUrl1Preview && (
+                    <img
+                      src={imgUrl1Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
+                  <hr/>
                   <p>모임 상세 이미지 등록</p>
-                  <input type="file" ref={img_url2} />
-                  <input type="file" ref={img_url3} />
+                  <input type="file" className="mb-3" onChange={handleFileChange2} />
+                  {imgUrl2Preview && (
+                    <img
+                      src={imgUrl2Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
+                  <input type="file" className="mb-3" onChange={handleFileChange3} />
+                  {imgUrl3Preview && (
+                    <img
+                      src={imgUrl3Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
                 </div>
                 <div>
                   <Button
                     className="register_btn ms-3 justify-content-end"
-                    onClick={() => {
-                      if (confirm('신청하시겠습니까?')) {
-                        form.append('g_title', g_title.current.value);
-                        form.append('type', type.current.value);
-                        form.append('category', category.current.value);
-                        form.append('user_max', Number(user_max.current.value));
-                        form.append('price', Number(price.current.value));
-                        form.append('addr1', formData.location);
-                        form.append('addr2', addr2.current.value);
-                        form.append(
-                          'latitude',
-                          Number(formData.coordinates.lat)
-                        );
-                        form.append(
-                          'longitude',
-                          Number(formData.coordinates.lng)
-                        );
-                        form.append('placeId', formData.placeId);
-                        const date1 = new Date(start_date.current.value);
-                        const formattedStartDate = date1.toISOString();
-                        form.append('start_date', formattedStartDate);
-
-                        const date2 = new Date(last_date.current.value);
-                        const formattedLastDate = date2.toISOString();
-                        form.append('last_date', formattedLastDate);
-                        form.append('comment1', comment1);
-                        form.append('comment2', comment2.current.value);
-                        // if (img_url1.current.files.length > 0) {
-                        //   form.append('img_url1', img_url1.current.files[0]);
-                        // }
-                        // if (img_url2.current.files.length > 0) {
-                        //   form.append('img_url2', img_url2.current.files[0]);
-                        // }
-                        // if (img_url3.current.files.length > 0) {
-                        //   form.append('img_url3', img_url3.current.files[0]);
-                        // }
-                        fetch('http://localhost:8080/group/insert', {
-                          method: 'post',
-                          // encType: 'multipart/form-data',
-                          body: form,
-                        }).then(() => {
-                          alert(
-                            '신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.'
-                          );
-                          history.go(-1);
-                        });
-                      }
-                    }}
+                    onClick={handleSubmit}
                   >
                     신청하기
                   </Button>
@@ -222,7 +364,6 @@ export default function GroupRegist() {
                     className="register_btn ms-3 justify-content-end"
                     onClick={() => {
                       history.go(-1);
-                      // navigate('/group/list');
                     }}
                   >
                     취소하기

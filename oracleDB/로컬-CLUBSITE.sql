@@ -10,8 +10,9 @@ drop table faq;
 drop table charge;
 drop table messages;
 drop table visit_log
-
 drop table member;
+
+
 create sequence basket_seq 
 start with 1 
 increment by 1;
@@ -67,6 +68,14 @@ increment by 1;
 create sequence transaction_seq
 start with 1
 increment by 1;
+
+create sequence report_seq
+start with 1
+increment by 1;
+
+create sequence notification_seq
+start with 1
+increment by 1;
 -- 모임장바구니
 create table basket(
     basket_no number(6) not null,
@@ -79,9 +88,10 @@ create table basket(
     status varchar2(20),                --찜, 승인대기, 종료
     primary key(basket_no)
 );
+ALTER TABLE BASKET
+ADD CONSTRAINT unique_basket UNIQUE (NO, GROUP_NO);
 
-
-
+select * from group_morak;
 -- 모임
 create table group_morak(
     group_no number(6) not null,
@@ -102,12 +112,17 @@ create table group_morak(
     comment2 varchar2(1000),             --모임소개글 
     approval varchar2(20) DEFAULT 'N',                --관리자 승인여부
     views number(6),                    --조회수
-     img_url1 varchar2(50),               --이미지1
-    img_url2 varchar2(50),               --이미지2
-    img_url3 varchar2(50),               --이미지3
+     img_url1 varchar2(100),               --이미지1
+    img_url2 varchar2(100),               --이미지2
+    img_url3 varchar2(100),               --이미지3
     type varchar2(20),                   --정기모임,소모임 구분
     primary key(group_no)
 );
+
+alter table group_morak modify img_url1 varchar2(100);
+alter table group_morak modify img_url2 varchar2(100);
+alter table group_morak modify img_url3 varchar2(100);
+alter table member_group add pr varchar2(500);
 
 
 
@@ -126,17 +141,21 @@ create table comments(
     isblacked varchar2(10) default 'N',
     primary key(comments_no)
 );
-
-
-
+select * from member;
+update member set id = 'aaaaa' where phone = 01049245948;
+delete from member where no = 41;
+commit;
 
 create table member_group(
     member_group_no number(6),
     no number(6) not null,
     group_no number(6) not null,
-    status varchar2(20),             --찜, 승인대기, 멤버, 모임장
+    status varchar2(20),             --승인대기, 멤버, 모임장
     primary key(member_group_no)
 );
+--같은 유저가 같은 모임 두번 신청 못하게 unique처리
+ALTER TABLE MEMBER_GROUP
+ADD CONSTRAINT UNIQUE_MEMBER_GROUP UNIQUE (NO, GROUP_NO);
 
 
 -- 리뷰게시판
@@ -156,7 +175,8 @@ create table review(
     primary key(review_no)
 
 );
-
+ALTER TABLE member MODIFY img_url VARCHAR2(255);
+commit;
 select * from member;
 drop table member;
 -- 사용자
@@ -180,20 +200,25 @@ create table member(
     star_sum number(6) default 0,        --별점총합
     black number(6) default 0,           --신고횟수
     reg_date date default sysdate,        --가입일
-    img_url varchar2(50) default '',                 --사진
+    img_url varchar2(255) default '',                 --사진
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
-ALTER TABLE member DROP PRIMARY KEY; -- 기존 PK(id) 삭제
-ALTER TABLE member ADD PRIMARY KEY (no); -- 새로운 PK(no) 추가
-ALTER TABLE member MODIFY role DEFAULT 1;
 commit;
 update member set provider = 'kakao' where no =26;
 select * from member;
+
 SELECT *
 		FROM Member
 		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 
-
+        INSERT INTO member (
+		no, email, name, nickname, birth, gender, zip_code, addr1, addr2,
+		provider, provider_id
+		) VALUES ( 
+		member_seq.nextval, 1,2, 3,
+		sysdate, 1, 1, 1,
+		1, 1, 1
+		);
 -- 알림
 create table notification(
     notification_no number(6) not null,
@@ -203,8 +228,8 @@ create table notification(
     reg_date date default sysdate,        --알림일
     primary key(notification_no)
 );
-
-
+insert into notification (notification_no,no,content) values (notification_seq.nextval, 45,'안녕하세요');
+commit;
 -- 공지사항
 create table notice(
     notice_no number(6) not null,
@@ -229,7 +254,7 @@ create table faq(
 
 --코인 충전 내역 테이블
 create table charge(
-    charge_no not null,
+    charge_no number(6)  not null,
     amount number(6),          ---충전금액
     reg_date date,
     no number(6) not null,   ---사용자 pk
@@ -248,16 +273,16 @@ CREATE TABLE messages (
     firebase_message_id VARCHAR2(255) UNIQUE,
     primary key(message_no)
 );
+select * from messages;
 
-
--- 방문 기록 테이블 추가
+-- 방문기록
 create table visit_log(
-    visit_no number(6),
+    v_id number(6),
     ip varchar2(50),
-    visit_time timestamp default current_timestamp,
+    visit_date date default sysdate,
     visit_url varchar2(300),
-    primary key(visit_no)
-);
+    primary key(v_id)
+    );
 
 --거래내역 테이블
 drop table transaction;
@@ -268,4 +293,20 @@ create table Transaction_log(
     amount number(7),
     reg_date date default sysdate,
     primary key(transaction_no)
-)
+);
+INSERT INTO Transaction_log (transaction_no, no, type, amount)  
+VALUES (2, 22, 'Deposit', 50000);
+commit;
+select * from transaction_log;
+insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);
+
+-- 신고
+create table report(
+    rep_no number(6),
+    reporter varchar2(50),
+    reported varchar2(50),
+    reason varchar2(255),
+    rep_date date,
+    rep_status varchar2(1),
+    primary key(rep_id)
+    );

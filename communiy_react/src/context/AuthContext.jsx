@@ -5,7 +5,11 @@ import useAuth from '../hooks/useAuth'; // ✅ 기존 useAuth 가져오기
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const { isAuthenticated: authStatus, userData: fetchedUserData } = useAuth();
+  const {
+    isAuthenticated: authStatus,
+    userData: fetchedUserData,
+    isLoading,
+  } = useAuth();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userData, setUserData] = useState(null);
 
@@ -16,6 +20,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     setUserData(fetchedUserData);
   }, [fetchedUserData]);
+
+  if (isLoading) {
+    return <div>Loading...</div>; // 로딩 중일 때 보여줄 UI
+  }
 
   return (
     <AuthContext.Provider value={{ isAuthenticated, userData }}>

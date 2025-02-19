@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import './GroupRegist.css';
-import { Button, Col, Collapse, Container, Row } from 'react-bootstrap';
+import { Button, Col, Container, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import GoogleMap from './component/GoogleMap';
-import { useLocation } from 'react-router';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export default function GroupUpdate() {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);
-  const g_id = queryParams.get('g_id'); // 'g_id' 파라미터 값을 가져옴
+  const group_no = queryParams.get('group_no'); // 'g_id' 파라미터 값을 가져옴
   const [items, setGroupDetail] = useState({});
 
   useEffect(() => {
-    fetch(`http://localhost:8080/group/detail?g_id=${g_id}`)
+    fetch(`http://localhost:8080/group/detail?group_no=${group_no}`)
       .then((res) => res.json())
       .then((data) => {
         setGroupDetail(data);
@@ -22,67 +22,251 @@ export default function GroupUpdate() {
       .catch((error) => {
         console.error('Error fetching data:', error);
       });
-  }, [g_id]);
+  }, [group_no]);
+
+  const group_title = useRef();
+  const type = useRef();
+  const category = useRef();
+  const user_max = useRef();
+  const price = useRef();
+  const addr1 = useRef();
+  const addr2 = useRef();
+  const start_date = useRef();
+  const last_date = useRef();
+  const comment1 = useRef();
+  const comment2 = useRef();
+  const [img_url1, setImg_url1] = useState();
+  const [img_url2, setImg_url2] = useState();
+  const [img_url3, setImg_url3] = useState();
+  const [imgUrl1Preview, setImgUrl1Preview] = useState(null);
+  const [imgUrl2Preview, setImgUrl2Preview] = useState(null);
+  const [imgUrl3Preview, setImgUrl3Preview] = useState(null);
+
+  const handleFileChange1 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url1(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl1Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileChange2 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url2(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl2Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleFileChange3 = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImg_url3(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgUrl3Preview(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const [formData, setFormData] = useState({
-    g_title: '',
-    type: '',
-    category: '',
-    user_max: '',
-    price: '',
-    addr1: '',
-    addr2: '',
-    lat: '',
-    alt: '',
-    start_date: '',
-    last_date: '',
-    comment1: '',
-    comment2: '',
-    img_url1: '',
-    img_url2: '',
-    img_url3: ''
+    location: '',
+    coordinates: { lat: items.latitude || '', lng: items.longitude || '' },
+    placeId: '',
   });
 
   useEffect(() => {
-    if (items) {
-      setFormData({
-        g_title: items.G_TITLE || '',
-        type: items.TYPE || '',
-        category: items.CATEGORY || '',
-        user_max: items.USER_MAX || '',
-        price: items.PRICE || '',
-        addr1: items.ADDR1 || '',
-        addr2: items.ADDR2 || '',
-        lat: items.LAT || '',
-        alt: items.ALT || '',
-        start_date: items.START_DATE || '',
-        last_date: items.LAST_DATE || '',
-        comment1: items.COMMENT1 || '',
-        comment2: items.COMMENT2 || '',
-        img_url1: items.IMG_URL1 || '',
-        img_url2: items.IMG_URL2 || '',
-        img_url3: items.IMG_URL3 || ''
-      });
+    if (Object.keys(items).length > 0) {
+      group_title.current.value = items.GROUP_TITLE || '';
+      type.current.value = items.TYPE || '';
+      category.current.value = items.CATEGORY || '';
+      user_max.current.value = items.USER_MAX || '';
+      price.current.value = items.PRICE || '';
+      addr1.current.value = items.ADDR1 || '';
+      addr2.current.value = items.ADDR2 || '';
+      const startDate = new Date(items.START_DATE || '');
+      startDate.setHours(startDate.getHours() + 9);
+      start_date.current.value = startDate.toISOString().slice(0, 16);
+      const lastDate = new Date(items.LAST_DATE || '');
+      lastDate.setHours(lastDate.getHours() + 9);
+      last_date.current.value = lastDate.toISOString().slice(0, 16);
+      comment1.current.value = items.COMMENT1 || '';
+      comment2.current.value = items.COMMENT2 || '';
+      setImg_url1(items.IMG_URL1 || '');
+      setImg_url2(items.IMG_URL2 || '');
+      setImg_url3(items.IMG_URL3 || '');
+      setImgUrl1Preview(items.IMG_URL1 ? `/images/${items.IMG_URL1}` : null);
+      setImgUrl2Preview(items.IMG_URL2 ? `/images/${items.IMG_URL2}` : null);
+      setImgUrl3Preview(items.IMG_URL3 ? `/images/${items.IMG_URL3}` : null);
     }
-    console.log("FormData category:", formData.category);
   }, [items]);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value
+  useEffect(() => {
+    setImg_url1(items.IMG_URL1 || '');
+    setImg_url2(items.IMG_URL2 || '');
+    setImg_url3(items.IMG_URL3 || '');
+  }, [items.IMG_URL1, items.IMG_URL2, items.IMG_URL3]);
+
+  /**  Google Places API 자동완성 설정 */
+  const autoCompleteRef = useRef(null);
+
+  useEffect(() => {
+    if (!window.google) return;
+
+    autoCompleteRef.current = new window.google.maps.places.Autocomplete(
+      addr1.current
+    );
+    autoCompleteRef.current.addListener('place_changed', () => {
+      const place = autoCompleteRef.current.getPlace();
+      if (place.geometry) {
+        console.log('Place:', place);
+        console.log('Latitude:', place.geometry.location.lat());
+        console.log('Longitude:', place.geometry.location.lng());
+        setFormData((prev) => ({
+          ...prev,
+          location: place.formatted_address,
+          coordinates: {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng(),
+          },
+        }));
+      }
     });
+  }, []);
+
+  const handleSubmit = () => {
+    if (!group_title.current.value) {
+      alert('모임명을 입력해주세요.');
+      group_title.current.focus();
+      return;
+    }
+    if (!type.current.value) {
+      alert('모임 타입을 선택해주세요.');
+      type.current.focus();
+      return;
+    }
+    if (!category.current.value) {
+      alert('모임 카테고리를 선택해주세요.');
+      category.current.focus();
+      return;
+    }
+    if (!user_max.current.value) {
+      alert('모임 정원을 입력해주세요.');
+      user_max.current.focus();
+      return;
+    }
+    if (!price.current.value) {
+      alert('인당 비용을 입력해주세요.');
+      price.current.focus();
+      return;
+    }
+    if (!addr1.current.value) {
+      alert('모임 주소를 입력해주세요.');
+      addr1.current.focus();
+      return;
+    }
+    if (!start_date.current.value) {
+      alert('모임 시작일을 입력해주세요.');
+      start_date.current.focus();
+      return;
+    }
+    if (!last_date.current.value) {
+      alert('모임 종료일을 입력해주세요.');
+      last_date.current.focus();
+      return;
+    }
+    if (
+      new Date(last_date.current.value) < new Date(start_date.current.value)
+    ) {
+      alert('모임 종료일은 모임 시작일보다 빠를 수 없습니다.');
+      last_date.current.focus();
+      return;
+    }
+    if (!comment1.current.value) {
+      alert('모임장 한마디를 입력해주세요.');
+      comment1.current.focus();
+      return;
+    }
+    if (!comment2.current.value) {
+      alert('모임 소개글을 입력해주세요.');
+      comment2.current.focus();
+      return;
+    }
+
+    if (confirm('수정하시겠습니까?')) {
+      const form = new FormData();
+      form.append('group_title', group_title.current.value);
+      form.append('type', type.current.value);
+      form.append('category', category.current.value);
+      form.append('user_max', Number(user_max.current.value));
+      form.append('price', Number(price.current.value));
+      form.append('addr1', addr1.current.value);
+      form.append('addr2', addr2.current.value);
+      form.append('latitude', Number(formData.coordinates.lat));
+      form.append('longitude', Number(formData.coordinates.lng));
+      form.append('placeId', formData.placeId);
+      const date1 = new Date(start_date.current.value);
+      const formattedStartDate = date1.toISOString();
+      form.append('start_date', formattedStartDate);
+      const date2 = new Date(last_date.current.value);
+      const formattedLastDate = date2.toISOString();
+      form.append('last_date', formattedLastDate);
+      form.append('comment1', comment1.current.value);
+      form.append('comment2', comment2.current.value);
+      if (img_url1) {
+        form.append('img_url1', img_url1);
+      } else {
+        form.append('img_url1', items.IMG_URL1 || '');
+      }
+      if (img_url2) {
+        form.append('img_url2', img_url2);
+      } else {
+        form.append('img_url2', items.IMG_URL2 || '');
+      }
+      if (img_url3) {
+        form.append('img_url3', img_url3);
+      } else {
+        form.append('img_url3', items.IMG_URL3 || '');
+      }
+
+      fetch(`http://localhost:8080/group/update?group_no=${group_no}`, {
+        method: 'post',
+        body: form,
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('수정에 실패했습니다. 다시 시도해주세요.');
+          }
+          return response.text();
+        })
+        .then((message) => {
+          alert(message);
+          navigate(`/group/detail?group_no=${group_no}`);
+        })
+        .catch((error) => {
+          alert(error.message);
+        });
+    }
   };
 
   return (
-    <Container className='w-75'>
-      <h1>제목 {items.G_TITLE}</h1>
+    <Container className="w-75">
       <div className="group_regist">
         <div className="board">
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
-              <b><span>{items.G_TITLE}</span> 모임 정보 수정</b>
+              <b>
+                <span>{items.GROUP_TITLE}</span> 모임 정보 수정
+              </b>
             </p>
           </div>
           <div className="group_register_form">
@@ -95,9 +279,7 @@ export default function GroupUpdate() {
                 <Form.Select
                   aria-label="Default select example"
                   className="w-50"
-                  name="type"
-                  value={formData.type}
-                  onChange={handleChange}
+                  ref={type}
                 >
                   <option value="regular">정기모임</option>
                   <option value="one">동행,소모임</option>
@@ -106,9 +288,7 @@ export default function GroupUpdate() {
                 <Form.Select
                   aria-label="Default select example"
                   className="w-50"
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
+                  ref={category}
                 >
                   <option value="culture">문화/예술</option>
                   <option value="food">푸드/드링크</option>
@@ -117,52 +297,43 @@ export default function GroupUpdate() {
                   <option value="edu">교육</option>
                 </Form.Select>
                 <Form.Label className="mt-3">모임명</Form.Label>
-                <Form.Control
-                  type="text"
-                  className="w-50"
-                  name="g_title"
-                  value={formData.g_title}
-                  onChange={handleChange}
-                />
+                <Form.Control type="text" className="w-50" ref={group_title} />
                 <div className="d-flex flex-row">
                   <div className="mt-3">
                     <Form.Label>모임정원</Form.Label>
                     <Form.Control
                       type="number"
                       className="w-50"
-                      name="user_max"
-                      value={formData.user_max}
-                      onChange={handleChange}
+                      ref={user_max}
                     />
                   </div>
                   <div className="mt-3">
                     <Form.Label>인당 비용</Form.Label>
-                    <Form.Control
-                      type="number"
-                      className="w-75"
-                      name="price"
-                      value={formData.price}
-                      onChange={handleChange}
-                    />
+                    <Form.Control type="number" className="w-75" ref={price} />
                   </div>
                 </div>
                 <div className="d-flex flex-row mt-3">
                   <div className="me-5">
                     <Form.Label>모임시작일</Form.Label>
-                    <Form.Control
-                      type="datetime-local"
-                      name="start_date"
-                      value={formData.start_date}
-                      onChange={handleChange}
-                    />
+                    <Form.Control type="datetime-local" ref={start_date} />
                   </div>
                   <div>
                     <Form.Label>모임종료일</Form.Label>
                     <Form.Control
                       type="datetime-local"
-                      name="last_date"
-                      value={formData.last_date}
-                      onChange={handleChange}
+                      ref={last_date}
+                      onChange={() => {
+                        if (
+                          new Date(last_date.current.value) <
+                          new Date(start_date.current.value)
+                        ) {
+                          alert(
+                            '모임 종료일은 모임 시작일보다 빠를 수 없습니다.'
+                          );
+                          last_date.current.value = '';
+                          last_date.current.focus();
+                        }
+                      }}
                     />
                   </div>
                 </div>
@@ -174,9 +345,7 @@ export default function GroupUpdate() {
                   <Col sm={10}>
                     <Form.Control
                       type="text"
-                      name="addr1"
-                      value={formData.addr1}
-                      onChange={handleChange}
+                      ref={addr1}
                       placeholder="모임 장소를 검색하세요"
                       size="50"
                     />
@@ -190,10 +359,9 @@ export default function GroupUpdate() {
                   <Col sm={10}>
                     <Form.Control
                       type="text"
-                      name="addr2"
-                      value={formData.addr2}
-                      onChange={handleChange}
+                      ref={addr2}
                       size="30"
+                      name="addr2"
                     />
                   </Col>
                 </Form.Group>
@@ -203,80 +371,60 @@ export default function GroupUpdate() {
                 controlId="exampleForm.ControlTextarea1"
               >
                 <Form.Label className="mt-3">모임장 한마디</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  name="comment1"
-                  value={formData.comment1}
-                  onChange={handleChange}
-                />
+                <Form.Control as="textarea" rows={3} ref={comment1} />
                 <Form.Label className="mt-3">모임 소개글</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={5}
-                  name="comment2"
-                  value={formData.comment2}
-                  onChange={handleChange}
-                />
+                <Form.Control as="textarea" rows={5} ref={comment2} />
               </Form.Group>
             </Form>
 
             <div className="register_body">
               <div className="d-flex  justify-content-between align-items-end">
                 <div className="register_button">
-                  <p>모임 대표 이미지 등록</p>
+                  <p>모임 대표 이미지 수정</p>
                   <input
                     type="file"
                     className="mb-3"
-                    name="img_url1"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        img_url1: e.target.value
-                      })
-                    }
+                    onChange={handleFileChange1}
                   />
+                  <br />
+                  {imgUrl1Preview && (
+                    <img
+                      src={imgUrl1Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
+                  <hr />
                   <p>모임 상세 이미지 등록</p>
                   <input
                     type="file"
-                    name="img_url2"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        img_url2: e.target.value
-                      })
-                    }
+                    className="mb-3"
+                    onChange={handleFileChange2}
                   />
+                  {imgUrl2Preview && (
+                    <img
+                      src={imgUrl2Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
                   <input
                     type="file"
-                    name="img_url3"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        img_url3: e.target.value
-                      })
-                    }
+                    className="mb-3"
+                    onChange={handleFileChange3}
                   />
+                  {imgUrl3Preview && (
+                    <img
+                      src={imgUrl3Preview}
+                      alt="미리보기"
+                      style={{ width: '100px', height: '100px' }}
+                    />
+                  )}
                 </div>
                 <div>
                   <Button
                     className="register_btn ms-3 justify-content-end"
-                    onClick={() => {
-                      if (confirm('수정하시겠습니까?')) {
-                        const form = new FormData();
-                        for (const key in formData) {
-                          form.append(key, formData[key]);
-                        }
-                        fetch('http://localhost:8080/group/update', {
-                          method: 'post',
-                          encType: 'multipart/form-data',
-                          body: form
-                        }).then(() => {
-                          alert('수정이 완료되었습니다.');
-                          // navigate(`/group/detail?${g_id}`);
-                        });
-                      }
-                    }}
+                    onClick={handleSubmit}
                   >
                     수정하기
                   </Button>

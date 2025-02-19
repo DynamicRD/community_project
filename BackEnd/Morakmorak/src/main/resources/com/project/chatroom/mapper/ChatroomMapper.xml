@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.chatroom.mapper.ChatroomMapper">
+	<insert id="insertChatroom">
+		 INSERT INTO messages (message_no,sender, content, timestamp, room_code, firebase_message_id)
+        VALUES (messages_seq.nextval, #{sender}, #{content}, #{timestamp}, #{roomCode}, #{firebaseMessageId})
+	</insert>
+	<!-- 중복된 Firebase 메시지 ID가 있는지 체크하는 쿼리 -->
+    <select id="checkDuplicate" resultType="boolean">
+        SELECT COUNT(1)
+        FROM messages
+        WHERE firebase_message_id = #{firebaseMessageId}
+    </select>
+</mapper>

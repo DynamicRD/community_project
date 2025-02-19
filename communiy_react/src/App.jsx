@@ -33,14 +33,13 @@ import AnnouncementsNoticeRead from './announcements/Announcements_notice_read';
 import AnnouncementsNoticeRegist from './announcements/Announcements_regist';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
-import KakaoCallback from './login/KakaoCallback';
 
 // ✅ 리뷰, 찜 목록, 채팅, 아이디/비번 찾기 관련
 import Read from './review/Read';
 import Review from './review/Review';
 import Regist from './review/Regist';
 import ChatRoom from './chatroom/Chatroom';
-import WishList from './wishlist/wishlist';
+import WishList from './wishlist/WishList';
 import FindId from './login/FindId';
 import FindPwd from './login/FindPwd';
 import ResetPassword from './login/ResetPassword';
@@ -55,6 +54,7 @@ import Board from './Admin/Board/Board';
 import ReviewDetail from './Admin/Board/ReviewDetail';
 import Stats from './Admin/Stats/Stats';
 import KakaoSignup from './login/KaKaoSignup';
+import MembershipWithdrawal from './mypage/MembershipWithdrawal';
 
 function App() {
   return (
@@ -66,7 +66,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/member/kakao/callback" element={<KakaoCallback />} />
 
             {/* 모임 관련 */}
             <Route path="/group/detail" element={<GroupDetail />} />
@@ -93,7 +92,7 @@ function App() {
             />
             <Route path="/mypage/reviews/:idx" element={<MyReviews />} />
             <Route path="/mypage/charge/:idx" element={<MyAmountCharge />} />
-            <Route path="/mypage/checkout" element={<Checkout />} />
+            <Route path="/mypage/checkout/:idx" element={<Checkout />} />
             <Route
               path="/mypage/checkout/success/:idx"
               element={<SuccessPage />}
@@ -102,6 +101,10 @@ function App() {
             <Route
               path="/mypage/infochange/address"
               element={<AddressInput />}
+            />
+            <Route
+              path="/mypage/withdrawal/:idx"
+              element={<MembershipWithdrawal />}
             />
 
             {/* 채팅 */}
@@ -115,7 +118,7 @@ function App() {
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
             <Route path="/review/read/:idx" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
+            <Route path="/review/regist/:idx" element={<Regist />} />
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />

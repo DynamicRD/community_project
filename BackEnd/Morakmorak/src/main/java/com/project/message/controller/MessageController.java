@@ -135,7 +135,7 @@ public class MessageController {
 		return response;
 	}
 
-	@CrossOrigin
+	
 	@RequestMapping("/send-one/number")
 	public int sendNumber() {
 		System.out.println(number);

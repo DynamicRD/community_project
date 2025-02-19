@@ -1,19 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import './GroupList.css';
-import { Col, Container, Row } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
+import { Container } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
-import GroupItem from './GroupItem';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
-import GroupDetailItem from './component/GroupDetailItem';
+import GroupItem from './component/GroupItem';
 
 function GroupList({ type }) {
   const [items, setGroupList] = useState([]);
 
   useEffect(() => {
-    console.log("type:"+type);
+    console.log('type:' + type);
     fetch(`http://localhost:8080/group/list?type=${type}`)
       .then((res) => res.json())
       .then((data) => {
@@ -35,7 +33,7 @@ function GroupList({ type }) {
     const filtered = items.filter((item) => {
       const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
       const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
-      const titleMatch = item.G_TITLE.toLowerCase().includes(
+      const titleMatch = item.GROUP_TITLE.toLowerCase().includes(
         searchTerm.toLowerCase()
       );
       return categoryMatch && areaMatch && titleMatch;
@@ -182,9 +180,15 @@ function GroupList({ type }) {
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-              {filteredItems.map((item) => (
-                <GroupItem key={item.G_ID} item={item} />
-              ))}
+              {filteredItems.length > 0 ? (
+                filteredItems.map((item) => (
+                  <GroupItem key={item.GROUP_NO} item={item} />
+                ))
+              ) : (
+                <div className="d-flex justify-content-center w-100">
+                  <h3 className="no-meetings m-5 group_span">모임이 없습니다.</h3>
+                </div>
+              )}
             </div>
           </div>
           <ul className="pagination pagination-sm justify-content-center m-5">
@@ -215,7 +219,6 @@ function GroupList({ type }) {
             </li>
           </ul>
         </div>
-        
       </Container>
     </>
   );

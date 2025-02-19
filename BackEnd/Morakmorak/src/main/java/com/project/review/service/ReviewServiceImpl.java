@@ -40,8 +40,34 @@ public class ReviewServiceImpl implements ReviewService {
 	}
 
 	@Override
-	public List<Map<String, Object>> replyList() throws Exception {
-		return mapper.replyList();
+	public List<Map<String, Object>> replyList(int idx) throws Exception {
+		return mapper.replyList(idx);
 	}
 
+	
+	@Override
+	public List<Map<String, Object>> groupList(int idx) throws Exception {
+		log.info("mapper = " + idx);
+		return mapper.groupList(idx);
+	}
+
+	@Override
+	public Map<String, Object> readGroup(int idx) throws Exception {
+		return mapper.readGroup(idx);
+	}
+	
+	@Override
+	public void deleteReview(int idx) throws Exception {
+
+		mapper.deleteReview(idx);
+	}
+
+	@Override
+	public void deleteReply(int idx) throws Exception {
+
+		mapper.deleteReply(idx);
+		
+	}
+	
+	
 }

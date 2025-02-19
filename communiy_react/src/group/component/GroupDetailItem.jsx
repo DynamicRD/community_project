@@ -1,71 +1,38 @@
-import {
-  Button,
-  Container,
-  Form,
-  ListGroup,
-  Modal,
-  Nav,
-  Image,
-} from 'react-bootstrap';
+import { Button, Form, ListGroup, Image } from 'react-bootstrap';
 import '../GroupDetail.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCalendar,
-  faComments,
-  faHeart,
   faList,
   faLocationDot,
   faSackDollar,
   faUserGroup,
 } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import MemberProfileView from './MemberProfileView';
 import GoogleMap from './GoogleMap';
 
 export default function GroupDetailItem({ item }) {
-  const memberList = [
-    {
-      id: 'gasdf1',
-      nickname: 'nickname1',
-      birth: '1999-01-01',
-      reg_date: '2025-02-06',
-      role: 'member',
-      self_pr: '자기소개입니다',
-      group_pr: '잘 부탁드립니다.',
-      gender: '여성',
-      phone: '010-1234-5678',
-    },
-    {
-      id: 'gasdf2',
-      nickname: 'nickname2',
-      birth: '1999-01-01',
-      reg_date: '2025-02-06',
-      role: 'member',
-      self_pr: '자기소개입니다',
-      group_pr: '잘 부탁드립니다.',
-      gender: '여성',
-      phone: '010-1234-5678',
-    },
-    {
-      id: 'gasdf3',
-      nickname: 'nickname3',
-      birth: '1999-01-01',
-      reg_date: '2025-02-06',
-      role: 'member',
-      self_pr: '자기소개입니다',
-      group_pr: '잘 부탁드립니다.',
-      gender: '여성',
-      phone: '010-1234-5678',
-    },
-  ];
+  const [activeMembers, setActiveMembers] = useState([]);
+useEffect(() => {
+    fetch(`http://localhost:8080/group/memberList?group_no=${item.GROUP_NO}`)
+      .then((res) => res.json())
+      .then((data) => {
+        // 참여 중인 멤버 목록
+        const activeMembers = data.filter((item) => item.STATUS === 'MEMBER');
+
+        // 상태 설정
+        setActiveMembers(activeMembers);
+      }).catch((error) => console.error('Error fetching group members:', error));
+  }, [item.GROUP_NO]);
 
   //멤버 프로필 띄우기
   const [profileShow, setProfileShow] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
   const profileOpen = (id) => {
-    const member = memberList.find((member) => member.id === id);
+    const member = activeMembers.find((member) => member.NO === id);
     setSelectedMember(member);
     setProfileShow(true);
   };
@@ -94,31 +61,46 @@ export default function GroupDetailItem({ item }) {
     return `${month}/${day} ${dayOfWeek} ${hours}:${minutes}`;
   };
 
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    // 페이지 로드 시 textarea 높이를 자동으로 조정
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto'; // 먼저 높이를 초기화
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`; // 텍스트 길이에 맞게 높이 조정
+    }
+  }, [item.COMMENT2]); // COMMENT2 내용이 변경될 때마다 실행
+
   return (
     <div className="group_detail">
-      <div className="information col">
-        <div>
-          <Link to={`/group/${item.type}_list`}>
+      <div className="information row">
+        <div className='col'>
+          <Link to={`/group/${item.TYPE}_list`}>
             <h4>{item.TYPE === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
           </Link>
           <img
             className="img-fluid"
-            src="/images/group_image1.jpg"
+            src={`/images/${item.IMG_URL1}`}
             alt="모임 이미지"
+            style={{ width: '100%', height: '400px' }}
           />
         </div>
-        <div className="information_detail">
+        <div className="information_detail col">
           &nbsp;
           <div>
             <p>
               <FontAwesomeIcon icon={faList} />
-              &nbsp;카테고리
+              &nbsp;{item.CATEGORY === 'culture' && '문화/예술'}
+              {item.CATEGORY === 'food' && '푸드/드링크'}
+              {item.CATEGORY === 'edu' && '교육'}
+              {item.CATEGORY === 'travel' && '여행'}
+              {item.CATEGORY === 'hobby' && '취미'}
             </p>
             <span
               className="group_span"
-              style={{ fontSize: '35px', padding: '10px 0px' }}
+              style={{ fontSize: '35px'}}
             >
-              {item.G_TITLE}
+              {item.GROUP_TITLE}
             </span>
           </div>
           <div>
@@ -132,7 +114,7 @@ export default function GroupDetailItem({ item }) {
             </h4>
             <h4>
               <FontAwesomeIcon icon={faUserGroup} />
-              &nbsp; 모집 인원 3 / {item.USER_MAX}명
+              &nbsp; 모집 인원 {item.MEMBER_COUNT} / {item.USER_MAX}명
             </h4>
             <h4>
               <FontAwesomeIcon icon={faSackDollar} />
@@ -147,28 +129,20 @@ export default function GroupDetailItem({ item }) {
           <p
             style={{ fontSize: '33px', marginBottom: '0px', fontWeight: '700' }}
           >
-            🌟 {item.G_TITLE} 모임장 한마디 🌟
+            🌟 {item.GROUP_TITLE} 모임장 한마디 🌟
           </p>
           {item.COMMENT1}
-          <br></br>
-          안녕하세요, 역삼역 일요일 아침 북클럽에 오신 여러분을 환영합니다! 📚
-          <br></br>
-          <br></br>
-          새로운 시각을 얻고 싶은 분이라면 누구든지 환영입니다. 부담 없이 오셔서
-          즐겁고 의미 있는 시간을 보내요! 😊<br></br>
-          일요일 아침, 역삼역에서 여러분을 기다리고 있겠습니다. 함께 책 속으로
-          떠나보아요! 📖✨
         </div>
         <div className="profile mt-5">
           <div className="d-flex align-items-center">
             <img
-              src="/images/group_leader_profile.jpeg"
+              src={`/images/${item.PROFILE_IMG}`}
               alt="모임장 프로필"
               className="rounded-circle"
             />
-            <h3 className="p-">(모임장 닉네임) 모임장</h3>
+            <h3 className="p-">{item.NICKNAME} 모임장</h3>
           </div>
-          <h4>평균별점 5.0</h4>
+          <h4>{item.STAR_SUM===0?'아직 등록된 평점이 없습니다.':`평균별점 ${item.STAR_SUM}`}</h4>
         </div>
       </div>
 
@@ -180,58 +154,63 @@ export default function GroupDetailItem({ item }) {
         >
           우리 모임은요
         </p>
+        {item.IMG_URL2 && (
+          <img
+            className="img-fluid centered-image"
+            src={`/images/${item.IMG_URL2}`}
+          />
+        )}
+        {item.IMG_URL3 && (
+          <img
+            className="img-fluid centered-image"
+            src={`/images/${item.IMG_URL3}`}
+          />
+        )}
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-  <Form.Control
-    as="textarea"
-    value={item.COMMENT2}
-    readOnly
-    style={{ border: 'none'}}
-  />
-</Form.Group>
-        <textarea>
-          {item.COMMENT2}
-          {/* 📚 역삼역 일요일 아침 북클럽 모집!🌞 
-          책과 함께 여유로운 일요일
-          아침을 보내고 싶으신가요? 
-          이번에 역삼역 근처에서 일요일 아침, 책을
-          좋아하는 사람들과 함께 만날 북클럽을 모집합니다! 참여대상: 책을
-          사랑하는 누구나! 다양한 장르의 책을 좋아하시는 분들 환영. 모임
-          방식: 한 권의 책을 선정하여 함께 읽고, 각자 읽은 내용을
-          공유합니다. 책에 대한 의견을 나누고, 서로의 생각을 들을 수 있는
-          편안한 분위기에서 자유롭게 대화합니다. 다양한 사람들과 책을 통해
-          소통하며, 새로운 친구를 만날 기회도 있어요! 책과 함께하는 소중한
-          시간을 만들고 싶으신 분들, 많은 참여 부탁드려요! 그럼 일요일
-          아침,여러분을 기다리고 있을게요! 📖💬 */}
-        </textarea>
+          <Form.Control
+            as="textarea"
+            value={item.COMMENT2}
+            readOnly
+            ref={textareaRef}
+            // onChange={handleTextChange}
+            // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
+            style={{
+              border: 'none',
+              height: 'auto',
+              overflow: 'hidden',
+              resize: 'none', // 사용자가 직접 크기를 조정하지 못하게 설정
+            }}
+          />
+        </Form.Group>
       </div>
 
       <div className="groupMemberList">
         <p
           style={{ fontSize: '35px', marginBottom: '10px', fontWeight: '700' }}
         >
-          현재 참여중인 멤버(3/{item.USER_MAX})
+          현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
         </p>
         <ListGroup as="ol">
-          {memberList.map((member) => {
+          {activeMembers.map((member) => {
             return (
               <ListGroup.Item
-                key={member.id}
+                key={member.NO}
                 as="li"
                 className="d-flex justify-content-between align-items-center"
               >
                 <div className="ms-2 me-auto">
                   <div>
                     <Image
-                      src="../images/시나모롤.jpg"
+                      src={`/images/${member.IMG_URL}`}
                       roundedCircle
                       style={{ height: '40px', width: '40px' }}
                     />{' '}
-                    &nbsp;<span className="fs-5">{member.nickname}</span>
+                    &nbsp;<span className="fs-5">{member.NICKNAME}</span>
                   </div>
                 </div>
                 <Button
                   variant="primary"
-                  onClick={() => profileOpen(member.id)}
+                  onClick={() => profileOpen(member.NO)}
                 >
                   프로필 보기
                 </Button>
@@ -246,9 +225,9 @@ export default function GroupDetailItem({ item }) {
           <FontAwesomeIcon icon={faLocationDot} />
           &nbsp;모임장소
         </p>
-        <h4>{item.ADDR2}</h4>
+        <h5>{item.ADDR1}</h5>
 
-        <p className="detail_address">{item.ADDR1}</p>
+        <p className="detail_address">{item.ADDR2}</p>
 
         <GoogleMap
           addr1={item.ADDR1}

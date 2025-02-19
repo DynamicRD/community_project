@@ -1,10 +1,15 @@
 package com.project.member.controller;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,7 +34,7 @@ import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
+import com.project.member.model.MemberRegist;
 import com.project.member.model.SnsInfo;
 import com.project.member.service.MemberService;
 
@@ -54,6 +59,7 @@ public class MemberController {
 
 	private SecretConfig secretConfig = new SecretConfig();
 
+	
 	@GetMapping("/kakao")
 	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code,@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe, HttpServletResponse response) {
 		String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
@@ -140,7 +146,8 @@ public class MemberController {
 				snsInfo.setId(idStr);
 				snsInfo.setName(nickname);
 				snsInfo.setPicture(thumbnailImage);
-				String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
+				System.out.println(snsInfo);
+				String jwtTempGoogleToken = jwtutil.createTemporarySnsToken(snsInfo);
 				addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 				// ✅ 회원가입 필요 (isRegistered=false 전달)
 				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
@@ -149,6 +156,7 @@ public class MemberController {
 		
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println(e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("카카오 로그인 실패");
 		}
 	}
@@ -185,10 +193,10 @@ public class MemberController {
 
 	// 회원가입 진행
 	@PostMapping("/register")
-	public ResponseEntity<?> registerMember(@RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<?> registerMember(@RequestBody MemberRegist memberRegist) {
 		try {
 			// 회원가입 로직 처리 (예: DB 저장)
-			service.register(memberDTO);
+			service.register(memberRegist);
 			return ResponseEntity.ok().body(Collections.singletonMap("message", "회원가입 성공"));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -198,10 +206,10 @@ public class MemberController {
 
 	// 회원가입 진행
 	@PostMapping("/infochange")
-	public ResponseEntity<?> infoChangeMember(@RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<?> infoChangeMember(@RequestBody MemberRegist memberRegist) {
 		try {
 			// 회원가입 로직 처리 (예: DB 저장)
-			service.infoChange(memberDTO);
+			service.infoChange(memberRegist);
 			return ResponseEntity.ok().body(Collections.singletonMap("message", "회원정보 수정 성공"));
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -211,10 +219,10 @@ public class MemberController {
 
 	// 전화번호 중복 확인
 	@PostMapping("/phoneduplicatecheck")
-	public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberDTO memberDTO) {
+	public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberRegist memberRegist) {
 		Map<String, Boolean> response = new HashMap<>();
 
-		if (service.phoneDuplicateCheck(memberDTO)) {
+		if (service.phoneDuplicateCheck(memberRegist)) {
 			response.put("isPhoneDuplicate", true);
 		} else {
 			response.put("isPhoneDuplicate", false);
@@ -370,7 +378,6 @@ public class MemberController {
 	}
 
 	@RequestMapping("/googlelogin")
-
 	public ResponseEntity<?> googleLogin(@RequestParam("code") String code,
 			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
 			HttpServletResponse response) {
@@ -450,7 +457,7 @@ public class MemberController {
 			SnsInfo snsInfo = new SnsInfo();
 			ObjectMapper objectMapper = new ObjectMapper();
 			snsInfo = objectMapper.convertValue(userInfo, SnsInfo.class);
-			String jwtTempGoogleToken = jwtutil.createTemporaryGoogleToken(snsInfo);
+			String jwtTempGoogleToken = jwtutil.createTemporarySnsToken(snsInfo);
 			addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 			// ✅ 회원가입 필요 (isRegistered=false 전달)
 			return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
@@ -470,11 +477,13 @@ public class MemberController {
 			String id = claims.get("id", String.class);
 			String email = claims.get("email", String.class);
 			String name = claims.get("name", String.class);
-
+			String picture = claims.get("picture",String.class);
+			
 			Map<String, String> userInfo = new HashMap<>();
 			userInfo.put("id", id);
 			userInfo.put("email", email);
 			userInfo.put("name", name);
+			userInfo.put("picture", picture);
 			System.out.println(userInfo);
 			return ResponseEntity.ok(userInfo);
 		} catch (Exception e) {
@@ -482,7 +491,42 @@ public class MemberController {
 		}
 	}
 
-
+	@PostMapping("/withdrawal")
+	public ResponseEntity<?> withdrawlMember(@RequestBody MemberRegist memberRegist) {
+		Member member = new Member();
+		member.setPw(memberRegist.getPass());
+		member.setNo(memberRegist.getNo());
+		boolean passCheck = service.passCheckNo(member);
+		if(passCheck || memberRegist.getPass().equals("")) {
+			try {
+				// 회원탈퇴
+				try {
+		            // 파일 경로 설정
+					String uploadDir = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+		            Path filePath = Paths.get(uploadDir+memberRegist.getPicture());
+		            File file = filePath.toFile();
+		            // 파일 존재 여부 확인 후 삭제
+		            if (file.exists()) {
+		                Files.delete(filePath);
+		                System.out.println("파일 삭제 성공: "  );
+		            } else {
+		            	System.out.println("파일을 찾을 수 없음: " );
+		            }
+		        } catch (Exception e) {
+		        	System.out.println("파일 삭제 중 오류 발생: " + e.getMessage());
+		        }
+				service.deleteMember(member);
+				return ResponseEntity.ok().body(Collections.singletonMap("message", "회원탈퇴 성공"));
+			} catch (Exception e) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+						.body(Collections.singletonMap("message", "회원탈퇴 실패: " + e.getMessage()));
+			}
+		}else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+					.body(Collections.singletonMap("message", "비밀번호 불일치"));
+		}
+		
+	}
 
 	// --------------------------------------------------api메소드가 아닌 컨트롤러용 메소드
 	// 액세스 토큰 재발급
@@ -571,5 +615,7 @@ public class MemberController {
 
 		return response.getBody();
 	}
+	
+
 
 }
