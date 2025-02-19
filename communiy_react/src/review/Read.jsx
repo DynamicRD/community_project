@@ -111,7 +111,7 @@ export default function Read() {
               {reviewDetail.NO === userData?.no ? (
                 <Nav.Link
                   onClick={() => {
-                    const confirmValue = confirm('정말로 삭제하시겠습니까?');
+                    const confirmValue = confirm('리뷰를 삭제하시겠습니까?');
                     if (confirmValue === true) {
                       fetch(
                         'http://localhost:8080/review/delete/' +
