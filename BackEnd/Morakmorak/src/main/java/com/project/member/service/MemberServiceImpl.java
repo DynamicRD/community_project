@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
@@ -35,7 +36,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
-	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
+	
 	
 	@Override
 	public boolean duplicateCheck(Member member) {
@@ -50,7 +51,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void register(MemberRegist memberDTO) {
+	public void register(MemberRegist memberDTO) throws IOException {
 		Member member = new Member();
 		member.setId(memberDTO.getId());
         System.out.println(memberDTO.getId());
@@ -86,9 +87,9 @@ public class MemberServiceImpl implements MemberService {
 			// URL에서 파일명 추출
 	        String originalFileName = imageUrl.substring(imageUrl.lastIndexOf("/") + 1);
 
-	        // UUID 추가
-	        String newFileName = UUID.randomUUID().toString() + "_" + originalFileName;
-	        String FilePath = UPLOAD_DIR+newFileName+".jpg";
+	        String uploadDir =	Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
+	        String newFileName = System.currentTimeMillis() + "_" + originalFileName;
+	        String FilePath = uploadDir+newFileName;
 			 try {
 		            RestTemplate restTemplate = new RestTemplate();
 		            ResponseEntity<Resource> response = restTemplate.getForEntity(imageUrl, Resource.class);
@@ -105,7 +106,7 @@ public class MemberServiceImpl implements MemberService {
 		        }
 			member.setProvider(memberDTO.getProvider());
 			member.setProviderId(memberDTO.getProviderId());
-			member.setImgUrl(FilePath);
+			member.setImgUrl(imageUrl);
 			mapper.registerSns(member);
 		} else {
 			mapper.register(member);

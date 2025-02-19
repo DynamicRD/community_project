@@ -179,7 +179,7 @@ function MyPage() {
           <Row>
             <Col md={2}>
               <img
-                src={`D:/community_project/communiy_react/public/images/${userData?.imgUrl}`}
+                src={`http://localhost:8080/upload/${userData?.imgUrl}`}
                 className="rounded-circle"
                 alt="Profile Picture"
                 style={{

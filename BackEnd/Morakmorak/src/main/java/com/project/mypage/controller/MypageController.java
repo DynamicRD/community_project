@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.UUID;
 import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -59,13 +60,13 @@ public class MypageController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일을 선택해 주세요.");
 		}
 
-		// 저장할 파일 이름 지정 (UUID + 원본 확장자)
+		System.out.println("파일 = "+file);
 		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-		String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-		String fileName = UUID.randomUUID().toString() + fileExtension;
-
+		String fileName = System.currentTimeMillis() + "_"  + originalFileName;
+		System.out.println(originalFileName);
+		System.out.println(fileName);
 		// 업로드 폴더 경로 설정
-		String uploadDir = "D:/community_project/communiy_react/public/images/";
+		String uploadDir =  Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
 		File directory = new File(uploadDir);
 		if (!directory.exists()) {
 			directory.mkdirs();

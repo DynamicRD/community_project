@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,10 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 
 @Service
-public class MypageServiceImpl implements MypageService {
+public class MypageServiceImpl implements MypageService{
 	@Autowired
 	private MypageMapper mapper;
-	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
-	
+
 	@Autowired
 	private JavaMailSender mailSender;
 	private SecretConfig secretConfig = new SecretConfig();
@@ -42,9 +42,10 @@ public class MypageServiceImpl implements MypageService {
 	@Override
 	public void  insertProfile(Map<String, Object> map) throws Exception {
 		String imgURL = mapper.selectProfileImg(map);
+		String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
 		try {
             // 파일 경로 설정
-            Path filePath = Paths.get(UPLOAD_DIR + imgURL);
+            Path filePath = Paths.get(uploadPath + imgURL);
             File file = filePath.toFile();
             // 파일 존재 여부 확인 후 삭제
             if (file.exists()) {

@@ -1,5 +1,6 @@
 package com.project.member.service;
 
+import java.io.IOException;
 import java.util.Map;
 
 import java.util.Map;
@@ -12,7 +13,7 @@ public interface MemberService {
 
 	boolean nickDuplicateCheck(Member member);
 
-	void register(MemberRegist memberDTO);
+	void register(MemberRegist memberDTO) throws IOException;
 
 	void infoChange(MemberRegist memberDTO);
 
