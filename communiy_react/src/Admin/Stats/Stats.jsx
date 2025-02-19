@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Bar, Line, Pie } from 'react-chartjs-2';
 import {
   Chart as ChartJS,
@@ -30,19 +30,43 @@ ChartJS.register(
 const Stats = () => {
   const [activeTab, setActiveTab] = useState('daily');
   const [selectedCommunityStat, setSelectedCommunityStat] = useState('전체');
+  const [visitorCount, setVisitorCount] = useState(null);
+
+  // 페이지 로드 시 백엔드 API 호출하여 방문자 수 증가 및 조회
+  useEffect(() => {
+    fetch('http://localhost:8080/home/visit')
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('현재 방문자 수:', data);
+        setVisitorCount(data);
+      })
+      .catch((error) => {
+        console.error('방문자 수 증가 에러:', error);
+      });
+  }, []);
+
+  // 오늘 기준으로 4일전 ~ 오늘 날짜의 라벨 생성 함수
+  const getLastFiveDaysLabels = () => {
+    const labels = [];
+    const today = new Date();
+    for (let i = 4; i >= 0; i--) {
+      const pastDate = new Date(today);
+      pastDate.setDate(today.getDate() - i);
+      const year = pastDate.getFullYear();
+      const month = String(pastDate.getMonth() + 1).padStart(2, '0');
+      const day = String(pastDate.getDate()).padStart(2, '0');
+      labels.push(`${year}-${month}-${day}`);
+    }
+    return labels;
+  };
+
   // 일별 수입, 방문자 통계 (Line Chart)
   const dailyData = {
-    labels: [
-      '2024-02-01',
-      '2024-02-02',
-      '2024-02-03',
-      '2024-02-04',
-      '2024-02-05',
-    ],
+    labels: getLastFiveDaysLabels(),
     datasets: [
       {
-        label: '일별 수입 ($)',
-        data: [300, 500, 250, 600, 700],
+        label: '일별 수입 (원)',
+        data: [20, 17, 26, 12, 30],
         borderColor: 'blue',
         backgroundColor: 'rgba(0, 0, 255, 0.5)',
       },
@@ -50,13 +74,7 @@ const Stats = () => {
   };
 
   const visitorData = {
-    labels: [
-      '2024-02-01',
-      '2024-02-02',
-      '2024-02-03',
-      '2024-02-04',
-      '2024-02-05',
-    ],
+    labels: getLastFiveDaysLabels(),
     datasets: [
       {
         label: '홈페이지 방문자',

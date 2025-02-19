@@ -8,8 +8,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-
+import org.springframework.web.servlet.view.RedirectView;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -23,11 +24,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.common.config.SecretConfig;
 import com.project.member.model.Member;
 import com.project.mypage.model.GroupMember;
+import com.project.mypage.model.Notification;
 import com.project.mypage.model.TransactionLog;
 import com.project.mypage.service.MypageService;
 
+import jakarta.mail.MessagingException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -35,9 +39,13 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/mypage")
 @CrossOrigin
 public class MypageController {
+	private SecretConfig secretConfig = new SecretConfig();
+	private static int verifyNum;
+	
 	@Autowired
 	private MypageService service;
-
+	
+	
 	@GetMapping("/transactionHistory")
 	public ResponseEntity<List<TransactionLog>> getUserCoinHistory(@RequestParam("no") int no) {
 		List<TransactionLog> historyList = service.selectTransactionLog(no);
@@ -52,13 +60,13 @@ public class MypageController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일을 선택해 주세요.");
 		}
 
-		// 저장할 파일 이름 지정 (UUID + 원본 확장자)
+		System.out.println("파일 = "+file);
 		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-		String fileExtension = originalFileName.substring(originalFileName.lastIndexOf("."));
-		String fileName = UUID.randomUUID().toString() + fileExtension;
-
+		String fileName = System.currentTimeMillis() + "_"  + originalFileName;
+		System.out.println(originalFileName);
+		System.out.println(fileName);
 		// 업로드 폴더 경로 설정
-		String uploadDir = "D:/community_project/communiy_react/public/images/";
+		String uploadDir =  Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
 		File directory = new File(uploadDir);
 		if (!directory.exists()) {
 			directory.mkdirs();
@@ -78,19 +86,75 @@ public class MypageController {
 		return ResponseEntity.ok("파일 업로드 성공: " + fileName);
 	}
 
-	@PostMapping("/charge")
-	public ResponseEntity<?> chargePoint(@RequestBody Member member) {
-		try {
-			service.chargeAmount(member);
-			return ResponseEntity.ok().body("포인트 충전 완료");
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body("충전 실패: " + e.getMessage());
-		}
+
+
+	@GetMapping("/charge/{no}")
+	public RedirectView chargePoint(
+	        @PathVariable int no,
+	        @RequestParam("amount") int amount,
+	        @RequestParam("orderId") String orderId) {
+
+	    if (!orderId.equals(secretConfig.getTossId())) {
+	        // 실패 시 프론트엔드의 실패 페이지로 리디렉트
+	        return new RedirectView("http://localhost:5173/mypage/checkout/fail/" + no);
+	    }
+
+	    try {
+	        Member member = new Member();
+	        member.setMoney(amount);
+	        member.setNo(no);
+	        service.chargeAmount(member);
+
+	        // 성공 시 프론트엔드의 성공 페이지로 리디렉트
+	        return new RedirectView("http://localhost:5173/mypage/checkout/success/" + no+"?"+"amount="+amount);
+	    } catch (Exception e) {
+	        // 실패 시 프론트엔드의 실패 페이지로 리디렉트
+	        return new RedirectView("http://localhost:5173/mypage/checkout/fail/" + no);
+	    }
 	}
+
 
 	@GetMapping("/group/{no}")
 	public ResponseEntity<List<List<GroupMember>>> getUserMeetings(@PathVariable int no) {
 		List<List<GroupMember>> meetings = service.getGroupMembers(no);
 		return ResponseEntity.ok(meetings);
 	}
+	
+	@PostMapping("/email")
+	public void sendEmail(@RequestParam("email") String email,@RequestParam("no") String no) {
+	
+		verifyNum = (int)(Math.random()*(1000000-100000+1)+100000);
+		try {
+			System.out.println("메세지 전송시도");
+			service.sendEmail(email, verifyNum);
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	@RequestMapping("/email/number")
+	public int sendNumber() {
+		System.out.println(verifyNum);
+		return verifyNum;
+	}
+	
+	 @GetMapping("/notification/{no}")
+	    public ResponseEntity<List<Notification>> getUserNotifications(@PathVariable int no) {
+	        List<Notification> notifications = service.selectNotification(no);
+	        System.out.println(notifications);
+	        return ResponseEntity.ok(notifications);
+	    }
+	 
+	 @GetMapping("/showMore")
+	 public ResponseEntity<String> handleShowMore(@RequestBody Map<String, Object> requestData) {
+	        try {
+	            // userId 추출
+	        	int no = (int) requestData.get("no");
+	        	service.readNotification(no);
+	            return ResponseEntity.ok("notification 읽기 성공");
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request");
+	        }
+	    }
 }

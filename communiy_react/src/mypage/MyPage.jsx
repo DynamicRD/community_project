@@ -17,9 +17,11 @@ function MyPage() {
   const [meetings, setMeetings] = useState([]); // 모임 데이터 상태
   const [showMore, setShowMore] = useState(false);
   const [activeTab, setActiveTab] = useState('ongoing'); // 기본값:
-  const { isAuthenticated, userData } = useContext(AuthContext);
+  const [notifications, setNotifications] = useState([]);
+  const [unreadCount, setUnreadCount] = useState(0);
   const navigate = useNavigate();
 
+  const { isAuthenticated, userData } = useContext(AuthContext);
   useEffect(() => {
     console.log('userData 대기중');
     if (!userData) return; // userData가 로드될 때까지 기다림
@@ -34,20 +36,65 @@ function MyPage() {
     }
   }, [isAuthenticated, userData, navigate]);
 
+  // 페이지네이션을 위한 상태 추가
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3; // 한 페이지당 3개씩 표시
+
+  // 현재 페이지에 맞는 데이터 필터링
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentMeetings = meetings.slice(indexOfFirstItem, indexOfLastItem);
+
+  // 총 페이지 수 계산
+  const totalPages = Math.ceil(meetings.length / itemsPerPage);
+
+  // 페이지 변경 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Pagination UI 렌더링
+  <Pagination className="d-flex justify-content-center">
+    <Pagination.Prev
+      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+      disabled={currentPage === 1}
+    />
+    {[...Array(totalPages)].map((_, index) => (
+      <Pagination.Item
+        key={index + 1}
+        active={index + 1 === currentPage}
+        onClick={() => handlePageChange(index + 1)}
+      >
+        {index + 1}
+      </Pagination.Item>
+    ))}
+    <Pagination.Next
+      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+      disabled={currentPage === totalPages}
+    />
+  </Pagination>;
+
   // 알림 내용
-  const notifications = [
-    '모임1의 참가자 리뷰가 추가되었습니다!',
-    '모임2의 일정이 변경되었습니다.',
-    '모임3의 장소가 변경되었습니다.',
-    '모임4의 참가자 목록이 업데이트되었습니다.',
-    '모임5의 일정이 확정되었습니다.',
-  ];
+  useEffect(() => {
+    if (!userData) return;
+
+    axios
+      .get(`http://localhost:8080/mypage/notification/${userData?.no}`)
+      .then((response) => {
+        console.log('알림 데이터:', response.data);
+        setNotifications(response.data);
+      })
+      .catch((error) => {
+        console.error('알림 데이터 로드 실패:', error);
+      });
+    console.log(userData.imgUrl);
+  }, [userData]);
 
   useEffect(() => {
     if (!userData) return;
 
     axios
-      .get(`http://localhost:8080/mypage/group/${userData.no}`)
+      .get(`http://localhost:8080/mypage/group/${userData?.no}`)
       .then((response) => {
         console.log('모임 데이터:', response.data);
         setMeetings(response.data);
@@ -60,17 +107,29 @@ function MyPage() {
   const heartedGroups = meetings?.[1] || []; // 찜한 그룹
   const ongoingGroups = meetings?.[2] || []; // 진행 중인 그룹
 
+  useEffect(() => {
+    if (notifications.length > 0) {
+      const unread = notifications.filter(
+        (notification) => notification.isRead === 'N'
+      ).length;
+      setUnreadCount(unread);
+    }
+  }, [notifications]);
+
   const renderTable = () => {
     let meetings = [];
     switch (activeTab) {
       case 'ongoing':
         meetings = ongoingGroups;
+
         break;
       case 'completed':
         meetings = endedGroups;
+
         break;
       case 'saved':
         meetings = heartedGroups;
+
         break;
       default:
         break;
@@ -88,15 +147,21 @@ function MyPage() {
           </tr>
         </thead>
         <tbody>
-          {meetings.map((meeting, index) => (
-            <tr key={index}>
-              <td>{meeting.groupName}</td>
-              <td>{meeting.startDate}</td>
-              <td>{meeting.endDate}</td>
-              <td>{meeting.statues}</td>
-              <td>{meeting.amount}</td>
+          {meetings == [] ? (
+            meetings.map((meeting, index) => (
+              <tr key={index}>
+                <td>{meeting.groupName}</td>
+                <td>{meeting.startDate}</td>
+                <td>{meeting.endDate}</td>
+                <td>{meeting.statues}</td>
+                <td>{meeting.amount}</td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan={5}>해당 내역이 없습니다.</td>
             </tr>
-          ))}
+          )}
         </tbody>
       </Table>
     );
@@ -115,7 +180,7 @@ function MyPage() {
           <Row>
             <Col md={2}>
               <img
-                src={`D:/community_project/communiy_react/public/images/${userData?.imgUrl}`}
+                src={`http://localhost:8080/upload/${userData?.imgUrl}`}
                 className="rounded-circle"
                 alt="Profile Picture"
                 style={{
@@ -201,20 +266,40 @@ function MyPage() {
         {/* Notifications */}
         <div className="border-section mt-4">
           <h5>알림</h5>
-          {/* 알림 목록 */}
+          <br />
+          <h6>{unreadCount}개의 읽지 않은 알림이 있습니다.</h6>
           <ul>
-            {notifications
-              .slice(0, showMore ? notifications.length : 2)
-              .map((notification, index) => (
-                <li key={index}>{notification}</li>
-              ))}
+            {notifications.length > 0 ? (
+              notifications
+                .slice(0, showMore ? notifications.length : 3)
+                .map((notification, index) => (
+                  <li key={index}>{notification.content}</li>
+                ))
+            ) : (
+              <li>알림이 없습니다.</li>
+            )}
           </ul>
 
-          {/* 더보기 / 접기 버튼 */}
           <Button
             className="myPageBtn mt-3"
             variant="danger"
-            onClick={() => setShowMore(!showMore)}
+            onClick={() => {
+              setShowMore(!showMore);
+
+              // 백엔드에 userData.no 값 보내기
+              if (userData?.no) {
+                axios
+                  .post('http://localhost:8080/mypage/showMore', {
+                    no: userData.no,
+                  })
+                  .then((response) => {
+                    console.log('서버 응답:', response.data);
+                  })
+                  .catch((error) => {
+                    console.error('서버 요청 실패:', error);
+                  });
+              }
+            }}
           >
             {showMore ? '접기' : '더보기'}
           </Button>
@@ -270,7 +355,7 @@ function MyPage() {
           </Pagination>
           <div className="text-center">
             {' '}
-            <Link to={`/mypage/withdrawal/${userData.no}`}>
+            <Link to={`/mypage/withdrawal/${userData?.no}`}>
               <Button block className="myPageBtn mt-3" variant="danger">
                 회원탈퇴
               </Button>

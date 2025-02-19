@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import './GroupList.css';
 import { Container, Pagination } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
@@ -6,10 +6,8 @@ import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
 import GroupItem from './component/GroupItem';
-import { AuthContext } from '../context/AuthContext';
 
 function GroupList({ type }) {
-  const { isAuthenticated, userData } = useContext(AuthContext);
   const [items, setGroupList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
@@ -108,7 +106,7 @@ function GroupList({ type }) {
   return (
     <>
       <Link
-        to={isAuthenticated ? '/group/regist' : '#'}
+        to={'/group/regist'}
         style={{ textDecoration: 'none', color: 'inherit' }}
         onClick={(e) => {
           if (!isAuthenticated) {
@@ -117,6 +115,7 @@ function GroupList({ type }) {
             window.location.href = '/login';
           }
         }}
+
       >
         <div className="group_banner">
           <span>

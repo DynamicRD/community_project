@@ -9,18 +9,29 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import com.project.common.config.SecretConfig;
 import com.project.member.model.Member;
 import com.project.mypage.mapper.MypageMapper;
 import com.project.mypage.model.GroupMember;
+import com.project.mypage.model.Notification;
 import com.project.mypage.model.TransactionLog;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
+
 @Service
-public class MypageServiceImpl implements MypageService {
+public class MypageServiceImpl implements MypageService{
 	@Autowired
 	private MypageMapper mapper;
-	private static final String UPLOAD_DIR = "D:/community_project/communiy_react/public/images/";
+
+	@Autowired
+	private JavaMailSender mailSender;
+	private SecretConfig secretConfig = new SecretConfig();
 	
 	@Override
 	public List<TransactionLog> selectTransactionLog(int no) {
@@ -31,9 +42,10 @@ public class MypageServiceImpl implements MypageService {
 	@Override
 	public void  insertProfile(Map<String, Object> map) throws Exception {
 		String imgURL = mapper.selectProfileImg(map);
+		String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
 		try {
             // 파일 경로 설정
-            Path filePath = Paths.get(UPLOAD_DIR + imgURL);
+            Path filePath = Paths.get(uploadPath + imgURL);
             File file = filePath.toFile();
             // 파일 존재 여부 확인 후 삭제
             if (file.exists()) {
@@ -63,8 +75,7 @@ public class MypageServiceImpl implements MypageService {
 
 	@Override
 	public List<List<GroupMember>> getGroupMembers(int no) {
-		 List<List<GroupMember>> resultList = new ArrayList<>();
-
+		List<List<GroupMember>> resultList = new ArrayList<>();
 		    // 각 리스트를 resultList에 추가
 		    resultList.add(mapper.getGroupMembersByUserNoEnd(no));
 		    resultList.add(mapper.getGroupMembersByUserNoHeart(no));
@@ -72,6 +83,39 @@ public class MypageServiceImpl implements MypageService {
 
 		    return resultList;
 	}
+
+
+	@Override
+	public void sendEmail(String toEmail, int verifyNum) throws MessagingException {
+
+		 MimeMessage message = mailSender.createMimeMessage();
+	        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+	        helper.setFrom(secretConfig.getSendEmail());
+	        helper.setTo(toEmail);
+	        helper.setSubject("[모락모락] 회원탈퇴를 위한 이메일 인증코드입니다.");
+	        helper.setText("인증번호 6자리 "+verifyNum+"을 입력해주세요", true); // HTML 지원
+	        System.out.println("메세지 전송직전");
+	        mailSender.send(message);
+	        System.out.println("메세지 전송됨");
+
+		
+	}
+
+
+	@Override
+	public List<Notification> selectNotification(int no) {
+		return mapper.selectNotification(no);
+	}
+
+
+	@Override
+	public void readNotification(int no) {
+		mapper.readNotification(no);
+	}
+
+
+
 	
 	
 }

@@ -140,7 +140,11 @@ export default function GroupDetailButton({ group_no }) {
         onHide={() => setFormShow(false)}
         group_no={group_no}
       />
-      <ChatRoom show={chatShow} onHide={() => setChatShow(false)} />
+      <ChatRoom
+        show={chatShow}
+        onHide={() => setChatShow(false)}
+        group_no={group_no}
+      />
     </div>
   );
 }

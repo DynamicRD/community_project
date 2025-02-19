@@ -87,14 +87,13 @@ public class ReviewController {
 		}
 
 		// 이미지 저장 경로
-		Path path = Paths.get("D:/community_project/communiy_react/public/images/" + fileName);
-		log.info("path = " + path);
+		Path path = Paths.get("D:/community_project/communiy_react/public/images/group_morak/" + fileName);
 		Files.copy(file.getInputStream(), path);
 
 		// 클라이언트가 접근할 수 있는 경로 반환
-		String imageUrl = fileName;
+		String imageUrl = "group_morak/" + fileName;
 		ResponseEntity.ok("파일 업로드 성공: " + imageUrl);
-		map.put("fileName", fileName);
+		map.put("fileName", imageUrl);
 		service.insertReview(map);
 	}
 
@@ -128,7 +127,6 @@ public class ReviewController {
 	@GetMapping(value = "/read/{idx}")
 	public Map<String, Object> readReview2(@PathVariable(name = "idx") int idx) throws Exception {
 		Map<String, Object> listMap = service.readReview(idx);
-		log.info("info = " + listMap);
 		return listMap;
 	}
 
@@ -153,7 +151,6 @@ public class ReviewController {
 
 	@PostMapping(value = "/reply/insert")
 	public void replyInsert(@RequestParam Map<String, Object> map) throws Exception {
-		log.info("Controller" + map);
 		service.replyInsert(map);
 	}
 
@@ -162,16 +159,27 @@ public class ReviewController {
 		return service.replyList(idx);
 	}
 
-	@GetMapping(value = "/group/list")
-	public List<Map<String, Object>> groupList() throws Exception {
-		return service.groupList();
+	@GetMapping(value = "/group/list/{idx}")
+	public List<Map<String, Object>> groupList(@PathVariable(name = "idx") int idx) throws Exception {
+		List<Map<String, Object>> listMap = service.groupList(idx);
+		log.info("value = " + idx);
+		log.info("value = " + listMap);
+		return service.groupList(idx);
 	}
 
 	@GetMapping(value = "/Regist/{idx}")
 	public Map<String, Object> readGroup(@PathVariable(name = "idx") int idx) throws Exception {
 		Map<String, Object> listMap = service.readGroup(idx);
-		log.info("info = " + listMap);
 		return listMap;
 	}
 
+	@GetMapping(value = "/delete/{idx}")
+	public void deleteReview(@PathVariable(name = "idx") int idx) throws Exception {
+		service.deleteReview(idx);
+	}
+
+	@GetMapping(value = "/reply/delete/{idx}")
+	public void deleteReply(@PathVariable(name = "idx") int idx) throws Exception {
+		service.deleteReply(idx);
+	}
 }

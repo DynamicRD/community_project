@@ -1,8 +1,10 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useContext } from 'react';
 // Firebase 모듈화된 방식으로 import
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onChildAdded, push } from 'firebase/database';
-import { Container, Card, Form, Button, ListGroup, Modal } from 'react-bootstrap';
+import { Form, Button, ListGroup, Modal } from 'react-bootstrap';
+import { AuthContext } from '../context/AuthContext';
+import { useLocation } from 'react-router-dom';
 
 // Firebase 구성
 const firebaseConfig = {
@@ -20,14 +22,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-function ChatRoom({show,onHide}) {
+function ChatRoom({ show, onHide, group_no }) {
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const [messageContent, setMessageContent] = useState('');
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
 
+  const [chatroomID, setChatroomID] = useState(0);
   // Firebase에서 실시간으로 메시지를 가져오는 useEffect
   useEffect(() => {
-    const messagesRef = ref(database, 'chatrooms/12345/messages');
+    console.log('chatroomID = ' + group_no);
+    const messagesRef = ref(database, `chatrooms/${group_no}/messages`);
     onChildAdded(messagesRef, (snapshot) => {
       const message = snapshot.val();
       const firebaseMessageId = snapshot.key;
@@ -55,18 +60,18 @@ function ChatRoom({show,onHide}) {
     };
   }, []);
 
-  //  // 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
-  //  useEffect(() => {
-  //   if (messagesEndRef.current) {
-  //     messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
-  //   }
-  // }, [messages]);
+  // 메시지가 추가될 때마다 스크롤을 맨 아래로 이동
+  useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: 'auto' });
+    }
+  }, [messages]);
 
   // 메시지 전송 함수
   const sendMessage = () => {
     if (messageContent.trim()) {
-      const roomCode = '12345'; // 방 코드
-      const sender = '김동욱'; // 발신자 (예시)
+      const roomCode = group_no; // 방 코드
+      const sender = userData?.nickname; // 발신자 (예시)
 
       const newMessage = {
         sender,
@@ -80,7 +85,7 @@ function ChatRoom({show,onHide}) {
       const firebaseMessageId = newMessageRef.key;
 
       // 메시지 전송 후 오라클 DB에 저장
-      fetch('/messages/save', {
+      fetch('http://localhost:8080/chatroom/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,9 +117,16 @@ function ChatRoom({show,onHide}) {
   };
 
   return (
-    <Modal show={show} onHide={onHide} size="lg" aria-labelledby="chatroom-modal">
+    <Modal
+      show={show}
+      onHide={onHide}
+      size="lg"
+      aria-labelledby="chatroom-modal"
+    >
       <Modal.Header closeButton>
-        <Modal.Title id="chatroom-modal">채팅방에 오신 것을 환영합니다!</Modal.Title>
+        <Modal.Title id="chatroom-modal">
+          채팅방에 오신 것을 환영합니다!
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body style={{ maxHeight: '400px', overflowY: 'scroll' }}>
         <ListGroup variant="flush">
@@ -151,7 +163,6 @@ function ChatRoom({show,onHide}) {
         </Form>
       </Modal.Footer>
     </Modal>
-
   );
 }
 
