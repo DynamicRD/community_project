@@ -175,7 +175,8 @@ create table review(
     primary key(review_no)
 
 );
-
+ALTER TABLE member MODIFY img_url VARCHAR2(255);
+commit;
 select * from member;
 drop table member;
 -- 사용자
@@ -199,14 +200,26 @@ create table member(
     star_sum number(6) default 0,        --별점총합
     black number(6) default 0,           --신고횟수
     reg_date date default sysdate,        --가입일
-    img_url varchar2(50) default '',                 --사진
+    img_url varchar2(255) default '',                 --사진
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
+INSERT INTO member (
+    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
+    star_sum, black, reg_date, img_url, self_pr
+) VALUES (
+    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
+    'none', 'none', 'admin', 'admin', 
+    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), 'male', 
+    100000, '12345', 'Seoul', 'Admin Street 1', 
+    0, 0, SYSDATE, '', '관리자 계정입니다.'
+);
+commit;
+
 commit;
 update member set provider = 'kakao' where no =26;
 select * from member;
-
+delete from member where no = 73;
 SELECT *
 		FROM Member
 		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 
@@ -273,16 +286,16 @@ CREATE TABLE messages (
     primary key(message_no)
 );
 select * from messages;
-
--- 방문 기록 테이블 추가
+drop table visit_log;
+-- 방문기록
 create table visit_log(
-    visit_no number(6),
+    v_id number(6),
     ip varchar2(50),
-    visit_time timestamp default current_timestamp,
+    visit_date date default sysdate,
     visit_url varchar2(300),
-    primary key(visit_no)
-);
-
+    primary key(v_id)
+    );
+commit;
 --거래내역 테이블
 drop table transaction;
 create table Transaction_log(
@@ -306,6 +319,6 @@ create table report(
     reported varchar2(50),
     reason varchar2(255),
     rep_date date,
-    rep_status varchar2(1),
-    primary key(rep_id)
+    rep_status varchar2(1) default 'N',
+    primary key(rep_no)
     );

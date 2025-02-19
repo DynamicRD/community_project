@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import '../GroupDetail.css';
 import GroupJoinForm from './GroupJoinForm';
 import ChatRoom from '../../chatroom/Chatroom';
@@ -9,6 +9,7 @@ import { AuthContext } from '../../context/AuthContext';
 
 export default function GroupDetailButton({ group_no }) {
   const { isAuthenticated, userData } = useContext(AuthContext);
+
   //신청폼 띄우기
   const [formShow, setFormShow] = useState(false);
 
@@ -17,7 +18,30 @@ export default function GroupDetailButton({ group_no }) {
 
   //권한별 버튼 설정
   const navigate = useNavigate();
-  const [userRole, setUserRole] = useState('group_leader');
+  useEffect(() => {
+    if (userData !== null) {
+      const form = new FormData();
+      form.append('no', userData.no);
+      form.append('group_no', group_no);
+  
+      fetch(`http://localhost:8080/group/auth`, {
+        method: 'POST',
+        body: form,
+      })
+        .then((res) => res.text())
+        .then((data) => {
+          // if(data===null){
+          //   return;
+          // }
+          setUserRole(data);
+          console.log(userRole);
+        })
+        .catch((error) => console.error('Error fetching group members:', error));
+    }
+  }, [userData, group_no]); 
+
+  const [userRole, setUserRole] = useState(null);
+  
   const handleButtonClick = () => {
     navigate(`/group/management?group_no=${group_no}`);
   };
@@ -27,7 +51,7 @@ export default function GroupDetailButton({ group_no }) {
       {/* 권한별 버튼 */}
       <div className="button">
         {/* 비회원 권한일 때 */}
-        {userRole === 'member' && (
+        {(!userRole || userRole === 'WAITING') && (
           <>
             <button
               onClick={() => {
@@ -93,7 +117,7 @@ export default function GroupDetailButton({ group_no }) {
         )}
 
         {/* 모임멤버 권한일 때 */}
-        {userRole === 'group_member' && (
+        {userRole === 'MEMBER' && (
           <button onClick={() => setChatShow(true)}>
             <FontAwesomeIcon icon={faComments} />
             &nbsp;모임 채팅 참여하기
@@ -101,7 +125,7 @@ export default function GroupDetailButton({ group_no }) {
         )}
 
         {/* 모임장 권한일 때 */}
-        {userRole === 'group_leader' && (
+        {userRole === 'LEADER' && (
           <>
             <button onClick={() => setChatShow(true)}>
               <FontAwesomeIcon icon={faComments} />
@@ -116,7 +140,11 @@ export default function GroupDetailButton({ group_no }) {
         onHide={() => setFormShow(false)}
         group_no={group_no}
       />
-      <ChatRoom show={chatShow} onHide={() => setChatShow(false)} />
+      <ChatRoom
+        show={chatShow}
+        onHide={() => setChatShow(false)}
+        group_no={group_no}
+      />
     </div>
   );
 }

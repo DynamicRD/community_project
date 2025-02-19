@@ -33,7 +33,6 @@ import AnnouncementsNoticeRead from './announcements/Announcements_notice_read';
 import AnnouncementsNoticeRegist from './announcements/Announcements_regist';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
-import KakaoCallback from './login/KakaoCallback';
 
 // ✅ 리뷰, 찜 목록, 채팅, 아이디/비번 찾기 관련
 import Read from './review/Read';
@@ -67,7 +66,6 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="/member/kakao/callback" element={<KakaoCallback />} />
 
             {/* 모임 관련 */}
             <Route path="/group/detail" element={<GroupDetail />} />

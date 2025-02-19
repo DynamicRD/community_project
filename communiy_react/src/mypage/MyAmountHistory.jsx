@@ -7,7 +7,6 @@ function MyAmountHistory() {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (userData && isAuthenticated !== false) {
@@ -27,6 +26,7 @@ function MyAmountHistory() {
       navigate('/');
     }
   }, [userData]);
+  const [error, setError] = useState(null);
   const [coinList, setCoinList] = useState([]);
   const { userId } = useParams();
   let num = 1;

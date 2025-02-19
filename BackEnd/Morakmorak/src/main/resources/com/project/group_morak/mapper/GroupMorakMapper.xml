@@ -16,7 +16,7 @@
 		group_seq.nextval, 1,
 		#{group_title}, #{category},
 		#{user_max},
-		#{price}, substr(#{addr1}, 6, 2),
+		#{price}, #{area},
 		#{addr1}, #{addr2},
 		#{latitude}, #{longitude},
 		#{start_date,
@@ -27,16 +27,23 @@
 		jdbcType=BLOB}, #{img_url2, jdbcType=BLOB},#{img_url3, jdbcType=BLOB}
 		)
 	</insert>
+	
+	<insert id="insertLeader">
+		INSERT INTO MEMBER_GROUP(MEMBER_GROUP_NO, NO, GROUP_NO, STATUS)
+		VALUES(member_group_seq.nextval, #{no}, group_seq.nextval-1, 'LEADER')
+	</insert>
 
 	<select id="list">
 		SELECT group_no, group_title, category, user_max,
 		price, area,
-		comment2, type,
-		TO_CHAR(start_date, 'FMMonth FMDD"일"') AS
+		comment2, type, reg_date,
 		start_date,
+		<!-- TO_CHAR(start_date, 'FMMonth FMDD"일"') AS
+		start_date, -->
 		img_url1
 		FROM GROUP_MORAK
-		WHERE type=#{type}
+		WHERE type=#{type} 
+		<!-- AND approval='Y' -->
 	</select>
 
 	<select id="read">
@@ -53,7 +60,6 @@
 		LEFT JOIN MEMBER_GROUP MG ON G.GROUP_NO = MG.GROUP_NO
 		INNER JOIN MEMBER M ON G.NO = M.NO
 		WHERE G.GROUP_NO = #{groupNo}
-		<!-- SELECT * FROM GROUP_MORAK WHERE group_no= #{groupNo} -->
 	</select>
 
 	<update id="update">
@@ -64,7 +70,7 @@
 		jdbcType=DATE},
 		USER_MAX = #{user_max}, PRICE = #{price}, ADDR1 =
 		#{addr1},
-		ADDR2 = #{addr2}, COMMENT1 = #{comment1}, COMMENT2 =
+		ADDR2 = #{addr2}, area= #{area}, COMMENT1 = #{comment1}, COMMENT2 =
 		#{comment2},
 		TYPE = #{type}, CATEGORY = #{category},
 		LATITUDE =
@@ -94,7 +100,25 @@
 	</insert>
 	
 	<select id="memberList">
-		
+		SELECT *
+		FROM MEMBER_GROUP MG INNER JOIN MEMBER M ON MG.NO = M.NO
+		WHERE GROUP_NO = #{group_no}
 	</select>
+	
+	<select id="groupAuth">
+		SELECT STATUS
+		FROM MEMBER_GROUP MG INNER JOIN MEMBER M ON MG.NO = M.NO
+		WHERE GROUP_NO = #{group_no}
+	</select>
+	
+	<select id="memberStatusUpdate">
+		UPDATE MEMBER_GROUP SET STATUS = #{status, jdbcType=VARCHAR} 
+		WHERE NO = #{no} AND GROUP_NO = #{group_no}
+	</select>
+	
+	<insert id="memberReport">
+		INSERT INTO REPORT(rep_no, reporter_no, reported_no, reason) 
+		VALUES(report_seq.NEXTVAL, #{reporter_no}, #{reported_no}, #{reason})
+	</insert>
 
 </mapper>

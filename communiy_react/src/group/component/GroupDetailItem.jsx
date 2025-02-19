@@ -15,47 +15,24 @@ import MemberProfileView from './MemberProfileView';
 import GoogleMap from './GoogleMap';
 
 export default function GroupDetailItem({ item }) {
-  const memberList = [
-    {
-      id: 'gasdf1',
-      nickname: 'nickname1',
-      birth: '1999-01-01',
-      reg_date: '2025-02-06',
-      role: 'member',
-      self_pr: '자기소개입니다',
-      group_pr: '잘 부탁드립니다.',
-      gender: '여성',
-      phone: '010-1234-5678',
-    },
-    {
-      id: 'gasdf2',
-      nickname: 'nickname2',
-      birth: '1999-01-01',
-      reg_date: '2025-02-06',
-      role: 'member',
-      self_pr: '자기소개입니다',
-      group_pr: '잘 부탁드립니다.',
-      gender: '여성',
-      phone: '010-1234-5678',
-    },
-    {
-      id: 'gasdf3',
-      nickname: 'nickname3',
-      birth: '1999-01-01',
-      reg_date: '2025-02-06',
-      role: 'member',
-      self_pr: '자기소개입니다',
-      group_pr: '잘 부탁드립니다.',
-      gender: '여성',
-      phone: '010-1234-5678',
-    },
-  ];
+  const [activeMembers, setActiveMembers] = useState([]);
+useEffect(() => {
+    fetch(`http://localhost:8080/group/memberList?group_no=${item.GROUP_NO}`)
+      .then((res) => res.json())
+      .then((data) => {
+        // 참여 중인 멤버 목록
+        const activeMembers = data.filter((item) => item.STATUS === 'MEMBER');
+
+        // 상태 설정
+        setActiveMembers(activeMembers);
+      }).catch((error) => console.error('Error fetching group members:', error));
+  }, [item.GROUP_NO]);
 
   //멤버 프로필 띄우기
   const [profileShow, setProfileShow] = useState(false);
   const [selectedMember, setSelectedMember] = useState(null);
   const profileOpen = (id) => {
-    const member = memberList.find((member) => member.id === id);
+    const member = activeMembers.find((member) => member.NO === id);
     setSelectedMember(member);
     setProfileShow(true);
   };
@@ -96,19 +73,19 @@ export default function GroupDetailItem({ item }) {
 
   return (
     <div className="group_detail">
-      <div className="information col">
-        <div>
+      <div className="information row">
+        <div className='col'>
           <Link to={`/group/${item.TYPE}_list`}>
             <h4>{item.TYPE === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
           </Link>
           <img
             className="img-fluid"
-            src={`/images/${item.IMG_URL1}`}
+            src={`http://localhost:8080/upload/${item.IMG_URL1}`}
             alt="모임 이미지"
             style={{ width: '100%', height: '400px' }}
           />
         </div>
-        <div className="information_detail">
+        <div className="information_detail col">
           &nbsp;
           <div>
             <p>
@@ -121,7 +98,7 @@ export default function GroupDetailItem({ item }) {
             </p>
             <span
               className="group_span"
-              style={{ fontSize: '35px', padding: '10px 0px' }}
+              style={{ fontSize: '35px'}}
             >
               {item.GROUP_TITLE}
             </span>
@@ -159,7 +136,7 @@ export default function GroupDetailItem({ item }) {
         <div className="profile mt-5">
           <div className="d-flex align-items-center">
             <img
-              src={`/images/${item.PROFILE_IMG}`}
+              src={`http://localhost:8080/upload/${item.PROFILE_IMG}`}
               alt="모임장 프로필"
               className="rounded-circle"
             />
@@ -180,13 +157,13 @@ export default function GroupDetailItem({ item }) {
         {item.IMG_URL2 && (
           <img
             className="img-fluid centered-image"
-            src={`/images/${item.IMG_URL2}`}
+            src={`http://localhost:8080/upload/${item.IMG_URL2}`}
           />
         )}
         {item.IMG_URL3 && (
           <img
             className="img-fluid centered-image"
-            src={`/images/${item.IMG_URL3}`}
+            src={`http://localhost:8080/upload/${item.IMG_URL3}`}
           />
         )}
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -214,26 +191,26 @@ export default function GroupDetailItem({ item }) {
           현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
         </p>
         <ListGroup as="ol">
-          {memberList.map((member) => {
+          {activeMembers.map((member) => {
             return (
               <ListGroup.Item
-                key={member.id}
+                key={member.NO}
                 as="li"
                 className="d-flex justify-content-between align-items-center"
               >
                 <div className="ms-2 me-auto">
                   <div>
                     <Image
-                      src="../images/시나모롤.jpg"
+                      src={`http://localhost:8080/upload/${member.IMG_URL}`}
                       roundedCircle
                       style={{ height: '40px', width: '40px' }}
                     />{' '}
-                    &nbsp;<span className="fs-5">{member.nickname}</span>
+                    &nbsp;<span className="fs-5">{member.NICKNAME}</span>
                   </div>
                 </div>
                 <Button
                   variant="primary"
-                  onClick={() => profileOpen(member.id)}
+                  onClick={() => profileOpen(member.NO)}
                 >
                   프로필 보기
                 </Button>

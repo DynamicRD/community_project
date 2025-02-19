@@ -1,8 +1,15 @@
 import React from 'react';
 import { Form, Image, InputGroup, Modal } from 'react-bootstrap';
 
-export default function GroupJoinFormView({ show, onHide, member }) {
-  if (!member) return null;
+export default function GroupJoinFormView({ show, onHide, selectedMember }) {
+  if (!selectedMember) return null;
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 01부터 시작하는 월
+    const day = String(date.getDate()).padStart(2, '0'); // 01부터 시작하는 날짜
+    return `${year}년 ${month}월 ${day}일`;
+  };
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -22,13 +29,13 @@ export default function GroupJoinFormView({ show, onHide, member }) {
           />
           <div>
             <span>
-              닉네임 : <span>{member.nickname}</span>
+              닉네임 : <span>{selectedMember.NICKNAME}</span>
               <br />
-              성별 : <span>{member.gender}</span>
+              성별 : <span>{selectedMember.GENDER}</span>
               <br />
-              생년월일 : <span>{member.birth}</span>
+              생년월일 : <span>{formatDate(selectedMember.BIRTH)}</span>
               <br />
-              연락처 : <span>{member.phone}</span>
+              연락처 : <span>{selectedMember.PHONE}</span>
             </span>
           </div>
         </div>
@@ -38,7 +45,12 @@ export default function GroupJoinFormView({ show, onHide, member }) {
           <Form.Control
             as="textarea"
             aria-label="With textarea"
-            value={member.self_pr}
+            value={
+              selectedMember.SELF_PR === 'undefined' ||
+              selectedMember?.SELF_PR.trim() === ''
+                ? '등록된 자기소개가 없습니다.'
+                : selectedMember.SELF_PR
+            }
           />
         </InputGroup>
 
@@ -47,7 +59,12 @@ export default function GroupJoinFormView({ show, onHide, member }) {
           <Form.Control
             as="textarea"
             aria-label="With textarea"
-            value={member.group_pr}
+            value={
+              selectedMember?.PR === 'undefined' ||
+              selectedMember?.PR.trim() === ''
+                ? '등록된 글이 없습니다.'
+                : selectedMember.PR
+            }
           />
         </InputGroup>
       </Modal.Body>

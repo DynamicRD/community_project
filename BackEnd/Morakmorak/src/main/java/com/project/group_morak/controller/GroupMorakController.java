@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/group")
 public class GroupMorakController {
+	
 	@Autowired
 	private GroupMorakService service;
 
@@ -39,8 +41,9 @@ public class GroupMorakController {
 			@RequestParam(value = "img_url2", required = false) MultipartFile file2,
 			@RequestParam(value = "img_url3", required = false) MultipartFile file3) throws Exception {
 		try {
+			String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
 			// 파일을 업로드할 폴더 지정
-			File directory = new File("D:/community_project/communiy_react/public/images/group_morak");
+			File directory = new File(uploadPath);
 			if (!directory.exists()) {
 				directory.mkdirs();
 			}
@@ -57,7 +60,7 @@ public class GroupMorakController {
 					String fileName = System.currentTimeMillis() + "_" + originalFileName;
 
 					// 이미지 저장 경로
-					Path path = Paths.get("D:/community_project/communiy_react/public/images/group_morak/" + fileName);
+					Path path = Paths.get(uploadPath + fileName);
 					log.info("path = " + path);
 					Files.copy(file.getInputStream(), path);
 
@@ -89,6 +92,7 @@ public class GroupMorakController {
 
 			// 서비스 호출
 			service.insert(map);
+			service.insertLeader(map);
 			return ResponseEntity.ok("신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.");
 		} catch (Exception e) {
 			log.error("Error inserting group", e);
@@ -142,8 +146,9 @@ public class GroupMorakController {
 			String[] existingFilePaths = { (String) currentData.get("IMG_URL1"), (String) currentData.get("IMG_URL2"),
 					(String) currentData.get("IMG_URL3") };
 
+			String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
 			// 파일을 업로드할 폴더 지정
-			File directory = new File("D:/community_project/communiy_react/public/images/group_morak");
+			File directory = new File(uploadPath);
 			if (!directory.exists()) {
 				directory.mkdirs();
 			}
@@ -159,7 +164,7 @@ public class GroupMorakController {
 					if (existingFilePaths[i] != null && !existingFilePaths[i].isEmpty()) {
 						// 기존 이미지 파일 삭제
 						File existingFile = new File(
-								"D:/community_project/communiy_react/public/images/" + existingFilePaths[i]);
+								uploadPath + existingFilePaths[i]);
 						if (existingFile.exists()) {
 							boolean deleted = existingFile.delete();
 							if (deleted) {
@@ -172,14 +177,14 @@ public class GroupMorakController {
 
 					// 새 파일 업로드 처리
 					String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
-					String fileName = group_title + "_" + System.currentTimeMillis() + "_" + originalFileName;
+					String fileName = System.currentTimeMillis() + "_" + originalFileName;
 
 					// 이미지 저장 경로
-					Path path = Paths.get("D:/community_project/communiy_react/public/images/group_morak/" + fileName);
+					Path path = Paths.get(uploadPath + fileName);
 					Files.copy(file.getInputStream(), path);
 
 					// 클라이언트가 접근할 수 있는 경로 반환
-					imgUrls[i] = "group_morak/" + fileName;
+					imgUrls[i] = "group_morak/" +fileName;
 				} else {
 					// 파일이 업로드되지 않은 경우 기존 파일 경로 유지
 					imgUrls[i] = existingFilePaths[i];
@@ -246,14 +251,37 @@ public class GroupMorakController {
 	    }
 	}
 	
-	@RequestMapping("/management")
+	@RequestMapping("/memberList")
 	public List<Map<String, Object>> memberList(@RequestParam(value = "group_no") String groupNo) {
-//		try {
 			return service.memberList(groupNo);
-//			
-//	    }catch (Exception e) {
-//			log.error("Error inserting group", e);
-//			return ResponseEntity.status(500).body("신청에 실패했습니다.");
-//		}
 	}
+	
+	@RequestMapping("/auth")
+	public String groupAuth(@RequestParam Map<String, Object>map) {
+			return service.groupAuth(map);
+		
+	}
+	
+	@RequestMapping("/statusUpdate")
+	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
+			try {
+				service.memberStatusUpdate(map);
+				return ResponseEntity.ok("처리가 완료되었습니다.");
+			}catch(Exception e) {
+				log.error("Error group member status updating ", e);
+		        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+			}
+	}
+	
+	@RequestMapping("/memberReport")
+	public ResponseEntity<String> memberReport(@RequestParam Map<String, Object>map) {
+		try {
+			service.memberReport(map);
+			return ResponseEntity.ok("처리가 완료되었습니다.");
+		}catch(Exception e) {
+			log.error("Error member Reporting ", e);
+	        return ResponseEntity.status(500).body("처리에 실패했습니다.");
+		}
+	}
+			
 }

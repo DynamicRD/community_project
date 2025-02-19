@@ -25,15 +25,15 @@ export default function MemberProfileView({ show, onHide, member }) {
         align-items-center gap-3"
           >
             <Image
-              src="../images/폼폼.png"
+              src={`/images/${member.IMG_URL}`}
               roundedCircle
               style={{ height: '100px', width: '100px' }}
             />
             <div>
               <span className="fs-5">
-                닉네임 : <span>{member.nickname}</span>
+                닉네임 : <span>{member.NICKNAME}</span>
                 <br />
-                성별 : <span>{member.gender}</span>
+                성별 : <span>{member.GENDER}</span>
                 <br />
               </span>
             </div>
@@ -44,14 +44,14 @@ export default function MemberProfileView({ show, onHide, member }) {
             <Form.Control
               as="textarea"
               aria-label="With textarea"
-              value={member.self_pr}
+              value={member.SELF_PR}
             />
           </InputGroup>
-          <div className="text-end">
+          <div className="text-end mt-2">
             <Button
               variant="danger"
               onClick={() => {
-                formOpen(member.id);
+                formOpen(member.NO);
               }}
             >
               신고하기
