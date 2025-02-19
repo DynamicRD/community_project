@@ -175,7 +175,8 @@ create table review(
     primary key(review_no)
 
 );
-
+ALTER TABLE member MODIFY img_url VARCHAR2(255);
+commit;
 select * from member;
 drop table member;
 -- 사용자
@@ -199,7 +200,7 @@ create table member(
     star_sum number(6) default 0,        --별점총합
     black number(6) default 0,           --신고횟수
     reg_date date default sysdate,        --가입일
-    img_url varchar2(50) default '',                 --사진
+    img_url varchar2(255) default '',                 --사진
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
@@ -274,14 +275,14 @@ CREATE TABLE messages (
 );
 select * from messages;
 
--- 방문 기록 테이블 추가
+-- 방문기록
 create table visit_log(
-    visit_no number(6),
+    v_id number(6),
     ip varchar2(50),
-    visit_time timestamp default current_timestamp,
+    visit_date date default sysdate,
     visit_url varchar2(300),
-    primary key(visit_no)
-);
+    primary key(v_id)
+    );
 
 --거래내역 테이블
 drop table transaction;
