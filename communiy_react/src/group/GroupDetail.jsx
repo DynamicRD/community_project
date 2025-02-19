@@ -33,7 +33,7 @@ function GroupDetail() {
     return <div>loading</div>;
   } else {
     return (
-      <Container>
+      <Container >
         {items.map((item) => (
           <GroupDetailItem key={item.GROUP_NO} item={item} />
         ))}

@@ -19,6 +19,11 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 	public void insert(Map<String, Object> map) throws Exception {
 		mapper.insert(map);
 	}
+	
+	@Override
+	public void insertLeader(Map<String, Object> map) {
+		mapper.insertLeader(map);
+	}
 
 	@Override
 	public List<Map<String, Object>> list(String type) throws Exception {
@@ -53,9 +58,13 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 	@Override
 	public List<Map<String, Object>> memberList(String groupNo) {
 		return mapper.memberList(groupNo);
-
 	}
 
+	@Override
+	public String groupAuth(Map<String, Object> map) {
+		return mapper.groupAuth(map);
+	}
+	
 	@Override
 	public void memberStatusUpdate(Map<String, Object> map) {
 		mapper.memberStatusUpdate(map);
@@ -66,4 +75,5 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.memberReport(map);
 	}
 
+	
 }

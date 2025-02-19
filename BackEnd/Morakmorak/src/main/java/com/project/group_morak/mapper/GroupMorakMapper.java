@@ -7,7 +7,10 @@ import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
 public interface GroupMorakMapper {
+
 	public void insert(Map<String, Object> map);
+	
+	public void insertLeader(Map<String, Object> map); 
 	
 	public List<Map<String, Object>> list(String type) throws Exception;
 
@@ -22,8 +25,11 @@ public interface GroupMorakMapper {
 	public void insertBasket(Map<String, Object> map);
 
 	public List<Map<String, Object>> memberList(String groupNo);
+	
+	public String groupAuth(Map<String, Object> map);
 
 	public void memberStatusUpdate(Map<String, Object> map);
 
-	public void memberReport(Map<String, Object> map); 
+	public void memberReport(Map<String, Object> map);
+
 }

@@ -47,7 +47,7 @@ export default function MemberProfileView({ show, onHide, member }) {
               value={member.SELF_PR}
             />
           </InputGroup>
-          <div className="text-end">
+          <div className="text-end mt-2">
             <Button
               variant="danger"
               onClick={() => {

@@ -74,7 +74,7 @@ export default function GroupManagement() {
     <Container className="d-flex justify-content-center align-items-center">
       <div className="group_management d-flex flex-column gap-4 mt-5 w-75">
         <div className="d-flex justify-content-between">
-          <h1>모임 멤버 관리</h1>
+          <p className='group_span'>모임 멤버 관리</p>
           <Button
             onClick={() => {
               navigate(`/group/update?group_no=${group_no}`);
@@ -163,9 +163,9 @@ export default function GroupManagement() {
           </Table>
 
           <div className="m-5 d-flex justify-content-end">
-            <Button variant="danger" size="lg">
+            {/* <Button variant="danger" size="lg">
               모임 종료하기
-            </Button>
+            </Button> */}
           </div>
         </div>
         <GroupJoinFormView
