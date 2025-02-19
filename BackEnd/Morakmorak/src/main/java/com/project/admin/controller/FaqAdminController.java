@@ -36,15 +36,15 @@ public class FaqAdminController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateFaq(@PathVariable Long id, @RequestBody FaqAdmin faq) {
-        faq.setId(id);
+    public ResponseEntity<Void> updateFaq(@PathVariable Long faqNo, @RequestBody FaqAdmin faq) {
+        faq.setFaqNo(faqNo);
         faqService.updateFaq(faq);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFaq(@PathVariable Long id) {
-        faqService.deleteFaq(id);
+    public ResponseEntity<Void> deleteFaq(@PathVariable Long faqNo) {
+        faqService.deleteFaq(faqNo);
         return ResponseEntity.ok().build();
     }
 }

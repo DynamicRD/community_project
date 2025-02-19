@@ -13,25 +13,25 @@
 
     <!-- 후기 추가 -->
     <insert id="addReview" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO review (title, writer, img, content, rating, hidden)
-        VALUES (#{title}, #{writer}, #{img}, #{content}, #{rating}, FALSE)
+        INSERT INTO review (review_title, nickname, img_url, content, star, isblacked)
+        VALUES (#{review_title}, #{nickname}, #{img_url}, #{content}, #{star}, 'N')
     </insert>
 
     <!-- 후기 수정 -->
     <update id="updateReview">
         UPDATE review 
-        SET title = #{title}, content = #{content}, img = #{img}, rating = #{rating} 
+        SET review_title = #{review_title}, content = #{content}, img_url = #{img_url}, rating = #{star} 
         WHERE id = #{id}
     </update>
 
     <!-- 후기 삭제 -->
     <delete id="deleteReview">
-        DELETE FROM review WHERE id = #{id}
+        DELETE FROM review WHERE no = #{no}
     </delete>
 
     <!-- 후기 블라인드 처리 -->
     <update id="toggleBlind">
-        UPDATE review SET hidden = !hidden WHERE id = #{id}
+        UPDATE review SET isblacked = !isblacked WHERE no = #{no}
     </update>
 	
 </mapper>

@@ -30,8 +30,8 @@ public class ReviewAdminController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReviewAdmin> getReview(@PathVariable Long id) {
-        return ResponseEntity.ok(reviewService.getReviewById(id));
+    public ResponseEntity<ReviewAdmin> getReview(@PathVariable Long no) {
+        return ResponseEntity.ok(reviewService.getReviewById(no));
     }
 
     @PostMapping
@@ -48,14 +48,14 @@ public class ReviewAdminController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long id) {
-        reviewService.deleteReview(id);
+    public ResponseEntity<Void> deleteReview(@PathVariable Long no) {
+        reviewService.deleteReview(no);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}/blind")
-    public ResponseEntity<Void> toggleBlind(@PathVariable Long id) {
-        reviewService.toggleBlind(id);
+    public ResponseEntity<Void> toggleBlind(@PathVariable Long no) {
+        reviewService.toggleBlind(no);
         return ResponseEntity.ok().build();
     }
 }

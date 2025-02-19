@@ -16,52 +16,58 @@ import '../../review/Review.css';
 // 후기 데이터
 const initialReviews = [
   {
-    id: 1,
-    title: '안녕하세요',
-    writer: '문정배',
-    img: '/images/review1.png',
-    rating: 0,
-    hidden: false,
+    no: 1,
+    review_no: '1',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
   },
   {
-    id: 2,
-    title: '배송이 빨라서 좋았어요.',
-    writer: '문정배2',
-    img: '/images/review1.png',
-    rating: 1,
-    hidden: false,
+    no: 2,
+    review_no: '2',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
   },
   {
-    id: 3,
-    title: '가격 대비 만족스럽습니다.',
-    writer: '문정배3',
-    img: '/images/review1.png',
-    rating: 2,
-    hidden: false,
+    no: 3,
+    review_no: '3',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
   },
   {
-    id: 4,
-    title: '다시 구매할 예정입니다.',
-    writer: '문정배4',
-    img: '/images/review1.png',
-    rating: 3,
-    hidden: false,
+    no: 4,
+    review_no: '4',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
   },
   {
-    id: 5,
-    title: '디자인이 예뻐요!',
-    writer: '문정배5',
-    img: '/images/review1.png',
-    rating: 4,
-    hidden: false,
+    no: 5,
+    review_no: '5',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
   },
   {
-    id: 6,
-    title: '품질이 정말 좋아요.',
-    writer: '문정배6',
-    img: '/images/review1.png',
-    rating: 5,
-    hidden: false,
+    no: 6,
+    review_no: '6',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
   },
 ];
 
@@ -81,10 +87,12 @@ const ReviewSection = () => {
     setCurrentPage(pageNumber);
   };
 
-  const toggleBlind = (id) => {
+  const toggleBlind = (no) => {
     setReviewList((prevReviews) =>
       prevReviews.map((review) =>
-        review.id === id ? { ...review, hidden: !review.hidden } : review
+        review.no === no
+          ? { ...review, isblacked: review.isblacked === 'Y' ? 'N' : 'Y' }
+          : review
       )
     );
   };
@@ -96,29 +104,33 @@ const ReviewSection = () => {
         <div className="d-flex flex-wrap justify-content-start gap-4">
           {paginatedReviews.map((review) => (
             <Card
-              key={review.id}
+              key={review.no}
               className="p-3 text-center"
               style={{ width: '30%' }}
             >
-              {review.hidden ? (
+              {review.isblacked === 'Y' ? (
                 <p>⚠️ 후기가 블라인드 처리되었습니다.</p>
               ) : (
                 <>
                   <p>
-                    <strong>{review.title}</strong>
+                    <strong>{review.review_title}</strong>
                   </p>
-                  <Link to={`/admin/board/${review.id}`}>
-                    <img src={review.img} alt="review" className="img-fluid" />
+                  <Link to={`/admin/board/${review.no}`}>
+                    <img
+                      src={review.img_url}
+                      alt="review"
+                      className="img-fluid"
+                    />
                   </Link>
-                  <p>작성자: {review.writer}</p>
+                  <p>작성자: {review.nickname}</p>
                 </>
               )}
               <Button
-                variant={review.hidden ? 'primary' : 'danger'}
-                onClick={() => toggleBlind(review.id)}
+                variant={review.isblacked === 'Y' ? 'primary' : 'danger'}
+                onClick={() => toggleBlind(review.no)}
                 className="mt-2"
               >
-                {review.hidden ? '블라인드 해제' : '블라인드 처리'}
+                {review.isblacked === 'Y' ? '블라인드 해제' : '블라인드 처리'}
               </Button>
             </Card>
           ))}
@@ -312,71 +324,38 @@ const today = new Date();
 const formattedDate = `${today.getFullYear()}년 ${
   today.getMonth() + 1
 }월 ${today.getDate()}일`;
-const announcementData = [
-  {
-    no: 1,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다1',
-    date: formattedDate,
-  },
-  {
-    no: 2,
-    title: '문정배에 대한 고찰',
-    content:
-      ' 문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배 최고문정배   ',
-    date: formattedDate,
-  },
-  {
-    no: 3,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다3',
-    date: formattedDate,
-  },
-  {
-    no: 4,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다4',
-    date: formattedDate,
-  },
-  {
-    no: 5,
-    title: '문정배에 대한 고찰',
-    content: '문정배 최고라고 생각합니다5',
-    date: formattedDate,
-  },
-];
 
 const NoticeFaq = () => {
   const [announcements, setAnnouncements] = useState([
     {
-      no: 1,
-      title: '문정배에 대한 고찰',
+      notice_no: 1,
+      notice_title: '문정배에 대한 고찰',
       content: '문정배 최고라고 생각합니다1',
-      date: formattedDate,
+      reg_date: formattedDate,
     },
     {
-      no: 2,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고문정배 최고문정배 최고',
-      date: formattedDate,
+      notice_no: 2,
+      notice_title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다1',
+      reg_date: formattedDate,
     },
     {
-      no: 3,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다3',
-      date: formattedDate,
+      notice_no: 3,
+      notice_title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다1',
+      reg_date: formattedDate,
     },
     {
-      no: 4,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다4',
-      date: formattedDate,
+      notice_no: 4,
+      notice_title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다1',
+      reg_date: formattedDate,
     },
     {
-      no: 5,
-      title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다5',
-      date: formattedDate,
+      notice_no: 5,
+      notice_title: '문정배에 대한 고찰',
+      content: '문정배 최고라고 생각합니다1',
+      reg_date: formattedDate,
     },
   ]);
 
@@ -389,10 +368,10 @@ const NoticeFaq = () => {
     if (!newTitle || !newContent) return;
 
     const newAnnouncement = {
-      no: announcements.length + 1,
-      title: newTitle,
+      notice_no: announcements.length + 1,
+      notice_title: newTitle,
       content: newContent,
-      date: formattedDate,
+      reg_date: formattedDate,
     };
     setAnnouncements([...announcements, newAnnouncement]);
     setNewTitle('');
@@ -458,18 +437,18 @@ const NoticeFaq = () => {
         <Container>
           <table className="announcements_table">
             {announcements.map((notice) => (
-              <tbody key={notice.no}>
+              <tbody key={notice.notice_no}>
                 <tr>
                   <td className="table_td_title">
                     <Link
-                      to={`/admin/board/Notice/${notice.no}`}
+                      to={`/admin/board/Notice/${notice.notice_no}`}
                       className="title_link"
                     >
-                      <span className="ps-5">{notice.title}</span>
+                      <span className="ps-5">{notice.notice_title}</span>
                     </Link>
                   </td>
                   <td className="table_td_date">
-                    <span className="pe-5">{notice.date}</span>
+                    <span className="pe-5">{notice.reg_date}</span>
                   </td>
                 </tr>
                 <HorizonLine_table />

@@ -14,5 +14,5 @@ public interface FaqAdminMapper {
 
 	void updateFaq(FaqAdmin faq);
 
-	void deleteFaq(Long id);
+	void deleteFaq(Long faqNo);
 }

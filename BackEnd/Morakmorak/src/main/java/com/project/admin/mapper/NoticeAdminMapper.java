@@ -9,8 +9,8 @@ import com.project.admin.model.NoticeAdmin;
 @Mapper
 public interface NoticeAdminMapper {
     List<NoticeAdmin> getNotices();
-    NoticeAdmin getNoticeById(Long id);
+    NoticeAdmin getNoticeById(Long noticeNo);
     void addNotice(NoticeAdmin notice);
     void updateNotice(NoticeAdmin notice);
-    void deleteNotice(Long id);
+    void deleteNotice(Long noticeNo);
 }

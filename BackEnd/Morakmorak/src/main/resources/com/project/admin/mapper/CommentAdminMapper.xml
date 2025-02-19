@@ -3,23 +3,23 @@
 <mapper namespace="com.project.admin.mapper.CommentAdminMapper">
 	  <!-- 댓글 목록 조회 -->
     <select id="getComments" resultType="com.project.admin.model.CommentAdmin">
-        SELECT * FROM comment ORDER BY created_at DESC
+        SELECT * FROM comment ORDER BY reg_date DESC
     </select>
 
     <!-- 댓글 추가 -->
     <insert id="addComment" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO comment (review_id, writer, content, created_at, status)
-        VALUES (#{reviewId}, #{writer}, #{content}, NOW(), '정상')
+        INSERT INTO comment (review_no, nickname, content, reg_date, isblacked)
+        VALUES (#{review_no}, #{nickname}, #{content}, NOW(), 'N')
     </insert>
 
     <!-- 댓글 삭제 -->
     <delete id="deleteComment">
-        DELETE FROM comment WHERE id = #{id}
+        DELETE FROM comment WHERE no = #{no}
     </delete>
 
     <!-- 댓글 블라인드 처리 -->
     <update id="toggleBlind">
-        UPDATE comment SET status = '신고됨' WHERE id = #{id}
+        UPDATE comment SET status = 'Y' WHERE no = #{no}
     </update>
 	
 
