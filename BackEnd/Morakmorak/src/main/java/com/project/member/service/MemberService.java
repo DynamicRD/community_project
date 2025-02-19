@@ -5,18 +5,18 @@ import java.util.Map;
 import java.util.Map;
 
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
+import com.project.member.model.MemberRegist;
 
 public interface MemberService {
 	boolean duplicateCheck(Member member);
 
 	boolean nickDuplicateCheck(Member member);
 
-	void register(MemberDTO memberDTO);
+	void register(MemberRegist memberDTO);
 
-	void infoChange(MemberDTO memberDTO);
+	void infoChange(MemberRegist memberDTO);
 
-	boolean phoneDuplicateCheck(MemberDTO memberDTO);
+	boolean phoneDuplicateCheck(MemberRegist memberDTO);
 
 	Member loginCheck(Member member);
 

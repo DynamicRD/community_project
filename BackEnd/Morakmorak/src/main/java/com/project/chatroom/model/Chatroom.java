@@ -8,5 +8,5 @@ public class Chatroom {
     private String content;
     private long timestamp;
     private String roomCode; // 채팅방 코드 추가
-    private String firebaseChatroomId;
+    private String firebaseMessageId;
 }

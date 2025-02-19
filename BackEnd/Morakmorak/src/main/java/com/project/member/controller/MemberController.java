@@ -29,7 +29,7 @@ import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.model.SnsInfo;
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
+import com.project.member.model.MemberRegist;
 import com.project.member.model.SnsInfo;
 import com.project.member.service.MemberService;
 
@@ -186,7 +186,7 @@ public class MemberController {
 
 	// 회원가입 진행
 	@PostMapping("/register")
-	public ResponseEntity<?> registerMember(@RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<?> registerMember(@RequestBody MemberRegist memberDTO) {
 		try {
 			// 회원가입 로직 처리 (예: DB 저장)
 			service.register(memberDTO);
@@ -199,7 +199,7 @@ public class MemberController {
 
 	// 회원가입 진행
 	@PostMapping("/infochange")
-	public ResponseEntity<?> infoChangeMember(@RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<?> infoChangeMember(@RequestBody MemberRegist memberDTO) {
 		try {
 			// 회원가입 로직 처리 (예: DB 저장)
 			service.infoChange(memberDTO);
@@ -212,7 +212,7 @@ public class MemberController {
 
 	// 전화번호 중복 확인
 	@PostMapping("/phoneduplicatecheck")
-	public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberDTO memberDTO) {
+	public Map<String, Boolean> phoneDuplicateCheck(@RequestBody MemberRegist memberDTO) {
 		Map<String, Boolean> response = new HashMap<>();
 
 		if (service.phoneDuplicateCheck(memberDTO)) {
@@ -574,7 +574,7 @@ public class MemberController {
 	}
 	
 	@PostMapping("/withdrawal")
-	public ResponseEntity<?> withdrawlMember(@RequestBody MemberDTO memberDTO) {
+	public ResponseEntity<?> withdrawlMember(@RequestBody MemberRegist memberDTO) {
 		Member member = new Member();
 		member.setPw(memberDTO.getPass());
 		member.setNo(memberDTO.getNo());

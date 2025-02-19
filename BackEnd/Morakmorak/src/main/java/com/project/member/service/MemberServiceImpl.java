@@ -17,7 +17,7 @@ import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.mapper.MemberMapper;
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
+import com.project.member.model.MemberRegist;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,7 +44,7 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public void register(MemberDTO memberDTO) {
+	public void register(MemberRegist memberDTO) {
 		Member member = new Member();
 		member.setId(memberDTO.getId());
         System.out.println(memberDTO.getId());
@@ -86,7 +86,7 @@ public class MemberServiceImpl implements MemberService {
 
 	
 	@Override
-	public void infoChange(MemberDTO memberDTO) {
+	public void infoChange(MemberRegist memberDTO) {
 		Member member = new Member();
 		
 
@@ -120,7 +120,7 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 	@Override
-	public boolean phoneDuplicateCheck(MemberDTO memberDTO) {
+	public boolean phoneDuplicateCheck(MemberRegist memberDTO) {
 		Member member = new Member();
 		member.setPhone(memberDTO.getPhone1() + memberDTO.getPhone2() + memberDTO.getPhone3());
 		int count = mapper.phoneDuplicateCheck(member);

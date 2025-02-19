@@ -4,7 +4,7 @@ package com.project.member.model;
 import lombok.Data;
 
 @Data
-public class MemberDTO {
+public class MemberRegist {
 	private int no;
     private String id;
     private String nickname;

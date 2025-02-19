@@ -2,14 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 // Firebase 모듈화된 방식으로 import
 import { initializeApp } from 'firebase/app';
 import { getDatabase, ref, onChildAdded, push } from 'firebase/database';
-import {
-  Container,
-  Card,
-  Form,
-  Button,
-  ListGroup,
-  Modal,
-} from 'react-bootstrap';
+import { Form, Button, ListGroup, Modal } from 'react-bootstrap';
 
 // Firebase 구성
 const firebaseConfig = {

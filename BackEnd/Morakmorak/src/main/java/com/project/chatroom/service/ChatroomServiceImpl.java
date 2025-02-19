@@ -16,7 +16,7 @@ public class ChatroomServiceImpl implements ChatroomService {
 
     // Firebase에서 메시지를 받아서 오라클 DB에 저장하는 메서드
     public void saveChatroom(Chatroom chatroom) {
-    	if (!checkDuplicate(chatroom.getFirebaseChatroomId())) {
+    	if (!checkDuplicate(chatroom.getFirebaseMessageId())) {
     		mapper.insertChatroom(chatroom);
     	} else {
             System.out.println("Duplicate Chatroom detected, not saving.");
