@@ -257,6 +257,26 @@ public class GroupMorakController {
 			return ResponseEntity.status(500).body("신청에 실패했습니다.");
 		}
 	}
+	
+	// 모임 참가 신청 취소
+	@RequestMapping("/cancelJoin")
+	public ResponseEntity<String> cancelJoin(@RequestParam Map<String, Object> map) {
+		try {
+			service.cancelJoin(map);
+			service.refundMoney(map);
+			System.out.println(map);
+//			TransactionLog transactionLog = new TransactionLog();
+//			transactionLog.setAmount(map.get(money));
+//			transactionLog.setNo(member.getNo());
+//			transactionLog.setType("환불");
+//		    System.out.println("거래내역 로그"+transactionLog);
+//			mapper.insertHistory(transactionLog);
+			return ResponseEntity.ok("신청이 취소되었습니다. 포인트가 환불되었습니다.");
+		} catch (Exception e) {
+			log.error("Error calceling ", e);
+			return ResponseEntity.status(500).body("처리에 실패했습니다.");
+		}
+	}
 
 	// 모임 찜목록에 저장
 	@RequestMapping("/basket")
@@ -288,14 +308,24 @@ public class GroupMorakController {
 	}
 
 	// 최대 모임원 필터
-	@RequestMapping("/countGroupMember")
-	public Map<String, Object> countGroupMember(@RequestParam(value = "group_no") String groupNo) {
+	@RequestMapping("/applicable")
+	public Map<String, Object> applicable(@RequestParam(value = "group_no") String groupNo) {
 	    Map<String, Object> map = service.countGroupMember(groupNo);
-
+	    Map<String, Object> map2 = service.read(groupNo);
+	    map.put("START_DATE", map2.get("START_DATE"));
+	    
 	    return map;
 	}
-
-
+	
+	// 모임 종료 여부
+	@RequestMapping("/isClosed")
+	public Map<String, Object> isClosed(@RequestParam(value = "group_no") String groupNo) {
+		Map<String, Object> map = service.countGroupMember(groupNo);
+		Map<String, Object> map2 = service.read(groupNo);
+		map.put("START_DATE", map2.get("START_DATE"));
+		
+		return map;
+	}
 
 	@RequestMapping("/statusUpdate")
 	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
@@ -328,6 +358,7 @@ public class GroupMorakController {
 	public List<GroupMorak> getGroups(@RequestParam(defaultValue = "all") String category) {
 		return service.getGroupsByCategory(category);
 	}
+	
 	@GetMapping("/detailselect")
 	public List<GroupMorak> getDetailGroups(@RequestParam(defaultValue = "all") String category) {
 		System.out.println(service.getGroupsByCategory3(category));

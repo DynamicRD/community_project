@@ -39,4 +39,6 @@ public interface GroupMorakService {
 	
 	public List<GroupMorak> getGroupsByCategory3(String category);
 
+	public void cancelJoin(Map<String, Object> map);
+
 }
