@@ -1,10 +1,15 @@
 package com.project.group_morak.service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.project.group_morak.model.GroupMorak;
+
 public interface GroupMorakService {
 	public void insert(Map<String, Object> map) throws Exception; 
+	
+	public void insertLeader(Map<String, Object> map);
 	
 	public List<Map<String, Object>> list(String type) throws Exception;
 
@@ -16,6 +21,8 @@ public interface GroupMorakService {
 
 	public void changeMoney(Map<String, Object> map);
 
+	public void refundMoney(Map<String, Object> map);
+	
 	public void insertBasket(Map<String, Object> map);
 
 	public List<Map<String, Object>> memberList(String groupNo);
@@ -23,4 +30,11 @@ public interface GroupMorakService {
 	public void memberStatusUpdate(Map<String, Object> map);
 
 	public void memberReport(Map<String, Object> map);
+
+	public String groupAuth(Map<String, Object> map);
+
+	public Map<String, Object> countGroupMember(String groupNo);
+
+	public List<GroupMorak> getGroupsByCategory(String category);
+
 }

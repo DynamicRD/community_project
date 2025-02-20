@@ -39,6 +39,8 @@ export default function MyReviews() {
   }
   const [completedMeetings, loading] = useFetch(url);
 
+  const { isAuthenticated, userData } = useContext(AuthContext);
+
   // 라디오 버튼 선택 값을 저장할 상태 변수
   const [selectedRadioValue, setSelectedRadioValue] = useState(null);
   const [check, setCheck] = useState(false);
@@ -52,126 +54,215 @@ export default function MyReviews() {
 
   useEffect(() => {
     if (selectedRadioValue !== null) {
-      console.log(selectedRadioValue); // 상태가 변경된 후 로그 출력
+      console.log(selectedRadioValue);
     }
   }, [selectedRadioValue]);
 
-  //fetch로 모임 값 가져오고
+  const [groupedClubs, setGroupedClubs] = useState([]);
 
-  const { isAuthenticated, userData } = useContext(AuthContext);
+  //페이징
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
+  const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
+  const reviewsPerPage = 4;
 
-  return (
-    <>
-      <Container>
-        <div className=" d-flex m-5">
-          <span
-            className="nav_notice"
-            style={{ fontSize: '33px', marginLeft: '65px' }}
-          >
-            모임 목록
-          </span>
-        </div>
+  useEffect(() => {
+    const groupClubs = [];
+    for (let i = 0; i < completedMeetings.length; i += reviewsPerPage) {
+      groupClubs.push(completedMeetings.slice(i, i + reviewsPerPage));
+    }
+    setGroupedClubs(groupClubs);
+  }, [completedMeetings]);
 
-        <div className="mypage_review_list mt-5 w-100">
-          <div className="d-flex justify-content-start gap-3 mb-4">
-            <table className="mypage_review_table">
-              {completedMeetings.length > 0 ? (
-                <>
-                  {completedMeetings.map((object, index) => (
-                    <tbody key={index}>
-                      <tr>
-                        <td>
-                          {/* 라디오 버튼 */}
-                          <input
-                            type="radio"
-                            name="radio"
-                            value={object.GROUP_NO}
-                            checked={selectedRadioValue === object.GROUP_NO}
-                            onChange={() => radioValueChecked(object.GROUP_NO)}
-                          />
-                        </td>
-                        <td>
-                          <Nav.Link
-                            href="#"
-                            onClick={() => radioValueChecked(object.GROUP_NO)}
-                          >
-                            <div className="d-flex m-4">
-                              <img
-                                src={`/images/${object.IMG_URL1}`}
-                                alt="이미지"
-                                style={{ width: '120px' }}
-                                className="mypage_review_table_img"
-                              />
-                              <div className="d-flex flex-column ms-4 w-100 justify-content-center">
-                                <span
-                                  style={{
-                                    fontSize: '30px',
-                                    fontWeight: '900',
-                                  }}
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (pageRangeStart > 0) {
+      setPageRangeStart(pageRangeStart - 5);
+      setPageRangeEnd(pageRangeEnd - 5);
+    }
+  };
+
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (pageRangeEnd < groupedClubs.length) {
+      setPageRangeStart(pageRangeStart + 5);
+      setPageRangeEnd(pageRangeEnd + 5);
+    }
+  };
+
+  //현재 페이지에서 내가 출력하고자 하는 리뷰의 개수를 함수를 통해 groupedReviews[currentPage - 1] 조절 한 뒤 currentReviews에 저장
+  const currentReviews = groupedClubs[currentPage - 1] || [];
+
+  if (!loading) {
+    return <Container>Loading...</Container>;
+  } else {
+    return (
+      <>
+        {!isAuthenticated ? (
+          <>
+            {alert('로그인 후 이용 바랍니다')}
+            {navigate('/login')};
+          </>
+        ) : (
+          <>
+            <Container>
+              <div className=" d-flex m-5">
+                <span
+                  className="nav_notice"
+                  style={{ fontSize: '33px', marginLeft: '65px' }}
+                >
+                  모임 목록
+                </span>
+              </div>
+
+              <div className="mypage_review_list mt-5 w-100">
+                <div className="d-flex justify-content-start gap-3 mb-4">
+                  <table className="mypage_review_table">
+                    {groupedClubs.length > 0 ? (
+                      <>
+                        {currentReviews.map((object, index) => (
+                          <tbody key={index}>
+                            <tr>
+                              <td>
+                                {/* 라디오 버튼 */}
+                                <input
+                                  type="radio"
+                                  name="radio"
+                                  value={object.GROUP_NO}
+                                  checked={
+                                    selectedRadioValue === object.GROUP_NO
+                                  }
+                                  onChange={() =>
+                                    radioValueChecked(object.GROUP_NO)
+                                  }
+                                />
+                              </td>
+                              <td>
+                                <Nav.Link
+                                  href="#"
+                                  onClick={() =>
+                                    radioValueChecked(object.GROUP_NO)
+                                  }
                                 >
-                                  {object.GROUP_TITLE}
-                                </span>
-                                <div className="d-flex justify-content-between align-items-center">
-                                  <span style={{ fontSize: '14px' }}>
-                                    {object.START_DATE}~ {object.LAST_DATE}
-                                  </span>
-                                  <span
-                                    style={{
-                                      fontSize: '17px',
-                                      fontWeight: '900',
-                                    }}
-                                    className="me-5"
-                                  >
-                                    {object.MC_NICKNAME}
-                                  </span>
-                                </div>
-                                <span style={{ fontWeight: '900' }}>
-                                  {object.PRICE}원
-                                </span>
-                              </div>
-                            </div>
-                          </Nav.Link>
-                        </td>
-                      </tr>
-                    </tbody>
-                  ))}
-                </>
-              ) : (
-                <>
-                  <div className="d-flex justify-content-center mt-5 mb-5">
-                    <span
-                      style={{
-                        fontSize: '30px',
-                        fontWeight: '900',
-                      }}
-                    >
-                      참여한 모임이 없습니다.
-                    </span>
-                  </div>
-                </>
-              )}
-            </table>
-          </div>
-        </div>
-      </Container>
-      <Container className="mb-5">
-        <div className="d-flex justify-content-center align-content-center ms-5 mb-3">
-          <Pagination size="sm">{item}</Pagination>
-          <Nav.Link
-            onClick={() => {
-              if (check === true) {
-                // window.location.href = `/review/Regist/${selectedRadioValue}`;
-                navigate(`/review/Regist/${selectedRadioValue}`);
-              } else {
-                alert('모임을 선택 해 주세요');
-              }
-            }}
-            className="reviewList"
-          >
-            <span>작성하기</span>
-          </Nav.Link>
-        </div>
-      </Container>
-    </>
-  );
+                                  <div className="d-flex m-4">
+                                    <img
+                                      src={`http://localhost:8080/upload/${object.IMG_URL1}`}
+                                      alt="이미지"
+                                      style={{ width: '120px' }}
+                                      className="mypage_review_table_img"
+                                    />
+                                    <div className="d-flex flex-column ms-4 w-100 justify-content-center">
+                                      <span
+                                        style={{
+                                          fontSize: '30px',
+                                          fontWeight: '900',
+                                        }}
+                                      >
+                                        {object.GROUP_TITLE}
+                                      </span>
+                                      <div className="d-flex justify-content-between align-items-center">
+                                        <span style={{ fontSize: '14px' }}>
+                                          {object.START_DATE} ~{' '}
+                                          {object.LAST_DATE}
+                                        </span>
+                                        <span
+                                          style={{
+                                            fontSize: '17px',
+                                            fontWeight: '900',
+                                          }}
+                                          className="me-5"
+                                        >
+                                          {object.MC_NICKNAME}
+                                        </span>
+                                      </div>
+                                      <span style={{ fontWeight: '900' }}>
+                                        {object.PRICE}원
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Nav.Link>
+                              </td>
+                            </tr>
+                          </tbody>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <div className="d-flex justify-content-center mt-5 mb-5">
+                          <span
+                            style={{
+                              fontSize: '30px',
+                              fontWeight: '900',
+                            }}
+                          >
+                            참여한 모임이 없습니다.
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </table>
+                </div>
+              </div>
+            </Container>
+            <Container className="mb-5">
+              <div className="d-flex justify-content-center align-content-center ms-5 mb-3">
+                <Pagination size="sm">
+                  {pageRangeStart < 5 ? (
+                    <>{null}</>
+                  ) : (
+                    <>
+                      <Pagination.Prev
+                        onClick={handlePrevPage}
+                        disabled={pageRangeStart === 0}
+                      />
+                    </>
+                  )}
+
+                  {Array.from({ length: 5 }, (_, index) => {
+                    const pageNumber = pageRangeStart + index + 1;
+                    if (pageNumber <= groupedClubs.length) {
+                      return (
+                        <Pagination.Item
+                          key={pageNumber}
+                          active={pageNumber === currentPage}
+                          onClick={() => handlePageChange(pageNumber)}
+                        >
+                          {pageNumber}
+                        </Pagination.Item>
+                      );
+                    }
+                    return null;
+                  })}
+                  {pageRangeEnd < groupedClubs.length && (
+                    <Pagination.Next
+                      onClick={handleNextPage}
+                      disabled={pageRangeEnd >= groupedClubs.length}
+                    />
+                  )}
+                </Pagination>
+                <Nav.Link
+                  onClick={() => {
+                    if (check === true) {
+                      // window.location.href = `/review/Regist/${selectedRadioValue}`;
+                      navigate(`/review/Regist/${selectedRadioValue}`);
+                    } else {
+                      alert('모임을 선택 해 주세요');
+                    }
+                  }}
+                  className="reviewList"
+                >
+                  <span>작성하기</span>
+                </Nav.Link>
+              </div>
+            </Container>
+          </>
+        )}
+      </>
+    );
+  }
 }

@@ -77,6 +77,11 @@
   border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 5px;
   background-color: #ffffff;
+  color: rgb(219, 219, 57);
+  text-shadow: -1px 0px black, 0px 1px black, 1px 0px black, 0px -1px black;
+}
+
+.optionColor {
 }
 
 #review_rating:focus {

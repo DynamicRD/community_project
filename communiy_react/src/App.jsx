@@ -42,7 +42,7 @@ import ChatRoom from './chatroom/Chatroom';
 import WishList from './wishlist/WishList';
 import FindId from './login/FindId';
 import FindPwd from './login/FindPwd';
-import ResetPassword from './login/ResetPassword';
+// import ResetPassword from './login/ResetPassword';
 
 // ✅ 관리자 관련 컴포넌트
 import Dashboard from './Admin/dashboard/dashboard';
@@ -138,7 +138,7 @@ function App() {
             {/* 아이디, 비밀번호 찾기 */}
             <Route path="/find-id" element={<FindId />} />
             <Route path="/find-password" element={<FindPwd />} />
-            <Route path="/resetPassword" element={<ResetPassword />} />
+            {/* <Route path="/resetPassword" element={<ResetPassword />} /> */}
           </Route>
 
           {/* ✅ 관리자 관련 라우트 */}
@@ -152,10 +152,6 @@ function App() {
             <Route path="board" element={<Board />} />
             <Route path="board/:reviewid" element={<ReviewDetail />} />
             <Route path="stats" element={<Stats />} />
-            <Route
-              path="notice/regist"
-              element={<AnnouncementsNoticeRegist />}
-            />
           </Route>
         </Routes>
       </BrowserRouter>

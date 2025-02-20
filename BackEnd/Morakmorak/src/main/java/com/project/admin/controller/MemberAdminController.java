@@ -31,6 +31,7 @@ public class MemberAdminController {
     public List<Map<String, Object>> getUsers() {
         return memberAdminService.getUsers();
     }
+
     /**
      * 모든 모임 리스트 조회 
      */
@@ -61,3 +62,4 @@ public class MemberAdminController {
     }
 }
  	
+

@@ -61,7 +61,9 @@ public class MemberController {
 
 	
 	@GetMapping("/kakao")
-	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code,@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe, HttpServletResponse response) {
+	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code,
+			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
+			HttpServletResponse response) {
 		String kakaoTokenUrl = "https://kauth.kakao.com/oauth/token";
 
 		// 요청할 파라미터 설정
@@ -96,7 +98,6 @@ public class MemberController {
 			// KakaoInfo에서 필요한 정보 추출
 			Long id = (Long) KakaoInfo.get("id");
 			String idStr = String.valueOf(id);
-		
 
 			// "properties" 안에서 "nickname"과 "thumbnail_image" 추출
 			Map<String, Object> properties = (Map<String, Object>) KakaoInfo.get("properties");
@@ -107,14 +108,13 @@ public class MemberController {
 			Map<String, Object> kakaoAccount = (Map<String, Object>) KakaoInfo.get("kakao_account");
 			String email = (String) kakaoAccount.get("email");
 
-		
 			Member member = new Member();
 			member.setProviderId(idStr);
 			member.setProvider("kakao");
 
 			// 사용자가 이미 존재하는지 확인
 			boolean isRegistered = service.snsUserCheck(member);
-			System.out.println("계정 사용자 체크 : "+isRegistered);
+			System.out.println("계정 사용자 체크 : " + isRegistered);
 			if (isRegistered) {
 				// 기존 회원 로그인 처리
 				member = service.selectSnsInfo(member);
@@ -138,7 +138,9 @@ public class MemberController {
 
 				// ✅ 로그인 성공 후 쿠키와 함께 React로 리다이렉트 (isRegistered=true 전달)
 				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
-						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=true&sns=kakao").build();
+						.header(HttpHeaders.LOCATION,
+								"http://localhost:5173/login/googlecheck?isRegistered=true&sns=kakao")
+						.build();
 			} else {
 				// 회원가입 필요
 				SnsInfo snsInfo = new SnsInfo();
@@ -151,9 +153,11 @@ public class MemberController {
 				addJwtCookie(response, "google_temp_token", jwtTempGoogleToken, 10);
 				// ✅ 회원가입 필요 (isRegistered=false 전달)
 				return ResponseEntity.status(HttpStatus.FOUND) // 302 Redirect
-						.header(HttpHeaders.LOCATION, "http://localhost:5173/login/googlecheck?isRegistered=false&sns=kakao").build();
+						.header(HttpHeaders.LOCATION,
+								"http://localhost:5173/login/googlecheck?isRegistered=false&sns=kakao")
+						.build();
 			}
-		
+
 		} catch (Exception e) {
 			e.printStackTrace();
 			System.out.println(e);
@@ -246,7 +250,7 @@ public class MemberController {
 		log.info("🔹 /login 요청 - 유저 ID: {}", member.getId());
 		// DB에서 사용자 확인
 		Member member2 = service.loginCheck(member);
-		System.out.println("member2값 읽어오기"+member2);
+		System.out.println("member2값 읽어오기" + member2);
 		if (member2 == null) {
 			return ResponseEntity.status(404).body(Map.of("success", false, "message", "등록되지 않은 사용자입니다. 회원가입이 필요합니다."));
 		}
@@ -277,7 +281,7 @@ public class MemberController {
 	@GetMapping("/refresh_check")
 	public ResponseEntity<?> checkRefreshToken(
 			@CookieValue(value = "refresh_token", required = false) String refreshToken, HttpServletResponse response) {
-	
+
 		System.out.println("토큰 유효시간 검증");
 		System.out.println(refreshToken);
 		if (refreshToken == null || !jwtTokenProvider.validateToken(refreshToken)) {
@@ -285,7 +289,7 @@ public class MemberController {
 		}
 		System.out.println("토큰 아이디");
 		int no = JwtUtil.getNoFromToken(refreshToken);
-		System.out.println("no추출 완료 : " +no);
+		System.out.println("no추출 완료 : " + no);
 		Member member = new Member();
 		member.setNo(no);
 
@@ -350,7 +354,6 @@ public class MemberController {
 			@CookieValue(value = "access_token", required = false) String accessToken,
 			@CookieValue(value = "refresh_token", required = false) String refreshToken) {
 
-		
 		boolean accessTokenExists = accessToken != null;
 		boolean refreshTokenExists = refreshToken != null;
 		System.out.println(accessTokenExists);
@@ -502,7 +505,7 @@ public class MemberController {
 				// 회원탈퇴
 				try {
 		            // 파일 경로 설정
-					String uploadDir = new ClassPathResource("static/upload/").getFile().getAbsolutePath();
+					String uploadDir = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString() + "/";
 		            Path filePath = Paths.get(uploadDir+memberRegist.getPicture());
 		            File file = filePath.toFile();
 		            // 파일 존재 여부 확인 후 삭제
@@ -527,6 +530,7 @@ public class MemberController {
 		}
 		
 	}
+
 
 	// --------------------------------------------------api메소드가 아닌 컨트롤러용 메소드
 	// 액세스 토큰 재발급
@@ -604,7 +608,7 @@ public class MemberController {
 		cookie.setAttribute("SameSite", "Strict"); // XSRF 방지
 		response.addCookie(cookie);
 	}
-	
+
 	public Map<String, Object> getKakaoUserInfo(String accessToken) {
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + accessToken);
@@ -615,7 +619,26 @@ public class MemberController {
 
 		return response.getBody();
 	}
-	
 
 
+	@PostMapping("/checkId")
+	public Map<String, Object> findMemberId(@RequestParam Map<String, Object> map) {
+		Map<String, Object> value = service.findMemberId(map);
+		log.info("value = " + value);
+		return service.findMemberId(map);
+	}
+
+
+	@PostMapping("/checkPw")
+	public Map<String, Object> findMemberPw(@RequestParam Map<String, Object> map) {
+		Map<String, Object> count = service.findMemberPw(map);
+		log.info("value = " + count);
+		return service.findMemberPw(map);
+	}
+
+	@PostMapping("/changePw")
+	public void changeMemberPw(@RequestParam Map<String, Object> map) {
+		service.changeMemberPw(map);
+
+	}
 }

@@ -1,5 +1,6 @@
 package com.project.member.mapper;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -40,4 +41,11 @@ public interface MemberMapper {
 	Member getSnsInfo(Member member);
 	
 	void deleteMemeber(Member member);
+	
+	Map<String, Object> findMemberId(Map<String, Object> map);
+
+	Map<String, Object> findMemberPw(Map<String, Object> map);
+	
+	void changeMemberPw(Map<String, Object> map);
+	
 }

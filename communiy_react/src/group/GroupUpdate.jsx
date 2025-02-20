@@ -31,6 +31,7 @@ export default function GroupUpdate() {
   const price = useRef();
   const addr1 = useRef();
   const addr2 = useRef();
+  const [area, setArea] = useState();
   const start_date = useRef();
   const last_date = useRef();
   const comment1 = useRef();
@@ -80,7 +81,7 @@ export default function GroupUpdate() {
 
   const [formData, setFormData] = useState({
     location: '',
-    coordinates: { lat: items.latitude || '', lng: items.longitude || '' },
+    coordinates: { lat: items.LATITUDE || '', lng: items.LONGITUDE || '' },
     placeId: '',
   });
 
@@ -93,6 +94,7 @@ export default function GroupUpdate() {
       price.current.value = items.PRICE || '';
       addr1.current.value = items.ADDR1 || '';
       addr2.current.value = items.ADDR2 || '';
+      setArea(items.AREA || '');
       const startDate = new Date(items.START_DATE || '');
       startDate.setHours(startDate.getHours() + 9);
       start_date.current.value = startDate.toISOString().slice(0, 16);
@@ -104,9 +106,9 @@ export default function GroupUpdate() {
       setImg_url1(items.IMG_URL1 || '');
       setImg_url2(items.IMG_URL2 || '');
       setImg_url3(items.IMG_URL3 || '');
-      setImgUrl1Preview(items.IMG_URL1 ? `/images/${items.IMG_URL1}` : null);
-      setImgUrl2Preview(items.IMG_URL2 ? `/images/${items.IMG_URL2}` : null);
-      setImgUrl3Preview(items.IMG_URL3 ? `/images/${items.IMG_URL3}` : null);
+      setImgUrl1Preview(items.IMG_URL1 ? `http://localhost:8080/upload/${items.IMG_URL1}` : null);
+      setImgUrl2Preview(items.IMG_URL2 ? `http://localhost:8080/upload/${items.IMG_URL2}` : null);
+      setImgUrl3Preview(items.IMG_URL3 ? `http://localhost:8080/upload/${items.IMG_URL3}` : null);
     }
   }, [items]);
 
@@ -142,6 +144,38 @@ export default function GroupUpdate() {
       }
     });
   }, []);
+
+   //area 변환
+    const areas = {
+      서울: ['서울'],
+      경기: ['경기', '경기도'],
+      강원: ['강원', '강원도'],
+      경상: ['경상', '경상도'],
+      부산: ['부산', '부산광역시'],
+      전라: ['전라', '전라도'],
+      충청: ['충청', '충청도'],
+      제주: ['제주'],
+    };
+  
+    function extractArea(location) {
+      for (let [key, values] of Object.entries(areas)) {
+        for (let value of values) {
+          if (location.includes(value)) {
+            return key; // 해당 지역이 포함되면 지역 이름 반환
+          }
+        }
+      }
+      return null; // 일치하는 지역이 없으면 null 반환
+    }
+  
+    // area 상태가 업데이트될 때마다 실행되는 useEffect
+    useEffect(() => {
+      if (formData.location) {
+        const extractedArea = extractArea(formData.location);
+        setArea(extractedArea);  // 지역 업데이트
+        console.log('Extracted area: ', area); // 추출된 지역 확인
+      }
+    }, [formData.location]); // formData.location이 변경될 때마다 실행
 
   const handleSubmit = () => {
     if (!group_title.current.value) {
@@ -211,9 +245,9 @@ export default function GroupUpdate() {
       form.append('price', Number(price.current.value));
       form.append('addr1', addr1.current.value);
       form.append('addr2', addr2.current.value);
+      form.append('area', area);
       form.append('latitude', Number(formData.coordinates.lat));
       form.append('longitude', Number(formData.coordinates.lng));
-      form.append('placeId', formData.placeId);
       const date1 = new Date(start_date.current.value);
       const formattedStartDate = date1.toISOString();
       form.append('start_date', formattedStartDate);
@@ -264,8 +298,8 @@ export default function GroupUpdate() {
         <div className="board">
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
-              <b>
-                <span>{items.GROUP_TITLE}</span> 모임 정보 수정
+              <b className='group_span'>
+                모임 정보 수정
               </b>
             </p>
           </div>
