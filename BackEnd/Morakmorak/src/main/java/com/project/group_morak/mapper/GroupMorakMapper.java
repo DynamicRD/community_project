@@ -1,5 +1,6 @@
 package com.project.group_morak.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,8 @@ public interface GroupMorakMapper {
 	public void join(Map<String, Object> map);
 
 	public void changeMoney(Map<String, Object> map);
+	
+	public void refundMoney(Map<String, Object> map);
 
 	public void insertBasket(Map<String, Object> map);
 
@@ -34,7 +37,16 @@ public interface GroupMorakMapper {
 
 	public void memberReport(Map<String, Object> map);
 	
+	public Map<String, Object> countGroupMember(String groupNo);
+
 	public List<GroupMorak> getGroupsByCategory(String category);
 	
 	public List<GroupMorak> getGroupsByCategoryAll();
+	
+	public List<GroupMorak> getGroupsByCategory3(String category);
+	
+	public List<GroupMorak> getGroupsByCategoryAll3();
+
+	public void cancelJoin(Map<String, Object> map);
+
 }

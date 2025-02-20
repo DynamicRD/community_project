@@ -175,7 +175,7 @@ public class ReviewController {
 		List<Map<String, Object>> listMap = service.groupList(idx);
 		log.info("value = " + idx);
 		log.info("value = " + listMap);
-		return service.groupList(idx);
+		return listMap;
 	}
 
 	@GetMapping(value = "/Regist/{idx}")

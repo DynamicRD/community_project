@@ -2,6 +2,7 @@ package com.project.group_morak.service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,9 +46,19 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 	public void join(Map<String, Object> map) {
 		mapper.join(map);
 	}
+	
+	@Override
+	public void cancelJoin(Map<String, Object> map) {
+		mapper.cancelJoin(map);
+	}
 
 	public void changeMoney(Map<String, Object> map) {
 		mapper.changeMoney(map);
+	}
+	
+	@Override
+	public void refundMoney(Map<String, Object> map) {
+		mapper.refundMoney(map);
 	}
 
 	@Override
@@ -76,11 +87,27 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 	}
 
 	@Override
+	public Map<String, Object> countGroupMember(String groupNo) {
+		return mapper.countGroupMember(groupNo);
+	}
+  
+	@Override
 	public List<GroupMorak> getGroupsByCategory(String category) {
 		if(category.equals("all")) {
 			return mapper.getGroupsByCategoryAll();
 		}
 		return mapper.getGroupsByCategory(category);
 	}
+	
+	@Override
+	public List<GroupMorak> getGroupsByCategory3(String category) {
+		if(category.equals("all")) {
+			return mapper.getGroupsByCategoryAll3();
+		}
+		return mapper.getGroupsByCategory3(category);
+	}
+
+	
+
 
 }

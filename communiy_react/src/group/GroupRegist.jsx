@@ -19,7 +19,6 @@ export default function GroupRegist() {
   const handleComment1Change = (e) => setComment1(e.target.value);
   const comment2 = useRef();
 
-
   // 이미지 업로드
   const [img_url1, setImg_url1] = useState(null);
   const [img_url2, setImg_url2] = useState(null);
@@ -92,7 +91,6 @@ export default function GroupRegist() {
           },
           placeId: place.place_id,
         }));
-       
       }
     });
   }, []);
@@ -104,6 +102,12 @@ export default function GroupRegist() {
     강원: ['강원', '강원도'],
     경상: ['경상', '경상도'],
     부산: ['부산', '부산광역시'],
+    인천: ['인천', '인천광역시'],
+    세종: ['세종'],
+    대구: ['부산', '대구광역시'],
+    광주: ['광주', '광주광역시'],
+    대전: ['대전', '대전광역시'],
+    울산: ['울산', '울산광역시'],
     전라: ['전라', '전라도'],
     충청: ['충청', '충청도'],
     제주: ['제주'],
@@ -124,7 +128,7 @@ export default function GroupRegist() {
   useEffect(() => {
     if (formData.location) {
       const extractedArea = extractArea(formData.location);
-      setArea(extractedArea);  // 지역 업데이트
+      setArea(extractedArea); // 지역 업데이트
       console.log('Extracted area: ', area); // 추출된 지역 확인
     }
   }, [formData.location]); // formData.location이 변경될 때마다 실행
@@ -264,7 +268,7 @@ export default function GroupRegist() {
         <div className="board">
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
-              <p className='group_span'>모임 개설 신청하기</p>
+              <p className="group_span">모임 개설 신청하기</p>
             </p>
           </div>
           <div className="group_register_form">

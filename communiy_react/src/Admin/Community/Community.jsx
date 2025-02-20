@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Table,
@@ -9,137 +9,108 @@ import {
   Pagination,
 } from 'react-bootstrap';
 
-const communityData = [
-  {
-    id: 1,
-    g_title: 'kpop 작사 모임',
-    category: '문화/예술',
-    user_max: '12',
-    reg_date: '2024-02-09',
-    area: '서울',
-    type: '정기모임',
-  },
-  {
-    id: 2,
-    g_title: 'kpop 작곡 모임',
-    category: '문화/예술',
-    user_max: '6',
-    reg_date: '2024-02-08',
-    area: '서울',
-    type: '정기모임',
-  },
-  {
-    id: 3,
-    g_title: '와인 시음회',
-    category: '푸드/드링크',
-    user_max: '12',
-    reg_date: '2024-02-09',
-    area: '인천',
-    type: '소모임',
-  },
-  {
-    id: 4,
-    g_title: '맛집탐방',
-    category: '푸드/드링크',
-    user_max: '8',
-    reg_date: '2024-02-08',
-    area: '경기',
-    type: '동행',
-  },
-  {
-    id: 5,
-    g_title: '꿈분석 모임',
-    category: '교육',
-    user_max: '6',
-    reg_date: '2024-02-09',
-    area: '서울',
-    type: '소모임',
-  },
-  {
-    id: 6,
-    g_title: '베이킹과 독서',
-    category: '취미',
-    user_max: '12',
-    reg_date: '2024-02-08',
-    area: '경기',
-    type: '정기모임',
-  },
-  {
-    id: 7,
-    g_title: '사랑에 대하여 영화토론',
-    category: '문화/예술',
-    user_max: '6',
-    reg_date: '2024-02-09',
-    area: '서울',
-    type: '소모임',
-  },
-  {
-    id: 8,
-    g_title: '말 습관 고치기 모임',
-    category: '교육',
-    user_max: '12',
-    reg_date: '2024-02-08',
-    area: '인천',
-    type: '정기모임',
-  },
-  {
-    id: 9,
-    g_title: '혼술러 모임',
-    category: '푸드/드링크',
-    user_max: '6',
-    reg_date: '2024-02-09',
-    area: '서울',
-    type: '동행',
-  },
-  {
-    id: 10,
-    g_title: '나에 대해서 알아가기 모임',
-    category: '교육',
-    user_max: '12',
-    reg_date: '2024-02-08',
-    area: '경기',
-    type: '정기모임',
-  },
-  {
-    id: 11,
-    g_title: '같이 스테이크 썰러 가요 모임',
-    category: '푸드/드링크',
-    user_max: '4',
-    reg_date: '2024-02-09',
-    area: '서울',
-    type: '동행',
-  },
-];
-
 const Community = () => {
+  const [communities, setCommunities] = useState([]); // 백엔드에서 가져온 데이터 저장
   const [search, setSearch] = useState('');
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedCommunity, setSelectedCommunity] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; // ✅ 한 페이지당 5명 표시
+  const itemsPerPage = 10; // 한 페이지당 10개 표시
 
-  // ✅ 검색 기능 (모임이름, 카테고리, 모임구분, 장소 포함)
-  const filteredUsers = communityData.filter((community) =>
+  // ✅ 1️⃣ 데이터 불러오기 (백엔드 연동)
+  useEffect(() => {
+    fetch('http://localhost:8080/admin/community')
+      .then((response) => response.json())
+      .then((data) => setCommunities(data))
+      .catch((error) => console.error('데이터 로드 실패:', error));
+  }, []);
+
+  // ✅ 2️⃣ 검색 필터링 (모임이름, 카테고리, 모임구분, 장소 포함)
+  const filteredCommunities = communities.filter((community) =>
     [
-      community.g_title,
+      community.groupTitle, // group_title
       community.category,
       community.type,
       community.area,
-    ].some((field) => field.toLowerCase().includes(search.toLowerCase()))
+    ].some((field) => field?.toLowerCase().includes(search.toLowerCase()))
   );
 
-  // ✅ 페이징 처리
-  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  // ✅ 3️⃣ 페이징 처리
+  const totalPages = Math.ceil(filteredCommunities.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedUsers = filteredUsers.slice(
+  const paginatedCommunities = filteredCommunities.slice(
     startIndex,
     startIndex + itemsPerPage
   );
+
+  // ✅ 4️⃣ 모임 승인 요청
+  const handleApprove = async (groupNo) => {
+    try {
+      const response = await fetch(
+        `http://localhost:8080/admin/community/approve/${groupNo}`,
+        {
+          method: 'POST',
+        }
+      );
+
+      if (response.ok) {
+        alert('모임이 승인되었습니다!');
+        window.location.reload();
+        setCommunities((prev) =>
+          prev.map((c) =>
+            c.GROUP_NO === groupNo ? { ...c, APPROVAL: 'Y' } : c
+          )
+        );
+        setSelectedCommunity(null);
+      } else {
+        alert('승인 실패');
+      }
+    } catch (error) {
+      console.error('승인 오류:', error);
+      alert('서버 오류');
+    }
+  };
+
+
+  const handleReject = async (groupNo) => {
+    console.log('거절 요청 - groupNo:', groupNo);
+    if (!groupNo) {
+      alert('오류: groupNo 값이 없습니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/admin/community/reject/${groupNo}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (response.ok) {
+        alert('모임 신청이 거절되었습니다!');
+        window.location.reload();
+
+        // ✅ 신청 목록에서 제거
+        setCommunities((prev) => prev.filter((c) => c.groupNo !== groupNo));
+
+        setSelectedCommunity(null);
+      } else {
+        const errorText = await response.text();
+        console.error('거절 실패:', errorText);
+        alert('거절 실패: ' + errorText);
+      }
+    } catch (error) {
+      console.error('거절 오류:', error);
+      alert('서버 오류');
+    }
+  };
+
 
   return (
     <div className="user-table-container">
       <h2>모임 관리</h2>
 
-      {/* 검색 입력창 */}
+      {/* 🔍 검색 입력창 */}
       <div className="d-flex mb-3">
         <InputGroup className="me-2">
           <Form.Control
@@ -151,7 +122,7 @@ const Community = () => {
         </InputGroup>
       </div>
 
-      {/* 회원 목록 테이블 */}
+      {/* 📌 모임 목록 테이블 */}
       <Table striped bordered hover responsive>
         <thead>
           <tr>
@@ -166,37 +137,46 @@ const Community = () => {
           </tr>
         </thead>
         <tbody>
-          {paginatedUsers.length > 0 ? (
-            paginatedUsers.map((Community) => (
-              <tr key={Community.id}>
-                <td>{Community.id}</td>
+          {communities.length > 0 ? (
+            communities.map((community) => (
+              <tr key={community.GROUP_NO}>
+                <td>{community.GROUP_NO}</td>
                 <td>
                   <Link
-                    to={`/admin/community/${Community.id}`}
+                    to={`/admin/community/${community.GROUP_NO}`}
                     className="text-decoration-none"
                   >
-                    {Community.g_title}
+                    {community.GROUP_TITLE}
                   </Link>
                 </td>
-                <td>{Community.category}</td>
-                <td>{Community.user_max}</td>
-                <td>{Community.reg_date}</td>
-                <td>{Community.area}</td>
-                <td>{Community.type}</td>
+                <td>{community.CATEGORY}</td>
+                <td>{community.USER_MAX}</td>
+                <td>{community.REG_DATE}</td>
+                <td>{community.AREA}</td>
+                <td>{community.TYPE}</td>
                 <td>
-                  <Button
-                    size="sm"
-                    variant="primary"
-                    onClick={() => setSelectedUser(Community)}
-                  >
-                    승인
-                  </Button>
+                  {community.approval === 'Y' ? (
+                    <Button size="sm" variant="success" disabled>
+                      승인됨
+                    </Button>
+                  ) : (
+                    <Button
+                      size="sm"
+                      variant="primary"
+                      onClick={() => {
+                        console.log('승인할 community:', community); // ✅ 디버깅
+                        setSelectedCommunity(community);
+                      }}
+                    >
+                      승인
+                    </Button>
+                  )}
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="6" className="text-center">
+              <td colSpan="8" className="text-center">
                 검색 결과가 없습니다.
               </td>
             </tr>
@@ -204,7 +184,7 @@ const Community = () => {
         </tbody>
       </Table>
 
-      {/* ✅ 페이징 UI 추가 */}
+      {/* 📌 페이징 UI */}
       <Pagination className="justify-content-center">
         <Pagination.Prev
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -226,32 +206,44 @@ const Community = () => {
           disabled={currentPage === totalPages}
         />
       </Pagination>
-      {/* 상세정보 모달 */}
-      {selectedUser && (
-        <Modal show={true} onHide={() => setSelectedUser(null)}>
+
+      {/* 📌 승인 모달 */}
+      {selectedCommunity && (
+        <Modal show={true} onHide={() => setSelectedCommunity(null)}>
           <Modal.Header closeButton>
             <Modal.Title>승인하시겠습니까?</Modal.Title>
           </Modal.Header>
           <Modal.Body className="text-center">
+            <p>{selectedCommunity.groupTitle} 모임을 승인하시겠습니까?</p>
             <div className="d-flex justify-content-center gap-3">
               <Button
                 variant="primary"
                 className="px-4"
-                onClick={() => setSelectedUser(Community)}
+                onClick={() => {
+                  console.log('선택된 community:', selectedCommunity); // ✅ 확인
+                  console.log('groupNo 값:', selectedCommunity.GROUP_NO); // ✅ groupNo가 올바른지 확인
+                  handleApprove(selectedCommunity.GROUP_NO);
+                }}
               >
-                YES
+                승인
               </Button>
               <Button
                 variant="danger"
                 className="px-4"
-                onClick={() => setSelectedUser(Community)}
+
+                onClick={() => {
+                  handleReject(selectedCommunity.GROUP_NO);
+                }}
               >
-                NO
+                거부
               </Button>
             </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={() => setSelectedUser(null)}>
+            <Button
+              variant="secondary"
+              onClick={() => setSelectedCommunity(null)}
+            >
               닫기
             </Button>
           </Modal.Footer>

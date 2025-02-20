@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.admin.mapper.DashboardAdminMapper">
+	<select id="getCurrentCustomerCount" resultType="double">
+		SELECT COUNT(*) AS reg_count
+		FROM member
+		WHERE TO_DATE(reg_date, 'YY/MM/DD')
+		BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE
+	</select>
+	<select id="getMonthCustomerCount" resultType="double">
+		SELECT COUNT(*) AS reg_count
+		FROM member
+		WHERE TO_DATE(reg_date, 'YY/MM/DD')
+		BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM')
+		AND LAST_DAY(ADD_MONTHS(SYSDATE, -1))
+	</select>
+</mapper>

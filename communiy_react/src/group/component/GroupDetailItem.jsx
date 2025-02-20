@@ -13,10 +13,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import MemberProfileView from './MemberProfileView';
 import GoogleMap from './GoogleMap';
+import axios from 'axios';
 
 export default function GroupDetailItem({ item }) {
+  const [category, setCategory] = useState(null);
+  const [groups, setGroups] = useState([]);
   const [activeMembers, setActiveMembers] = useState([]);
-useEffect(() => {
+  const [userRole, setUserRole] = useState();
+  useEffect(() => {
     fetch(`http://localhost:8080/group/memberList?group_no=${item.GROUP_NO}`)
       .then((res) => res.json())
       .then((data) => {
@@ -25,8 +29,27 @@ useEffect(() => {
 
         // 상태 설정
         setActiveMembers(activeMembers);
-      }).catch((error) => console.error('Error fetching group members:', error));
-  }, [item.GROUP_NO]);
+      })
+      .catch((error) => console.error('Error fetching group members:', error));
+  }, [item.GROUP_NO, item]);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/group/detailselect?category=${item.CATEGORY}`
+        );
+        setGroups(response.data);
+        console.log('Fetched groups:', response.data);
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+        setGroups([]);
+      }
+    };
+    if (item.CATEGORY) {
+      fetchGroups();
+    }
+  }, [item.CATEGORY]);
 
   //멤버 프로필 띄우기
   const [profileShow, setProfileShow] = useState(false);
@@ -74,7 +97,7 @@ useEffect(() => {
   return (
     <div className="group_detail">
       <div className="information row">
-        <div className='col'>
+        <div className="col-6">
           <Link to={`/group/${item.TYPE}_list`}>
             <h4>{item.TYPE === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
           </Link>
@@ -96,10 +119,7 @@ useEffect(() => {
               {item.CATEGORY === 'travel' && '여행'}
               {item.CATEGORY === 'hobby' && '취미'}
             </p>
-            <span
-              className="group_span"
-              style={{ fontSize: '35px'}}
-            >
+            <span className="group_span" style={{ fontSize: '35px' }}>
               {item.GROUP_TITLE}
             </span>
           </div>
@@ -131,6 +151,7 @@ useEffect(() => {
           >
             🌟 {item.GROUP_TITLE} 모임장 한마디 🌟
           </p>
+          <br />
           {item.COMMENT1}
         </div>
         <div className="profile mt-5">
@@ -140,9 +161,13 @@ useEffect(() => {
               alt="모임장 프로필"
               className="rounded-circle"
             />
-            <h3 className="p-">{item.NICKNAME} 모임장</h3>
+            <h3 className="p-2">{item.NICKNAME} 모임장</h3>
           </div>
-          <h4>{item.STAR_SUM===0?'아직 등록된 평점이 없습니다.':`평균별점 ${item.STAR_SUM}`}</h4>
+          <h4>
+            {item.STAR_SUM === 0
+              ? '아직 등록된 평점이 없습니다.'
+              : `평균별점 ${item.STAR_SUM}`}
+          </h4>
         </div>
       </div>
 
@@ -183,42 +208,47 @@ useEffect(() => {
           />
         </Form.Group>
       </div>
-
-      <div className="groupMemberList">
-        <p
-          style={{ fontSize: '35px', marginBottom: '10px', fontWeight: '700' }}
-        >
-          현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
-        </p>
-        <ListGroup as="ol">
-          {activeMembers.map((member) => {
-            return (
-              <ListGroup.Item
-                key={member.NO}
-                as="li"
-                className="d-flex justify-content-between align-items-center"
-              >
-                <div className="ms-2 me-auto">
-                  <div>
-                    <Image
-                      src={`http://localhost:8080/upload/${member.IMG_URL}`}
-                      roundedCircle
-                      style={{ height: '40px', width: '40px' }}
-                    />{' '}
-                    &nbsp;<span className="fs-5">{member.NICKNAME}</span>
-                  </div>
-                </div>
-                <Button
-                  variant="primary"
-                  onClick={() => profileOpen(member.NO)}
+      {item.MEMBER_COUNT > 0 && (
+        <div className="groupMemberList">
+          <p
+            style={{
+              fontSize: '35px',
+              marginBottom: '10px',
+              fontWeight: '700',
+            }}
+          >
+            현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
+          </p>
+          <ListGroup as="ol">
+            {activeMembers.map((member) => {
+              return (
+                <ListGroup.Item
+                  key={member.NO}
+                  as="li"
+                  className="d-flex justify-content-between align-items-center"
                 >
-                  프로필 보기
-                </Button>
-              </ListGroup.Item>
-            );
-          })}
-        </ListGroup>
-      </div>
+                  <div className="ms-2 me-auto">
+                    <div>
+                      <Image
+                        src={`http://localhost:8080/upload/${member.IMG_URL}`}
+                        roundedCircle
+                        style={{ height: '40px', width: '40px' }}
+                      />{' '}
+                      &nbsp;<span className="fs-5">{member.NICKNAME}</span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="primary"
+                    onClick={() => profileOpen(member.NO)}
+                  >
+                    프로필 보기
+                  </Button>
+                </ListGroup.Item>
+              );
+            })}
+          </ListGroup>
+        </div>
+      )}
 
       <div className="map">
         <p style={{ fontSize: '37px', fontWeight: '700' }}>
@@ -247,7 +277,7 @@ useEffect(() => {
           </thead>
           <tbody>
             <tr>
-              <th>모임 시작 7일 전까지</th>
+              <th>참가 승인 전, 모임 시작 7일 전까지</th>
               <td>전액 환불</td>
             </tr>
             <tr>
@@ -262,51 +292,46 @@ useEffect(() => {
         </table>
       </div>
       <div>
-        <p style={{ fontSize: '30px', fontWeight: '700' }}>
-          이런 모임은 어때요?
-        </p>
-        <div className="cards">
-          <div className="card" style={{ width: '18rem' }}>
-            <img
-              src="/images/media1.jpg"
-              className="card-img-top"
-              alt="추천 모임 이미지"
-            />
-            <div className="card-body">
-              <h5 className="card-title">Card with stretched link</h5>
-              <a href="#" className="btn btn-primary stretched-link">
-                Go somewhere
-              </a>
+        {groups?.length === 0 ? (
+          <></>
+        ) : (
+          <>
+            <p style={{ fontSize: '30px', fontWeight: '700' }}>
+              이런 모임은 어때요?
+            </p>
+            <div className="cards">
+              {groups.map((group, index) => (
+                <div key={index} className="card" style={{ width: '18rem' }}>
+                  <Link
+                    to={`/group/detail?group_no=${group.groupNo}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <img
+                      src={`http://localhost:8080/upload/${group.imgUrl1}`}
+                      className="card-img-top"
+                      alt={group.gtitle}
+                      style={{ height: '180px', objectFit: 'cover' }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{group.gtitle}</h5>
+                      <p className="card-text">
+                        {formatDate(group.startDate)} / {group.addr1}
+                      </p>
+                      <a
+                        href={`/group/detail?group_no=${group.groupNo}`}
+                        className="btn btn-primary stretched-link"
+                      >
+                        자세히 보기
+                      </a>
+                    </div>
+                  </Link>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="card" style={{ width: '18rem' }}>
-            <img
-              src="/images/media1.jpg"
-              className="card-img-top"
-              alt="추천 모임 이미지"
-            />
-            <div className="card-body">
-              <h5 className="card-title">Card with stretched link</h5>
-              <a href="#" className="btn btn-primary stretched-link">
-                Go somewhere
-              </a>
-            </div>
-          </div>
-          <div className="card" style={{ width: '18rem' }}>
-            <img
-              src="/images/media1.jpg"
-              className="card-img-top"
-              alt="추천 모임 이미지"
-            />
-            <div className="card-body">
-              <h5 className="card-title">Card with stretched link</h5>
-              <a href="#" className="btn btn-primary stretched-link">
-                Go somewhere
-              </a>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
+
       <MemberProfileView
         show={profileShow}
         onHide={() => setProfileShow(false)}

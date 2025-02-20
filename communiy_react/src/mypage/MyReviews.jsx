@@ -39,6 +39,8 @@ export default function MyReviews() {
   }
   const [completedMeetings, loading] = useFetch(url);
 
+  const { isAuthenticated, userData } = useContext(AuthContext);
+
   // 라디오 버튼 선택 값을 저장할 상태 변수
   const [selectedRadioValue, setSelectedRadioValue] = useState(null);
   const [check, setCheck] = useState(false);
@@ -56,10 +58,60 @@ export default function MyReviews() {
     }
   }, [selectedRadioValue]);
 
-  const { isAuthenticated, userData } = useContext(AuthContext);
+  const [groupedClubs, setGroupedClubs] = useState([]);
+
+  //페이징
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
+  const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
+  const reviewsPerPage = 4;
+
+  useEffect(() => {
+    const groupClubs = [];
+    for (let i = 0; i < completedMeetings.length; i += reviewsPerPage) {
+      groupClubs.push(completedMeetings.slice(i, i + reviewsPerPage));
+    }
+    setGroupedClubs(groupClubs);
+  }, [completedMeetings]);
+
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    const newPageRangeStart = pageRangeStart - 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart >= 0) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart - 4); // 현재 페이지를 범위의 첫 번째 페이지로 설정
+    }
+  };
+
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    const newPageRangeStart = pageRangeStart + 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart < groupedClubs.length) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart + 6); // 5 페이지씩 건너뛰고 이동
+    }
+  };
+
+  //현재 페이지에서 내가 출력하고자 하는 리뷰의 개수를 함수를 통해 groupedReviews[currentPage - 1] 조절 한 뒤 currentReviews에 저장
+  const currentReviews = groupedClubs[currentPage - 1] || [];
 
   if (!loading) {
-    return <Container>Loading...</Container>;
+    return (
+      <Container className="d-flex justify-content-center">
+        <div>
+          <span>Loading...</span>
+        </div>
+      </Container>
+    );
   } else {
     return (
       <>
@@ -83,9 +135,9 @@ export default function MyReviews() {
               <div className="mypage_review_list mt-5 w-100">
                 <div className="d-flex justify-content-start gap-3 mb-4">
                   <table className="mypage_review_table">
-                    {completedMeetings.length > 0 ? (
+                    {groupedClubs.length > 0 ? (
                       <>
-                        {completedMeetings.map((object, index) => (
+                        {currentReviews.map((object, index) => (
                           <tbody key={index}>
                             <tr>
                               <td>
@@ -171,7 +223,40 @@ export default function MyReviews() {
             </Container>
             <Container className="mb-5">
               <div className="d-flex justify-content-center align-content-center ms-5 mb-3">
-                <Pagination size="sm">{item}</Pagination>
+                <Pagination size="sm">
+                  {pageRangeStart < 5 ? (
+                    <>{null}</>
+                  ) : (
+                    <>
+                      <Pagination.Prev
+                        onClick={handlePrevPage}
+                        disabled={pageRangeStart === 0}
+                      />
+                    </>
+                  )}
+
+                  {Array.from({ length: 5 }, (_, index) => {
+                    const pageNumber = pageRangeStart + index + 1;
+                    if (pageNumber <= groupedClubs.length) {
+                      return (
+                        <Pagination.Item
+                          key={pageNumber}
+                          active={pageNumber === currentPage}
+                          onClick={() => handlePageChange(pageNumber)}
+                        >
+                          {pageNumber}
+                        </Pagination.Item>
+                      );
+                    }
+                    return null;
+                  })}
+                  {pageRangeEnd < groupedClubs.length && (
+                    <Pagination.Next
+                      onClick={handleNextPage}
+                      disabled={pageRangeEnd >= groupedClubs.length}
+                    />
+                  )}
+                </Pagination>
                 <Nav.Link
                   onClick={() => {
                     if (check === true) {

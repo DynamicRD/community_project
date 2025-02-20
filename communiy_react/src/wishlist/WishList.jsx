@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Col, Container, Row } from 'react-bootstrap';
+import { Col, Container, Pagination, Row } from 'react-bootstrap';
 import './WishList.css';
 import { AuthContext } from '../context/AuthContext';
 
@@ -7,7 +7,15 @@ import WishListItem from './WishListItem';
 import { useNavigate } from 'react-router';
 
 export default function WishList() {
-  const [filteredItems, setFilteredItems] = useState([]);
+  let item = [];
+  for (let number = 1; number <= 5; number++) {
+    item.push(
+      <Pagination.Item key={number} active={number === 1}>
+        {number}
+      </Pagination.Item>
+    );
+  }
+
   const { isAuthenticated, userData } = useContext(AuthContext);
   const [favoriteList, setFavoriteList] = useState([]); // reviewList를 먼저 선언
   const navigate = useNavigate();
@@ -26,15 +34,67 @@ export default function WishList() {
     if (!userData) return;
 
     getList(`http://localhost:8080/favorites/${userData?.no}`);
+    console.log(userData?.no);
   }, [userData]);
+
+  //페이징
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
+  const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
+  const reviewsPerPage = 4; //현재 페이지 내 보여줄 리스트 개수
+
+  //한페이지 내 들어갈 리스트 범위를 설정 후 배열로 지정
+  const [groupedFavorite, setGroupedFavorite] = useState([]);
+  useEffect(() => {
+    const groupFavorite = [];
+    for (let i = 0; i < favoriteList.length; i += reviewsPerPage) {
+      groupFavorite.push(favoriteList.slice(i, i + reviewsPerPage));
+    }
+    setGroupedFavorite(groupFavorite);
+  }, [favoriteList]);
+
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    const newPageRangeStart = pageRangeStart - 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart >= 0) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart - 4); // 현재 페이지를 범위의 첫 번째 페이지로 설정
+    }
+  };
+
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    const newPageRangeStart = pageRangeStart + 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart < favoriteList.length) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart + 6); // 5 페이지씩 건너뛰고 이동
+    }
+  };
+
+  //현재 페이지에서 내가 출력하고자 하는 리뷰의 개수를 함수를 통해 groupedReviews[currentPage - 1] 조절 한 뒤 currentReviews에 저장
+  const currentReviews = groupedFavorite[currentPage - 1] || [];
 
   return (
     <Container>
       {isAuthenticated !== true ? (
-        <></>
+        <>
+          <Container className="d-flex justify-content-center">
+            <div>
+              <span>Loading...</span>
+            </div>
+          </Container>
+        </>
       ) : (
         <>
-          <div className=" d-flex m-5">
+          <div className=" d-flex m-5 ">
             <span
               className="nav_notice"
               style={{ fontSize: '33px', marginLeft: '65px' }}
@@ -44,8 +104,8 @@ export default function WishList() {
           </div>
           <div className="wishList">
             <div className="row row-cols-1 row-cols-md-3 g-4">
-              {favoriteList.length > 0 ? (
-                favoriteList.map((item) => (
+              {groupedFavorite.length > 0 ? (
+                currentReviews.map((item) => (
                   <WishListItem key={item.BASKET_NO} item={item} />
                 ))
               ) : (
@@ -56,33 +116,42 @@ export default function WishList() {
                 </div>
               )}
             </div>
-            <ul className="pagination pagination-sm justify-content-center m-4">
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  &lt;
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  1
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  2
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  3
-                </a>
-              </li>
-              <li className="page-item">
-                <a className="page-link" href="#">
-                  &gt;
-                </a>
-              </li>
-            </ul>
+            <div className="custom-pagination d-flex justify-content-center align-content-center mb-4 mt-4">
+              <Pagination size="sm">
+                {pageRangeStart < 5 ? (
+                  <>{null}</>
+                ) : (
+                  <>
+                    <Pagination.Prev
+                      onClick={handlePrevPage}
+                      disabled={pageRangeStart === 0}
+                    />
+                  </>
+                )}
+
+                {Array.from({ length: 5 }, (_, index) => {
+                  const pageNumber = pageRangeStart + index + 1;
+                  if (pageNumber <= groupedFavorite.length) {
+                    return (
+                      <Pagination.Item
+                        key={pageNumber}
+                        active={pageNumber === currentPage}
+                        onClick={() => handlePageChange(pageNumber)}
+                      >
+                        {pageNumber}
+                      </Pagination.Item>
+                    );
+                  }
+                  return null;
+                })}
+                {pageRangeEnd < groupedFavorite.length && (
+                  <Pagination.Next
+                    onClick={handleNextPage}
+                    disabled={pageRangeEnd >= groupedFavorite.length}
+                  />
+                )}
+              </Pagination>
+            </div>
           </div>
         </>
       )}
