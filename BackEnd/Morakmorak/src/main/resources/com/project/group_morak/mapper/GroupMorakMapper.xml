@@ -46,7 +46,7 @@
 		img_url1
 		FROM GROUP_MORAK
 		WHERE type=#{type}
-		<!-- AND approval='Y' -->
+		AND approval='Y'
 	</select>
 
 	<select id="read">
