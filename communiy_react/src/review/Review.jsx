@@ -16,7 +16,10 @@ export default function Review() {
 
   const { isAuthenticated, userData } = useContext(AuthContext);
   const [reviewList, setReviewList] = useState([]);
+
   const [groupedReviews, setGroupedReviews] = useState([]);
+
+  //페이징
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
   const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
   const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
@@ -135,10 +138,17 @@ export default function Review() {
       <Container>
         <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
           <Pagination size="sm">
-            <Pagination.Prev
-              onClick={handlePrevPage}
-              disabled={pageRangeStart === 0}
-            />
+            {pageRangeStart < 5 ? (
+              <>{null}</>
+            ) : (
+              <>
+                <Pagination.Prev
+                  onClick={handlePrevPage}
+                  disabled={pageRangeStart === 0}
+                />
+              </>
+            )}
+
             {Array.from({ length: 5 }, (_, index) => {
               const pageNumber = pageRangeStart + index + 1;
               if (pageNumber <= groupedReviews.length) {
@@ -154,10 +164,12 @@ export default function Review() {
               }
               return null;
             })}
-            <Pagination.Next
-              onClick={handleNextPage}
-              disabled={pageRangeEnd >= groupedReviews.length}
-            />
+            {pageRangeEnd < groupedReviews.length && (
+              <Pagination.Next
+                onClick={handleNextPage}
+                disabled={pageRangeEnd >= groupedReviews.length}
+              />
+            )}
           </Pagination>
           {isAuthenticated ? (
             <Nav.Link
