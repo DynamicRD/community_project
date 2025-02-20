@@ -13,4 +13,6 @@ public interface MemberAdminMapper {
 	List<Map<String, Object>> getAllGroups(); // 모든 모임 조회
 
 	int approveGroup(@Param("groupNo") int groupNo); // 모임 승인 처리
+	
+	int rejectGroup(@Param("groupNo") int groupNo);
 }

@@ -54,6 +54,7 @@ const Community = () => {
 
       if (response.ok) {
         alert('모임이 승인되었습니다!');
+        window.location.reload();
         setCommunities((prev) =>
           prev.map((c) =>
             c.GROUP_NO === groupNo ? { ...c, APPROVAL: 'Y' } : c
@@ -65,6 +66,40 @@ const Community = () => {
       }
     } catch (error) {
       console.error('승인 오류:', error);
+      alert('서버 오류');
+    }
+  };
+
+  const handleReject = async (groupNo) => {
+    console.log('거절 요청 - groupNo:', groupNo);
+    if (!groupNo) {
+      alert('오류: groupNo 값이 없습니다.');
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `http://localhost:8080/admin/community/reject/${groupNo}`,
+        {
+          method: 'DELETE',
+        }
+      );
+
+      if (response.ok) {
+        alert('모임 신청이 거절되었습니다!');
+        window.location.reload();
+
+        // ✅ 신청 목록에서 제거
+        setCommunities((prev) => prev.filter((c) => c.groupNo !== groupNo));
+
+        setSelectedCommunity(null);
+      } else {
+        const errorText = await response.text();
+        console.error('거절 실패:', errorText);
+        alert('거절 실패: ' + errorText);
+      }
+    } catch (error) {
+      console.error('거절 오류:', error);
       alert('서버 오류');
     }
   };
@@ -188,14 +223,16 @@ const Community = () => {
                   handleApprove(selectedCommunity.GROUP_NO);
                 }}
               >
-                YES
+                승인
               </Button>
               <Button
                 variant="danger"
                 className="px-4"
-                onClick={() => setSelectedCommunity(null)}
+                onClick={() => {
+                  handleReject(selectedCommunity.GROUP_NO);
+                }}
               >
-                NO
+                거부
               </Button>
             </div>
           </Modal.Body>
