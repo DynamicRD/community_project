@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.project.common.config.SecretConfig;
+import com.project.group_morak.model.GroupMorak;
 import com.project.member.model.Member;
 import com.project.mypage.model.GroupMember;
 import com.project.mypage.model.Notification;
@@ -157,4 +158,11 @@ public class MypageController {
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid request");
 	        }
 	    }
+	 
+	// 최대 모임원 필터
+		@RequestMapping("/mineselect")
+		public List<GroupMember> getMineGroups(@RequestParam(defaultValue = "all") String category,@RequestParam(defaultValue = "1") int no) {
+			System.out.println("마이페이지 그룹 호출됨");
+			return service.getMineGroup(category,no);
+		}
 }

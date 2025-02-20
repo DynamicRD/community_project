@@ -42,5 +42,9 @@ public interface GroupMorakMapper {
 	public List<GroupMorak> getGroupsByCategory(String category);
 	
 	public List<GroupMorak> getGroupsByCategoryAll();
+	
+	public List<GroupMorak> getGroupsByCategory3(String category);
+	
+	public List<GroupMorak> getGroupsByCategoryAll3();
 
 }

@@ -15,7 +15,6 @@ public interface MemberAdminMapper {
 
 	int approveGroup(@Param("groupNo") int groupNo); // 모임 승인 처리
 
-	
 	int rejectGroup(@Param("groupNo") int groupNo);
 	
 	List<Map<String, Object>> getProfit();

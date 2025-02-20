@@ -70,6 +70,7 @@ const Community = () => {
     }
   };
 
+
   const handleReject = async (groupNo) => {
     console.log('거절 요청 - groupNo:', groupNo);
     if (!groupNo) {
@@ -103,6 +104,7 @@ const Community = () => {
       alert('서버 오류');
     }
   };
+
 
   return (
     <div className="user-table-container">
@@ -228,6 +230,7 @@ const Community = () => {
               <Button
                 variant="danger"
                 className="px-4"
+
                 onClick={() => {
                   handleReject(selectedCommunity.GROUP_NO);
                 }}

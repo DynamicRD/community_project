@@ -83,5 +83,21 @@
 		SELECT
 		no,content,is_read,reg_date from notification where no = #{no}
 	</select>
-
+	<select id="getMineGroup" resultType="com.project.mypage.model.GroupMember">
+		SELECT
+		gm.group_title,
+		gm.start_date,
+		gm.last_date,
+		gm.price,
+		mg.status
+		FROM member_group mg
+		JOIN group_morak gm ON mg.group_no = gm.group_no
+		WHERE mg.status != 'LEADER' and mg.no = #{no} and gm.last_date >
+		current_date
+	</select>
+	<select id="getMineLeaderGroup" resultType="com.project.mypage.model.GroupMember">
+		SELECT
+		group_title,start_date,last_date,price,approval as status from group_morak
+		where no = #{no}
+	</select>
 </mapper>

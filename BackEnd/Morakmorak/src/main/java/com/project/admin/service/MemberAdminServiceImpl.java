@@ -31,6 +31,7 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 	        return memberAdminMapper.approveGroup(groupNo) > 0;
 	    }
 
+
 	    @Override
 	    public boolean rejectGroup(int groupNo) {
 	        return memberAdminMapper.rejectGroup(groupNo) > 0;
