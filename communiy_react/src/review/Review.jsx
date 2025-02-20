@@ -1,174 +1,11 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Container, Nav } from 'react-bootstrap';
 import Pagination from 'react-bootstrap/Pagination';
+import { AuthContext } from '../context/AuthContext';
 
 import './Review.css';
 
-const reviewData = [
-  {
-    no: 1,
-    title: '안녕하세요',
-    writer: '문정배',
-    img: '/images/review1.png',
-    content:
-      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-    rating: 0,
-    tag: 'culture',
-  },
-  {
-    no: 2,
-    title: '안녕하세요2',
-    writer: '문정배2',
-    img: '/images/review1.png',
-    content:
-      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-    rating: 1,
-    tag: 'culture2',
-  },
-  {
-    no: 3,
-    title: '안녕하세요3',
-    writer: '문정배3',
-    img: '/images/review1.png',
-    content:
-      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-    rating: 2,
-    tag: 'culture3',
-  },
-  {
-    no: 4,
-    title: '안녕하세요4',
-    writer: '문정배4',
-    img: '/images/review1.png',
-    content:
-      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...4',
-    rating: 3,
-    tag: 'culture4',
-  },
-  {
-    no: 5,
-    title: '안녕하세요5',
-    writer: '문정배5',
-    img: '/images/review1.png',
-    content:
-      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...5',
-    rating: 4,
-    tag: 'culture5',
-  },
-  {
-    no: 6,
-    title: '안녕하세요13',
-    writer: '문정배6',
-    img: '/images/review1.png',
-    content:
-      '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...6',
-    rating: 5,
-    tag: 'culture6',
-  },
-];
-
 export default function Review() {
-  let item = [];
-  for (let number = 1; number <= 5; number++) {
-    item.push(
-      <Pagination.Item key={number} active={number === 1}>
-        {number}
-      </Pagination.Item>
-    );
-  }
-  const reviewData = [
-    {
-      no: 1,
-      title: '안녕하세요',
-      writer: '문정배',
-      img: '/images/review1.png',
-      content:
-        '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-      rating: 0,
-      tag: 'culture',
-    },
-    {
-      no: 2,
-      title: '안녕하세요2',
-      writer: '문정배2',
-      img: '/images/review1.png',
-      content:
-        '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-      rating: 1,
-      tag: 'culture2',
-    },
-    {
-      no: 3,
-      title: '안녕하세요3',
-      writer: '문정배3',
-      img: '/images/review1.png',
-      content:
-        '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...',
-      rating: 2,
-      tag: 'culture3',
-    },
-    {
-      no: 4,
-      title: '안녕하세요4',
-      writer: '문정배4',
-      img: '/images/review1.png',
-      content:
-        '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...4',
-      rating: 3,
-      tag: 'culture4',
-    },
-    {
-      no: 5,
-      title: '안녕하세요5',
-      writer: '문정배5',
-      img: '/images/review1.png',
-      content:
-        '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...5',
-      rating: 4,
-      tag: 'culture5',
-    },
-    {
-      no: 6,
-      title: '안녕하세요13',
-      writer: '문정배6',
-      img: '/images/review1.png',
-      content:
-        '내향적이고 조용히 고집스럽던 저의 일상에 너무나 따닷하고 긍정적인 변화를 준 멋진 모임입니다. 여러 플랫폼의...6',
-      rating: 5,
-      tag: 'culture6',
-    },
-  ];
-  const completedMeetings = [
-    {
-      name: '테크 세미나',
-      date: '2025-01-10',
-      endDate: '2025-01-10',
-      role: '참석자',
-      cost: '₩ 30,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-  ];
-
   const getStarImages = (rating) => {
     const stars = [];
     for (let i = 1; i <= 5; i++) {
@@ -177,16 +14,66 @@ export default function Review() {
     return stars;
   };
 
-  // Group reviews into sets of 3 items per row
-  const groupedReviews = [];
-  for (let i = 0; i < reviewData.length; i += 3) {
-    groupedReviews.push(reviewData.slice(i, i + 3));
+  const { isAuthenticated, userData } = useContext(AuthContext);
+  const [reviewList, setReviewList] = useState([]);
+
+  const [groupedReviews, setGroupedReviews] = useState([]);
+
+  //페이징
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
+  const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
+  const reviewsPerPage = 6;
+
+  // 리뷰값 DB에서 가져오기
+  function getList(url) {
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setReviewList(data);
+        console.log(data);
+      });
   }
+
+  useEffect(() => {
+    getList('http://localhost:8080/review/list');
+  }, []);
+
+  useEffect(() => {
+    const groupReviews = [];
+    for (let i = 0; i < reviewList.length; i += reviewsPerPage) {
+      groupReviews.push(reviewList.slice(i, i + reviewsPerPage));
+    }
+    setGroupedReviews(groupReviews);
+  }, [reviewList]);
+
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (pageRangeStart > 0) {
+      setPageRangeStart(pageRangeStart - 5);
+      setPageRangeEnd(pageRangeEnd - 5);
+    }
+  };
+
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (pageRangeEnd < groupedReviews.length) {
+      setPageRangeStart(pageRangeStart + 5);
+      setPageRangeEnd(pageRangeEnd + 5);
+    }
+  };
+
+  const currentReviews = groupedReviews[currentPage - 1] || [];
 
   return (
     <>
       <Container>
-        <div className=" d-flex m-5">
+        <div className="d-flex m-5">
           <span
             className="nav_notice"
             style={{ fontSize: '33px', marginLeft: '65px' }}
@@ -195,35 +82,37 @@ export default function Review() {
           </span>
         </div>
         <div className="review_board mt-4">
-          <ul id="board_list" className="list-unstyled">
-            {groupedReviews.map((group, index) => (
-              <div
-                className="d-flex justify-content-start gap-5 mb-4"
-                key={index}
-              >
-                {group.map((object) => (
-                  <div className="review_item" key={object.no}>
+          <ul
+            id="board_list"
+            className="list-unstyled d-flex justify-content-center"
+          >
+            {groupedReviews.length > 0 ? (
+              <div className="review_board_list d-flex flex-wrap gap-5 mb-4">
+                {currentReviews.map((object) => (
+                  <div className="review_item" key={object.REVIEW_NO}>
                     <div
-                      className="club_name d-flex align-content-cetner ms-4 mb-1"
+                      className="club_name d-flex mb-1"
                       style={{
                         fontSize: '14px',
                       }}
                     >
-                      {completedMeetings[0].name}
+                      {object.GROUP_TITLE}
                     </div>
-                    <Nav.Link href="/review/Read">
+                    <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
                       <img
-                        src={object.img}
+                        src={`http://localhost:8080/upload/${object.IMG_URL}`}
                         alt="review"
                         className="review_img"
                       />
                     </Nav.Link>
 
                     <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
-                      <Nav.Link href="/review/Read">{object.title}</Nav.Link>
+                      <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
+                        {object.REVIEW_TITLE}
+                      </Nav.Link>
                       <span style={{ fontSize: '12px' }}>
                         평점&nbsp;:&nbsp;
-                        {getStarImages(object.rating).map((star, index) => (
+                        {getStarImages(object.STAR).map((star, index) => (
                           <img
                             key={index}
                             src={star}
@@ -236,16 +125,64 @@ export default function Review() {
                   </div>
                 ))}
               </div>
-            ))}
+            ) : (
+              <div className="d-flex justify-content-center w-100">
+                <span className="WishListNo_meetings m-5">
+                  리뷰가 없습니다. 리뷰를 작성 해 주세요!
+                </span>
+              </div>
+            )}
           </ul>
         </div>
       </Container>
       <Container>
-        <div className="d-flex justify-content-center align-content-center mb-3">
-          <Pagination size="sm">{item}</Pagination>
-          <Nav.Link href="/mypage/reviews" className="reviewRegist">
-            <span>작성 하기</span>
-          </Nav.Link>
+        <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
+          <Pagination size="sm">
+            {pageRangeStart < 5 ? (
+              <>{null}</>
+            ) : (
+              <>
+                <Pagination.Prev
+                  onClick={handlePrevPage}
+                  disabled={pageRangeStart === 0}
+                />
+              </>
+            )}
+
+            {Array.from({ length: 5 }, (_, index) => {
+              const pageNumber = pageRangeStart + index + 1;
+              if (pageNumber <= groupedReviews.length) {
+                return (
+                  <Pagination.Item
+                    key={pageNumber}
+                    active={pageNumber === currentPage}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </Pagination.Item>
+                );
+              }
+              return null;
+            })}
+            {pageRangeEnd < groupedReviews.length && (
+              <Pagination.Next
+                onClick={handleNextPage}
+                disabled={pageRangeEnd >= groupedReviews.length}
+              />
+            )}
+          </Pagination>
+          {isAuthenticated ? (
+            <Nav.Link
+              href={`/mypage/reviews/${userData?.no}`}
+              className="reviewRegist"
+            >
+              <span>작성 하기</span>
+            </Nav.Link>
+          ) : (
+            <Nav.Link href="/" className="reviewRegist">
+              <span>홈으로</span>
+            </Nav.Link>
+          )}
         </div>
       </Container>
     </>

@@ -1,30 +1,31 @@
 drop table basket;
-drop table group1;
-drop table comment1;
+drop table group_morak;
+drop table comments;
 drop table user_group;
 drop table group_info;
 drop table review;
-drop table member;
 drop table notification;
 drop table notice;
 drop table faq;
 drop table charge;
 drop table messages;
+drop table visit_log
+drop table member;
 
 
 create sequence basket_seq 
 start with 1 
 increment by 1;
 
-create sequence group1_seq 
+create sequence group_seq 
 start with 1 
 increment by 1;
 
-create sequence comment1_seq 
+create sequence comments_seq 
 start with 1 
 increment by 1;
 
-create sequence user_group_seq 
+create sequence member_group_seq 
 start with 1 
 increment by 1;
 
@@ -63,53 +64,97 @@ increment by 1;
 create sequence visit_seq
 start with 1
 increment by 1;
+
+create sequence transaction_seq
+start with 1
+increment by 1;
+
+create sequence report_seq
+start with 1
+increment by 1;
+
+create sequence notification_seq
+start with 1
+increment by 1;
 -- 모임장바구니
 create table basket(
-    b_id number(6) not null,
-    id number(6) not null,
-    g_id number(6) not null,
+    basket_no number(6) not null,
+    no number(6) not null,
+    group_no number(6) not null,
     price number(6),                    --비용
     reg_date date default sysdate,       --신청일
     start_date date,                     --모임시작일
     last_date date,                      --모임종료일
     status varchar2(20),                --찜, 승인대기, 종료
-    primary key(b_id)
+    primary key(basket_no)
 );
+ALTER TABLE BASKET
+ADD CONSTRAINT unique_basket UNIQUE (NO, GROUP_NO);
 
+INSERT INTO MEMBER_GROUP
+VALUES(member_group_seq.nextval, 1, 2, 'LEADER', 'PR');
+SELECT * FROM MEMBER_GROUP;
 
+SELECT USER_MAX FROM GROUP_MORAK WHERE GROUP_NO = 1;
+SELECT COUNT(*) FROM MEMBER_GROUP WHERE GROUP_NO = 15;
+select * from group_morak;
+select * from member_group;
+select * from report;
+delete from group_morak where group_title = '1수정';
+commit;
+select * from member;
+update member set no=3 where no = 1;
 
+select * from group_morak;
 -- 모임
-create table group1(
-    g_id number(6) not null,
-    id number(6) not null,              --모임장
-    g_title varchar2(100),                --모임명
+create table group_morak(
+    group_no number(6) not null,
+    no number(6) not null,              --모임장
+    group_title varchar2(100),                --모임명
     reg_date date default sysdate,       --개설일
     category varchar2(50),                 --카테고리
     user_max number(3),                 --최대모임원
     price number(6),                    --비용
     area varchar2(50),                  --모임구역
-    address varchar2(100),              --일반주소
+    addr1 varchar2(100),              --일반주소
+    addr2 varchar2(100),       --상세주소
     latitude varchar2(30),              --위도
     longitude varchar2(30),             --경도
-    detail_address varchar2(100),       --상세주소
     start_date date,                     --모임시작일
     last_date date,                      --모임종료일
-    comment1 varchar2(255),             --자기PR
-    comment2 varchar2(255),             --모임소개글
-    status varchar2(20),                --관리자 승인여부
+    comment1 varchar2(500),             --자기PR
+    comment2 varchar2(1000),             --모임소개글 
+    approval varchar2(20) DEFAULT 'N',                --관리자 승인여부
     views number(6),                    --조회수
-    img_url varchar2(50),               --이미지
+     img_url1 varchar2(100),               --이미지1
+    img_url2 varchar2(100),               --이미지2
+    img_url3 varchar2(100),               --이미지3
     type varchar2(20),                   --정기모임,소모임 구분
-    primary key(g_id)
+    primary key(group_no)
 );
 
+alter table group_morak modify img_url1 varchar2(100);
+alter table group_morak modify img_url2 varchar2(100);
+alter table group_morak modify img_url3 varchar2(100);
+alter table member_group add pr varchar2(500);
 
-
+SELECT
+		gm.group_no,
+		gm.group_title,
+		gm.area,
+		gm.img_url1,
+		gm.start_date
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		WHERE gm.category = 'culture'
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 6 ROWS ONLY;
+select * from member;
 -- 댓글(답변형)
-create table comment1(
-    c_id number(6) not null,
-    id number(6) not null,
-    r_id number(6) not null,
+create table comments(
+    comments_no number(6) not null,
+    no number(6) not null,
+    review_no number(6) not null,
     content varchar2(255),
     ref number(5,0) default 0,
     step number(3,0) default 0,
@@ -117,46 +162,45 @@ create table comment1(
     num_ref number(7,0) default 0,
     nickname varchar2(50),               --닉네임
     reg_date date default sysdate,
-    primary key(c_id)
+    isblacked varchar2(10) default 'N',
+    primary key(comments_no)
 );
+select * from member;
+update member set id = 'aaaaa' where phone = 01049245948;
+delete from member where no = 41;
+commit;
 
-
-
--- 모임-사용자
-create table user_group(
-    u_g_id number(6),
-    id number(6) not null,
-    g_id number(6) not null,
-    status varchar2(20)                  --찜, 승인대기, 멤버, 모임장
+create table member_group(
+    member_group_no number(6),
+    no number(6) not null,
+    group_no number(6) not null,
+    status varchar2(20),             --승인대기, 멤버, 모임장
+    primary key(member_group_no)
 );
-
-
-
--- 모임 이미지
-create table group_info(
-    g_info_id number(6) not null,
-    g_id number(6) not null,
-    img_url varchar2(50),                 --사진
-    primary key(g_info_id)
-);
-
+--같은 유저가 같은 모임 두번 신청 못하게 unique처리
+ALTER TABLE MEMBER_GROUP
+ADD CONSTRAINT UNIQUE_MEMBER_GROUP UNIQUE (NO, GROUP_NO);
 
 
 -- 리뷰게시판
 create table review(
-    r_id number(6) not null,
-    id number(6) not null,
-    g_id number(6) not null,
-    r_title varchar2(50),
+    review_no number(6) not null,
+    no number(6) not null,
+    group_no number(6) not null,
+    review_title varchar2(50),
     img_url varchar2(50),
     content varchar2(255),
     views number(6),                     --조회수
     comments number(4),                  --댓글수
     star number(1) default 0,            --별점
-    category varchar2(50),               --카테고리
-    primary key(r_id)
-);
+    category varchar2(50),     --카테고리
+    reg_date DATE DEFAULT SYSDATE,
+    isblacked varchar2(10) default 'N',
+    primary key(review_no)
 
+);
+ALTER TABLE member MODIFY img_url VARCHAR2(255);
+commit;
 select * from member;
 drop table member;
 -- 사용자
@@ -180,75 +224,152 @@ create table member(
     star_sum number(6) default 0,        --별점총합
     black number(6) default 0,           --신고횟수
     reg_date date default sysdate,        --가입일
-    img_url varchar2(50) default '',                 --사진
+    img_url varchar2(255) default '',                 --사진
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
-update member set role=1 where id = 'aaaaa';
+INSERT INTO member (
+    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
+    star_sum, black, reg_date, img_url, self_pr
+) VALUES (
+    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
+    'none', 'none', 'admin', 'admin', 
+    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), 'male', 
+    100000, '12345', 'Seoul', 'Admin Street 1', 
+    0, 0, SYSDATE, '', '관리자 계정입니다.'
+);
 commit;
+
+commit;
+update member set provider = 'kakao' where no =26;
+select * from member;
+delete from member where no = 73;
 SELECT *
 		FROM Member
 		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 
-
+        INSERT INTO member (
+		no, email, name, nickname, birth, gender, zip_code, addr1, addr2,
+		provider, provider_id
+		) VALUES ( 
+		member_seq.nextval, 1,2, 3,
+		sysdate, 1, 1, 1,
+		1, 1, 1
+		);
 -- 알림
 create table notification(
-    n_id number(6) not null,
-    id number(6) not null,
+    notification_no number(6) not null,
+    no number(6) not null,
     content varchar2(255),
     is_read varchar2(1) default 'N',     --읽음여부
     reg_date date default sysdate,        --알림일
-    primary key(n_id)
+    primary key(notification_no)
 );
-
-
+insert into notification (notification_no,no,content) values (notification_seq.nextval, 45,'안녕하세요');
+commit;
 -- 공지사항
 create table notice(
-    n_id number(6) not null,
-    n_title varchar2(50),
+    notice_no number(6) not null,
+   notice_title varchar2(50),
     content varchar2(255),
     reg_date date default sysdate,
-    primary key(n_id)
+    primary key(notice_no)
 );
 
 
 
 -- FAQ
 create table faq(
-    n_id number(6) not null,
-    f_title varchar2(50),
+    faq_no number(6) not null,
+    faq_title varchar2(50),
     reg_date date default sysdate,
-    content varchar2(255)
+    content varchar2(255),
+    primary key(faq_no)
 );
 
 
 
 --코인 충전 내역 테이블
 create table charge(
-    id NUMBER GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    charge_no number(6)  not null,
     amount number(6),          ---충전금액
     reg_date date,
-    u_id number(6) not null   ---사용자 pk
+    no number(6) not null,   ---사용자 pk
+    primary key(charge_no)
 );
 
 
 
 -- 채팅내역 DB 저장
 CREATE TABLE messages (
-    id NUMBER GENERATED BY DEFAULT ON NULL AS IDENTITY PRIMARY KEY,
+    message_no number(6),
     sender VARCHAR2(100) NOT NULL,
     content CLOB NOT NULL,
     timestamp NUMBER NOT NULL,
     room_code VARCHAR2(50) NOT NULL,
-    firebase_message_id VARCHAR2(255) UNIQUE
+    firebase_message_id VARCHAR2(255) UNIQUE,
+    primary key(message_no)
 );
+-- 신고
+create table report(
+    rep_no number(6),
+    reporter varchar2(50),
+    reported varchar2(50),
+    reason varchar2(255),
+    rep_date date,
+    rep_status varchar2(1) default 'N',
+    primary key(rep_no)
+    );
 
-
--- 방문 기록 테이블 추가
+-- 방문기록
 create table visit_log(
     v_id number(6),
     ip varchar2(50),
-    visit_time timestamp default current_timestamp,
+    visit_date date default sysdate,
     visit_url varchar2(300),
     primary key(v_id)
+    );
+commit;
+--거래내역 테이블
+drop table transaction;
+create table Transaction_log(
+    transaction_no number(6),
+    no number(6),
+    type varchar2(100),
+    amount number(7),
+    reg_date date default sysdate,
+    primary key(transaction_no)
+);
+INSERT INTO Transaction_log (transaction_no, no, type, amount)  
+VALUES (2, 22, 'Deposit', 50000);
+commit;
+select * from transaction_log;
+insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);
+
+select img_url1 from group_morak;
+select MONEY from member;
+DELETE FROM MEMBER_GROUP WHERE STATUS = 'WAITING';
+COMMIT;
+COMMIT;
+    SELECT PRICE FROM GROUP_MORAK WHERE GROUP_NO=26;
+SELECT MONEY FROM MEMBER;
+SELECT * FROM GROUP_MORAK;
+SELECT * FROM MEMBER;
+UPDATE MEMBER SET NO = 1 WHERE NO = 3;
+UPDATE MEMBER SET MONEY = MONEY + (SELECT PRICE FROM GROUP_MORAK WHERE GROUP_NO = 26)
+		WHERE NO = 2;
+SELECT * FROM MEMBER_GROUP;
+        SELECT COUNT(*) -1 FROM MEMBER_GROUP
+		WHERE GROUP_NO = 26;
+    
+--관리자
+INSERT INTO member (
+    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
+    star_sum, black, reg_date, img_url, self_pr
+) VALUES (
+    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
+    'none', 'none', 'admin', 'admin', 
+    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), 'male', 
+    100000, '12345', 'Seoul', 'Admin Street 1', 
+    0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
 

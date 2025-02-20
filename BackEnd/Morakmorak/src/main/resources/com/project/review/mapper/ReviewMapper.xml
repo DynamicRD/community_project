@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.review.mapper.ReviewMapper">
+
+<!--	<insert id="insertReview">
+		INSERT INTO REVIEW (R_ID, ID, G_ID, R_TITLE, IMG_URL, CONTENT, STAR)
+		VALUES (REVIEW_SEQ.NEXTVAL, 1, 1, #{title}, #{imageUrl, jdbcType=BLOB},
+		#{content}, #{star})
+	</insert>
+-->
+
+	<select id="listReview" resultType="java.util.Map">
+		SELECT R.REVIEW_NO AS REVIEW_NO, R.NO AS NO, R.GROUP_NO AS GROUP_NO, R.REVIEW_TITLE AS REVIEW_TITLE, R.IMG_URL AS IMG_URL, R.CONTENT AS CONTENT, R.VIEWS AS VIEWS,
+		R.COMMENTS AS COMMENTS, R.STAR AS STAR, R.CATEGORY AS CATEGORY, GROUP_TITLE FROM REVIEW R LEFT JOIN GROUP_MORAK G ON R.GROUP_NO = G.GROUP_NO ORDER BY REVIEW_NO DESC
+	</select>
+
+	<insert id="insertReview">
+		INSERT INTO REVIEW (REVIEW_NO, NO, GROUP_NO, REVIEW_TITLE, IMG_URL,
+		CONTENT, STAR)
+		VALUES (REVIEW_SEQ.NEXTVAL, #{userNo}, #{groupNo}, #{title}, #{fileName}, #{content},
+		#{star})
+	</insert>
+
+	<select id="readReview" resultType="java.util.Map">
+		SELECT R.REVIEW_NO AS REVIEW_NO , R.NO AS NO, R.GROUP_NO AS GROUP_NO,
+		R.REVIEW_TITLE AS REVIEW_TITLE, R.IMG_URL AS IMG_URL, R.CONTENT AS
+		CONTENT, R.VIEWS AS VIEWS,
+		R.COMMENTS AS COMMENTS, R.STAR AS STAR, G.GROUP_TITLE AS GROUP_TITLE,
+		R.CATEGORY AS CATEGORY, NICKNAME FROM REVIEW R LEFT JOIN GROUP_MORAK G
+		ON R.GROUP_NO = G.GROUP_NO
+		LEFT JOIN MEMBER M ON R.NO = M.NO
+		WHERE REVIEW_NO = #{idx}
+	</select>
+
+	<insert id="replyInsert">
+		INSERT INTO COMMENTS (COMMENTS_NO, NO, NICKNAME, REVIEW_NO, CONTENT) VALUES
+		(COMMENTS_SEQ.NEXTVAL, #{userId}, #{userNickName}, #{reviewNo}, #{content})
+	</insert>
+
+	<select id="replyList" resultType="java.util.Map">
+		SELECT
+		C.COMMENTS_NO AS "COMMENT",
+		C.NO AS NO,
+		C.NICKNAME AS NICKNAME,
+		C.REVIEW_NO AS REVIEW_NO,
+		C.CONTENT AS CONTENT,
+		TO_CHAR(C.REG_DATE, 'YYYY-MM-DD HH24:MI') AS REG_DATE
+		FROM COMMENTS C
+		LEFT JOIN REVIEW R ON C.REVIEW_NO = R.REVIEW_NO
+		WHERE C.REVIEW_NO = #{idx}
+		ORDER BY C.COMMENTS_NO
+	</select>
+
+	<select id="groupList" resultType="java.util.Map">
+		<![CDATA[
+			SELECT MG.MEMBER_GROUP_NO AS MEMBER_GROUP_NO, MG.NO AS NO, MG.GROUP_NO AS GROUP_NO, G.NO AS MC, (SELECT NICKNAME FROM MEMBER M LEFT JOIN GROUP_MORAK G ON G.NO = M.NO WHERE G.NO = M.NO) AS MC_NICKNAME, G.GROUP_TITLE AS GROUP_TITLE, 
+			TO_CHAR(G.START_DATE, 'yyyy-MM-dd HH24:MI') AS START_DATE, 
+			TO_CHAR(G.LAST_DATE, 'yyyy-MM-dd HH24:MI') AS LAST_DATE,
+			G.PRICE AS PRICE, G.IMG_URL1 AS IMG_URL1
+			FROM MEMBER_GROUP MG 
+			LEFT JOIN MEMBER M ON MG.NO = M.NO
+			LEFT JOIN GROUP_MORAK G ON MG.GROUP_NO = G.GROUP_NO 
+			WHERE STATUS = 'LEADER' AND MG.NO = #{idx}
+			ORDER BY MEMBER_GROUP_NO DESC
+		]]>
+		<!--  AND LAST_DATE < SYSDATE -->
+	</select>
+
+	<select id="readGroup" resultType="java.util.Map">
+		SELECT GROUP_NO, NO, GROUP_TITLE,TO_CHAR(START_DATE, 'yyyy-MM-dd
+		HH24:MI') AS START_DATE,TO_CHAR(LAST_DATE, 'yyyy-MM-dd HH24:MI') AS
+		LAST_DATE, PRICE FROM GROUP_MORAK WHERE GROUP_NO = #{idx}
+	</select>
+
+	<delete id="deleteReview">
+		DELETE FROM REVIEW WHERE REVIEW_NO = #{idx}
+	</delete>
+	
+	<delete id="deleteReply">
+		DELETE FROM COMMENTS WHERE COMMENTS_NO = #{idx}
+	</delete>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>

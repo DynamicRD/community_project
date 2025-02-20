@@ -1,8 +1,24 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Form, Modal } from 'react-bootstrap';
+import { AuthContext } from '../../context/AuthContext';
 
-export default function GroupJoinForm({ show, onHide }) {
-  const [pr, setPr] = useState();
+export default function GroupJoinForm({ show, onHide, group_no }) {
+  const { isAuthenticated, userData } = useContext(AuthContext);
+  const [items, setGroupDetail] = useState([]);
+  useEffect(() => {
+    fetch(`http://localhost:8080/group/detail?group_no=${group_no}`)
+      .then((res) => res.json())
+      .then((dataArray) => {
+        setGroupDetail(dataArray);
+      });
+  }, [group_no]);
+  const [pr, setPr] = useState(null);
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('ko-KR', {
+      style: 'currency',
+      currency: 'KRW',
+    }).format(value);
+  };
 
   return (
     <Modal show={show} onHide={onHide}>
@@ -24,30 +40,64 @@ export default function GroupJoinForm({ show, onHide }) {
           </Form.Group>
         </Form>
         <div>
-          <p>현재 보유 포인트 10,000원</p>
-          <p className="text-danger">차감 예정 포인트 10,000원</p>
+          <p>
+            현재 보유 포인트 {formatCurrency(userData?.money)}원<br />
+            <span className="text-danger">
+              차감 예정 포인트 {formatCurrency(items.PRICE)}원
+            </span>
+          </p>
         </div>
       </Modal.Body>
       <Modal.Footer>
         <Button
           variant="primary"
           onClick={() => {
+            if (!pr) {
+              alert('한마디를 작성해주세요.');
+              return;
+            }
+            if(items.PRICE>userData?.money){
+              alert('포인트가 부족합니다.');
+              return;
+            }
             if (confirm('신청하시겠습니까?')) {
               const form = new FormData();
-              form.append('pr', pr.current.value);
-              fetch('http://localhost:8080/member/statusUpdate', {
-                method: 'POST',
+              form.append('group_no', Number(items.GROUP_NO));
+              form.append('no', userData?.no); // 회원 아이디
+              form.append('pr', pr); // 신청 폼
+              form.append('price', Number(items.PRICE));
+              fetch('http://localhost:8080/group/join', {
+                method: 'post',
                 body: form,
               })
-                .then((response) => response.json())
-                .then((data) => {
-                  alert(
-                    '신청이 완료되었습니다. 모임장의 승인 후 활동이 가능합니다.'
-                  );
+                .then((response) => {
+                  if (!response.ok) {
+                    // 응답이 실패하면 JSON 형식으로 오류 메시지를 받음
+                    return response.text().then((errorData) => {
+                      try {
+                        // 서버에서 문자열로 받은 응답을 JSON으로 파싱 시도
+                        const parsedError = JSON.parse(errorData);
+                        throw new Error(
+                          parsedError.message ||
+                            '처리에 실패했습니다. 다시 시도해주세요.'
+                        );
+                      } catch (e) {
+                        // JSON 파싱 실패 시 그냥 문자열로 처리
+                        throw new Error(
+                          errorData || '처리에 실패했습니다. 다시 시도해주세요.'
+                        );
+                      }
+                    });
+                  }
+                  return response.text(); // 정상 응답일 경우
+                })
+                .then((message) => {
+                  alert(message); // 성공 시 반환된 메시지
+                  onHide(true);
                 })
                 .catch((error) => {
-                  console.error('Error:', error);
-                  alert('신청에 실패했습니다. 다시 시도해주세요.');
+                  alert(error.message); // 서버에서 넘긴 오류 메시지
+                  onHide(true);
                 });
             }
           }}

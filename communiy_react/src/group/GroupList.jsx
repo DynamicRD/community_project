@@ -1,121 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import './GroupList.css';
-import { Col, Container, Row } from 'react-bootstrap';
-import Button from 'react-bootstrap/Button';
+import { Container, Pagination } from 'react-bootstrap';
 import Collapse from 'react-bootstrap/Collapse';
-import GroupItem from './GroupItem';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link } from 'react-router';
+import GroupItem from './component/GroupItem';
+import { AuthContext } from '../context/AuthContext'; //
 
 function GroupList({ type }) {
-  //목업데이터
-  const items = [
-    {
-      groupList: {
-        g_id: '1',
-        g_title: 'Title 1',
-        comment1: 'Comment 1',
-        img_url: '/images/card01.png',
-        category: 'culture',
-        area: 'seoul',
-        reg_date: '2025-02-01',
-        star: 4,
-      },
-    },
-    {
-      groupList: {
-        g_id: '2',
-        g_title: 'Title 2',
-        comment1: 'Comment 2',
-        img_url: '/images/slide01.png',
-        category: 'food',
-        area: 'gyeong-gi',
-        reg_date: '2025-01-15',
-        star: 5,
-      },
-    },
-    {
-      groupList: {
-        g_id: '3',
-        g_title: 'Title 3',
-        comment1: 'Comment 3',
-        img_url: '/images/card01.png',
-        category: 'hobby',
-        area: 'incheon',
-        reg_date: '2025-01-20',
-        star: 3,
-      },
-    },
-    {
-      groupList: {
-        g_id: '4',
-        g_title: 'Title 4',
-        comment1: 'Comment 4',
-        category: 'travel',
-        area: 'gangwon',
-        reg_date: '2025-01-25',
-        star: 2,
-      },
-    },
-    {
-      groupList: {
-        g_id: '5',
-        g_title: 'Title 5',
-        comment1: 'Comment 4',
-        category: 'edu',
-        area: 'chungcheong',
-        reg_date: '2025-01-10',
-        star: 1,
-      },
-    },
-    {
-      groupList: {
-        g_id: '6',
-        g_title: 'Title 6',
-        comment1: 'Comment 4',
-        category: 'culture',
-        area: 'jeolla',
-        reg_date: '2025-01-05',
-        star: 4,
-      },
-    },
-    {
-      groupList: {
-        g_id: '7',
-        g_title: 'Title 7',
-        comment1: 'Comment 4',
-        category: 'food',
-        area: 'gyeongsang',
-        reg_date: '2025-01-30',
-        star: 5,
-      },
-    },
-    {
-      groupList: {
-        g_id: '8',
-        g_title: 'Title 8',
-        comment1: 'Comment 4',
-        category: 'hobby',
-        area: 'jeju',
-        reg_date: '2025-01-28',
-        star: 3,
-      },
-    },
-    {
-      groupList: {
-        g_id: '9',
-        g_title: 'Title 9',
-        comment1: 'Comment 4',
-        category: 'travel',
-        area: 'seoul',
-        reg_date: '2025-01-18',
-        star: 2,
-      },
-    },
-  ];
+  const { isAuthenticated, userData } = useContext(AuthContext);
+  const [items, setGroupList] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 9;
 
-  //필터기능
+  useEffect(() => {
+    fetch(`http://localhost:8080/group/list?type=${type}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setGroupList(data);
+        setFilteredItems(data); // 초기 데이터 설정
+      });
+  }, [type]);
+
+  // 필터링 상태 변수
   const [open, setOpen] = useState(false);
   const [rdo, setRdo] = useState([]);
   const [rdo2, setRdo2] = useState([]);
@@ -123,62 +31,76 @@ function GroupList({ type }) {
   const [filteredItems, setFilteredItems] = useState(items);
   const [selectOpt, setSelectOpt] = useState('latest');
 
+  // 필터링 로직
   useEffect(() => {
-    const filtered = items.filter(({ groupList }) => {
-      const categoryMatch = rdo.length === 0 || rdo.includes(groupList.category);
-      const areaMatch = rdo2.length === 0 || rdo2.includes(groupList.area);
-      const titleMatch = groupList.g_title.toLowerCase().includes(searchTerm.toLowerCase());
+    const filtered = items.filter((item) => {
+      const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
+      const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
+      const titleMatch = item.GROUP_TITLE.toLowerCase().includes(
+        searchTerm.toLowerCase()
+      );
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
-  }, [rdo, rdo2]);
+  }, [rdo, rdo2, searchTerm, items]);
 
-  useEffect(() => {
-    let sortedItems = [...filteredItems];
-    if (selectOpt === 'latest') {
-      sortedItems.sort((a, b) => new Date(b.groupList.reg_date) - new Date(a.groupList.reg_date));
-    } else if (selectOpt === 'grade') {
-      sortedItems.sort((a, b) => b.groupList.star - a.groupList.star);
-    }
-    setFilteredItems(sortedItems);
-  }, [selectOpt]);
+  // 페이지네이션 관련 계산
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const totalPages = Math.ceil(filteredItems.length / itemsPerPage);
+  const paginatedReports = filteredItems.slice(
+    startIndex,
+    startIndex + itemsPerPage
+  );
 
+  // 카테고리 필터 변경
   const handelCategoryChange = (e) => {
     const { value, checked } = e.target;
-
     if (checked) {
       setRdo((prev) => [...prev, value]);
     } else {
-      // 체크박스를 해제했을 때 선택된 값 배열에서 제거
       setRdo((prev) => prev.filter((item) => item !== value));
     }
-    console.log('category change');
-    console.log(rdo);
   };
 
+  // 지역 필터 변경
   const handelAreaChange = (e) => {
     const { value, checked } = e.target;
-
     if (checked) {
       setRdo2((prev) => [...prev, value]);
     } else {
       setRdo2((prev) => prev.filter((item) => item !== value));
     }
-    console.log('area change');
-    console.log(rdo2);
   };
 
+  // 정렬 옵션 변경
   const handelSelectChange = (e) => {
     setSelectOpt(e.target.value);
-    console.log(selectOpt);
   };
 
+  // 정렬 기능
+  useEffect(() => {
+    let sortedItems = [...items]; // filteredItems 대신 items를 사용
+    if (selectOpt === 'latest') {
+      // 최신 등록 순 정렬
+      sortedItems.sort((a, b) => new Date(b.REG_DATE) - new Date(a.REG_DATE));
+    } else if (selectOpt === 'start_date') {
+      // 시작 날짜 순 정렬
+      sortedItems.sort(
+        (a, b) => new Date(a.START_DATE) - new Date(b.START_DATE)
+      );
+    }
+    setFilteredItems(sortedItems); // 정렬된 items를 filteredItems에 설정
+  }, [selectOpt, items]); // selectOpt나 items가 변경될 때마다 실행
+
+  // 검색 기능
   const handleSearch = (e) => {
     e.preventDefault();
-    const filtered = items.filter(({ groupList }) => {
-      const categoryMatch = rdo.length === 0 || rdo.includes(groupList.category);
-      const areaMatch = rdo2.length === 0 || rdo2.includes(groupList.area);
-      const titleMatch = groupList.g_title.toLowerCase().includes(searchTerm.toLowerCase());
+    const filtered = items.filter((item) => {
+      const categoryMatch = rdo.length === 0 || rdo.includes(item.CATEGORY);
+      const areaMatch = rdo2.length === 0 || rdo2.includes(item.AREA);
+      const titleMatch = item.G_TITLE.toLowerCase().includes(
+        searchTerm.toLowerCase()
+      );
       return categoryMatch && areaMatch && titleMatch;
     });
     setFilteredItems(filtered);
@@ -186,7 +108,17 @@ function GroupList({ type }) {
 
   return (
     <>
-      <Link to={'/group/regist'} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Link
+        to={'/group/regist'}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+        onClick={(e) => {
+          if (!isAuthenticated) {
+            e.preventDefault();
+            alert('로그인 후 이용 가능합니다.');
+            window.location.href = '/login';
+          }
+        }}
+      >
         <div className="group_banner">
           <span>
             모임 개설하러 가기&nbsp;
@@ -194,7 +126,7 @@ function GroupList({ type }) {
           </span>
         </div>
       </Link>
-      <Container >
+      <Container style={{ maxWidth: '85%' }}>
         <div className="group_list">
           <h1 className="p-2 group_span">
             {type === 'regular' ? `정기모임` : '동행ㆍ소모임'}
@@ -225,21 +157,33 @@ function GroupList({ type }) {
                 </div>
                 <h5>지역</h5>
                 <div onChange={handelAreaChange}>
-                  <input type="checkbox" value="seoul" name="area" />
+                  <input type="checkbox" value="서울" name="area" />
                   &nbsp;서울
-                  <input type="checkbox" value="gyeong-gi" name="area" />
+                  <input type="checkbox" value="경기" name="area" />
                   &nbsp;경기
-                  <input type="checkbox" value="incheon" name="area" />
+                  <input type="checkbox" value="인천" name="area" />
                   &nbsp;인천
-                  <input type="checkbox" value="gangwon" name="area" />
+                  <input type="checkbox" value="강원" name="area" />
                   &nbsp;강원
-                  <input type="checkbox" value="chungcheong" name="area" />
+                  <input type="checkbox" value="충청" name="area" />
                   &nbsp;충청
-                  <input type="checkbox" value="jeolla" name="area" />
+                  <input type="checkbox" value="세종" name="area" />
+                  &nbsp;세종
+                  <input type="checkbox" value="대전" name="area" />
+                  &nbsp;대전
+                  <input type="checkbox" value="전라" name="area" />
                   &nbsp;전라
-                  <input type="checkbox" value="gyeongsang" name="area" />
+                  <input type="checkbox" value="광주" name="area" />
+                  &nbsp;광주
+                  <input type="checkbox" value="경상" name="area" />
                   &nbsp;경상
-                  <input type="checkbox" value="jeju" name="area" />
+                  <input type="checkbox" value="대구" name="area" />
+                  &nbsp;대구
+                  <input type="checkbox" value="울산" name="area" />
+                  &nbsp;울산
+                  <input type="checkbox" value="부산" name="area" />
+                  &nbsp; 부산
+                  <input type="checkbox" value="제주" name="area" />
                   &nbsp;제주
                 </div>
               </div>
@@ -262,53 +206,48 @@ function GroupList({ type }) {
             </div>
             <select onChange={handelSelectChange}>
               <option value="latest">최신 등록 순</option>
-              <option value="grade">별점 순</option>
+              <option value="start_date">시작 날짜 빠른 순</option>
             </select>
           </div>
           <hr />
           <div>
             <div className="row row-cols-1 row-cols-md-3 g-4">
-              {filteredItems.map(({ groupList }) => (
-                <GroupItem
-                  g_id={groupList.g_id}
-                  g_title={groupList.g_title}
-                  img_url={groupList.img_url}
-                  comment1={groupList.comment1}
-                  start_date={groupList.start_date}
-                  reg_date={groupList.reg_date}
-                  star={groupList.star}
-                  key={groupList.g_id}
-                />
-              ))}
+              {paginatedReports.length > 0 ? (
+                paginatedReports.map((item) => (
+                  <GroupItem key={item.GROUP_NO} item={item} />
+                ))
+              ) : (
+                <div className="d-flex justify-content-center w-100">
+                  <h3 className="no-meetings m-5 group_span">
+                    모임이 없습니다.
+                  </h3>
+                </div>
+              )}
             </div>
           </div>
-          <ul className="pagination pagination-sm justify-content-center m-5">
-            <li className="page-item">
-              <a className="page-link" href="#">
-                &lt;
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                1
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                2
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                3
-              </a>
-            </li>
-            <li className="page-item">
-              <a className="page-link" href="#">
-                &gt;
-              </a>
-            </li>
-          </ul>
+          <Pagination className="justify-content-center">
+            <Pagination.Prev
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+              className={currentPage === 1 ? 'disabled' : ''}
+            />
+            {[...Array(totalPages)].map((_, index) => (
+              <Pagination.Item
+                key={index + 1}
+                active={index + 1 === currentPage} // 현재 페이지일 때만 active
+                onClick={() => setCurrentPage(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+              className={currentPage === totalPages ? 'disabled' : ''}
+            />
+          </Pagination>
         </div>
       </Container>
     </>

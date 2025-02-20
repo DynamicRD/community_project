@@ -1,28 +1,39 @@
 package com.project.member.service;
 
+import java.io.IOException;
 import java.util.Map;
 
 import com.project.member.model.Member;
-import com.project.member.model.MemberDTO;
+import com.project.member.model.MemberRegist;
 
 public interface MemberService {
 	boolean duplicateCheck(Member member);
 
 	boolean nickDuplicateCheck(Member member);
 
-	void register(MemberDTO memberDTO);
-	
-	void infoChange(MemberDTO memberDTO);
+	void register(MemberRegist memberDTO) throws IOException;
 
-	boolean phoneDuplicateCheck(MemberDTO memberDTO);
+	void infoChange(MemberRegist memberDTO);
+
+	boolean phoneDuplicateCheck(MemberRegist memberDTO);
 
 	Member loginCheck(Member member);
 
-	Map<String, String> kakaoLogin(String accessToken);
-	
 	Member selectMemberByNo(Member member);
+
+	boolean snsUserCheck(Member member);
+
+	Member selectSnsInfo(Member member);
+
+	boolean passCheck(Member member);
+
+	boolean passCheckNo(Member member);
 	
-	boolean googleUserCheck(Member member);
+	void deleteMember(Member member);
 	
-	Member selectGoogleInfo(Member member);
+	Map<String, Object> findMemberId(Map<String, Object> map);
+	
+	Map<String, Object> findMemberPw(Map<String, Object> map);
+	
+	void changeMemberPw(Map<String, Object> map);
 }

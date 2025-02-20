@@ -68,6 +68,10 @@
   width: 1000px;
 }
 
+.mypage_review_table2 {
+  width: 1000px;
+}
+
 .mypage_review_table > thead > tr > th {
   background-color: rgba(0, 0, 0, 0.1);
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
@@ -80,20 +84,18 @@
 }
 
 .mypage_review_table > tbody > tr > td {
-  text-align: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   height: 55px;
 }
 
 .reviewList {
-  position: absolute;
-  right: 520px;
+  position: relative;
+  left: 350px;
 }
 
 .reviewList span {
-  background-color: #ff6745;
+  background-color: #ff2d00;
   padding: 7px 10px;
-  border: 1px solid #ccc;
   border-radius: 20px;
   cursor: pointer;
   color: white;

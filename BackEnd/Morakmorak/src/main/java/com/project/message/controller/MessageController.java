@@ -54,7 +54,7 @@ public class MessageController {
 	 */
 	@GetMapping("/get-message-list")
 	public MessageListResponse getMessageList() {
-		// 검색 조건이 있는 경우에 MessagListRequest를 초기화 하여 getMessageList 함수에 파라미터로 넣어서 검색할 수
+		// 검색 조건이 있는 경우에 MessagListRequest를 초기화 하여 getMessageList 함수에 파라미터로 넣어서 검색할 수	
 		// 있습니다!.
 		// 수신번호와 발신번호는 반드시 -,* 등의 특수문자를 제거한 01012345678 형식으로 입력해주셔야 합니다!
 		MessageListRequest request = new MessageListRequest();
@@ -135,7 +135,7 @@ public class MessageController {
 		return response;
 	}
 
-	@CrossOrigin
+	
 	@RequestMapping("/send-one/number")
 	public int sendNumber() {
 		System.out.println(number);

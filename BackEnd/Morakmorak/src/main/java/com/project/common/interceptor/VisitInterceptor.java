@@ -1,6 +1,6 @@
 package com.project.common.interceptor;
 
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,12 +30,12 @@ public class VisitInterceptor implements HandlerInterceptor {
 		}
 
 		// 요청 URI가 동적 페이지이면 방문 기록을 저장
-		LocalDateTime visitTime = LocalDateTime.now();
-		VisitLog visitLog = new VisitLog(ipAddress, requestURI, visitTime);
+		Date visitDate = new Date();
+		VisitLog visitLog = new VisitLog(ipAddress, requestURI, visitDate);
 
 		// 방문 기록을 저장
 		service.insert(visitLog);
-		System.out.println(visitLog);
+//		System.out.println(visitLog);
 
 		// 요청 처리 계속 진행
 		return true;
@@ -45,6 +45,7 @@ public class VisitInterceptor implements HandlerInterceptor {
 		// 정적 리소스 제외
 		return requestURI.startsWith("/css/") || requestURI.startsWith("/js/") || requestURI.startsWith("/image/")
 				|| requestURI.startsWith("/static/") || requestURI.startsWith("/public/")
-				|| requestURI.startsWith("/resources/") || requestURI.equals("/favicon.ico");
+				|| requestURI.startsWith("/resources/") || requestURI.equals("/favicon.ico")
+				|| requestURI.equals("/error") || requestURI.equals("/member/check_tokens");
 	}
 }

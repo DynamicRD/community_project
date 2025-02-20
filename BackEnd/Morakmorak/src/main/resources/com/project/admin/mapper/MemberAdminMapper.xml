@@ -1,10 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.admin.mapper.MemberAdminMapper">
-<!-- 모든 회원 조회 -->
+
+	<!-- 모든 회원 조회 -->
 	<select id="getUsers"
 		resultType="map">
-		SELECT no, name, email, phone, to_date(reg_date, 'yyyy-mm-dd'), gender, nickname, self_pr, black
+		SELECT no, name, email, phone, to_date(reg_date, 'yyyy-mm-dd') as reg_date, gender, nickname, self_pr, black, birth
 		FROM member ORDER BY no DESC
+	</select>
+	<!-- 모든 모임 조회 -->
+	<select id="getAllGroups"
+		resultType="java.util.Map">
+		SELECT group_no, group_title, category, user_max, to_date(reg_date, 'yyyy-mm-dd') as reg_date, area, type, approval
+		FROM group_morak WHERE approval = 'N' ORDER BY group_no DESC
+	</select>
+	<!-- 모임 승인 처리 -->
+    <update id="approveGroup">
+        UPDATE group_morak SET approval = 'Y' WHERE group_no = #{groupNo}
+    </update>
+	<!-- 일별 수입 통계 -->
+	<select id="profit" resultType="java.util.Map">
+    <![CDATA[
+    	SELECT TRUNC(reg_date) AS reg_date, SUM(amount) AS daily_total
+		FROM charge
+		GROUP BY TRUNC(reg_date)
+		ORDER BY reg_date DESC
+    ]]>
+	</select>
+	<!-- 사용자 성별 통계 -->
+	<select id="genderCount" resultType="java.util.Map">
+    <![CDATA[
+    	SELECT gender, count(*) as count
+		FROM MEMBER
+		GROUP BY gender
+    ]]>
+	</select>
+	<!-- 사용자 연령대 통계 -->
+	<select id="countAge" resultType="java.util.Map">
+    <![CDATA[
+    	SELECT 
+		    CASE 
+		        WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 10 AND 19 THEN '10대'
+		        WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 20 AND 29 THEN '20대'
+		        WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 30 AND 39 THEN '30대'
+		        WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 40 AND 49 THEN '40대'
+		        WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 50 AND 59 THEN '50대'
+		        WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) >= 60 THEN '60대 이상'
+		        ELSE '기타'
+		    END AS age_group,
+		    COUNT(*) AS count
+			FROM user1
+			GROUP BY age_group
+			ORDER BY age_group
+    ]]>
+	</select>
+	<!-- 인기 카테고리 -->
+	<select id = "selectPopularCategory" resultType="java.util.Map">
+	</select>
+	<!-- 인기 모임 -->
+	<!-- 모임에서 approval이 Y인 모임 중에서 모임사용자에서 찜 목록이 많은 순으로 정렬 -->
+	<select id="selectPopularGroup" resultType="java.util.Map">
+    <![CDATA[
+    	SELECT g.g_id, count(*) AS count
+		FROM user_group ug INNER JOIN group1 g
+		ON ug.g_id = g.g_id
+		where ug.approval = 'Y' and g.status= 'bookmark'
+		GROUP BY g.g_id
+		ORDER BY count DESC
+    ]]>
+	</select>
+	<!-- 모임사이트별 방문자수 -->
+	<select id="countVisitGroup" resultType="java.util.Map">
+    <![CDATA[
+    	SELECT URL, COUNT(DISTINCT IP) AS count
+		FROM VISIT_LOG
+		WHERE URL LIKE '/GROUP/DETAIL%'
+		GROUP BY URL
+		ORDER BY visitor_count DESC
+    ]]>
 	</select>
 </mapper>

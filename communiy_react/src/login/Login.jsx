@@ -1,18 +1,22 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useEffect } from 'react';
 import { Container } from 'react-bootstrap';
 import './LoginPage.css';
-import { Link, useNavigate } from 'react-router-dom'; // Link 컴포넌트를 추가합니다.
+import { Link, useNavigate } from 'react-router-dom'; // Link
+// 컴포넌트를 추가합니다.
+
+import { AuthContext } from '../context/AuthContext'; //
 
 export default function Login() {
   const [id, setId] = useState('');
   const [password, setPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
   const handleLogin = async () => {
     console.log('ID:', id, 'Password:', password, 'Remember Me:', rememberMe);
-
     try {
       const response = await axios.post(
         'http://localhost:8080/member/login',
@@ -51,6 +55,7 @@ export default function Login() {
   };
 
   useEffect(() => {
+    setLoading(true);
     // 팝업에서 데이터를 받을 리스너 설정
     const handleMessage = (event) => {
       if (event.origin !== window.location.origin) return; // 보안: 올바른 출처 확인
@@ -78,10 +83,36 @@ export default function Login() {
     console.log(kakaoRestApiKey);
     console.log(kakaoRedirectUrl);
 
-    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code`;
+    const kakaoUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoRestApiKey}&redirect_uri=${kakaoRedirectUrl}&response_type=code&rememberMe=${rememberMe}`;
 
     window.open(kakaoUrl, 'kakao-login', 'width=600,height=600');
   };
+
+  //   const handleKakaoRedirect = async () => {
+  //     const urlParams = new URLSearchParams(window.location.search);
+  //     const authCode = urlParams.get("code");
+
+  //     if (authCode) {
+  //         console.log("Authorization Code:", authCode);
+
+  //         try {
+  //             // 백엔드로 인가 코드 전달 (액세스 토큰 요청)
+  //             const response = await fetch("http://localhost:8080/member/kakao", {
+  //                 method: "POST",
+  //                 headers: {
+  //                     "Content-Type": "application/json"
+  //                 },
+  //                 body: JSON.stringify({ code: authCode }) // 여기서 백엔드로 인가 코드 보냄
+  //             });
+
+  //             const data = await response.json();
+  //             console.log("Backend Response:", data);
+  //         } catch (error) {
+  //             console.error("Error during Kakao login:", error);
+  //         }
+  //     }
+  // };
+
   const doGoogleLogin = (rememberMe) => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     const redirectUrl = import.meta.env.VITE_GOOGLE_REDIRECT_URL;
@@ -109,138 +140,163 @@ export default function Login() {
       'width=600,height=600'
     );
   };
-
-  return (
-    <Container>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-        }}
-      >
-        <div
-          style={{
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-            width: '400px',
-          }}
-          className="LoginBg"
-        >
-          <h2
-            style={{ textAlign: 'center', fontWeight: '900' }}
-            className="mt-3 mb-4"
-          >
-            회원 로그인
-          </h2>
-          <input
-            type="text"
-            placeholder="아이디를 입력하시오"
-            style={{
-              width: '100%',
-              padding: '10px',
-              marginBottom: '10px',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-            }}
-            value={id}
-            onChange={(e) => setId(e.target.value)}
-            onKeyDown={handleKeyDown} // 추가
-          />
-
-          <input
-            type="password"
-            placeholder="비밀번호를 입력하시오"
-            style={{
-              width: '100%',
-              padding: '10px',
-              marginBottom: '20px',
-              border: '1px solid #ccc',
-              borderRadius: '5px',
-            }}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={handleKeyDown} // 추가
-          />
-          <button
-            className="buttonLogin"
-            onClick={handleLogin} // ✅ 올바르게 수정
-            style={{
-              width: '100%',
-              padding: '10px',
-              color: 'white',
-              border: 'none',
-              borderRadius: '25px',
-              cursor: 'pointer',
-            }}
-          >
-            로그인
-          </button>
-
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '10px',
-            }}
-          >
-            <input
-              type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
-              style={{ marginRight: '5px' }}
-            />
-            <span>로그인 상태 유지</span>
-          </div>
-          <p style={{ textAlign: 'center', marginTop: '10px' }}>
-            --소셜 계정으로 간단하게 로그인하세요--
-          </p>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              marginTop: '10px',
-            }}
-          >
-            <img
-              src="/images/google.png"
-              alt="Google Login"
-              style={{ width: '50px', marginRight: '20px' }}
-              onClick={doGoogleLogin}
-            />
-
-            <img
-              src="/images/kakao.png"
-              alt="Kakao Login"
-              style={{ width: '50px' }}
-              onClick={doKakaoLogin}
-            />
-          </div>
-          <div
-            style={{ textAlign: 'center', marginTop: '15px', fontSize: '14px' }}
-          >
-            <p>
-              아이디를 잊어버리셨나요?{' '}
-              <Link to="/find-id" style={{ textDecoration: 'none' }}>
-                <span className="findId">아이디 찾기</span>
-              </Link>
-              <br />
-              비밀번호를 잊어버리셨나요?{' '}
-              <Link to="/find-password" style={{ textDecoration: 'none' }}>
-                <span className="findId">비밀번호 찾기</span>
-              </Link>
-              <br />
-              아직 회원이 아니신가요?{' '}
-              <Link to="/signup" style={{ textDecoration: 'none' }}>
-                <span className="findId">회원가입</span>
-              </Link>
-            </p>
-          </div>
+  if (!loading) {
+    return (
+      <Container className="d-flex justify-content-center">
+        <div>
+          <span>Loading...</span>
         </div>
-      </div>
-    </Container>
-  );
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        {isAuthenticated ? (
+          <>
+            {alert('잘못된 접근 입니다.')}
+            {navigate('/')}
+          </>
+        ) : (
+          <>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                height: '80vh',
+              }}
+            >
+              <div
+                style={{
+                  padding: '20px',
+                  borderRadius: '10px',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                  width: '400px',
+                }}
+                className="LoginBg"
+              >
+                <h2
+                  style={{ textAlign: 'center', fontWeight: '900' }}
+                  className="mt-3 mb-4"
+                >
+                  회원 로그인
+                </h2>
+                <input
+                  type="text"
+                  placeholder="아이디를 입력하시오"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    marginBottom: '10px',
+                    border: '1px solid #ccc',
+                    borderRadius: '5px',
+                  }}
+                  value={id}
+                  onChange={(e) => setId(e.target.value)}
+                  onKeyDown={handleKeyDown} // 추가
+                />
+
+                <input
+                  type="password"
+                  placeholder="비밀번호를 입력하시오"
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    marginBottom: '20px',
+                    border: '1px solid #ccc',
+                    borderRadius: '5px',
+                  }}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onKeyDown={handleKeyDown} // 추가
+                />
+                <button
+                  className="buttonLogin"
+                  onClick={handleLogin} // ✅ 올바르게 수정
+                  style={{
+                    width: '100%',
+                    padding: '10px',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '25px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  로그인
+                </button>
+
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: '10px',
+                  }}
+                >
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    style={{ marginRight: '5px' }}
+                  />
+                  <span>로그인 상태 유지</span>
+                </div>
+                <p style={{ textAlign: 'center', marginTop: '10px' }}>
+                  --소셜 계정으로 간단하게 로그인하세요--
+                </p>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    marginTop: '10px',
+                  }}
+                >
+                  <img
+                    src="/images/google.png"
+                    alt="Google Login"
+                    style={{ width: '50px', marginRight: '20px' }}
+                    onClick={doGoogleLogin}
+                  />
+
+                  <img
+                    src="/images/kakao.png"
+                    alt="Kakao Login"
+                    style={{ width: '50px' }}
+                    onClick={doKakaoLogin}
+                  />
+                </div>
+                <div
+                  style={{
+                    textAlign: 'center',
+                    marginTop: '15px',
+                    fontSize: '14px',
+                  }}
+                >
+                  <p>
+                    아이디를 잊어버리셨나요?{' '}
+                    <Link to="/find-id" style={{ textDecoration: 'none' }}>
+                      <span className="findId">아이디 찾기</span>
+                    </Link>
+                    <br />
+                    비밀번호를 잊어버리셨나요?{' '}
+                    <Link
+                      to="/find-password"
+                      style={{ textDecoration: 'none' }}
+                    >
+                      <span className="findId">비밀번호 찾기</span>
+                    </Link>
+                    <br />
+                    아직 회원이 아니신가요?{' '}
+                    <Link to="/signup" style={{ textDecoration: 'none' }}>
+                      <span className="findId">회원가입</span>
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+      </Container>
+    );
+  }
 }

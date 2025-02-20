@@ -65,12 +65,18 @@ export default function MyInfoChange() {
   }, [isAuthenticated, userData, navigate]);
 
   useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
-      alert(`접근 권한이 없습니다.`);
-      navigate('/');
+    console.log('userData 대기중');
+    if (!userData) return; // userData가 로드될 때까지 기다림
+
+    if (isAuthenticated !== false) {
+      const pathSegments = window.location.pathname.split('/');
+      const pageId = pathSegments[pathSegments.length - 1];
+      if (userData?.no.toString() !== pageId) {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+      }
     }
-  }, [userData]); // userData가 변할 때만 실행
+  }, [isAuthenticated, userData, navigate]); // userData가 변할 때만 실행
 
   const [isAddressInputVisible, setIsAddressInputVisible] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(true);

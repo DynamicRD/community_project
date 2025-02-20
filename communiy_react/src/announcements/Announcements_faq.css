@@ -13,7 +13,7 @@
   font-size: large;
   display: flex;
   align-items: center;
-  padding: 20px 0px 20px 48px;
+  padding: 20px 0px 20px 20px;
 }
 
 .faq_accordion_body {
@@ -28,9 +28,10 @@
 }
 
 .accordion-button.active,
+.accordion-button:focus,
 .accordion-body:focus,
 .accordion-body.active {
-  background-color: rgba(197, 0, 0, 0.692);
+  background-color: #f8f8f8;
   color: rgb(0, 0, 0);
 }
 .accordion-button:not(:focus),

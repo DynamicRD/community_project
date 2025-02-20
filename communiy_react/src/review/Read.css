@@ -32,23 +32,28 @@
 }
 
 .review_main {
+  border: none;
+  scrollbar-width: none;
+  width: 70%;
+}
+.review_main:focus {
+  border: none;
+  scrollbar-width: none;
   width: 70%;
 }
 
 .review_content > .review_p {
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .review_list {
   position: relative;
-  text-align: start;
-  margin: 20px 0;
+  margin: 20px 0px 0px 0px;
   font-size: 13px;
-  width: 75px;
 }
 
 .review_list span {
-  margin: 0 10px;
+  margin: 0 5px;
   padding: 7px 13px;
   border: 1px solid #ccc;
   border-radius: 20px;
@@ -84,19 +89,28 @@
 }
 
 .register_btn {
-  background-color: #ff6745;
+  background-color: #ff2d00;
   border: 1px solid #ff6745;
   position: relative;
   right: 10px;
   height: 35px;
   text-align: center;
+  color: white;
 }
 
 .register_btn:hover {
+  color: white;
   background-color: #ff67458f;
   border: 1px solid #ff674500;
 }
 
 .reply_hr {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.deleteReply {
+  cursor: pointer;
+}
+.deleteReply:hover {
+  color: #ff2d00;
 }

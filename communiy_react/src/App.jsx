@@ -30,16 +30,19 @@ import AddressInput from './mypage/daumAPI/AddressInput';
 import AnnouncementsNotice from './announcements/Announcements_notice';
 import AnnouncementsFaq from './announcements/Announcements_faq';
 import AnnouncementsNoticeRead from './announcements/Announcements_notice_read';
+import AnnouncementsNoticeRegist from './announcements/Announcements_regist';
 import GoogleLoginCheck from './login/GoogleLoginCheck';
 import GoogleSignup from './login/GoogleSignup';
+
+// ✅ 리뷰, 찜 목록, 채팅, 아이디/비번 찾기 관련
 import Read from './review/Read';
 import Review from './review/Review';
 import Regist from './review/Regist';
 import ChatRoom from './chatroom/Chatroom';
-import WishList from './wishlist/wishlist';
+import WishList from './wishlist/WishList';
 import FindId from './login/FindId';
 import FindPwd from './login/FindPwd';
-import ResetPassword from './login/ResetPassword';
+// import ResetPassword from './login/ResetPassword';
 
 // ✅ 관리자 관련 컴포넌트
 import Dashboard from './Admin/dashboard/dashboard';
@@ -49,10 +52,9 @@ import CommunityDetail from './Admin/Community/CommunityDetail';
 import Complaint from './Admin/Complaint/Complaint';
 import Board from './Admin/Board/Board';
 import ReviewDetail from './Admin/Board/ReviewDetail';
-import Notice from './Admin/Board/Notice';
-import NoticeDetail from './Admin/Board/NoticeDetail';
-import Faq from './Admin/Board/Faq';
 import Stats from './Admin/Stats/Stats';
+import KakaoSignup from './login/KaKaoSignup';
+import MembershipWithdrawal from './mypage/MembershipWithdrawal';
 
 function App() {
   return (
@@ -100,6 +102,10 @@ function App() {
               path="/mypage/infochange/address"
               element={<AddressInput />}
             />
+            <Route
+              path="/mypage/withdrawal/:idx"
+              element={<MembershipWithdrawal />}
+            />
 
             {/* 채팅 */}
             <Route path="/chatroom" element={<ChatRoom />} />
@@ -107,18 +113,23 @@ function App() {
             {/* 소셜 로그인 */}
             <Route path="/login/googlecheck" element={<GoogleLoginCheck />} />
             <Route path="/google/signup" element={<GoogleSignup />} />
+            <Route path="/kakao/signup" element={<KakaoSignup />} />
 
             {/* 리뷰게시판 */}
             <Route path="/review" element={<Review />} />
-            <Route path="/review/read" element={<Read />} />
-            <Route path="/review/regist" element={<Regist />} />
+            <Route path="/review/read/:idx" element={<Read />} />
+            <Route path="/review/regist/:idx" element={<Regist />} />
 
             {/* 공지사항 */}
             <Route path="/announcements" element={<AnnouncementsNotice />} />
             <Route path="/announcements/faq" element={<AnnouncementsFaq />} />
             <Route
-              path="/announcements/read"
+              path="/announcements/notice/read/:idx"
               element={<AnnouncementsNoticeRead />}
+            />
+            <Route
+              path="/notice/regist"
+              element={<AnnouncementsNoticeRegist />}
             />
 
             {/* 찜 목록 */}
@@ -127,7 +138,7 @@ function App() {
             {/* 아이디, 비밀번호 찾기 */}
             <Route path="/find-id" element={<FindId />} />
             <Route path="/find-password" element={<FindPwd />} />
-            <Route path="/resetPassword" element={<ResetPassword />} />
+            {/* <Route path="/resetPassword" element={<ResetPassword />} /> */}
           </Route>
 
           {/* ✅ 관리자 관련 라우트 */}
@@ -140,9 +151,6 @@ function App() {
             <Route path="complaint" element={<Complaint />} />
             <Route path="board" element={<Board />} />
             <Route path="board/:reviewid" element={<ReviewDetail />} />
-            <Route path="board/Notice" element={<Notice />} />
-            <Route path="board/Notice/:noticeid" element={<NoticeDetail />} />
-            <Route path="board/Faq" element={<Faq />} />
             <Route path="stats" element={<Stats />} />
           </Route>
         </Routes>
@@ -150,4 +158,5 @@ function App() {
     </AuthProvider>
   );
 }
+
 export default App;

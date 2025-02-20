@@ -6,6 +6,7 @@ export default function GoogleLoginCheck() {
       // URL 파라미터에서 'is_new_user' 확인
       const queryParams = new URLSearchParams(window.location.search);
       const isRegistered = queryParams.get('isRegistered');
+      const sns = queryParams.get('sns'); // "kakao"
 
       // 'is_new_user' 값에 따라 다르게 처리
       if (isRegistered === 'true') {
@@ -14,7 +15,12 @@ export default function GoogleLoginCheck() {
         window.opener.location.href = window.location.origin + redirectUrl;
       } else {
         console.log('신규회원입니다.');
-        const redirectUrl = '/google/signup'; // 예시로 로그인 페이지로 리디렉션
+        let redirectUrl = null;
+        if (sns != 'kakao') {
+          redirectUrl = '/google/signup';
+        } else {
+          redirectUrl = '/kakao/signup';
+        }
         window.opener.location.href = window.location.origin + redirectUrl;
       }
 

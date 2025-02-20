@@ -1,11 +1,34 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Button, Container, Nav, Pagination } from 'react-bootstrap';
 import Table from 'react-bootstrap/Table';
 import { useNavigate } from 'react-router-dom';
 import HorizonLine from './HorizonLine';
 import './MyPage.css';
+import { AuthContext } from '../context/AuthContext'; //
+
+function useFetch(url) {
+  const [loading, setLoading] = useState(false);
+  const [completedMeetings, setCompletedMeetings] = useState([]);
+  useEffect(() => {
+    fetch(url)
+      .then((response) => response.json())
+      .then((data) => {
+        setCompletedMeetings(data);
+      })
+      .catch((error) => {
+        console.error('Error fetching review data:', error);
+      })
+      .finally(() => {
+        setLoading(true);
+      });
+  }, []);
+  return [completedMeetings, loading];
+}
 
 export default function MyReviews() {
+  const pathIdx = window.location.pathname.split('/').pop();
+  const url = 'http://localhost:8080/review/group/list/' + pathIdx;
+
   let item = [];
   for (let number = 1; number <= 5; number++) {
     item.push(
@@ -14,108 +37,232 @@ export default function MyReviews() {
       </Pagination.Item>
     );
   }
-  const radioValue = useRef();
-  const radioValueChecked = () => {
-    radioValue.current = 'checked';
-    console.log(radioValue);
+  const [completedMeetings, loading] = useFetch(url);
+
+  const { isAuthenticated, userData } = useContext(AuthContext);
+
+  // 라디오 버튼 선택 값을 저장할 상태 변수
+  const [selectedRadioValue, setSelectedRadioValue] = useState(null);
+  const [check, setCheck] = useState(false);
+  const navigate = useNavigate();
+
+  // 라디오 버튼 클릭 시 값 변경
+  const radioValueChecked = (value) => {
+    setSelectedRadioValue(value);
+    setCheck(true);
   };
 
-  const completedMeetings = [
-    {
-      name: '테크 세미나',
-      date: '2025-01-10',
-      endDate: '2025-01-10',
-      role: '참석자',
-      cost: '₩ 30,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-    {
-      name: '사진 동아리',
-      date: '2025-01-15',
-      endDate: '2025-01-15',
-      role: '모임장',
-      cost: '₩ 20,000',
-    },
-  ];
+  useEffect(() => {
+    if (selectedRadioValue !== null) {
+      console.log(selectedRadioValue);
+    }
+  }, [selectedRadioValue]);
 
-  return (
-    <>
-      <Container>
-        <div className="mypage_review_list mt-5 w-100">
-          <div className="d-flex justify-content-start gap-3 mb-4">
-            <table className="mypage_review_table">
-              {completedMeetings.map((object) => (
-                <tbody key={object.no}>
-                  <tr>
-                    <td>
-                      <input type="radio" name="radio" ref={radioValue} />
-                    </td>
-                    <Nav.Link href="#" onClick={radioValueChecked}>
-                      <tr className="d-flex m-4">
-                        <td>
-                          <img
-                            src="/images/review1.png"
-                            alt="이미지"
-                            style={{ width: '120px' }}
-                            className="mypage_review_table_img"
-                          />
-                        </td>
-                        <tr className="d-flex flex-column ms-4 w-100 justify-content-center">
-                          <td>
-                            <span
-                              style={{ fontSize: '30px', fontWeight: '900' }}
-                            >
-                              {object.name}
-                            </span>
-                          </td>
-                          <tr className="d-flex justify-content-between align-items-center">
-                            <td style={{ fontSize: '14px' }}>
-                              <span>{object.date}~</span>
-                              <span> {object.endDate}</span>
-                            </td>
-                            <td
-                              style={{ fontSize: '17px', fontWeight: '900' }}
-                              className="me-5"
-                            >
-                              {object.role}
-                            </td>
-                          </tr>
-                          <td>
-                            <span style={{ fontWeight: '900' }}>
-                              {object.cost}
-                            </span>
-                          </td>
-                        </tr>
-                      </tr>
-                    </Nav.Link>
-                  </tr>
-                </tbody>
-              ))}
-            </table>
-          </div>
-        </div>
-      </Container>
-      <Container className="mb-5">
-        <div className="d-flex justify-content-center align-content-center mb-3">
-          <Pagination size="sm">{item}</Pagination>
-          <Nav.Link href="/review/Regist" className="reviewList">
-            <span>작성 하기</span>
-          </Nav.Link>
-        </div>
-      </Container>
-    </>
-  );
+  const [groupedClubs, setGroupedClubs] = useState([]);
+
+  //페이징
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
+  const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
+  const reviewsPerPage = 4;
+
+  useEffect(() => {
+    const groupClubs = [];
+    for (let i = 0; i < completedMeetings.length; i += reviewsPerPage) {
+      groupClubs.push(completedMeetings.slice(i, i + reviewsPerPage));
+    }
+    setGroupedClubs(groupClubs);
+  }, [completedMeetings]);
+
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (pageRangeStart > 0) {
+      setPageRangeStart(pageRangeStart - 5);
+      setPageRangeEnd(pageRangeEnd - 5);
+    }
+  };
+
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (pageRangeEnd < groupedClubs.length) {
+      setPageRangeStart(pageRangeStart + 5);
+      setPageRangeEnd(pageRangeEnd + 5);
+    }
+  };
+
+  //현재 페이지에서 내가 출력하고자 하는 리뷰의 개수를 함수를 통해 groupedReviews[currentPage - 1] 조절 한 뒤 currentReviews에 저장
+  const currentReviews = groupedClubs[currentPage - 1] || [];
+
+  if (!loading) {
+    return <Container>Loading...</Container>;
+  } else {
+    return (
+      <>
+        {!isAuthenticated ? (
+          <>
+            {alert('로그인 후 이용 바랍니다')}
+            {navigate('/login')};
+          </>
+        ) : (
+          <>
+            <Container>
+              <div className=" d-flex m-5">
+                <span
+                  className="nav_notice"
+                  style={{ fontSize: '33px', marginLeft: '65px' }}
+                >
+                  모임 목록
+                </span>
+              </div>
+
+              <div className="mypage_review_list mt-5 w-100">
+                <div className="d-flex justify-content-start gap-3 mb-4">
+                  <table className="mypage_review_table">
+                    {groupedClubs.length > 0 ? (
+                      <>
+                        {currentReviews.map((object, index) => (
+                          <tbody key={index}>
+                            <tr>
+                              <td>
+                                {/* 라디오 버튼 */}
+                                <input
+                                  type="radio"
+                                  name="radio"
+                                  value={object.GROUP_NO}
+                                  checked={
+                                    selectedRadioValue === object.GROUP_NO
+                                  }
+                                  onChange={() =>
+                                    radioValueChecked(object.GROUP_NO)
+                                  }
+                                />
+                              </td>
+                              <td>
+                                <Nav.Link
+                                  href="#"
+                                  onClick={() =>
+                                    radioValueChecked(object.GROUP_NO)
+                                  }
+                                >
+                                  <div className="d-flex m-4">
+                                    <img
+                                      src={`http://localhost:8080/upload/${object.IMG_URL1}`}
+                                      alt="이미지"
+                                      style={{ width: '120px' }}
+                                      className="mypage_review_table_img"
+                                    />
+                                    <div className="d-flex flex-column ms-4 w-100 justify-content-center">
+                                      <span
+                                        style={{
+                                          fontSize: '30px',
+                                          fontWeight: '900',
+                                        }}
+                                      >
+                                        {object.GROUP_TITLE}
+                                      </span>
+                                      <div className="d-flex justify-content-between align-items-center">
+                                        <span style={{ fontSize: '14px' }}>
+                                          {object.START_DATE} ~{' '}
+                                          {object.LAST_DATE}
+                                        </span>
+                                        <span
+                                          style={{
+                                            fontSize: '17px',
+                                            fontWeight: '900',
+                                          }}
+                                          className="me-5"
+                                        >
+                                          {object.MC_NICKNAME}
+                                        </span>
+                                      </div>
+                                      <span style={{ fontWeight: '900' }}>
+                                        {object.PRICE}원
+                                      </span>
+                                    </div>
+                                  </div>
+                                </Nav.Link>
+                              </td>
+                            </tr>
+                          </tbody>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <div className="d-flex justify-content-center mt-5 mb-5">
+                          <span
+                            style={{
+                              fontSize: '30px',
+                              fontWeight: '900',
+                            }}
+                          >
+                            참여한 모임이 없습니다.
+                          </span>
+                        </div>
+                      </>
+                    )}
+                  </table>
+                </div>
+              </div>
+            </Container>
+            <Container className="mb-5">
+              <div className="d-flex justify-content-center align-content-center ms-5 mb-3">
+                <Pagination size="sm">
+                  {pageRangeStart < 5 ? (
+                    <>{null}</>
+                  ) : (
+                    <>
+                      <Pagination.Prev
+                        onClick={handlePrevPage}
+                        disabled={pageRangeStart === 0}
+                      />
+                    </>
+                  )}
+
+                  {Array.from({ length: 5 }, (_, index) => {
+                    const pageNumber = pageRangeStart + index + 1;
+                    if (pageNumber <= groupedClubs.length) {
+                      return (
+                        <Pagination.Item
+                          key={pageNumber}
+                          active={pageNumber === currentPage}
+                          onClick={() => handlePageChange(pageNumber)}
+                        >
+                          {pageNumber}
+                        </Pagination.Item>
+                      );
+                    }
+                    return null;
+                  })}
+                  {pageRangeEnd < groupedClubs.length && (
+                    <Pagination.Next
+                      onClick={handleNextPage}
+                      disabled={pageRangeEnd >= groupedClubs.length}
+                    />
+                  )}
+                </Pagination>
+                <Nav.Link
+                  onClick={() => {
+                    if (check === true) {
+                      // window.location.href = `/review/Regist/${selectedRadioValue}`;
+                      navigate(`/review/Regist/${selectedRadioValue}`);
+                    } else {
+                      alert('모임을 선택 해 주세요');
+                    }
+                  }}
+                  className="reviewList"
+                >
+                  <span>작성하기</span>
+                </Nav.Link>
+              </div>
+            </Container>
+          </>
+        )}
+      </>
+    );
+  }
 }
