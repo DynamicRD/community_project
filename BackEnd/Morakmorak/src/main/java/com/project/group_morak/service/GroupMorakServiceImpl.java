@@ -93,6 +93,14 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		}
 		return mapper.getGroupsByCategory(category);
 	}
+	
+	@Override
+	public List<GroupMorak> getGroupsByCategory3(String category) {
+		if(category.equals("all")) {
+			return mapper.getGroupsByCategoryAll3();
+		}
+		return mapper.getGroupsByCategory3(category);
+	}
 
 
 }

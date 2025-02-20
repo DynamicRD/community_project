@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.admin.mapper.FaqAdminMapper">
+	<select id="getFaqs" resultType="com.project.admin.model.FaqAdmin">
+        SELECT * FROM faq ORDER BY reg_date DESC
+    </select>
+
+    <insert id="addFaq" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO faq (faq_title, content, reg_date) VALUES (#{faq_title}, #{content}, NOW())
+    </insert>
+
+    <update id="updateFaq">
+        UPDATE faq SET faq_title = #{faq_title}, content = #{content} WHERE faq_no = #{faq_no}
+    </update>
+
+    <delete id="deleteFaq">
+        DELETE FROM faq WHERE faq_no = #{faq_no}
+    </delete>
+
+
+</mapper>
