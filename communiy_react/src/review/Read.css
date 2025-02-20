@@ -104,6 +104,20 @@
   border: 1px solid #ff674500;
 }
 
+.read_btn {
+  background-color: #ff2d00;
+  border: 1px solid #ff6745;
+  height: 35px;
+  text-align: center;
+  color: white;
+}
+
+.read_btn:hover {
+  color: white;
+  background-color: #ff67458f;
+  border: 1px solid #ff674500;
+}
+
 .reply_hr {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }

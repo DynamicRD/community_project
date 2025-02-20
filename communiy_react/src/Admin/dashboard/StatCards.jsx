@@ -3,14 +3,14 @@ import { Row, Col, Card } from 'react-bootstrap';
 import './dashboard.css';
 const stats = [
   {
-    title: 'Customers',
+    title: '고객',
     value: '345k',
     info: '18.2% increase',
     color: 'success',
   },
-  { title: 'Revenue', value: '$2.4k', info: '4.6% increase', color: 'success' },
-  { title: 'Purchases', value: '43', info: '2.6% decrease', color: 'danger' },
-  { title: 'Traffic', value: '64k', info: '2.5% increase', color: 'success' },
+  { title: '수익', value: '$2.4k', info: '4.6% increase', color: 'success' },
+  { title: '모임회원수', value: '43', info: '2.6% decrease', color: 'danger' },
+  { title: '방문객', value: '64k', info: '2.5% increase', color: 'success' },
 ];
 
 const StatCards = () => {
@@ -23,7 +23,8 @@ const StatCards = () => {
             <Card.Body>
               <h5>{stat.value}</h5>
               <p className={`text-${stat.color}`}>
-                {stat.info} since last month
+                전월 대비 <br />
+                {stat.info}
               </p>
             </Card.Body>
           </Card>

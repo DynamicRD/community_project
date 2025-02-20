@@ -230,6 +230,4 @@
 		GROUP BY
 		G.USER_MAX
 	</select>
-
-	
 </mapper>

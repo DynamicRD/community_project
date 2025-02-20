@@ -5,16 +5,16 @@ import HorizonLine_table from './HorizonLine_table';
 import Pagination from 'react-bootstrap/Pagination';
 import { Link, useNavigate } from 'react-router';
 
-let item = [];
-for (let number = 1; number <= 5; number++) {
-  item.push(
-    <Pagination.Item key={number} active={number === 1}>
-      {number}
-    </Pagination.Item>
-  );
-}
-
 export default function Announcements_notice() {
+  let item = [];
+  for (let number = 1; number <= 5; number++) {
+    item.push(
+      <Pagination.Item key={number} active={number === 1}>
+        {number}
+      </Pagination.Item>
+    );
+  }
+
   const [noticeList, setNoticeList] = useState([]);
   //공지사항 값 DB에서 가져오기
   function getList(url) {
@@ -24,7 +24,6 @@ export default function Announcements_notice() {
       })
       .then((data) => {
         setNoticeList(data);
-        console.log(data);
       });
   }
 
@@ -56,17 +55,23 @@ export default function Announcements_notice() {
 
   // 이전 페이지로 이동
   const handlePrevPage = () => {
-    if (pageRangeStart > 0) {
-      setPageRangeStart(pageRangeStart - 5);
-      setPageRangeEnd(pageRangeEnd - 5);
+    const newPageRangeStart = pageRangeStart - 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart >= 0) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart - 4); // 현재 페이지를 범위의 첫 번째 페이지로 설정
     }
   };
 
   // 다음 페이지로 이동
   const handleNextPage = () => {
-    if (pageRangeEnd < groupedNotices.length) {
-      setPageRangeStart(pageRangeStart + 5);
-      setPageRangeEnd(pageRangeEnd + 5);
+    const newPageRangeStart = pageRangeStart + 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart < groupedNotices.length) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart + 6); // 5 페이지씩 건너뛰고 이동
     }
   };
 
@@ -131,7 +136,7 @@ export default function Announcements_notice() {
             )}
           </table>
         </Container>
-        <div className="d-flex justify-content-center align-content-center mt-4">
+        <div className="custom-pagination d-flex justify-content-center align-content-center mt-4">
           <Pagination size="sm">
             {pageRangeStart < 5 ? (
               <>{null}</>

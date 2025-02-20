@@ -36,4 +36,6 @@ public interface MemberService {
 	Map<String, Object> findMemberPw(Map<String, Object> map);
 	
 	void changeMemberPw(Map<String, Object> map);
+	
+	void changeMemberBlack(Member member);
 }

@@ -119,5 +119,7 @@
 		UPDATE MEMBER SET PW = #{encryptedPassword} WHERE ID = #{id} AND PHONE = #{phone}
 	</update>
     
-    
+    <update id="changeMemberBlack">
+    	UPDATE MEMBER SET BLACK = BLACK + 1 WHERE NO = #{no}
+    </update>
 </mapper>

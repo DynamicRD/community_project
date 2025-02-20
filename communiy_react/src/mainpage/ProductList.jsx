@@ -51,7 +51,7 @@ const GroupsList = () => {
         {categories.map((category) => (
           <button
             key={category.key}
-            className={`btn btn-outline-primary mx-2 ${
+            className={`btn btn-outline-dark mx-2 ${
               selectedCategory === category.key ? 'active' : ''
             }`}
             onClick={() => setSelectedCategory(category.key)}

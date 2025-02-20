@@ -5,6 +5,7 @@ export default function GroupItem({ item }) {
   // 날짜 변환
   const formatDate = (date) => {
     const months = [
+
       "1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"
     ];
     const month = months[date.getMonth()];
@@ -14,6 +15,7 @@ export default function GroupItem({ item }) {
   const startDate = new Date(item.START_DATE); 
   const formattedStartDate = formatDate(startDate);
 
+
   let loading = false;
   if (loading) {
     return <div>loading</div>;
@@ -21,7 +23,10 @@ export default function GroupItem({ item }) {
     const isClosed = new Date() > startDate; // 모집 마감 여부
 
     return (
-      <Link to={`/group/detail?group_no=${item.GROUP_NO}`} style={{ textDecoration: 'none', color: 'inherit' }}> 
+      <Link
+        to={`/group/detail?group_no=${item.GROUP_NO}`}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+      >
         <div className="col">
           <div className="card" style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
             <div 
@@ -69,6 +74,7 @@ export default function GroupItem({ item }) {
               </h5>
               <p className="card-text" style={{ flexGrow: 1 }}>
                 {formattedStartDate} / {item.AREA} / {item.CATEGORY === 'culture' && '문화/예술'}
+
                 {item.CATEGORY === 'food' && '푸드/드링크'}
                 {item.CATEGORY === 'edu' && '교육'}
                 {item.CATEGORY === 'travel' && '여행'}
