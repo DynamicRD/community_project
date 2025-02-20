@@ -13,6 +13,7 @@ function GroupList({ type }) {
   const [items, setGroupList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
+  const { isAuthenticated, userData } = useContext(AuthContext);
 
   useEffect(() => {
     fetch(`http://localhost:8080/group/list?type=${type}`)

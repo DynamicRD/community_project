@@ -440,7 +440,7 @@ export default function FindPwd() {
                             type="text"
                             name="valid"
                             ref={phoneNumber}
-                            className="validCode me-1"
+                            className="validCode2 me-1"
                             style={{
                               width: '78%',
                               padding: '10px',
