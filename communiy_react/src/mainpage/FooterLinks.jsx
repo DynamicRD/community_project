@@ -4,10 +4,9 @@ import './App.css';
 
 const FooterLinks = () => {
   const link = [
-    { text: '자주 묻는 질문', url: '#' },
-    { text: '1:1 문의', url: '#' },
-    { text: '이용 약관', url: '#' },
-    { text: '개인정보 처리방침', url: '#' },
+    { text: '자주 묻는 질문', url: '/announcements/faq' },
+    { text: '모임 개설 하기', url: '#' },
+    { text: '홈페이지', url: '#' },
   ];
 
   return (
