@@ -17,10 +17,12 @@ export default function GroupDetailButton({ group_no }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch(`http://localhost:8080/group/countGroupMember?group_no=${group_no}`)
+    fetch(`http://localhost:8080/group/applicable?group_no=${group_no}`)
       .then((res) => res.json())
       .then((data) => {
-        setApplicable(data.MEMBER_COUNT < data.USER_MAX);
+        setApplicable(
+          !(data.MEMBER_COUNT >= data.USER_MAX || new Date(data.START_DATE) <= new Date())
+        );
       })
       .catch((error) =>
         console.error('Error fetching countGroupMember:', error)
@@ -38,7 +40,6 @@ export default function GroupDetailButton({ group_no }) {
         .then((res) => res.text())
         .then((data) => {
           setUserRole(data);
-          console.log(data);
         })
         .catch((error) =>
           console.error('Error fetching group members:', error)
@@ -50,113 +51,149 @@ export default function GroupDetailButton({ group_no }) {
     navigate(`/group/management?group_no=${group_no}`);
   };
 
+  const handleCancelApplication = () => {
+    const form = new FormData();
+    form.append('group_no', Number(group_no));
+    form.append('no', userData?.no);
+
+    fetch('http://localhost:8080/group/cancelJoin', {
+      method: 'POST',
+      body: form,
+    })
+      .then((response) => {
+        if (!response.ok) {
+          return response.text().then((errorData) => {
+            try {
+              const parsedError = JSON.parse(errorData);
+              throw new Error(
+                parsedError.message ||
+                  '처리에 실패했습니다. 다시 시도해주세요.'
+              );
+            } catch (e) {
+              throw new Error(
+                errorData || '처리에 실패했습니다. 다시 시도해주세요.'
+              );
+            }
+          });
+        }
+        return response.text();
+      })
+      .then((message) => {
+        alert(message);
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
   return (
     <div className="group_detail">
       <div className="button">
-        {applicable === false ? (
-          <button className='nonApplicable'
-            onClick={() => {
-              alert('모임이 이미 가득 찼습니다. 나중에 다시 시도해 주세요.');
-            }}
-          >
-            모집이 종료된 모임입니다.
-          </button>
-        ) : (
+        {/* 비회원 또는 대기 상태일 때 */}
+        {!(userRole === 'MEMBER' || userRole === 'LEADER') && (
           <>
-            {/* 회원권한, 모임장권한이 아닐때 (비회원 또는 대기 상태) */}
-            {!(userRole === 'MEMBER' || userRole === 'LEADER') && (
-              <>
-                <button
-                  onClick={() => {
-                    if (!isAuthenticated) {
-                      alert('로그인 후 이용해주세요');
-                      return;
-                    }
-
-                    const form = new FormData();
-                    form.append('group_no', Number(group_no));
-                    form.append('no', userData?.no);
-
-                    fetch('http://localhost:8080/group/basket', {
-                      method: 'POST',
-                      body: form,
-                    })
-                      .then((response) => {
-                        if (!response.ok) {
-                          return response.text().then((errorData) => {
-                            try {
-                              const parsedError = JSON.parse(errorData);
-                              throw new Error(
-                                parsedError.message ||
-                                  '처리에 실패했습니다. 다시 시도해주세요.'
-                              );
-                            } catch (e) {
-                              throw new Error(
-                                errorData ||
-                                  '처리에 실패했습니다. 다시 시도해주세요.'
-                              );
-                            }
-                          });
-                        }
-                        return response.text();
-                      })
-                      .then((message) => {
-                        alert(message);
-                      })
-                      .catch((error) => {
-                        alert(error.message);
-                      });
-                  }}
-                >
-                  <FontAwesomeIcon icon={faHeart} />
-                  &nbsp;찜하기
-                </button>
-                <button
-                  onClick={() => {
-                    if (!isAuthenticated) {
-                      alert('로그인 후 이용해주세요');
-                      return;
-                    }
-                    setFormShow(true);
-                  }}
-                >
-                  참가 신청하기
-                </button>
-              </>
-            )}
-
-            {/* 모임멤버 권한일 때 */}
-            {userRole === 'MEMBER' && (
-              <button onClick={() => setChatShow(true)}>
-                <FontAwesomeIcon icon={faComments} />
-                &nbsp;모임 채팅 참여하기
+            {applicable === false ? (
+              <button
+                className='nonApplicable'
+                onClick={() => {
+                  alert('모집이 마감된 모임입니다.');
+                }}
+              >
+                모집이 마감된 모임입니다.
               </button>
-            )}
-
-            {/* 모임장 권한일 때 */}
-            {userRole === 'LEADER' && (
+            ) : (
               <>
-                <button onClick={() => setChatShow(true)}>
-                  <FontAwesomeIcon icon={faComments} />
-                  &nbsp;모임 채팅 참여하기
-                </button>
-                <button onClick={handleButtonClick}>&nbsp;모임 관리하기</button>
+                {userRole === 'WAITING' ? (
+                  <button onClick={handleCancelApplication}>
+                    참가 신청 취소하기
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          alert('로그인 후 이용해주세요');
+                          return;
+                        }
+
+                        const form = new FormData();
+                        form.append('group_no', Number(group_no));
+                        form.append('no', userData?.no);
+
+                        fetch('http://localhost:8080/group/basket', {
+                          method: 'POST',
+                          body: form,
+                        })
+                          .then((response) => {
+                            if (!response.ok) {
+                              return response.text().then((errorData) => {
+                                try {
+                                  const parsedError = JSON.parse(errorData);
+                                  throw new Error(
+                                    parsedError.message ||
+                                      '처리에 실패했습니다. 다시 시도해주세요.'
+                                  );
+                                } catch (e) {
+                                  throw new Error(
+                                    errorData ||
+                                      '처리에 실패했습니다. 다시 시도해주세요.'
+                                  );
+                                }
+                              });
+                            }
+                            return response.text();
+                          })
+                          .then((message) => {
+                            alert(message);
+                          })
+                          .catch((error) => {
+                            alert(error.message);
+                          });
+                      }}
+                    >
+                      <FontAwesomeIcon icon={faHeart} />
+                      &nbsp;찜하기
+                    </button>
+                    <button
+                      onClick={() => {
+                        if (!isAuthenticated) {
+                          alert('로그인 후 이용해주세요');
+                          return;
+                        }
+                        setFormShow(true);
+                      }}
+                    >
+                      참가 신청하기
+                    </button>
+                  </>
+                )}
               </>
             )}
           </>
         )}
+
+        {/* 모임멤버 권한일 때 */}
+        {userRole === 'MEMBER' && (
+          <button onClick={() => setChatShow(true)}>
+            <FontAwesomeIcon icon={faComments} />
+            &nbsp;모임 채팅 참여하기
+          </button>
+        )}
+
+        {/* 모임장 권한일 때 */}
+        {userRole === 'LEADER' && (
+          <>
+            <button onClick={() => setChatShow(true)}>
+              <FontAwesomeIcon icon={faComments} />
+              &nbsp;모임 채팅 참여하기
+            </button>
+            <button onClick={handleButtonClick}>&nbsp;모임 관리하기</button>
+          </>
+        )}
       </div>
 
-      <GroupJoinForm
-        show={formShow}
-        onHide={() => setFormShow(false)}
-        group_no={group_no}
-      />
-      <ChatRoom
-        show={chatShow}
-        onHide={() => setChatShow(false)}
-        group_no={group_no}
-      />
+      <GroupJoinForm show={formShow} onHide={() => setFormShow(false)} group_no={group_no} />
+      <ChatRoom show={chatShow} onHide={() => setChatShow(false)} group_no={group_no} />
     </div>
   );
 }

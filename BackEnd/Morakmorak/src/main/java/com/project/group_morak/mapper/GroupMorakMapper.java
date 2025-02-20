@@ -47,4 +47,6 @@ public interface GroupMorakMapper {
 	
 	public List<GroupMorak> getGroupsByCategoryAll3();
 
+	public void cancelJoin(Map<String, Object> map);
+
 }
