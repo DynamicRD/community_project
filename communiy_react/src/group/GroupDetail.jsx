@@ -43,20 +43,6 @@ function GroupDetail() {
       .finally(() => setLoading(false)); // 로딩 완료
   }, [group_no]);
 
-  if (loading) {
-    return <div>loading</div>;
-  } else {
-    return (
-      <Container >
-        {items.map((item) => (
-          <GroupDetailItem key={item.GROUP_NO} item={item} />
-        ))}
-        <GroupDetailButton group_no={group_no} />
-      </Container>
-    );
-
-  }
-
   return (
     <Container>
       {items.length > 0 ? (

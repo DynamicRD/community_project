@@ -13,8 +13,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import MemberProfileView from './MemberProfileView';
 import GoogleMap from './GoogleMap';
+import axios from 'axios';
 
 export default function GroupDetailItem({ item }) {
+  const [category, setCategory] = useState(null);
+  const [groups, setGroups] = useState([]);
   const [activeMembers, setActiveMembers] = useState([]);
   useEffect(() => {
     fetch(`http://localhost:8080/group/memberList?group_no=${item.GROUP_NO}`)
@@ -28,6 +31,25 @@ export default function GroupDetailItem({ item }) {
       })
       .catch((error) => console.error('Error fetching group members:', error));
   }, [item.GROUP_NO, item]);
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/group/detailselect?category=${item.CATEGORY}`
+        );
+        setGroups(response.data);
+        console.log('Fetched groups:', response.data);
+      } catch (error) {
+        console.error('데이터를 불러오는 중 오류 발생:', error);
+        setGroups([]);
+      }
+    };
+
+    if (item.CATEGORY) {
+      fetchGroups();
+    }
+  }, [item.CATEGORY]);
 
   //멤버 프로필 띄우기
   const [profileShow, setProfileShow] = useState(false);
@@ -194,7 +216,7 @@ export default function GroupDetailItem({ item }) {
               fontWeight: '700',
             }}
           >
-            현재 참여중인 멤버({item.MEMBER_COUNT-1}/{item.USER_MAX})
+            현재 참여중인 멤버({item.MEMBER_COUNT - 1}/{item.USER_MAX})
           </p>
           <ListGroup as="ol">
             {activeMembers.map((member) => {
@@ -269,51 +291,46 @@ export default function GroupDetailItem({ item }) {
         </table>
       </div>
       <div>
-        <p style={{ fontSize: '30px', fontWeight: '700' }}>
-          이런 모임은 어때요?
-        </p>
-        <div className="cards">
-          <div className="card" style={{ width: '18rem' }}>
-            <img
-              src="/images/media1.jpg"
-              className="card-img-top"
-              alt="추천 모임 이미지"
-            />
-            <div className="card-body">
-              <h5 className="card-title">Card with stretched link</h5>
-              <a href="#" className="btn btn-primary stretched-link">
-                Go somewhere
-              </a>
+        {groups?.length === 0 ? (
+          <></>
+        ) : (
+          <>
+            <p style={{ fontSize: '30px', fontWeight: '700' }}>
+              이런 모임은 어때요?
+            </p>
+            <div className="cards">
+              {groups.map((group, index) => (
+                <div key={index} className="card" style={{ width: '18rem' }}>
+                  <Link
+                    to={`/group/detail?group_no=${group.groupNo}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    <img
+                      src={`http://localhost:8080/upload/${group.imgUrl1}`}
+                      className="card-img-top"
+                      alt={group.gtitle}
+                      style={{ height: '180px', objectFit: 'cover' }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{group.gtitle}</h5>
+                      <p className="card-text">
+                        {formatDate(group.startDate)} / {group.addr1}
+                      </p>
+                      <a
+                        href={`/group/detail?group_no=${group.groupNo}`}
+                        className="btn btn-primary stretched-link"
+                      >
+                        자세히 보기
+                      </a>
+                    </div>
+                  </Link>
+                </div>
+              ))}
             </div>
-          </div>
-          <div className="card" style={{ width: '18rem' }}>
-            <img
-              src="/images/media1.jpg"
-              className="card-img-top"
-              alt="추천 모임 이미지"
-            />
-            <div className="card-body">
-              <h5 className="card-title">Card with stretched link</h5>
-              <a href="#" className="btn btn-primary stretched-link">
-                Go somewhere
-              </a>
-            </div>
-          </div>
-          <div className="card" style={{ width: '18rem' }}>
-            <img
-              src="/images/media1.jpg"
-              className="card-img-top"
-              alt="추천 모임 이미지"
-            />
-            <div className="card-body">
-              <h5 className="card-title">Card with stretched link</h5>
-              <a href="#" className="btn btn-primary stretched-link">
-                Go somewhere
-              </a>
-            </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
+
       <MemberProfileView
         show={profileShow}
         onHide={() => setProfileShow(false)}

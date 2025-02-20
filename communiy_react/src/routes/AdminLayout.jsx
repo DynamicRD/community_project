@@ -17,6 +17,11 @@ const AdminLayout = () => {
       navigate('/');
     } else {
       if (!userData) return; // userData가 로드될 때까지 기다림
+
+      if (userData?.role !== 0) {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+      }
     }
   }, [isAuthenticated, userData, navigate]);
 
