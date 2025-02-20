@@ -328,10 +328,13 @@ public class GroupMorakController {
 	public List<GroupMorak> getGroups(@RequestParam(defaultValue = "all") String category) {
 		return service.getGroupsByCategory(category);
 	}
+	
 	@GetMapping("/detailselect")
 	public List<GroupMorak> getDetailGroups(@RequestParam(defaultValue = "all") String category) {
 		System.out.println(service.getGroupsByCategory3(category));
 		return service.getGroupsByCategory3(category);
 	}
+	
+	
 
 }

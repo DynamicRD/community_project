@@ -213,5 +213,4 @@
 		WHERE M.GROUP_NO = #{groupNo}
 		GROUP BY USER_MAX
 	</select>
-
 </mapper>

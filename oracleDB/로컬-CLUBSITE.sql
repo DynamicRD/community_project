@@ -144,7 +144,7 @@ create table member_group(
     no number(6) not null,
     group_no number(6) not null,
     status varchar2(20),             --승인대기, 멤버, 모임장
-     pr varchar2(500),
+    pr varchar2(500),
     primary key(member_group_no)
 );
 --같은 유저가 같은 모임 두번 신청 못하게 unique처리
@@ -171,6 +171,16 @@ create table review(
 );
 
 
+select * from member;
+SELECT 
+    gm.group_title,
+    gm.start_date,
+    gm.last_date,
+    gm.price,
+    mg.status
+FROM member_group mg
+JOIN group_morak gm ON mg.group_no = 72
+WHERE mg.status != 'LEADER';
 -- 사용자
 create table member(
     no number(6) not null,
