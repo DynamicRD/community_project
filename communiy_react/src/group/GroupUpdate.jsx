@@ -31,7 +31,7 @@ export default function GroupUpdate() {
   const price = useRef();
   const addr1 = useRef();
   const addr2 = useRef();
-  const [area, setArea] = useState(items.AREA || '');
+  const [area, setArea] = useState();
   const start_date = useRef();
   const last_date = useRef();
   const comment1 = useRef();
@@ -94,6 +94,7 @@ export default function GroupUpdate() {
       price.current.value = items.PRICE || '';
       addr1.current.value = items.ADDR1 || '';
       addr2.current.value = items.ADDR2 || '';
+      setArea(items.AREA || '');
       const startDate = new Date(items.START_DATE || '');
       startDate.setHours(startDate.getHours() + 9);
       start_date.current.value = startDate.toISOString().slice(0, 16);
@@ -105,9 +106,9 @@ export default function GroupUpdate() {
       setImg_url1(items.IMG_URL1 || '');
       setImg_url2(items.IMG_URL2 || '');
       setImg_url3(items.IMG_URL3 || '');
-      setImgUrl1Preview(items.IMG_URL1 ? `/images/${items.IMG_URL1}` : null);
-      setImgUrl2Preview(items.IMG_URL2 ? `/images/${items.IMG_URL2}` : null);
-      setImgUrl3Preview(items.IMG_URL3 ? `/images/${items.IMG_URL3}` : null);
+      setImgUrl1Preview(items.IMG_URL1 ? `http://localhost:8080/upload/${items.IMG_URL1}` : null);
+      setImgUrl2Preview(items.IMG_URL2 ? `http://localhost:8080/upload/${items.IMG_URL2}` : null);
+      setImgUrl3Preview(items.IMG_URL3 ? `http://localhost:8080/upload/${items.IMG_URL3}` : null);
     }
   }, [items]);
 

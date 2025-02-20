@@ -2,6 +2,7 @@ package com.project.group_morak.controller;
 
 import java.io.Console;
 import java.io.File;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,6 +39,7 @@ public class GroupMorakController {
 	@Autowired
 	private GroupMorakService service;
 
+	// 모임 개설 신청
 	@RequestMapping("/insert")
 	public ResponseEntity<String> insert(@RequestParam Map<String, Object> map,
 			@RequestParam("img_url1") MultipartFile file1,
@@ -106,6 +109,7 @@ public class GroupMorakController {
 		}
 	}
 
+	// 모임 리스트
 	@GetMapping("/list")
 	public List<Map<String, Object>> list(@RequestParam(value = "type") String type) throws Exception {
 		List<Map<String, Object>> data = service.list(type);
@@ -132,11 +136,13 @@ public class GroupMorakController {
 		return data;
 	}
 
+	// 모임 상세
 	@RequestMapping("/detail")
 	public Map<String, Object> read(@RequestParam(value = "group_no") String groupNo) throws Exception {
 		return service.read(groupNo);
 	}
 
+	// 모임 정보 수정
 	@RequestMapping("/update")
 	public ResponseEntity<String> update(@RequestParam Map<String, Object> map,
 			@RequestParam(value = "img_url1", required = false) MultipartFile file1,
@@ -144,7 +150,6 @@ public class GroupMorakController {
 			@RequestParam(value = "img_url3", required = false) MultipartFile file3) throws Exception {
 		try {
 			String groupNo = (String) map.get("group_no");
-			String group_title = (String) map.get("group_title");
 
 			// 데이터베이스에서 현재 파일 경로를 조회
 			Map<String, Object> currentData = service.read(groupNo);
@@ -226,6 +231,7 @@ public class GroupMorakController {
 		}
 	}
 
+	// 모임 참가 신청
 	@RequestMapping("/join")
 	public ResponseEntity<String> join(@RequestParam Map<String, Object> map) {
 		try {
@@ -242,6 +248,7 @@ public class GroupMorakController {
 		}
 	}
 
+	// 모임 찜목록에 저장
 	@RequestMapping("/basket")
 	public ResponseEntity<String> insertBasket(@RequestParam Map<String, Object> map) {
 		try {
@@ -256,21 +263,37 @@ public class GroupMorakController {
 		}
 	}
 
+
+	// 모임 멤버 리스트
 	@RequestMapping("/memberList")
 	public List<Map<String, Object>> memberList(@RequestParam(value = "group_no") String groupNo) {
 		return service.memberList(groupNo);
 	}
 
+
+	// 모임 권한 추출
 	@RequestMapping("/auth")
 	public String groupAuth(@RequestParam Map<String, Object> map) {
 		return service.groupAuth(map);
-
 	}
+
+	// 최대 모임원 필터
+	@RequestMapping("/countGroupMember")
+	public Map<String, Object> countGroupMember(@RequestParam(value = "group_no") String groupNo) {
+	    Map<String, Object> map = service.countGroupMember(groupNo);
+
+	    return map;
+	}
+
+
 
 	@RequestMapping("/statusUpdate")
 	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
 		try {
 			service.memberStatusUpdate(map);
+			if ("REJECT".equals(map.get("status"))) {
+				service.refundMoney(map);
+			}
 			return ResponseEntity.ok("처리가 완료되었습니다.");
 		} catch (Exception e) {
 			log.error("Error group member status updating ", e);
@@ -278,6 +301,8 @@ public class GroupMorakController {
 		}
 	}
 
+
+	// 모임 멤버 신고
 	@RequestMapping("/memberReport")
 	public ResponseEntity<String> memberReport(@RequestParam Map<String, Object> map) {
 		try {

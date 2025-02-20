@@ -167,10 +167,20 @@ function GroupList({ type }) {
                   &nbsp;강원
                   <input type="checkbox" value="충청" name="area" />
                   &nbsp;충청
+                  <input type="checkbox" value="세종" name="area" />
+                  &nbsp;세종
+                  <input type="checkbox" value="대전" name="area" />
+                  &nbsp;대전
                   <input type="checkbox" value="전라" name="area" />
                   &nbsp;전라
+                  <input type="checkbox" value="광주" name="area" />
+                  &nbsp;광주
                   <input type="checkbox" value="경상" name="area" />
                   &nbsp;경상
+                  <input type="checkbox" value="대구" name="area" />
+                  &nbsp;대구
+                  <input type="checkbox" value="울산" name="area" />
+                  &nbsp;울산
                   <input type="checkbox" value="부산" name="area" />
                   &nbsp; 부산
                   <input type="checkbox" value="제주" name="area" />
