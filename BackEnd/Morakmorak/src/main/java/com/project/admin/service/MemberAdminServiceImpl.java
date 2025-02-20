@@ -31,10 +31,28 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 	        return memberAdminMapper.approveGroup(groupNo) > 0;
 	    }
 
-	    
 	    @Override
 	    public boolean rejectGroup(int groupNo) {
 	        return memberAdminMapper.rejectGroup(groupNo) > 0;
+	    }
+	    
+	    @Override
+	    public List<Map<String, Object>> getProfit() {
+	        return memberAdminMapper.getProfit();
+	    }
+	    
+	    @Override
+	    public List<Map<String, Object>> genderCount() {
+	    	return memberAdminMapper.genderCount();
+	    }
+	    
+	    @Override
+	    public List<Map<String, Object>> countVisitGroup() {
+	    	return memberAdminMapper.countVisitGroup();
+	    }
+	    @Override
+	    public List<Map<String, Object>> countAge() {
+	    	return memberAdminMapper.countAge();
 	    }
 
 }

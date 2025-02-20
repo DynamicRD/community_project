@@ -28,9 +28,18 @@ ChartJS.register(
 );
 
 const Stats = () => {
+  const [genderData, setGenderData] = useState({ 남자: 0, 여자: 0 });
+  const [visited, setVisited] = useState([]); // 백엔드에서 가져온 데이터 저장
   const [activeTab, setActiveTab] = useState('daily');
   const [selectedCommunityStat, setSelectedCommunityStat] = useState('전체');
   const [visitorCount, setVisitorCount] = useState(null);
+  const [allAgeData, setAllAgeData] = useState({
+    '10대': 0,
+    '20대': 0,
+    '30대': 0,
+    '40대': 0,
+    '50대 이상': 0,
+  });
 
   // 페이지 로드 시 백엔드 API 호출하여 방문자 수 증가 및 조회
   useEffect(() => {
@@ -44,6 +53,48 @@ const Stats = () => {
         console.error('방문자 수 증가 에러:', error);
       });
   }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/admin/stats/age')
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedData = data.reduce(
+          (acc, curr) => {
+            acc[curr.AGE_GROUP] = curr.COUNT;
+            return acc;
+          },
+          { 남자: 0, 여자: 0 }
+        );
+
+        setAllAgeData(formattedData);
+      })
+      .catch((error) => console.error('연령대 통계 데이터 로드 실패:', error));
+  }, []);
+
+  useEffect(() => {
+    fetch('http://localhost:8080/admin/stats/gender')
+      .then((response) => response.json())
+      .then((data) => {
+        // API 응답을 객체 형태로 변환
+        const formattedData = data.reduce(
+          (acc, curr) => {
+            acc[curr.GENDER] = curr.COUNT;
+            return acc;
+          },
+          { 남자: 0, 여자: 0 }
+        );
+
+        setGenderData(formattedData);
+      })
+      .catch((error) => console.error('성별 통계 데이터 로드 실패:', error));
+  }, []);
+
+  // useEffect(() => {
+  //   fetch('http://localhost:8080/admin/stats/visitAll')
+  //     .then((response) => response.json())
+  //     .then((data) => setVisited(data))
+  //     .catch((error) => console.error('데이터 로드 실패:', error));
+  // }, []);
 
   // 오늘 기준으로 4일전 ~ 오늘 날짜의 라벨 생성 함수
   const getLastFiveDaysLabels = () => {
@@ -91,27 +142,30 @@ const Stats = () => {
     datasets: [
       {
         label: '성별 비율',
-        data: [60, 40],
+        data: [genderData.남자, genderData.여자],
         backgroundColor: ['#797bbb', '#ee6ca5'],
       },
     ],
   };
 
   const ageData = {
-    labels: ['10대', '20대', '30대', '40대', '50대'],
+    labels: ['10대', '20대', '30대', '40대', '50대 이상'],
     datasets: [
       {
         label: '연령대 분포',
-        data: [10, 20, 30, 40, 50, 60, 70, 80],
+        data: [
+          allAgeData['10대'],
+          allAgeData['20대'],
+          allAgeData['30대'],
+          allAgeData['40대'],
+          allAgeData['50대 이상'],
+        ], // 데이터가 없을 경우 0으로 처리
         backgroundColor: [
-          '#797bbb',
-          '#a278c0',
           '#ca72b8',
           '#ee6ca5',
           '#ff6c89',
           '#ff7767',
           '#ff8c40',
-          '#ffa600',
         ],
       },
     ],

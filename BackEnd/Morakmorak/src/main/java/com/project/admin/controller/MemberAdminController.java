@@ -60,6 +60,56 @@ public class MemberAdminController {
             return ResponseEntity.badRequest().body("삭제 실패 - 존재하지 않는 groupNo");
         }
     }
+    
+    /**
+     * 수익 조회
+     */
+    @GetMapping("/stats/profit")
+    public ResponseEntity<List<Map<String, Object>>> getProfit() {
+        return ResponseEntity.ok(memberAdminService.getProfit());
+    }
+    
+    /**
+     * 성별 조회
+     */
+    @GetMapping("/stats/gender")
+    public ResponseEntity<List<Map<String, Object>>> genderCount() {
+        return ResponseEntity.ok(memberAdminService.genderCount());
+    }
+    /**
+     * 연령대 조회
+     */
+    @GetMapping("/stats/age")
+    public ResponseEntity<List<Map<String, Object>>> countAge() {
+        return ResponseEntity.ok(memberAdminService.countAge());
+    }
+    /**
+     * 전체 인기 카테고리
+     */
+    
+    /**
+     * 전체 찜많은 모임
+     */
+    
+    /**
+     * 전체 방문자 많은 사이트
+     */
+    @GetMapping("/stats/visitAll")
+    public ResponseEntity<List<Map<String, Object>>> countVisitGroup() {
+        return ResponseEntity.ok(memberAdminService.countVisitGroup());
+    }
+    
+    /**
+     * 최근 한달 인기 카테고리
+     */
+    
+    /**
+     * 최근 한달 찜많은 모임
+     */
+    
+    /**
+     * 최근 한달 방문자 많은 사이트
+     */
 }
  	
 
