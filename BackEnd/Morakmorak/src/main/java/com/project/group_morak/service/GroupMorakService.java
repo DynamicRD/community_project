@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.project.group_morak.model.GroupMorak;
+
 public interface GroupMorakService {
 	public void insert(Map<String, Object> map) throws Exception; 
 	
@@ -33,5 +35,6 @@ public interface GroupMorakService {
 
 	public Map<String, Object> countGroupMember(String groupNo);
 
+	public List<GroupMorak> getGroupsByCategory(String category);
 
 }

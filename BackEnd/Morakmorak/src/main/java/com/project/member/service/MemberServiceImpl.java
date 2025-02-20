@@ -81,6 +81,7 @@ public class MemberServiceImpl implements MemberService {
 		member.setAddr1(memberDTO.getAddress01());
 		member.setAddr2(memberDTO.getAddress02());
 		if (memberDTO.getProvider().equals("google") || memberDTO.getProvider().equals("kakao")) {
+
 			String imageUrl = memberDTO.getPicture();
 			System.out.println(imageUrl);
 			// URL에서 파일명 추출
@@ -141,6 +142,7 @@ public class MemberServiceImpl implements MemberService {
 		            e.printStackTrace();
 		        }
 			}
+
 
 			member.setProvider(memberDTO.getProvider());
 			member.setProviderId(memberDTO.getProviderId());
@@ -251,6 +253,31 @@ public class MemberServiceImpl implements MemberService {
 		return isMatch;
 	}
 
+
+	@Override
+	public Map<String, Object> findMemberId(Map<String, Object> map) {
+		return mapper.findMemberId(map);
+	}
+
+	@Override
+	public Map<String, Object> findMemberPw(Map<String, Object> map) {
+		return mapper.findMemberPw(map);
+	}
+
+	@Override
+	public void changeMemberPw(Map<String, Object> map) {
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String encryptedPassword = null;
+		if (map.get("newPass") != null) {
+			String rawPassword = (String) map.get("newPass"); // 원래 비밀번호
+			encryptedPassword = encoder.encode(rawPassword);
+			System.out.println(encryptedPassword);
+		}
+		map.put("encryptedPassword", encryptedPassword);
+		mapper.changeMemberPw(map);
+	}
+
+
 	// Content-Type을 기반으로 파일 확장자 반환
 	private static String getFileExtension(String contentType) {
 		switch (contentType) {
@@ -268,4 +295,5 @@ public class MemberServiceImpl implements MemberService {
 			return ".jpg"; // 기본값
 		}
 	}
+
 }

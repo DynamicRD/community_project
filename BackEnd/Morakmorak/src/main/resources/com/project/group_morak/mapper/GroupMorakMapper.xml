@@ -128,8 +128,10 @@
 	</select>
 
 	<select id="memberStatusUpdate">
+
 		UPDATE MEMBER_GROUP SET STATUS = #{status,
 		jdbcType=VARCHAR}
+
 		WHERE NO = #{no} AND GROUP_NO = #{group_no}
 	</select>
 
@@ -138,6 +140,35 @@
 		reason)
 		VALUES(report_seq.NEXTVAL, #{reporter_no}, #{reported_no}, #{reason})
 	</insert>
+	<select id="getGroupsByCategory"
+		resultType="com.project.group_morak.model.GroupMorak">
+		SELECT
+		gm.group_no AS groupNo,
+		gm.group_title AS gTitle,
+		gm.start_date AS startDate,
+		gm.img_url1 AS imgUrl1,
+		gm.area AS addr1
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		WHERE gm.category = #{category}
+		AND gm.start_date > CURRENT_DATE
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 6 ROWS ONLY
+	</select>
+	<select id="getGroupsByCategoryAll"
+		resultType="com.project.group_morak.model.GroupMorak">
+		SELECT
+		gm.group_no AS groupNo,
+		gm.group_title AS gTitle,
+		gm.start_date AS startDate,
+		gm.img_url1 AS imgUrl1,
+		gm.area AS addr1
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		WHERE gm.start_date > CURRENT_DATE
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 6 ROWS ONLY
+	</select>
 
 	<select id="countGroupMember">
 		SELECT

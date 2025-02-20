@@ -71,10 +71,10 @@ const UserTable = () => {
             paginatedUsers.map((user) => (
               <tr key={user.id}>
                 <td>{user.id}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.phone}</td>
-                <td>{user.reg_date}</td>
+                <td>{user.NAME}</td>
+                <td>{user.EMAIL}</td>
+                <td>{user.PHONE}</td>
+                <td>{user.REG_DATE}</td>
                 <td>
                   <Button
                     size="sm"
@@ -127,28 +127,28 @@ const UserTable = () => {
           </Modal.Header>
           <Modal.Body>
             <p>
-              <strong>이름:</strong> {selectedUser.name}
+              <strong>이름:</strong> {selectedUser.NAME}
             </p>
             <p>
-              <strong>이메일:</strong> {selectedUser.email}
+              <strong>이메일:</strong> {selectedUser.EMAIL}
             </p>
             <p>
-              <strong>생년월일:</strong> {selectedUser.birth}
+              <strong>생년월일:</strong> {selectedUser.BIRTH}
             </p>
             <p>
-              <strong>전화번호:</strong> {selectedUser.phone}
+              <strong>전화번호:</strong> {selectedUser.PHONE}
             </p>
             <p>
-              <strong>성별:</strong> {selectedUser.gender}
+              <strong>성별:</strong> {selectedUser.GENDER}
             </p>
             <p>
-              <strong>한줄 소개:</strong> {selectedUser.self_pr}
+              <strong>한줄 소개:</strong> {selectedUser.SELF_PR}
             </p>
             <p>
-              <strong>경고 횟수:</strong> {selectedUser.black}
+              <strong>경고 횟수:</strong> {selectedUser.BLACK}
             </p>
             <p>
-              <strong>회원가입일:</strong> {selectedUser.reg_date}
+              <strong>회원가입일:</strong> {selectedUser.REG_DATE}
             </p>
           </Modal.Body>
           <Modal.Footer>

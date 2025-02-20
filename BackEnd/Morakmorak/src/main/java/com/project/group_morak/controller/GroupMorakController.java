@@ -1,5 +1,6 @@
 package com.project.group_morak.controller;
 
+import java.io.Console;
 import java.io.File;
 import java.math.BigDecimal;
 import java.nio.file.Files;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.group_morak.model.GroupMorak;
 import com.project.group_morak.service.GroupMorakService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -76,7 +78,10 @@ public class GroupMorakController {
 			map.put("img_url1", imgUrls[0]);
 			map.put("img_url2", imgUrls[1]);
 			map.put("img_url3", imgUrls[2]);
-
+			
+			System.out.println(imgUrls[0]);
+			System.out.println(imgUrls[1]);
+			System.out.println(imgUrls[2]);
 			// 날짜 처리
 			String startDateStr = (String) map.get("start_date");
 			String lastDateStr = (String) map.get("last_date");
@@ -96,6 +101,7 @@ public class GroupMorakController {
 			// 서비스 호출
 			service.insert(map);
 			service.insertLeader(map);
+			System.out.println(map);
 			return ResponseEntity.ok("신청이 완료되었습니다. 관리자의 승인 후 모임이 개설됩니다.");
 		} catch (Exception e) {
 			log.error("Error inserting group", e);
@@ -257,11 +263,13 @@ public class GroupMorakController {
 		}
 	}
 
+
 	// 모임 멤버 리스트
 	@RequestMapping("/memberList")
 	public List<Map<String, Object>> memberList(@RequestParam(value = "group_no") String groupNo) {
 		return service.memberList(groupNo);
 	}
+
 
 	// 모임 권한 추출
 	@RequestMapping("/auth")
@@ -278,7 +286,7 @@ public class GroupMorakController {
 	}
 
 
-	// 모임장 - 멤버 승인, 거부 처리
+
 	@RequestMapping("/statusUpdate")
 	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
 		try {
@@ -293,6 +301,7 @@ public class GroupMorakController {
 		}
 	}
 
+
 	// 모임 멤버 신고
 	@RequestMapping("/memberReport")
 	public ResponseEntity<String> memberReport(@RequestParam Map<String, Object> map) {
@@ -303,6 +312,12 @@ public class GroupMorakController {
 			log.error("Error member Reporting ", e);
 			return ResponseEntity.status(500).body("처리에 실패했습니다.");
 		}
+	}
+
+	@GetMapping("/mainselect")
+	public List<GroupMorak> getGroups(@RequestParam(defaultValue = "all") String category) {
+		System.out.println(service.getGroupsByCategory(category));
+		return service.getGroupsByCategory(category);
 	}
 
 }

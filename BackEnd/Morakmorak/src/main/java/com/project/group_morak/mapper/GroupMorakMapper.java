@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.project.group_morak.model.GroupMorak;
+
 @Mapper
 public interface GroupMorakMapper {
 
@@ -36,5 +38,9 @@ public interface GroupMorakMapper {
 	public void memberReport(Map<String, Object> map);
 	
 	public Map<String, Object> countGroupMember(String groupNo);
+
+	public List<GroupMorak> getGroupsByCategory(String category);
+	
+	public List<GroupMorak> getGroupsByCategoryAll();
 
 }

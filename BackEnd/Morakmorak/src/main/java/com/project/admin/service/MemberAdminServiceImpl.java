@@ -22,7 +22,12 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 	    }
 	    
 	    @Override
-	    public List<Map<String, Object>> getGroups() {
-	    	return memberAdminMapper.getGroups();
+	    public List<Map<String, Object>> getAllGroups() {
+	        return memberAdminMapper.getAllGroups();
+	    }
+
+	    @Override
+	    public boolean approveGroup(int groupNo) {
+	        return memberAdminMapper.approveGroup(groupNo) > 0;
 	    }
 }

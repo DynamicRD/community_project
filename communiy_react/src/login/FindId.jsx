@@ -1,15 +1,20 @@
-import React, { useRef, useState } from 'react';
-import { Button, Container, Form, FormControl } from 'react-bootstrap';
-import { Link, Navigate } from 'react-router';
+import React, { useContext, useEffect, useRef, useState } from 'react';
+import { Container, Form } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router';
+import { AuthContext } from '../context/AuthContext'; //
 
 export default function FindId() {
   const phoneNumber = useRef();
   const nameValue = useRef();
   const phoneInput = useRef();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [isPhoneChecked, setIsPhoneChecked] = useState(false);
   const [isPhoneValid, setIsPhoneValid] = useState(false);
   const [isNameChecked, setIsNameChecked] = useState(false);
+  const [responseIdValue, setResponseIdValue] = useState(null);
+  const { isAuthenticated, userData } = useContext(AuthContext);
 
   const handleClick = () => {
     setIsVisible(true);
@@ -34,6 +39,11 @@ export default function FindId() {
       setIsNameChecked(false);
     }
   };
+
+  useEffect(() => {
+    console.log(responseIdValue);
+    setLoading(true);
+  }, [responseIdValue]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -117,26 +127,23 @@ export default function FindId() {
 
     if (isValid && isNameChecked && isPhoneChecked) {
       try {
-        //get방식으로 이름, 전화번호로 검색예정 전화번호 인증완료 된다면
-        const response = await fetch('http://localhost:8080/member/???????', {
+        const form = new FormData();
+        form.append('phone', phoneInput.current.value);
+        form.append('name', nameValue.current.value);
+        const response = await fetch('http://localhost:8080/member/checkId', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData), // formData를 JSON으로 변환하여 전송
+          body: form, // formData를 JSON으로 변환하여 전송
         });
 
         const data = await response.json(); // 서버 응답 받기
-
+        setResponseIdValue(data);
         if (response.ok) {
           alert('인증이 완료 되었습니다');
-          Navigate('/signup');
         } else {
           alert(`회원가입 실패: ${data.message || '알 수 없는 오류'}`);
         }
       } catch (error) {
         console.error('회원가입 오류:', error);
-        alert('서버와의 통신 중 오류가 발생했습니다.');
       }
     } else if (!isNameChecked) {
       alert('아이디를 입력 바랍니다.');
@@ -148,208 +155,317 @@ export default function FindId() {
       alert('전화번호 인증을 먼저 진행하여 주세요');
       phoneNumber.current.focus();
     } else {
-      alert('조건이 위배되어 회원가입에 실패하였습니다.');
+      alert('조건이 위배되어 아이디 찾기에 실패하였습니다.');
     }
   };
-
-  return (
-    <Container>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          height: '80vh',
-        }}
-      >
-        <div
-          style={{
-            padding: '20px',
-            borderRadius: '10px',
-            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
-            width: '400px',
-          }}
-          className="LoginBg"
-        >
-          <h2
-            style={{ textAlign: 'center', fontWeight: '900' }}
-            className="mt-3 mb-4"
-          >
-            아이디 찾기
-          </h2>
-          <Form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              name="name"
-              placeholder="이름을 입력하시오"
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1px solid #ccc',
-                borderRadius: '5px',
-              }}
-              value={formData.name}
-              ref={nameValue}
-              onChange={handleChange}
-              onFocus={nameIsNotEmpty}
-            />
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignContent: 'center',
-                marginTop: '10px',
-              }}
-            >
-              <input
-                type="text"
-                placeholder="전화번호를 입력하시오"
-                name="phone"
-                style={{
-                  width: '78%',
-                  padding: '10px',
-                  marginBottom: '10px',
-                  border: '1px solid #ccc',
-                  borderRadius: '5px',
-                }}
-                value={formData.phone}
-                onChange={handleChange}
-                ref={phoneInput}
-              />
-              <div
-                className="findIdButton ms-1"
-                style={{
-                  width: '22%',
-                  padding: '10px',
-                  marginBottom: '10px',
-                  borderRadius: '5px',
-                  fontSize: '14px',
-                }}
-                onClick={() => {
-                  if (formData.phone === '') {
-                    alert('전화번호를 입력 바랍니다');
-                    phoneInput.current.value = '';
-                    phoneInput.current.focus();
-                  } else {
-                    setIsPhoneChecked(true);
-                    const form = new FormData();
-                    form.append('number', formData.phone);
-
-                    fetch('http://localhost:8080/send-one2', {
-                      method: 'post',
-                      body: form,
-                    }).then((data) => {
-                      // if (formData.phone === data) {
-                      alert('인증번호가 발송 되었습니다');
-                      handleClick();
-                      // } else {
-                      //   alert('전화번호를 잘못 입력하였습니다');
-                      //   phoneNumber.current.value = '';
-                      //   phoneNumber.current.focus();
-                      // }
-                    });
-                  }
-                }}
-              >
-                번호발송
-              </div>
-            </div>
-            <div>
-              {errors.phone && (
-                <div className="text-danger">{errors.phone}</div>
-              )}
-            </div>
-            <div style={{ display: isVisible === true ? 'block' : 'none' }}>
-              <div className="d-flex">
-                <input
-                  placeholder="인증번호입력"
-                  type="text"
-                  name="valid"
-                  ref={phoneNumber}
-                  className="validCode me-1"
-                  style={{
-                    width: '30%',
-                    padding: '10px',
-                    marginBottom: '10px',
-                    border: '1px solid #ccc',
-                    borderRadius: '5px',
-                  }}
-                  onChange={handleChange}
-                />
+  if (!loading) {
+    return (
+      <Container className="d-flex justify-content-center">
+        <div>
+          <span>Loading...</span>
+        </div>
+      </Container>
+    );
+  } else {
+    return (
+      <Container>
+        {isAuthenticated ? (
+          <>
+            {alert('잘못된 접근 입니다.')}
+            {navigate('/')}
+          </>
+        ) : (
+          <>
+            {responseIdValue === null ? (
+              <>
                 <div
-                  className="findIdButton"
                   style={{
-                    width: '22%',
-                    padding: '11px',
-                    marginBottom: '10px',
-                    borderRadius: '5px',
-                    fontSize: '15px',
-                  }}
-                  onClick={() => {
-                    fetch('http://localhost:8080/send-one/number2')
-                      .then((response) => {
-                        return response.json();
-                      })
-                      .then((data) => {
-                        if (Number(phoneNumber.current.value) === data) {
-                          setIsPhoneValid(true);
-                          alert('인증이 완료 되었습니다');
-                        } else {
-                          alert('인증에 실패하였습니다');
-                          phoneNumber.current.value = '';
-                          phoneNumber.current.focus();
-                        }
-                      });
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '80vh',
                   }}
                 >
-                  인증확인
+                  <div
+                    style={{
+                      padding: '20px',
+                      borderRadius: '10px',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                      width: '400px',
+                    }}
+                    className="LoginBg"
+                  >
+                    <h2
+                      style={{ textAlign: 'center', fontWeight: '900' }}
+                      className="mt-3 mb-4"
+                    >
+                      아이디 찾기
+                    </h2>
+                    <Form onSubmit={handleSubmit}>
+                      <input
+                        type="text"
+                        name="name"
+                        placeholder="이름을 입력하시오"
+                        style={{
+                          width: '100%',
+                          padding: '10px',
+                          border: '1px solid #ccc',
+                          borderRadius: '5px',
+                        }}
+                        value={formData.name}
+                        ref={nameValue}
+                        onChange={handleChange}
+                        onFocus={nameIsNotEmpty}
+                      />
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignContent: 'center',
+                          marginTop: '10px',
+                        }}
+                      >
+                        <input
+                          type="text"
+                          placeholder="전화번호를 입력하시오"
+                          name="phone"
+                          style={{
+                            width: '78%',
+                            padding: '10px',
+                            marginBottom: '10px',
+                            border: '1px solid #ccc',
+                            borderRadius: '5px',
+                          }}
+                          value={formData.phone}
+                          onChange={handleChange}
+                          ref={phoneInput}
+                        />
+                        <div
+                          className="findIdButton ms-1"
+                          style={{
+                            width: '22%',
+                            padding: '10px',
+                            marginBottom: '10px',
+                            borderRadius: '5px',
+                            fontSize: '14px',
+                          }}
+                          onClick={() => {
+                            if (formData.phone === '') {
+                              alert('전화번호를 입력 바랍니다');
+                              phoneInput.current.value = '';
+                              phoneInput.current.focus();
+                            } else {
+                              setIsPhoneChecked(true);
+                              const form = new FormData();
+                              form.append('number', formData.phone);
+
+                              fetch('http://localhost:8080/send-one2', {
+                                method: 'post',
+                                body: form,
+                              }).then((data) => {
+                                // if (formData.phone === data) {
+                                console.log(data);
+                                alert('인증번호가 발송 되었습니다');
+                                handleClick();
+                                // } else {
+                                //   alert('전화번호를 잘못 입력하였습니다');
+                                //   phoneNumber.current.value = '';
+                                //   phoneNumber.current.focus();
+                                // }
+                              });
+                            }
+                          }}
+                        >
+                          번호발송
+                        </div>
+                      </div>
+                      <div>
+                        {errors.phone && (
+                          <div className="text-danger">{errors.phone}</div>
+                        )}
+                      </div>
+                      <div
+                        style={{
+                          display: isVisible === true ? 'block' : 'none',
+                        }}
+                      >
+                        <div className="d-flex">
+                          <input
+                            placeholder="인증번호입력"
+                            type="text"
+                            name="valid"
+                            ref={phoneNumber}
+                            className="validCode me-1"
+                            style={{
+                              width: '78%',
+                              padding: '10px',
+                              marginBottom: '10px',
+                              border: '1px solid #ccc',
+                              borderRadius: '5px',
+                            }}
+                            onChange={handleChange}
+                          />
+                          <div
+                            className="findIdButton"
+                            style={{
+                              width: '22%',
+                              padding: '11px',
+                              marginBottom: '10px',
+                              borderRadius: '5px',
+                              fontSize: '15px',
+                            }}
+                            onClick={() => {
+                              fetch('http://localhost:8080/send-one/number2')
+                                .then((response) => {
+                                  return response.json();
+                                })
+                                .then((data) => {
+                                  if (
+                                    Number(phoneNumber.current.value) === data
+                                  ) {
+                                    setIsPhoneValid(true);
+                                    alert('인증이 완료 되었습니다');
+                                  } else {
+                                    alert('인증에 실패하였습니다');
+                                    phoneNumber.current.value = '';
+                                    phoneNumber.current.focus();
+                                  }
+                                });
+                            }}
+                          >
+                            인증확인
+                          </div>
+                        </div>
+                      </div>
+                      <div>
+                        {errors.valid && (
+                          <div className="text-danger">{errors.valid}</div>
+                        )}
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          marginTop: '10px',
+                        }}
+                      >
+                        <button className="buttonLogin">아이디 찾기</button>
+                      </div>
+                    </Form>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        marginTop: '15px',
+                        fontSize: '14px',
+                      }}
+                    >
+                      <p>
+                        비밀번호를 잊어버리셨나요?{' '}
+                        <Link
+                          to="/find-password"
+                          style={{
+                            textDecoration: 'none',
+                          }}
+                        >
+                          <span className="findId">비밀번호 찾기</span>
+                        </Link>
+                        <br />
+                        아직 회원이 아니신가요?{' '}
+                        <Link
+                          to="/signup"
+                          style={{
+                            textDecoration: 'none',
+                          }}
+                        >
+                          <span className="findId">회원가입</span>
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-            <div>
-              {errors.valid && (
-                <div className="text-danger">{errors.valid}</div>
-              )}
-            </div>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: '10px',
-              }}
-            >
-              {' '}
-              <button className="buttonLogin">아이디 찾기</button>
-            </div>
-          </Form>
-          <div
-            style={{ textAlign: 'center', marginTop: '15px', fontSize: '14px' }}
-          >
-            <p>
-              비밀번호를 잊어버리셨나요?{' '}
-              <Link
-                to="/find-password"
-                style={{
-                  textDecoration: 'none',
-                }}
-              >
-                <span className="findId">비밀번호 찾기</span>
-              </Link>
-              <br />
-              아직 회원이 아니신가요?{' '}
-              <Link
-                to="/signup"
-                style={{
-                  textDecoration: 'none',
-                }}
-              >
-                <span className="findId">회원가입</span>
-              </Link>
-            </p>
-          </div>
-        </div>
-      </div>
-    </Container>
-  );
+              </>
+            ) : (
+              <>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '80vh',
+                  }}
+                >
+                  <div
+                    style={{
+                      padding: '20px',
+                      borderRadius: '10px',
+                      boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                      width: '400px',
+                    }}
+                    className="LoginBg"
+                  >
+                    <span className="mt-3 mb-4 d-flex justify-content-center">
+                      {responseIdValue.length < 0 ? (
+                        <>입력한 정보에 대한 아이디가 존재하지 않습니다</>
+                      ) : (
+                        <>
+                          회원님의 아이디는 <b>{responseIdValue.ID}</b> 입니다
+                        </>
+                      )}
+                    </span>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: '10px',
+                      }}
+                    >
+                      <button
+                        className="buttonLogin"
+                        onClick={() => {
+                          navigate('/login');
+                        }}
+                      >
+                        로그인
+                      </button>
+                    </div>
+                    <div
+                      style={{
+                        textAlign: 'center',
+                        marginTop: '15px',
+                        fontSize: '14px',
+                      }}
+                    >
+                      <p>
+                        비밀번호를 잊어버리셨나요?{' '}
+                        <Link
+                          to="/find-password"
+                          style={{
+                            textDecoration: 'none',
+                          }}
+                        >
+                          <span className="findId">비밀번호 찾기</span>
+                        </Link>
+                        <br />
+                        아직 회원이 아니신가요?{' '}
+                        <Link
+                          to="/signup"
+                          style={{
+                            textDecoration: 'none',
+                          }}
+                        >
+                          <span className="findId">회원가입</span>
+                        </Link>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </>
+            )}
+          </>
+        )}
+      </Container>
+    );
+  }
 }
