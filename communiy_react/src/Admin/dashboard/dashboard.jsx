@@ -15,8 +15,8 @@ const Dashboard = () => {
             <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
             <Breadcrumb.Item active>Overview</Breadcrumb.Item>
           </Breadcrumb>
-          <h2>Dashboard</h2>
-          <p>This is the homepage of a simple admin interface.</p>
+          <h2>대시보드</h2>
+
           <StatCards />
           <Row>
             <Col xl={8}>

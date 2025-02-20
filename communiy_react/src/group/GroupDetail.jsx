@@ -45,20 +45,18 @@ function GroupDetail() {
 
   if (loading) {
     return <div>loading</div>;
-  } else {
-    return (
-      <Container>
-        {items.length > 0 ? (
-          items.map((item) => (
-            <GroupDetailItem key={item.GROUP_NO} item={item} />
-          ))
-        ) : (
-          <div>그룹 정보를 찾을 수 없습니다.</div>
-        )}
-        <GroupDetailButton group_no={group_no} />
-      </Container>
-    );
   }
+
+  return (
+    <Container>
+      {items.length > 0 ? (
+        items.map((item) => <GroupDetailItem key={item.GROUP_NO} item={item} />)
+      ) : (
+        <div>그룹 정보를 찾을 수 없습니다.</div>
+      )}
+      <GroupDetailButton group_no={group_no} />
+    </Container>
+  );
 }
 
 export default GroupDetail;

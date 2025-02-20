@@ -14,7 +14,8 @@
 		img_url3
 		) VALUES (
 		group_seq.nextval, #{no},
-		#{group_title}, #{category},
+		#{group_title},
+		#{category},
 		#{user_max},
 		#{price}, #{area},
 		#{addr1}, #{addr2},
@@ -46,7 +47,7 @@
 		img_url1
 		FROM GROUP_MORAK
 		WHERE type=#{type}
-		<!-- AND approval='Y' -->
+		AND approval='Y'
 	</select>
 
 	<select id="read">
@@ -56,16 +57,14 @@
 		MG.NO AS MEMBER_NO,
 		M.NICKNAME,
 		M.IMG_URL AS PROFILE_IMG,
-		M.STAR_SUM,
-		COUNT(CASE WHEN MG.STATUS =
-		'MEMBER' THEN 1 END) OVER (PARTITION BY G.GROUP_NO) AS
-		MEMBER_COUNT
+		M.STAR_SUM
 		FROM GROUP_MORAK G
-		LEFT JOIN MEMBER_GROUP MG ON G.GROUP_NO =
-		MG.GROUP_NO
-		INNER JOIN MEMBER M ON G.NO = M.NO
-		WHERE G.GROUP_NO =
-		#{groupNo}
+		LEFT JOIN
+		MEMBER_GROUP MG ON G.GROUP_NO = MG.GROUP_NO
+		INNER JOIN MEMBER M ON G.NO
+		= M.NO
+		WHERE G.GROUP_NO = #{groupNo}
+		AND MG.STATUS = 'LEADER'
 	</select>
 
 	<update id="update">
@@ -124,7 +123,7 @@
 		SELECT STATUS
 		FROM MEMBER_GROUP MG INNER JOIN MEMBER M
 		ON MG.NO = M.NO
-		WHERE GROUP_NO = #{group_no}
+		WHERE GROUP_NO = #{group_no} AND M.NO=#{no}
 	</select>
 
 	<select id="memberStatusUpdate">
@@ -138,7 +137,8 @@
 	<insert id="memberReport">
 		INSERT INTO REPORT(rep_no, reporter_no, reported_no,
 		reason)
-		VALUES(report_seq.NEXTVAL, #{reporter_no}, #{reported_no}, #{reason})
+		VALUES(report_seq.NEXTVAL, #{reporter_no}, #{reported_no},
+		#{reason})
 	</insert>
 	<select id="getGroupsByCategory"
 		resultType="com.project.group_morak.model.GroupMorak">
@@ -150,7 +150,8 @@
 		gm.area AS addr1
 		FROM group_morak gm
 		JOIN member m ON gm.no = m.no
-		WHERE gm.category = #{category}
+		WHERE gm.category =
+		#{category}
 		AND gm.start_date > CURRENT_DATE
 		AND gm.approval = 'Y'
 		ORDER BY m.star_sum DESC
@@ -171,14 +172,45 @@
 		ORDER BY m.star_sum DESC
 		FETCH FIRST 6 ROWS ONLY
 	</select>
+	<select id="getGroupsByCategory3"
+		resultType="com.project.group_morak.model.GroupMorak">
+		SELECT
+		gm.group_no AS groupNo,
+		gm.group_title AS gTitle,
+		gm.start_date AS startDate,
+		gm.img_url1 AS imgUrl1,
+		gm.area AS addr1
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		WHERE gm.category = #{category}
+		AND gm.start_date > CURRENT_DATE
+		AND gm.approval = 'Y'
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 3 ROWS ONLY
+	</select>
+	<select id="getGroupsByCategoryAll3"
+		resultType="com.project.group_morak.model.GroupMorak">
+		SELECT
+		gm.group_no AS groupNo,
+		gm.group_title AS gTitle,
+		gm.start_date AS startDate,
+		gm.img_url1 AS imgUrl1,
+		gm.area AS addr1
+		FROM group_morak gm
+		JOIN member m ON gm.no = m.no
+		WHERE gm.start_date > CURRENT_DATE
+		AND gm.approval = 'Y'
+		ORDER BY m.star_sum DESC
+		FETCH FIRST 3 ROWS ONLY
+	</select>
 	<select id="countGroupMember">
 		SELECT
 		COUNT(*) - 1 AS MEMBER_COUNT,
 		G.USER_MAX
-		FROM MEMBER_GROUP M
+		FROM
+		MEMBER_GROUP M
 		INNER JOIN GROUP_MORAK G ON M.GROUP_NO = G.GROUP_NO
 		WHERE M.GROUP_NO = #{groupNo}
 		GROUP BY USER_MAX
 	</select>
-
 </mapper>

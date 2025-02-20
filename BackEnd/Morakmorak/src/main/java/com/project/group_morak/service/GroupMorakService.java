@@ -36,5 +36,7 @@ public interface GroupMorakService {
 	public Map<String, Object> countGroupMember(String groupNo);
 
 	public List<GroupMorak> getGroupsByCategory(String category);
+	
+	public List<GroupMorak> getGroupsByCategory3(String category);
 
 }

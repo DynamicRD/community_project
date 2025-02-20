@@ -28,4 +28,10 @@ public interface MypageMapper {
 	List<Notification> selectNotification(int no); 
 	
 	void readNotification(int no);
+	
+	List<GroupMember> getMineGroup(int no);
+	
+	List<GroupMember> getMineEndGroup(int no);
+	
+	List<GroupMember> getMineLeaderGroup(int no);
 }

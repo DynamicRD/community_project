@@ -5,16 +5,16 @@ import './App.css';
 const ServicesSection = () => {
   const services = [
     {
-      title: '매니징 서비스 제공',
+      title: '채팅 서비스 제공',
       description:
-        '견적 협상, 업무 범위 조정, 그리고 소통의 부담 등 개인 디자이너로서 겪을 수 있던 다양한 문제들을 해결하는 데 도움을 줍니다.',
+        '모임 일정, 준비물 등 공지사항 공유와 서로의 관심사에 대한 일상 대화를 나눌 수 있도록 소통의 창구로써 채팅 서비스를 제공합니다.',
       image: '../images/support_img01.png',
       alt: 'Service 1',
     },
     {
-      title: '포트폴리오 관리 및 홍보 지원',
+      title: '통계 관리 및 홍보 지원',
       description:
-        '프리랜서들의 포트폴리오를 관리하고 적절한 홍보 전략을 통해 더 넓은 기회를 제공합니다.',
+        '통계 관리를 통해 일별/전체통계, 유저통계, 채널통계 등 적절한 홍보 전략을 수립하고 더 넓은 기회를 제공할 수 있도록 도움을 드립니다.',
       image: '../images/support_img02.png',
       alt: 'Service 2',
     },

@@ -28,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.group_morak.model.GroupMorak;
 import com.project.group_morak.service.GroupMorakService;
+import com.project.mypage.model.TransactionLog;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -139,7 +140,10 @@ public class GroupMorakController {
 	// 모임 상세
 	@RequestMapping("/detail")
 	public Map<String, Object> read(@RequestParam(value = "group_no") String groupNo) throws Exception {
-		return service.read(groupNo);
+		Map<String, Object> map = service.read(groupNo);
+		Map<String, Object> map2 = service.countGroupMember(groupNo);
+		map.put("MEMBER_COUNT", map2.get("MEMBER_COUNT"));
+		return map;
 	}
 
 	// 모임 정보 수정
@@ -237,7 +241,13 @@ public class GroupMorakController {
 		try {
 			service.join(map);
 			service.changeMoney(map);
-
+			System.out.println(map);
+			TransactionLog transactionLog = new TransactionLog();
+//			transactionLog.setAmount(map.get(money));
+//			transactionLog.setNo(member.getNo());
+//			transactionLog.setType("충전");
+//		    System.out.println("거래내역 로그"+transactionLog);
+//			mapper.insertHistory(transactionLog);
 			return ResponseEntity.ok("신청이 완료되었습니다. 모임장의 승인 후 활동이 가능합니다.");
 		} catch (DataIntegrityViolationException e) { // 유니크 제약 조건 위반 예외 처리
 			log.error("Duplicate basket entry", e);
@@ -316,8 +326,15 @@ public class GroupMorakController {
 
 	@GetMapping("/mainselect")
 	public List<GroupMorak> getGroups(@RequestParam(defaultValue = "all") String category) {
-		System.out.println(service.getGroupsByCategory(category));
 		return service.getGroupsByCategory(category);
 	}
+	
+	@GetMapping("/detailselect")
+	public List<GroupMorak> getDetailGroups(@RequestParam(defaultValue = "all") String category) {
+		System.out.println(service.getGroupsByCategory3(category));
+		return service.getGroupsByCategory3(category);
+	}
+	
+	
 
 }
