@@ -1,3 +1,4 @@
+
 DROP TABLE basket CASCADE CONSTRAINTS;
 DROP TABLE group_morak CASCADE CONSTRAINTS;
 DROP TABLE comments CASCADE CONSTRAINTS;
@@ -11,7 +12,6 @@ DROP TABLE messages CASCADE CONSTRAINTS;
 DROP TABLE visit_log CASCADE CONSTRAINTS;
 DROP TABLE report CASCADE CONSTRAINTS;
 DROP TABLE transaction_log CASCADE CONSTRAINTS;
-
 
 
 create sequence basket_seq 
@@ -241,7 +241,6 @@ create table notice(
     primary key(notice_no)
 );
 
-
 -- FAQ
 create table faq(
     faq_no number(6) not null,
@@ -294,6 +293,55 @@ create table Transaction_log(
     primary key(transaction_no)
 );
 
+    
+--관리자
+delete from member where gender='male';
+INSERT INTO member (
+    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
+    star_sum, black, reg_date, img_url, self_pr
+) VALUES (
+    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
+    'none', 'none', 'admin', 'admin', 
+    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), '여자', 
+    100000, '12345', 'Seoul', 'Admin Street 1', 
+    0, 0, SYSDATE, '', '관리자 계정입니다.'
+);
 
 
 
+select * from charge; 
+SELECT TO_CHAR(reg_date, 'YYYY-MM-DD') AS transaction_date, -- 날짜 형식 변환
+       SUM(amount) AS total_amount
+FROM Transaction_log
+GROUP BY TO_CHAR(reg_date, 'YYYY-MM-DD')
+ORDER BY transaction_date;
+
+SELECT gender, count(*) as count
+		FROM MEMBER
+		GROUP BY gender;
+        
+SELECT
+		    CASE 
+		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 10 AND 19) THEN '10대'
+		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 20 AND 29) THEN '20대'
+		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 30 AND 39) THEN '30대'
+		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 40 AND 49) THEN '40대'
+		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 50 AND 59) THEN '50대'
+		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) >= 60) THEN '60대 이상'
+		        ELSE '기타'
+		    END AS age_group,
+		    COUNT(*) AS count
+			FROM member;
+            
+SELECT g.group_no, count(*) AS count
+		FROM member_group mg INNER JOIN group_morak g
+		ON mg.member_group_no = g.group_no
+		where mg.status = 'MEMBER' and g.approval= 'Y'
+		GROUP BY g.group_no
+		ORDER BY count DESC;
+        
+       ELECT URL, COUNT(DISTINCT IP) AS count
+		FROM VISIT_LOG
+		WHERE URL LIKE '/GROUP/DETAIL%'
+		GROUP BY URL
+		ORDER BY visitor_count DESC;
