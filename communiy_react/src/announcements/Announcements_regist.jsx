@@ -1,13 +1,6 @@
 import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Table,
-  Form,
-  InputGroup,
-  Button,
-  Modal,
-  Pagination,
-} from 'react-bootstrap';
+
 const Announcements_regist = () => {
   const navigate = useNavigate();
   const title = useRef();

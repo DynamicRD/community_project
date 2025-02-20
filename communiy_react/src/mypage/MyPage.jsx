@@ -54,25 +54,6 @@ function MyPage() {
   };
 
   // Pagination UI 렌더링
-  <Pagination className="d-flex justify-content-center">
-    <Pagination.Prev
-      onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-      disabled={currentPage === 1}
-    />
-    {[...Array(totalPages)].map((_, index) => (
-      <Pagination.Item
-        key={index + 1}
-        active={index + 1 === currentPage}
-        onClick={() => handlePageChange(index + 1)}
-      >
-        {index + 1}
-      </Pagination.Item>
-    ))}
-    <Pagination.Next
-      onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
-      disabled={currentPage === totalPages}
-    />
-  </Pagination>;
 
   // 알림 내용
   useEffect(() => {
@@ -87,6 +68,7 @@ function MyPage() {
       .catch((error) => {
         console.error('알림 데이터 로드 실패:', error);
       });
+    console.log(userData.imgUrl);
   }, [userData]);
 
   useEffect(() => {
@@ -179,7 +161,7 @@ function MyPage() {
           <Row>
             <Col md={2}>
               <img
-                src={`D:/community_project/communiy_react/public/images/${userData?.imgUrl}`}
+                src={`http://localhost:8080/upload/${userData?.imgUrl}`}
                 className="rounded-circle"
                 alt="Profile Picture"
                 style={{
@@ -345,12 +327,26 @@ function MyPage() {
           {/* 해당 모임 테이블 렌더링 */}
           {renderTable()}
 
-          <Pagination className="d-flex justify-content-center ">
-            <Pagination.Prev />
-            <Pagination.Item>{1}</Pagination.Item>
-            <Pagination.Item>{2}</Pagination.Item>
-            <Pagination.Item>{3}</Pagination.Item>
-            <Pagination.Next />
+          <Pagination className="d-flex justify-content-center">
+            <Pagination.Prev
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+              disabled={currentPage === 1}
+            />
+            {[...Array(totalPages)].map((_, index) => (
+              <Pagination.Item
+                key={index + 1}
+                active={index + 1 === currentPage}
+                onClick={() => handlePageChange(index + 1)}
+              >
+                {index + 1}
+              </Pagination.Item>
+            ))}
+            <Pagination.Next
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+              disabled={currentPage === totalPages}
+            />
           </Pagination>
           <div className="text-center">
             {' '}

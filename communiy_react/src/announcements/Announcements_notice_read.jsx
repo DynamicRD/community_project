@@ -34,7 +34,6 @@ export default function Announcements_notice_read() {
   const [data, loading] = useFetch(url);
 
   if (loading) {
-    console.log(data);
     return <div>loading</div>;
   } else {
     return (

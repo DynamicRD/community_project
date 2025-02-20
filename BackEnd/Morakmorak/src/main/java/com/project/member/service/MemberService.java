@@ -1,7 +1,6 @@
 package com.project.member.service;
 
-import java.util.Map;
-
+import java.io.IOException;
 import java.util.Map;
 
 import com.project.member.model.Member;
@@ -12,7 +11,7 @@ public interface MemberService {
 
 	boolean nickDuplicateCheck(Member member);
 
-	void register(MemberRegist memberDTO);
+	void register(MemberRegist memberDTO) throws IOException;
 
 	void infoChange(MemberRegist memberDTO);
 
@@ -31,4 +30,10 @@ public interface MemberService {
 	boolean passCheckNo(Member member);
 	
 	void deleteMember(Member member);
+	
+	Map<String, Object> findMemberId(Map<String, Object> map);
+	
+	Map<String, Object> findMemberPw(Map<String, Object> map);
+	
+	void changeMemberPw(Map<String, Object> map);
 }

@@ -12,7 +12,7 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
         setGroupDetail(dataArray);
       });
   }, [group_no]);
-  const [pr, setPr] = useState();
+  const [pr, setPr] = useState(null);
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',
@@ -52,14 +52,17 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
         <Button
           variant="primary"
           onClick={() => {
-            if (!pr.trim()) {
+            if (!pr) {
               alert('한마디를 작성해주세요.');
+              return;
+            }
+            if(items.PRICE>userData?.money){
+              alert('포인트가 부족합니다.');
               return;
             }
             if (confirm('신청하시겠습니까?')) {
               const form = new FormData();
               form.append('group_no', Number(items.GROUP_NO));
-              form.append('status', 'waiting');
               form.append('no', userData?.no); // 회원 아이디
               form.append('pr', pr); // 신청 폼
               form.append('price', Number(items.PRICE));

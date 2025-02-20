@@ -42,6 +42,7 @@ export default function MembershipWithdrawal() {
           address01: userData.addr1,
           address02: userData.addr2,
           provider: userData.provider,
+          picture: userData.imgUrl,
         }));
       } else {
         setFormData((prev) => ({
@@ -59,6 +60,7 @@ export default function MembershipWithdrawal() {
           address01: userData.addr1,
           address02: userData.addr2,
           provider: userData.provider,
+          picture: userData.imgUrl,
         }));
       }
     }
@@ -91,6 +93,7 @@ export default function MembershipWithdrawal() {
     phone3: '',
     email: '',
     valid: '',
+    picture: '',
   });
 
   const [errors, setErrors] = useState({

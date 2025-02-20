@@ -25,7 +25,7 @@ export default function MemberProfileView({ show, onHide, member }) {
         align-items-center gap-3"
           >
             <Image
-              src={`/images/${member.IMG_URL}`}
+              src={`http://localhost:8080/upload/${member.IMG_URL}`}
               roundedCircle
               style={{ height: '100px', width: '100px' }}
             />
@@ -47,7 +47,7 @@ export default function MemberProfileView({ show, onHide, member }) {
               value={member.SELF_PR}
             />
           </InputGroup>
-          <div className="text-end">
+          <div className="text-end mt-2">
             <Button
               variant="danger"
               onClick={() => {

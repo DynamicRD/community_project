@@ -16,7 +16,7 @@ import GoogleMap from './GoogleMap';
 
 export default function GroupDetailItem({ item }) {
   const [activeMembers, setActiveMembers] = useState([]);
-useEffect(() => {
+  useEffect(() => {
     fetch(`http://localhost:8080/group/memberList?group_no=${item.GROUP_NO}`)
       .then((res) => res.json())
       .then((data) => {
@@ -25,8 +25,9 @@ useEffect(() => {
 
         // 상태 설정
         setActiveMembers(activeMembers);
-      }).catch((error) => console.error('Error fetching group members:', error));
-  }, [item.GROUP_NO]);
+      })
+      .catch((error) => console.error('Error fetching group members:', error));
+  }, [item.GROUP_NO, item]);
 
   //멤버 프로필 띄우기
   const [profileShow, setProfileShow] = useState(false);
@@ -74,13 +75,13 @@ useEffect(() => {
   return (
     <div className="group_detail">
       <div className="information row">
-        <div className='col'>
+        <div className="col">
           <Link to={`/group/${item.TYPE}_list`}>
             <h4>{item.TYPE === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
           </Link>
           <img
             className="img-fluid"
-            src={`/images/${item.IMG_URL1}`}
+            src={`http://localhost:8080/upload/${item.IMG_URL1}`}
             alt="모임 이미지"
             style={{ width: '100%', height: '400px' }}
           />
@@ -96,10 +97,7 @@ useEffect(() => {
               {item.CATEGORY === 'travel' && '여행'}
               {item.CATEGORY === 'hobby' && '취미'}
             </p>
-            <span
-              className="group_span"
-              style={{ fontSize: '35px'}}
-            >
+            <span className="group_span" style={{ fontSize: '35px' }}>
               {item.GROUP_TITLE}
             </span>
           </div>
@@ -136,13 +134,17 @@ useEffect(() => {
         <div className="profile mt-5">
           <div className="d-flex align-items-center">
             <img
-              src={`/images/${item.PROFILE_IMG}`}
+              src={`http://localhost:8080/upload/${item.PROFILE_IMG}`}
               alt="모임장 프로필"
               className="rounded-circle"
             />
-            <h3 className="p-">{item.NICKNAME} 모임장</h3>
+            <h3 className="p-2">{item.NICKNAME} 모임장</h3>
           </div>
-          <h4>{item.STAR_SUM===0?'아직 등록된 평점이 없습니다.':`평균별점 ${item.STAR_SUM}`}</h4>
+          <h4>
+            {item.STAR_SUM === 0
+              ? '아직 등록된 평점이 없습니다.'
+              : `평균별점 ${item.STAR_SUM}`}
+          </h4>
         </div>
       </div>
 
@@ -157,13 +159,13 @@ useEffect(() => {
         {item.IMG_URL2 && (
           <img
             className="img-fluid centered-image"
-            src={`/images/${item.IMG_URL2}`}
+            src={`http://localhost:8080/upload/${item.IMG_URL2}`}
           />
         )}
         {item.IMG_URL3 && (
           <img
             className="img-fluid centered-image"
-            src={`/images/${item.IMG_URL3}`}
+            src={`http://localhost:8080/upload/${item.IMG_URL3}`}
           />
         )}
         <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
@@ -183,42 +185,47 @@ useEffect(() => {
           />
         </Form.Group>
       </div>
-
-      <div className="groupMemberList">
-        <p
-          style={{ fontSize: '35px', marginBottom: '10px', fontWeight: '700' }}
-        >
-          현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
-        </p>
-        <ListGroup as="ol">
-          {activeMembers.map((member) => {
-            return (
-              <ListGroup.Item
-                key={member.NO}
-                as="li"
-                className="d-flex justify-content-between align-items-center"
-              >
-                <div className="ms-2 me-auto">
-                  <div>
-                    <Image
-                      src={`/images/${member.IMG_URL}`}
-                      roundedCircle
-                      style={{ height: '40px', width: '40px' }}
-                    />{' '}
-                    &nbsp;<span className="fs-5">{member.NICKNAME}</span>
-                  </div>
-                </div>
-                <Button
-                  variant="primary"
-                  onClick={() => profileOpen(member.NO)}
+      {item.MEMBER_COUNT > 0 && (
+        <div className="groupMemberList">
+          <p
+            style={{
+              fontSize: '35px',
+              marginBottom: '10px',
+              fontWeight: '700',
+            }}
+          >
+            현재 참여중인 멤버({item.MEMBER_COUNT-1}/{item.USER_MAX})
+          </p>
+          <ListGroup as="ol">
+            {activeMembers.map((member) => {
+              return (
+                <ListGroup.Item
+                  key={member.NO}
+                  as="li"
+                  className="d-flex justify-content-between align-items-center"
                 >
-                  프로필 보기
-                </Button>
-              </ListGroup.Item>
-            );
-          })}
-        </ListGroup>
-      </div>
+                  <div className="ms-2 me-auto">
+                    <div>
+                      <Image
+                        src={`http://localhost:8080/upload/${member.IMG_URL}`}
+                        roundedCircle
+                        style={{ height: '40px', width: '40px' }}
+                      />{' '}
+                      &nbsp;<span className="fs-5">{member.NICKNAME}</span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="primary"
+                    onClick={() => profileOpen(member.NO)}
+                  >
+                    프로필 보기
+                  </Button>
+                </ListGroup.Item>
+              );
+            })}
+          </ListGroup>
+        </div>
+      )}
 
       <div className="map">
         <p style={{ fontSize: '37px', fontWeight: '700' }}>

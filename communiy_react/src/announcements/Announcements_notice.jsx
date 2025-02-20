@@ -33,6 +33,46 @@ export default function Announcements_notice() {
     getList('http://localhost:8080/announcements/notice/list');
   }, []);
 
+  const [groupedNotices, setGroupedNotices] = useState([]);
+
+  //페이징
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
+  const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
+  const reviewsPerPage = 4; //현재 페이지 내 보여줄 리스트 개수
+
+  useEffect(() => {
+    const groupNotices = [];
+    for (let i = 0; i < noticeList.length; i += reviewsPerPage) {
+      groupNotices.push(noticeList.slice(i, i + reviewsPerPage));
+    }
+    setGroupedNotices(groupNotices);
+  }, [noticeList]);
+
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (pageRangeStart > 0) {
+      setPageRangeStart(pageRangeStart - 5);
+      setPageRangeEnd(pageRangeEnd - 5);
+    }
+  };
+
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (pageRangeEnd < groupedNotices.length) {
+      setPageRangeStart(pageRangeStart + 5);
+      setPageRangeEnd(pageRangeEnd + 5);
+    }
+  };
+
+  //현재 페이지에서 내가 출력하고자 하는 리뷰의 개수를 함수를 통해 groupedReviews[currentPage - 1] 조절 한 뒤 currentReviews에 저장
+  const currentReviews = groupedNotices[currentPage - 1] || [];
+
   return (
     // 카테고리 적용 고민
     <Container>
@@ -61,7 +101,7 @@ export default function Announcements_notice() {
             >
               {noticeList.length}개 공지사항
             </div>
-            {noticeList.length <= 0 ? (
+            {groupedNotices.length <= 0 ? (
               <div
                 className="ms-5 mb-3"
                 style={{ fontFamily: 'Freesentation-9Black' }}
@@ -69,7 +109,7 @@ export default function Announcements_notice() {
                 공지사항이 없습니다.
               </div>
             ) : (
-              noticeList.map((object) => (
+              currentReviews.map((object) => (
                 <tbody key={object.NOTICE_NO}>
                   <tr>
                     <td className="table_td_title">
@@ -92,7 +132,40 @@ export default function Announcements_notice() {
           </table>
         </Container>
         <div className="d-flex justify-content-center align-content-center mt-4">
-          <Pagination size="sm">{item}</Pagination>
+          <Pagination size="sm">
+            {pageRangeStart < 5 ? (
+              <>{null}</>
+            ) : (
+              <>
+                <Pagination.Prev
+                  onClick={handlePrevPage}
+                  disabled={pageRangeStart === 0}
+                />
+              </>
+            )}
+
+            {Array.from({ length: 5 }, (_, index) => {
+              const pageNumber = pageRangeStart + index + 1;
+              if (pageNumber <= groupedNotices.length) {
+                return (
+                  <Pagination.Item
+                    key={pageNumber}
+                    active={pageNumber === currentPage}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </Pagination.Item>
+                );
+              }
+              return null;
+            })}
+            {pageRangeEnd < groupedNotices.length && (
+              <Pagination.Next
+                onClick={handleNextPage}
+                disabled={pageRangeEnd >= groupedNotices.length}
+              />
+            )}
+          </Pagination>
         </div>
       </div>
     </Container>

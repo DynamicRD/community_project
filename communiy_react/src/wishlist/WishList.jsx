@@ -18,6 +18,7 @@ export default function WishList() {
       .then((response) => response.json())
       .then((data) => {
         setFavoriteList(data);
+        console.log(data);
       });
   }
 
@@ -26,6 +27,7 @@ export default function WishList() {
     if (!userData) return;
 
     getList(`http://localhost:8080/favorites/${userData?.no}`);
+    console.log(userData?.no);
   }, [userData]);
 
   return (

@@ -84,6 +84,11 @@
   border-right: none;
 }
 
+.validCode2 {
+  border-radius: 5px 0px 0px 5px;
+  border-right: none;
+}
+
 .OnSubmitForm {
   margin-left: 110px;
 }

@@ -20,4 +20,14 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 	    public List<Map<String, Object>> getUsers() {
 	        return memberAdminMapper.getUsers();
 	    }
+	    
+	    @Override
+	    public List<Map<String, Object>> getAllGroups() {
+	        return memberAdminMapper.getAllGroups();
+	    }
+
+	    @Override
+	    public boolean approveGroup(int groupNo) {
+	        return memberAdminMapper.approveGroup(groupNo) > 0;
+	    }
 }
