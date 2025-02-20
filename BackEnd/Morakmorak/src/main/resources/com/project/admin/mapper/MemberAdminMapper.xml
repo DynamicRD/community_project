@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.admin.mapper.MemberAdminMapper">
-<!-- 모든 회원 조회 -->
+	<!-- 모든 회원 조회 -->
 	<select id="getUsers"
 		resultType="map">
 		SELECT no, name, email, phone, to_date(reg_date, 'yyyy-mm-dd'), gender, nickname, self_pr, black
 		FROM member ORDER BY no DESC
+	</select>
+	<!-- 모든 모임 조회 -->
+	<select id="getGroups"
+		resultType="map">
+		SELECT group_no, group_title, category, user_max, to_date(reg_date, 'yyyy-mm-dd'), area, type, approval
+		FROM group_morak ORDER BY group_no DESC
 	</select>
 </mapper>

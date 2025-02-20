@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.favorite.mapper.FavoriteMapper">
+
+	<select id="favoriteList" resultType="java.util.Map">
+		SELECT BASKET_NO, MG.NO AS NO, MG.GROUP_NO AS GROUP_NO, M.NICKNAME AS
+		NICKNAME,
+		G.GROUP_TITLE AS GROUP_TITLE, G.IMG_URL1 AS IMG_URL1, G.COMMENT1 AS
+		COMMENT1,
+		TO_CHAR(G.START_DATE, 'yyyy-MM-dd HH24:MI') AS START_DATE, G.REG_DATE AS
+		REG_DATE, TO_CHAR(G.LAST_DATE, 'yyyy-MM-dd HH24:MI') AS LAST_DATE,
+		G.CATEGORY AS CATEGORY, MG.PRICE AS PRICE, G.USER_MAX AS USER_MAX,
+		G.AREA AS AREA, MG.STATUS AS STATUS FROM BASKET MG
+		LEFT JOIN MEMBER M
+		ON MG.NO = M.NO
+		LEFT JOIN GROUP_MORAK G
+		ON MG.GROUP_NO = G.GROUP_NO
+		WHERE MG.STATUS = 1 AND MG.NO = #{idx}
+		ORDER BY BASKET_NO
+	</select>
+	
+	
+	<update id="favoriteUpdateStatus">
+		UPDATE BASKET SET STATUS = 0 WHERE BASKET_NO = #{idx}
+	</update>
+</mapper>

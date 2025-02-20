@@ -10,8 +10,9 @@ drop table faq;
 drop table charge;
 drop table messages;
 drop table visit_log
-
 drop table member;
+
+
 create sequence basket_seq 
 start with 1 
 increment by 1;
@@ -65,6 +66,14 @@ start with 1
 increment by 1;
 
 create sequence transaction_seq
+start with 1
+increment by 1;
+
+create sequence report_seq
+start with 1
+increment by 1;
+
+create sequence notification_seq
 start with 1
 increment by 1;
 -- 모임장바구니
@@ -147,16 +156,20 @@ create table comments(
     primary key(comments_no)
 );
 select * from member;
+update member set id = 'aaaaa' where phone = 01049245948;
+delete from member where no = 41;
+commit;
 
-
-drop table member_group;
 create table member_group(
     member_group_no number(6),
-    no number(6) not null unique,
+    no number(6) not null,
     group_no number(6) not null,
-    status varchar2(20),             --찜, 승인대기, 멤버, 모임장
+    status varchar2(20),             --승인대기, 멤버, 모임장
     primary key(member_group_no)
 );
+--같은 유저가 같은 모임 두번 신청 못하게 unique처리
+ALTER TABLE MEMBER_GROUP
+ADD CONSTRAINT UNIQUE_MEMBER_GROUP UNIQUE (NO, GROUP_NO);
 
 
 -- 리뷰게시판
@@ -176,7 +189,8 @@ create table review(
     primary key(review_no)
 
 );
-
+ALTER TABLE member MODIFY img_url VARCHAR2(255);
+commit;
 select * from member;
 drop table member;
 -- 사용자
@@ -200,7 +214,7 @@ create table member(
     star_sum number(6) default 0,        --별점총합
     black number(6) default 0,           --신고횟수
     reg_date date default sysdate,        --가입일
-    img_url varchar2(50) default '',                 --사진
+    img_url varchar2(255) default '',                 --사진
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
@@ -228,8 +242,8 @@ create table notification(
     reg_date date default sysdate,        --알림일
     primary key(notification_no)
 );
-
-
+insert into notification (notification_no,no,content) values (notification_seq.nextval, 45,'안녕하세요');
+commit;
 -- 공지사항
 create table notice(
     notice_no number(6) not null,
@@ -273,6 +287,7 @@ CREATE TABLE messages (
     firebase_message_id VARCHAR2(255) UNIQUE,
     primary key(message_no)
 );
+<<<<<<< HEAD
 SELECT * FROM MEMBER_GROUP;
 -- 신고
 create table report(
@@ -284,16 +299,18 @@ create table report(
     rep_status varchar2(1) default 'N',
     primary key(rep_no)
     );
+=======
+select * from messages;
+>>>>>>> 1502b8784c0b6b34a17385f20ec909cda7308c53
 
-
--- 방문 기록 테이블 추가
+-- 방문기록
 create table visit_log(
-    visit_no number(6),
+    v_id number(6),
     ip varchar2(50),
-    visit_time timestamp default current_timestamp,
+    visit_date date default sysdate,
     visit_url varchar2(300),
-    primary key(visit_no)
-);
+    primary key(v_id)
+    );
 
 --거래내역 테이블
 drop table transaction;
@@ -310,6 +327,7 @@ VALUES (2, 22, 'Deposit', 50000);
 commit;
 select * from transaction_log;
 insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);
+<<<<<<< HEAD
 select img_url1 from group_morak;
 select MONEY from member;
 DELETE FROM MEMBER_GROUP WHERE STATUS = 'WAITING';
@@ -336,3 +354,16 @@ INSERT INTO member (
     100000, '12345', 'Seoul', 'Admin Street 1', 
     0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
+=======
+
+-- 신고
+create table report(
+    rep_no number(6),
+    reporter varchar2(50),
+    reported varchar2(50),
+    reason varchar2(255),
+    rep_date date,
+    rep_status varchar2(1),
+    primary key(rep_id)
+    );
+>>>>>>> 1502b8784c0b6b34a17385f20ec909cda7308c53

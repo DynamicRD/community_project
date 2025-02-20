@@ -15,7 +15,6 @@ function useFetch(url, urlPath) {
       .then((response) => response.json())
       .then((data) => {
         setReviewDetail(data);
-        console.log('review = ', data);
       })
       .catch((error) => {
         console.error('Error fetching review data:', error);
@@ -28,7 +27,6 @@ function useFetch(url, urlPath) {
       .then((response) => response.json())
       .then((data) => {
         setReplyList(data);
-        console.log('reply = ', data);
       })
       .catch((error) => {
         console.error('Error fetching reply data:', error);
@@ -106,10 +104,34 @@ export default function Read() {
               />
             </div>
             <div className="review_main">{reviewDetail.CONTENT}</div>
-            <div className="review_list">
+            <div className="review_list d-flex">
               <Nav.Link href="/review">
                 <span>목록</span>
               </Nav.Link>
+              {reviewDetail.NO === userData?.no ? (
+                <Nav.Link
+                  onClick={() => {
+                    const confirmValue = confirm('리뷰를 삭제하시겠습니까?');
+                    if (confirmValue === true) {
+                      fetch(
+                        'http://localhost:8080/review/delete/' +
+                          reviewDetail.REVIEW_NO
+                      )
+                        .then(() => {
+                          alert('삭제가 완료 되었습니다');
+                        })
+                        .catch((error) => {
+                          console.error('Error fetching review data:', error);
+                        })
+                        .finally(() => {
+                          navigate('/review');
+                        });
+                    }
+                  }}
+                >
+                  <span>삭제</span>
+                </Nav.Link>
+              ) : null}
             </div>
           </div>
 
@@ -188,12 +210,41 @@ export default function Read() {
           )}
 
           {/* reply */}
-          {replyList.length !== 0 || null ? (
-            replyList.map((object, idx) => (
+          {replyList.length > 0 ? (
+            replyList.map((object, idx = 0) => (
               <Container key={idx}>
                 <div className="writer mt-4 mb-3">
-                  <span>
+                  <span style={{ fontSize: '17px' }}>
                     <b>{object.NICKNAME}</b>
+                    {object.NO === userData?.no ? (
+                      <>
+                        <span
+                          style={{ fontSize: '13px' }}
+                          className="deleteReply ms-2"
+                          onClick={() => {
+                            fetch(
+                              `http://localhost:8080/review/reply/delete/${object.COMMENT}`
+                            )
+                              .then(() => {
+                                alert('삭제가 완료 되었습니다');
+                              })
+                              .catch((error) => {
+                                console.error(
+                                  'Error fetching review data:',
+                                  error
+                                );
+                              })
+                              .finally(() => {
+                                window.location.reload();
+                              });
+                          }}
+                        >
+                          삭제
+                        </span>
+                      </>
+                    ) : (
+                      <>{null}</>
+                    )}
                   </span>
                 </div>
                 <div className="review_content">

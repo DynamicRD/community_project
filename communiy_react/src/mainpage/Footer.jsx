@@ -13,13 +13,13 @@ const Footer = () => {
           <div className="col-md-2">
             <h5>소셜 미디어</h5>
             <div className="social-icons">
-              <a href="#">
+              <a href="https://www.facebook.com/?locale=ko_KR">
                 <i className="bi bi-facebook"></i>
               </a>
-              <a href="#">
+              <a href="https://www.instagram.com/">
                 <i className="bi bi-instagram"></i>
               </a>
-              <a href="#">
+              <a href="https://www.youtube.com/?hl=ko&gl=KR&app=desktop">
                 <i className="bi bi-youtube"></i>
               </a>
             </div>

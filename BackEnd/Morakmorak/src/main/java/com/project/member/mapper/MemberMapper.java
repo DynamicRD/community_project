@@ -15,20 +15,21 @@ public interface MemberMapper {
 
 	void register(Member member);
 	
-	void registerGoogle(Member member);
+	void registerSns(Member member);
 	
 	void updateInfo(Member member);
 	
-	void updateInfoGoogle(Member member);
+	void updateInfoSns(Member member);
 
 	Member loginCheck(Member member);
 
 	String passCompare(Member member);
+	
+	String passCompareNo(Member member);
 
 	void insertMember(Member member);
 
 	Member findByEmail(String email);
-
 	
 	int phoneDuplicateCheck(Member member);
 	
@@ -37,4 +38,6 @@ public interface MemberMapper {
 	int snsRegisteredCheck(Member member);
 	
 	Member getSnsInfo(Member member);
+	
+	void deleteMemeber(Member member);
 }

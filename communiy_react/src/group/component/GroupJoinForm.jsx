@@ -40,8 +40,12 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
           </Form.Group>
         </Form>
         <div>
-          <p>현재 보유 포인트 {formatCurrency(userData?.money)}원<br/>
-          <span className='text-danger'>차감 예정 포인트 {formatCurrency(items.PRICE)}원</span></p>
+          <p>
+            현재 보유 포인트 {formatCurrency(userData?.money)}원<br />
+            <span className="text-danger">
+              차감 예정 포인트 {formatCurrency(items.PRICE)}원
+            </span>
+          </p>
         </div>
       </Modal.Body>
       <Modal.Footer>
@@ -66,38 +70,37 @@ export default function GroupJoinForm({ show, onHide, group_no }) {
                 method: 'post',
                 body: form,
               })
-              .then((response) => {
-                
-                if (!response.ok) {
-                  // 응답이 실패하면 JSON 형식으로 오류 메시지를 받음
-                  return response.text().then((errorData) => {
-                    try {
-                      // 서버에서 문자열로 받은 응답을 JSON으로 파싱 시도
-                      const parsedError = JSON.parse(errorData);
-                      throw new Error(
-                        parsedError.message ||
-                          '처리에 실패했습니다. 다시 시도해주세요.'
-                      );
-                    } catch (e) {
-                      // JSON 파싱 실패 시 그냥 문자열로 처리
-                      throw new Error(
-                        errorData ||
-                          '처리에 실패했습니다. 다시 시도해주세요.'
-                      );
-                    }
-                  });
-                }
-                return response.text(); // 정상 응답일 경우
-              })
-              .then((message) => {
-                alert(message); // 성공 시 반환된 메시지
-                onHide(true);
-              })
-              .catch((error) => {
-                alert(error.message); // 서버에서 넘긴 오류 메시지
-                onHide(true);
-              });
-            }}}
+                .then((response) => {
+                  if (!response.ok) {
+                    // 응답이 실패하면 JSON 형식으로 오류 메시지를 받음
+                    return response.text().then((errorData) => {
+                      try {
+                        // 서버에서 문자열로 받은 응답을 JSON으로 파싱 시도
+                        const parsedError = JSON.parse(errorData);
+                        throw new Error(
+                          parsedError.message ||
+                            '처리에 실패했습니다. 다시 시도해주세요.'
+                        );
+                      } catch (e) {
+                        // JSON 파싱 실패 시 그냥 문자열로 처리
+                        throw new Error(
+                          errorData || '처리에 실패했습니다. 다시 시도해주세요.'
+                        );
+                      }
+                    });
+                  }
+                  return response.text(); // 정상 응답일 경우
+                })
+                .then((message) => {
+                  alert(message); // 성공 시 반환된 메시지
+                  onHide(true);
+                })
+                .catch((error) => {
+                  alert(error.message); // 서버에서 넘긴 오류 메시지
+                  onHide(true);
+                });
+            }
+          }}
         >
           신청하기
         </Button>

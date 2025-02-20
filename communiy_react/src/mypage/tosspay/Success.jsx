@@ -17,34 +17,21 @@ export default function SuccessPage() {
   const queryParams = new URLSearchParams(location.search);
   const amount = queryParams.get('amount');
   const navigate = useNavigate();
-
   useEffect(() => {
-    if (amount && userData && userData.no) {
-      fetch('http://localhost:8080/mypage/charge', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          no: userData.no,
-          money: Number(amount),
-        }),
-      })
-        .then(async (res) => {
-          const text = await res.text(); // 응답을 먼저 텍스트로 받기
-          try {
-            const json = JSON.parse(text); // JSON 변환 시도
-            console.log('충전 성공:', json);
-          } catch (error) {
-            console.error('JSON 파싱 실패, 서버 응답:', text);
-          }
-        })
-        .catch((err) => console.error('충전 요청 실패:', err));
-    }
-  }, [amount, userData]);
+    console.log('userData 대기중');
+    if (!userData) return; // userData가 로드될 때까지 기다림
 
+    if (isAuthenticated !== false) {
+      const pathSegments = window.location.pathname.split('/');
+      const pageId = pathSegments[pathSegments.length - 1];
+      if (userData?.no.toString() !== pageId) {
+        alert('접근 권한이 없습니다.');
+        navigate('/');
+      }
+    }
+  }, [isAuthenticated, userData, navigate]);
   return (
-    <Container className="mt-5 mb-5 w-25 d-flex">
+    <Container className="mt-5 mb-5 w-50 d-flex">
       <div className="infochange p-5">
         <h1>충전 성공</h1>
         <div>{`결제 금액: ${Number(
