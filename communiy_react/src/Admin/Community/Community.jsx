@@ -54,6 +54,7 @@ const Community = () => {
 
       if (response.ok) {
         alert('모임이 승인되었습니다!');
+        window.location.reload();
         setCommunities((prev) =>
           prev.map((c) =>
             c.GROUP_NO === groupNo ? { ...c, APPROVAL: 'Y' } : c
