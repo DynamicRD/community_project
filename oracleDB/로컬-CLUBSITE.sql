@@ -208,6 +208,11 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
+SELECT COUNT(*) AS reg_count
+FROM member
+WHERE TO_DATE(reg_date, 'YY/MM/DD') 
+      BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
+
 delete from member where gender='male';
 INSERT INTO member (
     no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
@@ -219,7 +224,7 @@ INSERT INTO member (
     100000, '12345', 'Seoul', 'Admin Street 1', 
     0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
-
+select * from member;
 
 -- 알림
 create table notification(
@@ -281,8 +286,9 @@ create table visit_log(
     visit_url varchar2(300),
     primary key(v_id)
     );
-
-
+select * from visit_log;
+truncate table visit_log;
+commit;
 --거래내역 테이블
 create table Transaction_log(
     transaction_no number(6),
