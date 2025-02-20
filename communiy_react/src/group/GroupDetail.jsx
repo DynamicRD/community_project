@@ -46,16 +46,7 @@ function GroupDetail() {
   if (loading) {
     return <div>loading</div>;
   } else {
-    return (
-      <Container >
-        {items.map((item) => (
-          <GroupDetailItem key={item.GROUP_NO} item={item} />
-        ))}
-        <GroupDetailButton group_no={group_no} />
-      </Container>
-    );
-
-  }
+    
 
   return (
     <Container>
@@ -67,6 +58,7 @@ function GroupDetail() {
       <GroupDetailButton group_no={group_no} />
     </Container>
   );
+}
 }
 
 export default GroupDetail;
