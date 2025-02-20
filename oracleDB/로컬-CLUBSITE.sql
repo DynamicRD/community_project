@@ -1,16 +1,17 @@
-drop table basket;
-drop table group_morak;
-drop table comments;
-drop table user_group;
-drop table group_info;
-drop table review;
-drop table notification;
-drop table notice;
-drop table faq;
-drop table charge;
-drop table messages;
-drop table visit_log
-drop table member;
+DROP TABLE basket CASCADE CONSTRAINTS;
+DROP TABLE group_morak CASCADE CONSTRAINTS;
+DROP TABLE comments CASCADE CONSTRAINTS;
+DROP TABLE member_group CASCADE CONSTRAINTS;
+DROP TABLE review CASCADE CONSTRAINTS;
+DROP TABLE member CASCADE CONSTRAINTS;
+DROP TABLE notification CASCADE CONSTRAINTS;
+DROP TABLE notice CASCADE CONSTRAINTS;
+DROP TABLE faq CASCADE CONSTRAINTS;
+DROP TABLE messages CASCADE CONSTRAINTS;
+DROP TABLE visit_log CASCADE CONSTRAINTS;
+DROP TABLE report CASCADE CONSTRAINTS;
+DROP TABLE transaction_log CASCADE CONSTRAINTS;
+
 
 
 create sequence basket_seq 
@@ -77,6 +78,7 @@ create sequence notification_seq
 start with 1
 increment by 1;
 -- 모임장바구니
+
 create table basket(
     basket_no number(6) not null,
     no number(6) not null,
@@ -85,28 +87,11 @@ create table basket(
     reg_date date default sysdate,       --신청일
     start_date date,                     --모임시작일
     last_date date,                      --모임종료일
-    status varchar2(20),                --찜, 승인대기, 종료
     primary key(basket_no)
 );
 ALTER TABLE BASKET
 ADD CONSTRAINT unique_basket UNIQUE (NO, GROUP_NO);
 
-INSERT INTO MEMBER_GROUP
-VALUES(member_group_seq.nextval, 1, 2, 'LEADER', 'PR');
-SELECT * FROM MEMBER_GROUP;
-
-SELECT USER_MAX FROM GROUP_MORAK WHERE GROUP_NO = 1;
-SELECT COUNT(*) FROM MEMBER_GROUP WHERE GROUP_NO = 15;
-select * from group_morak;
-select * from member_group;
-select * from report;
-delete from group_morak where group_title = '1수정';
-commit;
-select * from member;
-update member set no=3 where no = 1;
-
-select * from group_morak;
-update group_morak set approval = 'Y' ;
 -- 모임
 create table group_morak(
     group_no number(6) not null,
@@ -134,23 +119,7 @@ create table group_morak(
     primary key(group_no)
 );
 
-alter table group_morak modify img_url1 varchar2(100);
-alter table group_morak modify img_url2 varchar2(100);
-alter table group_morak modify img_url3 varchar2(100);
-alter table member_group add pr varchar2(500);
 
-SELECT
-		gm.group_no,
-		gm.group_title,
-		gm.area,
-		gm.img_url1,
-		gm.start_date
-		FROM group_morak gm
-		JOIN member m ON gm.no = m.no
-		WHERE gm.category = 'culture'
-		ORDER BY m.star_sum DESC
-		FETCH FIRST 6 ROWS ONLY;
-select * from member;
 -- 댓글(답변형)
 create table comments(
     comments_no number(6) not null,
@@ -166,16 +135,16 @@ create table comments(
     isblacked varchar2(10) default 'N',
     primary key(comments_no)
 );
-select * from member;
-update member set id = 'aaaaa' where phone = 01049245948;
-delete from member where no = 41;
-commit;
 
+
+
+--멤버-그룹 조인테이블
 create table member_group(
     member_group_no number(6),
     no number(6) not null,
     group_no number(6) not null,
     status varchar2(20),             --승인대기, 멤버, 모임장
+     pr varchar2(500),
     primary key(member_group_no)
 );
 --같은 유저가 같은 모임 두번 신청 못하게 unique처리
@@ -200,10 +169,8 @@ create table review(
     primary key(review_no)
 
 );
-ALTER TABLE member MODIFY img_url VARCHAR2(255);
-commit;
-select * from member;
-drop table member;
+
+
 -- 사용자
 create table member(
     no number(6) not null,
@@ -229,33 +196,19 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
+delete from member where gender='male';
 INSERT INTO member (
     no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
     star_sum, black, reg_date, img_url, self_pr
 ) VALUES (
     0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
     'none', 'none', 'admin', 'admin', 
-    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), 'male', 
+    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), '여자', 
     100000, '12345', 'Seoul', 'Admin Street 1', 
     0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
-commit;
 
-commit;
-update member set provider = 'kakao' where no =26;
-select * from member;
-delete from member where no = 73;
-SELECT *
-		FROM Member
-		WHERE ID =  'aaaaa' AND PROVIDER = 'none'; 
-        INSERT INTO member (
-		no, email, name, nickname, birth, gender, zip_code, addr1, addr2,
-		provider, provider_id
-		) VALUES ( 
-		member_seq.nextval, 1,2, 3,
-		sysdate, 1, 1, 1,
-		1, 1, 1
-		);
+
 -- 알림
 create table notification(
     notification_no number(6) not null,
@@ -265,8 +218,8 @@ create table notification(
     reg_date date default sysdate,        --알림일
     primary key(notification_no)
 );
-insert into notification (notification_no,no,content) values (notification_seq.nextval, 45,'안녕하세요');
-commit;
+
+
 -- 공지사항
 create table notice(
     notice_no number(6) not null,
@@ -275,7 +228,6 @@ create table notice(
     reg_date date default sysdate,
     primary key(notice_no)
 );
-
 
 
 -- FAQ
@@ -297,16 +249,18 @@ CREATE TABLE messages (
     firebase_message_id VARCHAR2(255) UNIQUE,
     primary key(message_no)
 );
--- 신고
+
+
+----------신고테이블 최종본----------------------
 create table report(
     rep_no number(6),
-    reporter varchar2(50),
-    reported varchar2(50),
+    reporter_no number(6),
+    reported_no number(6),
     reason varchar2(255),
     rep_date date,
-    rep_status varchar2(1) default 'N',
+    rep_status varchar2(1) default 'N', -- 처리상태 (N => 처리전, Y=> 처리됨, P=>넘어감)
     primary key(rep_no)
-    );
+);
 
 -- 방문기록
 create table visit_log(
@@ -316,9 +270,9 @@ create table visit_log(
     visit_url varchar2(300),
     primary key(v_id)
     );
-commit;
+
+
 --거래내역 테이블
-drop table transaction;
 create table Transaction_log(
     transaction_no number(6),
     no number(6),
@@ -327,37 +281,7 @@ create table Transaction_log(
     reg_date date default sysdate,
     primary key(transaction_no)
 );
-INSERT INTO Transaction_log (transaction_no, no, type, amount)  
-VALUES (2, 22, 'Deposit', 50000);
-commit;
-select * from transaction_log;
-insert into Transaction_log values (transaction_seq.nextval,3,3,3,sysdate);
 
-select img_url1 from group_morak;
-select MONEY from member;
-DELETE FROM MEMBER_GROUP WHERE STATUS = 'WAITING';
-COMMIT;
-COMMIT;
-    SELECT PRICE FROM GROUP_MORAK WHERE GROUP_NO=26;
-SELECT MONEY FROM MEMBER;
-SELECT * FROM GROUP_MORAK;
-SELECT * FROM MEMBER;
-UPDATE MEMBER SET NO = 1 WHERE NO = 3;
-UPDATE MEMBER SET MONEY = MONEY + (SELECT PRICE FROM GROUP_MORAK WHERE GROUP_NO = 26)
-		WHERE NO = 2;
-SELECT * FROM MEMBER_GROUP;
-        SELECT COUNT(*) -1 FROM MEMBER_GROUP
-		WHERE GROUP_NO = 26;
-    
---관리자
-INSERT INTO member (
-    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
-    star_sum, black, reg_date, img_url, self_pr
-) VALUES (
-    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
-    'none', 'none', 'admin', 'admin', 
-    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), 'male', 
-    100000, '12345', 'Seoul', 'Admin Street 1', 
-    0, 0, SYSDATE, '', '관리자 계정입니다.'
-);
+
+
 
