@@ -5,7 +5,7 @@ import './App.css';
 const FooterLinks = () => {
   const link = [
     { text: '자주 묻는 질문', url: '/announcements/faq' },
-    { text: '모임 개설 하기', url: '#' },
+    { text: '모임 개설 하기', url: '/group/regist' },
     { text: '홈페이지', url: '#' },
   ];
 
