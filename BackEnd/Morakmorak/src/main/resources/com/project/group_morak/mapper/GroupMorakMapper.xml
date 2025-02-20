@@ -171,8 +171,6 @@
 		ORDER BY m.star_sum DESC
 		FETCH FIRST 6 ROWS ONLY
 	</select>
-
-
 	<select id="countGroupMember">
 		SELECT
 		COUNT(*) - 1 AS MEMBER_COUNT,

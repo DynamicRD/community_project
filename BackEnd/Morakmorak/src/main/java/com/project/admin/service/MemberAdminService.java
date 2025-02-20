@@ -7,8 +7,10 @@ public interface MemberAdminService {
 	List<Map<String, Object>> getUsers();
 
 	List<Map<String, Object>> getAllGroups();
-    boolean approveGroup(int groupNo);
+  
+  boolean approveGroup(int groupNo);
 
-    boolean rejectGroup(int groupNo);
+  boolean rejectGroup(int groupNo);
+
 
 }
