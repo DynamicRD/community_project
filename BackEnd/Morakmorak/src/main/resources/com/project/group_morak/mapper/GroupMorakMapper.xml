@@ -174,13 +174,15 @@
 
 	<select id="countGroupMember">
 		SELECT
-		COUNT(*) - 1 AS MEMBER_COUNT,
+		COUNT(CASE WHEN M.STATUS = 'MEMBER' THEN 1 END) AS MEMBER_COUNT,
 		G.USER_MAX
 		FROM
 		MEMBER_GROUP M
 		INNER JOIN GROUP_MORAK G ON M.GROUP_NO = G.GROUP_NO
-		WHERE M.GROUP_NO = #{groupNo}
-		GROUP BY USER_MAX
+		WHERE
+		M.GROUP_NO = #{group_no}
+		GROUP BY
+		G.USER_MAX
 	</select>
 
 </mapper>
