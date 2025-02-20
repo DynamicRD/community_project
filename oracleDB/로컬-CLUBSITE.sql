@@ -118,7 +118,9 @@ create table group_morak(
     type varchar2(20),                   --정기모임,소모임 구분
     primary key(group_no)
 );
-
+SELECT
+		group_title,start_date,last_date,price,approval as status from group_morak
+		where no =1;
 
 -- 댓글(답변형)
 create table comments(
@@ -179,8 +181,8 @@ SELECT
     gm.price,
     mg.status
 FROM member_group mg
-JOIN group_morak gm ON mg.group_no = 72
-WHERE mg.status != 'LEADER';
+JOIN group_morak gm ON mg.group_no = gm.group_no
+WHERE mg.status != 'LEADER' and mg.no = 72 and gm.last_date > current_date;
 -- 사용자
 create table member(
     no number(6) not null,
