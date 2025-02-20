@@ -14,21 +14,16 @@ export default function Review() {
     return stars;
   };
 
-  // Pagination 아이템 생성
-  let item = [];
-  for (let number = 1; number <= 5; number++) {
-    item.push(
-      <Pagination.Item key={number} active={number === 1}>
-        {number}
-      </Pagination.Item>
-    );
-  }
-  //import { AuthContext } from '../context/AuthContext';
   const { isAuthenticated, userData } = useContext(AuthContext);
-  const [reviewList, setReviewList] = useState([]); // reviewList를 먼저 선언
+  const [reviewList, setReviewList] = useState([]);
+
   const [groupedReviews, setGroupedReviews] = useState([]);
 
-  // groupedReviews 상태 추가 (바뀐 부분)/ reviewList를 먼저 선언
+  //페이징
+  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지
+  const [pageRangeStart, setPageRangeStart] = useState(0); // 페이지 범위 시작
+  const [pageRangeEnd, setPageRangeEnd] = useState(5); // 페이지 범위 끝
+  const reviewsPerPage = 6;
 
   // 리뷰값 DB에서 가져오기
   function getList(url) {
@@ -40,23 +35,45 @@ export default function Review() {
       });
   }
 
-  // 페이지 시작 시 getList 호출
   useEffect(() => {
     getList('http://localhost:8080/review/list');
   }, []);
 
   useEffect(() => {
     const groupReviews = [];
-    for (let i = 0; i < reviewList.length; i += 3) {
-      groupReviews.push(reviewList.slice(i, i + 3));
+    for (let i = 0; i < reviewList.length; i += reviewsPerPage) {
+      groupReviews.push(reviewList.slice(i, i + reviewsPerPage));
     }
     setGroupedReviews(groupReviews);
   }, [reviewList]);
 
+  // 페이지 변경 시 호출되는 함수
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // 이전 페이지로 이동
+  const handlePrevPage = () => {
+    if (pageRangeStart > 0) {
+      setPageRangeStart(pageRangeStart - 5);
+      setPageRangeEnd(pageRangeEnd - 5);
+    }
+  };
+
+  // 다음 페이지로 이동
+  const handleNextPage = () => {
+    if (pageRangeEnd < groupedReviews.length) {
+      setPageRangeStart(pageRangeStart + 5);
+      setPageRangeEnd(pageRangeEnd + 5);
+    }
+  };
+
+  const currentReviews = groupedReviews[currentPage - 1] || [];
+
   return (
     <>
       <Container>
-        <div className=" d-flex m-5">
+        <div className="d-flex m-5">
           <span
             className="nav_notice"
             style={{ fontSize: '33px', marginLeft: '65px' }}
@@ -65,52 +82,49 @@ export default function Review() {
           </span>
         </div>
         <div className="review_board mt-4">
-          <ul id="board_list" className="list-unstyled">
+          <ul
+            id="board_list"
+            className="list-unstyled d-flex justify-content-center"
+          >
             {groupedReviews.length > 0 ? (
-              groupedReviews.map((group, index) => (
-                <divs
-                  className="d-flex justify-content-start gap-5 mb-4"
-                  key={index}
-                >
-                  {group.map((object) => (
-                    <div className="review_item" key={object.REVIEW_TITLE}>
-                      <div
-                        className="club_name d-flex align-content-cetner ms-4 mb-1"
-                        style={{
-                          fontSize: '14px',
-                        }}
-                      >
-                        {object.GROUP_TITLE}
-                      </div>
-                      <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
-                        <img
-                          src={`http://localhost:8080/upload/${object.IMG_URL}`}
-                          alt="review"
-                          className="review_img"
-                        />
-                      </Nav.Link>
-
-                      <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
-                        <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
-                          {object.REVIEW_TITLE}
-                        </Nav.Link>
-                        <span style={{ fontSize: '12px' }}>
-                          평점&nbsp;:&nbsp;
-                          {console.log(object.STAR)}
-                          {getStarImages(object.STAR).map((star, index) => (
-                            <img
-                              key={index}
-                              src={star}
-                              alt="star"
-                              className="star"
-                            />
-                          ))}
-                        </span>
-                      </div>
+              <div className="review_board_list d-flex flex-wrap gap-5 mb-4">
+                {currentReviews.map((object) => (
+                  <div className="review_item" key={object.REVIEW_NO}>
+                    <div
+                      className="club_name d-flex mb-1"
+                      style={{
+                        fontSize: '14px',
+                      }}
+                    >
+                      {object.GROUP_TITLE}
                     </div>
-                  ))}
-                </divs>
-              ))
+                    <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
+                      <img
+                        src={`http://localhost:8080/upload/${object.IMG_URL}`}
+                        alt="review"
+                        className="review_img"
+                      />
+                    </Nav.Link>
+
+                    <div className="d-flex justify-content-between align-content-center mt-2 me-4 ms-4">
+                      <Nav.Link href={`/review/read/${object.REVIEW_NO}`}>
+                        {object.REVIEW_TITLE}
+                      </Nav.Link>
+                      <span style={{ fontSize: '12px' }}>
+                        평점&nbsp;:&nbsp;
+                        {getStarImages(object.STAR).map((star, index) => (
+                          <img
+                            key={index}
+                            src={star}
+                            alt="star"
+                            className="star"
+                          />
+                        ))}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             ) : (
               <div className="d-flex justify-content-center w-100">
                 <span className="WishListNo_meetings m-5">
@@ -123,7 +137,40 @@ export default function Review() {
       </Container>
       <Container>
         <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
-          <Pagination size="sm">{item}</Pagination>
+          <Pagination size="sm">
+            {pageRangeStart < 5 ? (
+              <>{null}</>
+            ) : (
+              <>
+                <Pagination.Prev
+                  onClick={handlePrevPage}
+                  disabled={pageRangeStart === 0}
+                />
+              </>
+            )}
+
+            {Array.from({ length: 5 }, (_, index) => {
+              const pageNumber = pageRangeStart + index + 1;
+              if (pageNumber <= groupedReviews.length) {
+                return (
+                  <Pagination.Item
+                    key={pageNumber}
+                    active={pageNumber === currentPage}
+                    onClick={() => handlePageChange(pageNumber)}
+                  >
+                    {pageNumber}
+                  </Pagination.Item>
+                );
+              }
+              return null;
+            })}
+            {pageRangeEnd < groupedReviews.length && (
+              <Pagination.Next
+                onClick={handleNextPage}
+                disabled={pageRangeEnd >= groupedReviews.length}
+              />
+            )}
+          </Pagination>
           {isAuthenticated ? (
             <Nav.Link
               href={`/mypage/reviews/${userData?.no}`}

@@ -106,6 +106,7 @@ select * from member;
 update member set no=3 where no = 1;
 
 select * from group_morak;
+update group_morak set approval = 'Y' ;
 -- 모임
 create table group_morak(
     group_no number(6) not null,
@@ -285,19 +286,6 @@ create table faq(
     content varchar2(255),
     primary key(faq_no)
 );
-
-
-
---코인 충전 내역 테이블
-create table charge(
-    charge_no number(6)  not null,
-    amount number(6),          ---충전금액
-    reg_date date,
-    no number(6) not null,   ---사용자 pk
-    primary key(charge_no)
-);
-
-
 
 -- 채팅내역 DB 저장
 CREATE TABLE messages (

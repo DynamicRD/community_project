@@ -152,10 +152,6 @@ function App() {
             <Route path="board" element={<Board />} />
             <Route path="board/:reviewid" element={<ReviewDetail />} />
             <Route path="stats" element={<Stats />} />
-            <Route
-              path="notice/regist"
-              element={<AnnouncementsNoticeRegist />}
-            />
           </Route>
         </Routes>
       </BrowserRouter>

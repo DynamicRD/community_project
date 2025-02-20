@@ -30,20 +30,26 @@ export default function WishListItem({ item }) {
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
             <div className="col">
-              <div className="card h-100">
+              <div className="card">
                 <img
-                  src={`/images/${item.IMG_URL1}`}
-                  className="card-img-top img-fluid"
+                  src={`http://localhost:8080/upload/${item.IMG_URL1}`}
+                  className="card-img-top img-fluid p-3"
                   style={{ height: '264.83px', width: '394px' }}
                   alt="..."
                 />
                 <div className="card-body">
-                  <h5 className="card-title">{item.GROUP_TITLE}</h5>
-                  <p className="card-text">{item.COMMENT1}</p>
-                  <p className="card-text">카테고리 {item.CATEGORY}</p>
-                  <p className="card-text">{item.AREA}</p>
-                  <p className="card-text">시작일 {item.START_DATE}</p>
-                  <p className="card-text">정원 {item.USER_MAX}</p>
+                  <h5 className="card-title">
+                    <strong>{item.GROUP_TITLE}</strong>
+                    <span></span>
+                  </h5>
+                  <p className="card-text">
+                    {item.START_DATE} / {item.AREA} /{' '}
+                    {item.CATEGORY === 'culture' && '문화/예술'}
+                    {item.CATEGORY === 'food' && '푸드/드링크'}
+                    {item.CATEGORY === 'edu' && '교육'}
+                    {item.CATEGORY === 'travel' && '여행'}
+                    {item.CATEGORY === 'hobby' && '취미'}
+                  </p>
                 </div>
               </div>
             </div>
