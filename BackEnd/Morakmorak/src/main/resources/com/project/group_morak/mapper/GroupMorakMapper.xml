@@ -131,6 +131,7 @@
 		FROM group_morak gm
 		JOIN member m ON gm.no = m.no
 		WHERE gm.category = #{category}
+		AND gm.start_date > CURRENT_DATE
 		ORDER BY m.star_sum DESC
 		FETCH FIRST 6 ROWS ONLY
 	</select>
@@ -144,6 +145,7 @@
 		gm.area AS addr1
 		FROM group_morak gm
 		JOIN member m ON gm.no = m.no
+		WHERE gm.start_date > CURRENT_DATE
 		ORDER BY m.star_sum DESC
 		FETCH FIRST 6 ROWS ONLY
 	</select>

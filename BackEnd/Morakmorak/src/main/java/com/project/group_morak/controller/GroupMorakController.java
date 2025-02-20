@@ -67,7 +67,7 @@ public class GroupMorakController {
 					Files.copy(file.getInputStream(), path);
 
 					// 클라이언트가 접근할 수 있는 경로 반환
-					imgUrls[i] = "group_morak/" + fileName;
+					imgUrls[i] = fileName;
 				}
 			}
 
@@ -75,7 +75,10 @@ public class GroupMorakController {
 			map.put("img_url1", imgUrls[0]);
 			map.put("img_url2", imgUrls[1]);
 			map.put("img_url3", imgUrls[2]);
-
+			
+			System.out.println(imgUrls[0]);
+			System.out.println(imgUrls[1]);
+			System.out.println(imgUrls[2]);
 			// 날짜 처리
 			String startDateStr = (String) map.get("start_date");
 			String lastDateStr = (String) map.get("last_date");
@@ -186,7 +189,7 @@ public class GroupMorakController {
 					Files.copy(file.getInputStream(), path);
 
 					// 클라이언트가 접근할 수 있는 경로 반환
-					imgUrls[i] = "group_morak/" + fileName;
+					imgUrls[i] = fileName;
 				} else {
 					// 파일이 업로드되지 않은 경우 기존 파일 경로 유지
 					imgUrls[i] = existingFilePaths[i];
