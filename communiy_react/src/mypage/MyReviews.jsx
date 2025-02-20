@@ -105,7 +105,13 @@ export default function MyReviews() {
   const currentReviews = groupedClubs[currentPage - 1] || [];
 
   if (!loading) {
-    return <Container>Loading...</Container>;
+    return (
+      <Container className="d-flex justify-content-center">
+        <div>
+          <span>Loading...</span>
+        </div>
+      </Container>
+    );
   } else {
     return (
       <>

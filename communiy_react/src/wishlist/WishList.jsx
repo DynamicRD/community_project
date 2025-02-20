@@ -85,7 +85,13 @@ export default function WishList() {
   return (
     <Container>
       {isAuthenticated !== true ? (
-        <></>
+        <>
+          <Container className="d-flex justify-content-center">
+            <div>
+              <span>Loading...</span>
+            </div>
+          </Container>
+        </>
       ) : (
         <>
           <div className=" d-flex m-5 ">
