@@ -1,9 +1,12 @@
 package com.project.group_morak.mapper;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+
+import com.project.group_morak.model.GroupMorak;
 
 @Mapper
 public interface GroupMorakMapper {
@@ -21,6 +24,8 @@ public interface GroupMorakMapper {
 	public void join(Map<String, Object> map);
 
 	public void changeMoney(Map<String, Object> map);
+	
+	public void refundMoney(Map<String, Object> map);
 
 	public void insertBasket(Map<String, Object> map);
 
@@ -31,5 +36,11 @@ public interface GroupMorakMapper {
 	public void memberStatusUpdate(Map<String, Object> map);
 
 	public void memberReport(Map<String, Object> map);
+	
+	public Map<String, Object> countGroupMember(String groupNo);
+
+	public List<GroupMorak> getGroupsByCategory(String category);
+	
+	public List<GroupMorak> getGroupsByCategoryAll();
 
 }

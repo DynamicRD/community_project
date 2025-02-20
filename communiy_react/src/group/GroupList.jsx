@@ -9,10 +9,10 @@ import GroupItem from './component/GroupItem';
 import { AuthContext } from '../context/AuthContext'; //
 
 function GroupList({ type }) {
+  const { isAuthenticated, userData } = useContext(AuthContext);
   const [items, setGroupList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
-  const { isAuthenticated, userData } = useContext(AuthContext);
 
   useEffect(() => {
     fetch(`http://localhost:8080/group/list?type=${type}`)
@@ -167,10 +167,20 @@ function GroupList({ type }) {
                   &nbsp;강원
                   <input type="checkbox" value="충청" name="area" />
                   &nbsp;충청
+                  <input type="checkbox" value="세종" name="area" />
+                  &nbsp;세종
+                  <input type="checkbox" value="대전" name="area" />
+                  &nbsp;대전
                   <input type="checkbox" value="전라" name="area" />
                   &nbsp;전라
+                  <input type="checkbox" value="광주" name="area" />
+                  &nbsp;광주
                   <input type="checkbox" value="경상" name="area" />
                   &nbsp;경상
+                  <input type="checkbox" value="대구" name="area" />
+                  &nbsp;대구
+                  <input type="checkbox" value="울산" name="area" />
+                  &nbsp;울산
                   <input type="checkbox" value="부산" name="area" />
                   &nbsp; 부산
                   <input type="checkbox" value="제주" name="area" />
