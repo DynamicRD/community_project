@@ -19,7 +19,9 @@ export default function GroupDetailItem({ item }) {
   const [category, setCategory] = useState(null);
   const [groups, setGroups] = useState([]);
   const [activeMembers, setActiveMembers] = useState([]);
+  const [userRole, setUserRole] = useState();
   useEffect(() => {
+
     fetch(`http://localhost:8080/group/memberList?group_no=${item.GROUP_NO}`)
       .then((res) => res.json())
       .then((data) => {
@@ -216,7 +218,9 @@ export default function GroupDetailItem({ item }) {
               fontWeight: '700',
             }}
           >
-            현재 참여중인 멤버({item.MEMBER_COUNT - 1}/{item.USER_MAX})
+
+            현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
+
           </p>
           <ListGroup as="ol">
             {activeMembers.map((member) => {

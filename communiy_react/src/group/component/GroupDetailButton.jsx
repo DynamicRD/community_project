@@ -38,6 +38,7 @@ export default function GroupDetailButton({ group_no }) {
         .then((res) => res.text())
         .then((data) => {
           setUserRole(data);
+          console.log(data);
         })
         .catch((error) =>
           console.error('Error fetching group members:', error)

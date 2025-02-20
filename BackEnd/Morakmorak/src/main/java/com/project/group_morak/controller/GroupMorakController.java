@@ -140,7 +140,10 @@ public class GroupMorakController {
 	// 모임 상세
 	@RequestMapping("/detail")
 	public Map<String, Object> read(@RequestParam(value = "group_no") String groupNo) throws Exception {
-		return service.read(groupNo);
+		Map<String, Object> map = service.read(groupNo);
+		Map<String, Object> map2 = service.countGroupMember(groupNo);
+		map.put("MEMBER_COUNT", map2.get("MEMBER_COUNT"));
+		return map;
 	}
 
 	// 모임 정보 수정

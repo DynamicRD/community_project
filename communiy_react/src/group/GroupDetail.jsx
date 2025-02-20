@@ -43,6 +43,11 @@ function GroupDetail() {
       .finally(() => setLoading(false)); // 로딩 완료
   }, [group_no]);
 
+  if (loading) {
+    return <div>loading</div>;
+  } else {
+    
+
   return (
     <Container>
       {items.length > 0 ? (
@@ -53,6 +58,7 @@ function GroupDetail() {
       <GroupDetailButton group_no={group_no} />
     </Container>
   );
+}
 }
 
 export default GroupDetail;
