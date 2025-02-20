@@ -22,7 +22,6 @@ public class FavoriteController {
 	@GetMapping("/favorites/{idx}")
 	public List<Map<String, Object>> favoriteList(@PathVariable(name = "idx") int idx) throws Exception {
 		List<Map<String, Object>> listMap = service.favoriteList(idx);
-		System.out.println(listMap + " 123123 " +idx);
 		return listMap;
 	}
 

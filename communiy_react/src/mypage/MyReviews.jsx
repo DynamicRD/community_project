@@ -81,17 +81,23 @@ export default function MyReviews() {
 
   // 이전 페이지로 이동
   const handlePrevPage = () => {
-    if (pageRangeStart > 0) {
-      setPageRangeStart(pageRangeStart - 5);
-      setPageRangeEnd(pageRangeEnd - 5);
+    const newPageRangeStart = pageRangeStart - 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart >= 0) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart - 4); // 현재 페이지를 범위의 첫 번째 페이지로 설정
     }
   };
 
   // 다음 페이지로 이동
   const handleNextPage = () => {
-    if (pageRangeEnd < groupedClubs.length) {
-      setPageRangeStart(pageRangeStart + 5);
-      setPageRangeEnd(pageRangeEnd + 5);
+    const newPageRangeStart = pageRangeStart + 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart < groupedClubs.length) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart + 6); // 5 페이지씩 건너뛰고 이동
     }
   };
 
@@ -99,7 +105,13 @@ export default function MyReviews() {
   const currentReviews = groupedClubs[currentPage - 1] || [];
 
   if (!loading) {
-    return <Container>Loading...</Container>;
+    return (
+      <Container className="d-flex justify-content-center">
+        <div>
+          <span>Loading...</span>
+        </div>
+      </Container>
+    );
   } else {
     return (
       <>

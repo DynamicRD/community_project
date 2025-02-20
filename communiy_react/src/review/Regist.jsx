@@ -59,7 +59,6 @@ export default function Regist() {
     }
 
     const formData = new FormData();
-    //위에과정에서 지정한 image경로를 해당 백앤드에 전달
 
     formData.append('image', image);
     formData.append('groupNo', completedMeetings.GROUP_NO);
@@ -79,14 +78,20 @@ export default function Regist() {
         }
       );
       console.log('업로드 성공:', response.data);
-      // navigate('/review');
+      navigate('/review');
     } catch (error) {
       console.error('업로드 실패:', error);
     }
   };
 
   if (!loading) {
-    return <Container>Loading...</Container>;
+    return (
+      <Container className="d-flex justify-content-center">
+        <div>
+          <span>Loading...</span>
+        </div>
+      </Container>
+    );
   } else {
     return (
       <Container>

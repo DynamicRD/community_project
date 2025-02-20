@@ -54,17 +54,23 @@ export default function Review() {
 
   // 이전 페이지로 이동
   const handlePrevPage = () => {
-    if (pageRangeStart > 0) {
-      setPageRangeStart(pageRangeStart - 5);
-      setPageRangeEnd(pageRangeEnd - 5);
+    const newPageRangeStart = pageRangeStart - 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart >= 0) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart - 4); // 현재 페이지를 범위의 첫 번째 페이지로 설정
     }
   };
 
   // 다음 페이지로 이동
   const handleNextPage = () => {
-    if (pageRangeEnd < groupedReviews.length) {
-      setPageRangeStart(pageRangeStart + 5);
-      setPageRangeEnd(pageRangeEnd + 5);
+    const newPageRangeStart = pageRangeStart + 5;
+    const newPageRangeEnd = newPageRangeStart + 5;
+    if (newPageRangeStart < groupedReviews.length) {
+      setPageRangeStart(newPageRangeStart);
+      setPageRangeEnd(newPageRangeEnd);
+      setCurrentPage(pageRangeStart + 6); // 5 페이지씩 건너뛰고 이동
     }
   };
 
@@ -135,8 +141,8 @@ export default function Review() {
           </ul>
         </div>
       </Container>
-      <Container>
-        <div className="d-flex justify-content-center align-content-center mb-3 ms-5">
+      <Container className="custom-pagination">
+        <div className="d-flex justify-content-center align-content-center mb-3 ms-5 text-black">
           <Pagination size="sm">
             {pageRangeStart < 5 ? (
               <>{null}</>
