@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,18 @@ public class MemberAdminController {
     public ResponseEntity<String> approveGroup(@PathVariable int groupNo) {
         boolean success = memberAdminService.approveGroup(groupNo);
         return success ? ResponseEntity.ok("모임 승인 완료") : ResponseEntity.badRequest().body("승인 실패");
+    }
+    
+    @DeleteMapping("/community/reject/{groupNo}")
+    public ResponseEntity<String> rejectGroup(@PathVariable int groupNo) {
+        System.out.println("거절 요청 - groupNo: " + groupNo);
+        boolean success = memberAdminService.rejectGroup(groupNo);
+
+        if (success) {
+            return ResponseEntity.ok("모임 신청이 거절되었습니다.");
+        } else {
+            return ResponseEntity.badRequest().body("삭제 실패 - 존재하지 않는 groupNo");
+        }
     }
 }
  	

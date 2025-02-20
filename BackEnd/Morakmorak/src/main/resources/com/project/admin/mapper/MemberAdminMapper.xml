@@ -18,6 +18,10 @@
     <update id="approveGroup">
         UPDATE group_morak SET approval = 'Y' WHERE group_no = #{groupNo}
     </update>
+    <!-- 모임 거부 처리 -->
+    <delete id="rejectGroup">
+    	DELETE FROM group_morak WHERE group_no = #{groupNo}
+    </delete>
 	<!-- 일별 수입 통계 -->
 	<select id="profit" resultType="java.util.Map">
     <![CDATA[
@@ -37,7 +41,7 @@
 	</select>
 	<!-- 사용자 연령대 통계 -->
 	<select id="countAge" resultType="java.util.Map">
-    <![CDATA[
+    <![CDATA[	
     	SELECT 
 		    CASE 
 		        WHEN FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 10 AND 19 THEN '10대'

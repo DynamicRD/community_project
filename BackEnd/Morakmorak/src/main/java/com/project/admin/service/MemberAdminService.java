@@ -9,4 +9,6 @@ public interface MemberAdminService {
 	List<Map<String, Object>> getAllGroups();
     boolean approveGroup(int groupNo);
 
+    boolean rejectGroup(int groupNo);
+
 }
