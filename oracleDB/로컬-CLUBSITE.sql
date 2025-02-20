@@ -298,7 +298,7 @@ create table Transaction_log(
     reg_date date default sysdate,
     primary key(transaction_no)
 );
-
+select * from transaction_log;
     
 --관리자
 delete from member where gender='male';
