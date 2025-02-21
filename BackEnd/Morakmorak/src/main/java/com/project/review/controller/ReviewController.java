@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.member.service.MemberService;
 import com.project.review.service.ReviewService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class ReviewController {
 
 	@Autowired
 	private ReviewService service;
+	
+	@Autowired
+	private MemberService memberService;
 
 	// 이전 BLOB방식 혹시몰라서 남겨둠
 //	@PostMapping(value = "/insert")
@@ -104,6 +108,7 @@ public class ReviewController {
 		map.put("fileName", imageUrl);
 
 		service.insertReview(map);
+		memberService.updateStar();
 
 		return ResponseEntity.ok("파일 업로드 성공: " + imageUrl);
 	}

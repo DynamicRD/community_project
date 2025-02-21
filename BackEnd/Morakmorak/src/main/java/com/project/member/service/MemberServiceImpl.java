@@ -301,4 +301,10 @@ public class MemberServiceImpl implements MemberService {
 		mapper.changeMemberBlack(member);
 	}
 
+	@Override
+	public void updateStar() {
+		mapper.updateStar();
+		
+	}
+
 }
