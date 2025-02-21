@@ -40,6 +40,7 @@ public class MemberAdminServiceImpl implements MemberAdminService {
     }
 
     private boolean processGroupApproval(int groupNo, boolean isApproved) {
+    	System.out.println("노티피케이션");
         Notification notification = new Notification();
         int no = mypageMapper.selectNoFromGroup(groupNo);
         String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
