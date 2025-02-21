@@ -353,10 +353,12 @@ SELECT g.group_no, count(*) AS count
 		ON mg.member_group_no = g.group_no
 		where mg.status = 'MEMBER' and g.approval= 'Y'
 		GROUP BY g.group_no
-		ORDER BY count DESC;
+		ORDER BY count DESC
         
-       ELECT URL, COUNT(DISTINCT IP) AS count
+       SELECT URL, COUNT(DISTINCT IP) AS count
 		FROM VISIT_LOG
 		WHERE URL LIKE '/GROUP/DETAIL%'
 		GROUP BY URL
 		ORDER BY visitor_count DESC;
+        
+        select * from group_morak;
