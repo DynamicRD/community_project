@@ -87,3 +87,21 @@
   background-color: black;
   color: #ffffff;
 }
+
+.review_title_page {
+  border: none;
+  border-bottom: 1px solid black;
+  font-size: 17px;
+}
+
+.review_title_page:focus,
+.review_title_page:active {
+  border-bottom: 1px solid black;
+  outline: none;
+}
+
+.borderValue {
+  border-bottom: 1px solid black;
+  font-size: 26px;
+  margin-right: 30px;
+}
