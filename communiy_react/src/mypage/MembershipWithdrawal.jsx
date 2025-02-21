@@ -14,10 +14,12 @@ import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import AddressInput from './daumAPI/AddressInput';
+import CheckAccessPermission from '../hooks/checkAccessPermission';
 
 export default function MembershipWithdrawal() {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
+  CheckAccessPermission(isAuthenticated, userData, navigate);
   useEffect(() => {
     if (userData && isAuthenticated !== false) {
       const pathSegments = window.location.pathname.split('/');
@@ -65,20 +67,6 @@ export default function MembershipWithdrawal() {
       }
     }
   }, [isAuthenticated, userData, navigate]);
-
-  useEffect(() => {
-    console.log('userData 대기중');
-    if (!userData) return; // userData가 로드될 때까지 기다림
-
-    if (isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      if (userData?.no.toString() !== pageId) {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-      }
-    }
-  }, [isAuthenticated, userData, navigate]); // userData가 변할 때만 실행
 
   const [isPhoneChecked, setIsPhoneChecked] = useState(false);
   const [isEmailChecked, setIsEmailChecked] = useState(false);
