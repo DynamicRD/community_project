@@ -8,12 +8,12 @@
 
     <!-- 댓글 블라인드 처리 -->
     <update id="toggleBlind">
-        UPDATE comments SET isblacked = 'Y' WHERE no = #{no}
+        UPDATE comments SET isblacked = 'Y' WHERE comments_no = #{no}
     </update>
 	
 	<!-- 댓글 블라인드 처리 Y->N -->
     <update id="toggleBlindYN">
-        UPDATE comments SET isblacked = 'N' WHERE no = #{no}
+        UPDATE comments SET isblacked = 'N' WHERE comments_no = #{no}
     </update>
 
 

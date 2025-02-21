@@ -183,7 +183,7 @@ const CommentSection = () => {
       })
       .then((data) => setComments(Array.isArray(data) ? data : []))
       .catch((error) => console.error('Error fetching comments:', error));
-  }, []);
+  }, [comments]);
 
   // 🔹 블라인드 상태 토글 API 요청
   const form = new FormData();
@@ -253,9 +253,9 @@ const CommentSection = () => {
         </thead>
         <tbody>
           {paginatedComments.length > 0 ? (
-            paginatedComments.map((comment) => (
+            paginatedComments.map((comment, idx) => (
               <tr
-                key={comment.no}
+                key={idx}
                 className={comment.isblacked === 'Y' ? 'table-danger' : ''}
               >
                 <td>{comment.no}</td>
@@ -269,7 +269,7 @@ const CommentSection = () => {
                     variant={comment.isblacked === 'Y' ? 'primary' : 'danger'}
                     size="sm"
                     onClick={() =>
-                      toggleBlindStatus(comment.no, comment.isblacked)
+                      toggleBlindStatus(comment.commentsNo, comment.isblacked)
                     }
                   >
                     {comment.isblacked === 'Y' ? '해제' : '처리'}

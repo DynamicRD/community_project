@@ -24,7 +24,7 @@ public class CommentAdminServiceImpl implements CommentAdminService {
     }
 	@Override
 	public void toggleBlindYN(Long no) {
-		commentMapper.toggleBlind(no);
+		commentMapper.toggleBlindYN(no);
 		
 	}
 

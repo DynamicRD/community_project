@@ -33,17 +33,15 @@ public class CommentAdminController {
     }
 
     @PostMapping("/blind")
-    public void toggleBlind(@RequestBody Map<String, Object> request) {
-       System.out.println(request);
-       long num = (long)request.get("no");
-       String value = (String)request.get("value");
-        System.out.println("no: " + num);
+    public void toggleBlind( @RequestParam(name="no") long no, @RequestParam(name="isblacked") String value) {
+      
+        System.out.println("no: " + no);
         System.out.println("value: " + value);
 
         if (value.equals("Y")) {
-            commentService.toggleBlindYN(num);
+            commentService.toggleBlindYN(no);
         } else {
-            commentService.toggleBlind(num);
+            commentService.toggleBlind(no);
         }
 
     }
