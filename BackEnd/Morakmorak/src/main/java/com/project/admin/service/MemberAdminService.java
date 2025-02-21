@@ -20,4 +20,10 @@ public interface MemberAdminService {
 
 	List<Map<String, Object>> countAge();
 
+	List<Map<String, Object>> selectPopularCategory();
+	
+	List<Map<String, Object>> getCommunityDetail(int groupNo);
+
+	List<Map<String, Object>> selectPopularGroup();
+
 }

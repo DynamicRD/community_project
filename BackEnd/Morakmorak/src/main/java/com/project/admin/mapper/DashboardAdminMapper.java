@@ -7,4 +7,16 @@ public interface DashboardAdminMapper {
 	double getCurrentCustomerCount();
 	
 	double getMonthCustomerCount();
+	
+	double getCurrentProfit();
+	
+	double getMonthProfit();
+	
+	double getCurrentGroupMember();
+	
+	double getMonthGroupMember();
+	
+	double getCurrentVisitLog();
+	
+	double getMonthVisitLog();
 }

@@ -12,6 +12,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContext } from '../context/AuthContext'; //
 import axios from 'axios';
+import CheckAccessPermission from '../hooks/checkAccessPermission';
 
 function MyPage() {
   const [showMore, setShowMore] = useState(false);
@@ -22,18 +23,13 @@ function MyPage() {
   const navigate = useNavigate();
 
   const { isAuthenticated, userData } = useContext(AuthContext);
-  useEffect(() => {
-    console.log('userData 대기중');
-    if (!userData) return; // userData가 로드될 때까지 기다림
+  CheckAccessPermission(isAuthenticated, userData, navigate);
 
-    if (isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      if (userData?.no.toString() !== pageId) {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-      }
-    }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchGroups(selectedCategory);
+    }, 200);
+    return () => clearTimeout(timer);
   }, [isAuthenticated, userData, navigate]);
 
   // 페이지네이션을 위한 상태 추가
@@ -58,9 +54,7 @@ function MyPage() {
       console.log('fetchGroups 실행:', selectedCategory, userData.no);
       fetchGroups(selectedCategory);
     }
-  }, [selectedCategory, userData]); // userData가 변경될 때 실행되도록 유지
-  // userData가 변경될 때 실행되도록 수정
-  // userData가 변경될 때 실행되도록 수정
+  }, [selectedCategory]);
 
   const fetchGroups = async (category) => {
     if (!userData?.no) return; // userData가 없으면 실행하지 않음

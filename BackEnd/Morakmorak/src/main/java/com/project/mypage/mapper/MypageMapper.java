@@ -15,6 +15,8 @@ public interface MypageMapper {
 
 	String selectProfileImg(Map<String, Object> map) throws Exception;
 
+	
+	
 	void chargeAmount(Member member) throws Exception;
 
 	void insertHistory(TransactionLog transactionLog) throws Exception;
@@ -34,4 +36,12 @@ public interface MypageMapper {
 	List<GroupMember> getMineEndGroup(int no);
 	
 	List<GroupMember> getMineLeaderGroup(int no);
+	
+	void insertNotification(Notification notification);
+	
+	int selectNoFromGroup(int groupNo);
+	
+	String selectGroupNameFromGroup(int groupNo);
+	
+	String selectNickNameByNo(int no);
 }
