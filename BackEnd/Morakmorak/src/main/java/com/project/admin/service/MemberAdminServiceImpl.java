@@ -13,6 +13,13 @@ import com.project.mypage.model.Notification;
 @Service
 public class MemberAdminServiceImpl implements MemberAdminService {
 
+
+		@Override
+		public Map<String, Object> getGroupDetail(int groupNo) {
+			return memberAdminMapper.getGroupDetail(groupNo);
+		}
+
+
     @Autowired
     private MemberAdminMapper memberAdminMapper;
     
@@ -90,4 +97,5 @@ public class MemberAdminServiceImpl implements MemberAdminService {
     public List<Map<String, Object>> selectPopularGroup() {
         return memberAdminMapper.selectPopularGroup();
     }
+
 }

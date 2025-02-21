@@ -12,7 +12,7 @@ function GroupList({ type }) {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const [items, setGroupList] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const itemsPerPage = 8;
 
   useEffect(() => {
     fetch(`http://localhost:8080/group/list?type=${type}`)
@@ -211,7 +211,7 @@ function GroupList({ type }) {
           </div>
           <hr />
           <div>
-            <div className="row row-cols-1 row-cols-md-3 g-4">
+            <div className="row row-cols-1 row-cols-md-4 g-4">
               {paginatedReports.length > 0 ? (
                 paginatedReports.map((item) => (
                   <GroupItem key={item.GROUP_NO} item={item} />
@@ -229,7 +229,6 @@ function GroupList({ type }) {
             <Pagination.Prev
               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
               disabled={currentPage === 1}
-              className={currentPage === 1 ? 'disabled' : ''}
             />
             {[...Array(totalPages)].map((_, index) => (
               <Pagination.Item
@@ -245,7 +244,6 @@ function GroupList({ type }) {
                 setCurrentPage((prev) => Math.min(prev + 1, totalPages))
               }
               disabled={currentPage === totalPages}
-              className={currentPage === totalPages ? 'disabled' : ''}
             />
           </Pagination>
         </div>

@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
 import GroupJoinFormView from './component/GroupJoinFormView';
 import { useNavigate } from 'react-router';
+import { AuthContext } from '../context/AuthContext';
 
 export default function GroupManagement() {
   const navigate = useNavigate();
+  const { isAuthenticated, userData } = useContext(AuthContext); // 로그인 여부와 사용자 정보
+    // 로그인되지 않았다면, 로그인 페이지로 리다이렉트
+    useEffect(() => {
+      if (!isAuthenticated) {
+        alert('로그인 후 이용 가능합니다.');
+        navigate('/login'); // 로그인 페이지로 이동
+      }
+    }, [isAuthenticated, navigate]);
   
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);
@@ -96,7 +105,6 @@ export default function GroupManagement() {
           <Table bordered hover className="text-center">
             <thead>
               <tr>
-                <th className="w-25">ID</th>
                 <th className="w-25">닉네임</th>
                 <th className="w-25">신청일</th>
                 <th className="w-25">승인 처리</th>
@@ -110,7 +118,6 @@ export default function GroupManagement() {
                     onClick={() => formOpen(item.NO)} // 클릭 시 정보 열기
                     style={{ cursor: 'pointer' }}
                   >
-                    <td>{item.NO}</td>
                     <td>{item.NICKNAME}</td>
                     <td>{formatDate(item.REG_DATE)}</td>
                     <td>
@@ -145,10 +152,9 @@ export default function GroupManagement() {
           <Table bordered hover className="text-center">
             <thead>
               <tr>
-                <th className="w-25">ID</th>
                 <th className="w-25">닉네임</th>
-                <th className="w-25">연락처</th>
-                <th className="w-25">직책</th>
+                <th className="w-25">성별</th>
+                <th className="w-25">생년월일</th>
               </tr>
             </thead>
             <tbody>
@@ -159,10 +165,9 @@ export default function GroupManagement() {
                     onClick={() => formOpen(member.NO)} // 클릭 시 정보 열기
                     style={{ cursor: 'pointer' }}
                   >
-                    <td>{member.NO}</td>
                     <td>{member.NICKNAME}</td>
-                    <td>{member.PHONE}</td>
-                    <td>{member.STATUS}</td>
+                    <td>{member.GENDER}</td>
+                    <td>{formatDate(member.BIRTH)}</td>
                   </tr>
                 );
               })}

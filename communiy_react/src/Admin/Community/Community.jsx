@@ -27,10 +27,10 @@ const Community = () => {
   // ✅ 2️⃣ 검색 필터링 (모임이름, 카테고리, 모임구분, 장소 포함)
   const filteredCommunities = communities.filter((community) =>
     [
-      community.groupTitle, // group_title
-      community.category,
-      community.type,
-      community.area,
+      community.GROUP_TITLE, // group_title
+      community.CATEGORY,
+      community.TYPE,
+      community.AREA,
     ].some((field) => field?.toLowerCase().includes(search.toLowerCase()))
   );
 
@@ -70,7 +70,6 @@ const Community = () => {
     }
   };
 
-
   const handleReject = async (groupNo) => {
     console.log('거절 요청 - groupNo:', groupNo);
     if (!groupNo) {
@@ -105,7 +104,6 @@ const Community = () => {
     }
   };
 
-
   return (
     <div className="user-table-container">
       <h2>모임 관리</h2>
@@ -115,7 +113,7 @@ const Community = () => {
         <InputGroup className="me-2">
           <Form.Control
             type="text"
-            placeholder="모임 검색 (모임이름, 카테고리, 모임구분, 장소)"
+            placeholder="모임 검색 (모임이름, 장소)"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -137,8 +135,8 @@ const Community = () => {
           </tr>
         </thead>
         <tbody>
-          {communities.length > 0 ? (
-            communities.map((community) => (
+          {filteredCommunities.length > 0 ? (
+            filteredCommunities.map((community) => (
               <tr key={community.GROUP_NO}>
                 <td>{community.GROUP_NO}</td>
                 <td>
@@ -149,11 +147,24 @@ const Community = () => {
                     {community.GROUP_TITLE}
                   </Link>
                 </td>
-                <td>{community.CATEGORY}</td>
+                <td>
+                  {community.CATEGORY === 'culture' && '문화/예술'}
+                  {community.CATEGORY === 'food' && '푸드/드링크'}
+                  {community.CATEGORY === 'edu' && '교육'}
+                  {community.CATEGORY === 'travel' && '여행'}
+                  {community.CATEGORY === 'hobby' && '취미'}
+                </td>
                 <td>{community.USER_MAX}</td>
                 <td>{community.REG_DATE}</td>
                 <td>{community.AREA}</td>
-                <td>{community.TYPE}</td>
+                <td>
+                  {' '}
+                  {community.TYPE === 'regular'
+                    ? '정기모임'
+                    : community.TYPE === 'one'
+                    ? '동행 소모임'
+                    : '기타'}
+                </td>
                 <td>
                   {community.approval === 'Y' ? (
                     <Button size="sm" variant="success" disabled>
@@ -230,7 +241,6 @@ const Community = () => {
               <Button
                 variant="danger"
                 className="px-4"
-
                 onClick={() => {
                   handleReject(selectedCommunity.GROUP_NO);
                 }}
