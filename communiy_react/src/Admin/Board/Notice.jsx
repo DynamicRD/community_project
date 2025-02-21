@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Container, Nav, Form, Button, Pagination } from 'react-bootstrap';
 import '/src/announcements/Announcements_notice.css';
 import HorizonLine_table from '/src/announcements/HorizonLine_table';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Notice() {
   const today = new Date();
@@ -10,41 +11,26 @@ export default function Notice() {
     today.getMonth() + 1
   }월 ${today.getDate()}일`;
 
-  const [announcements, setAnnouncements] = useState([
-    {
-      notice_no: 1,
-      notice_title: '문정배에 대한 고찰',
-      content: '문정배 최고라고 생각합니다1',
-      reg_date: formattedDate,
-    },
-    {
-      notice_no: 2,
-      notice_title: '공지사항 예제 2',
-      content: '공지사항 내용 2',
-      reg_date: formattedDate,
-    },
-    {
-      notice_no: 3,
-      notice_title: '공지사항 예제 3',
-      content: '공지사항 내용 3',
-      reg_date: formattedDate,
-    },
-    {
-      notice_no: 4,
-      notice_title: '공지사항 예제 4',
-      content: '공지사항 내용 4',
-      reg_date: formattedDate,
-    },
-    {
-      notice_no: 5,
-      notice_title: '공지사항 예제 5',
-      content: '공지사항 내용 5',
-      reg_date: formattedDate,
-    },
-  ]);
+  function getList(url) {
+    fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setAnnouncements(data);
+      });
+  }
 
-  const [newTitle, setNewTitle] = useState('');
-  const [newContent, setNewContent] = useState('');
+  //페이지 시작 시 getList 호출
+  useEffect(() => {
+    getList('http://localhost:8080/announcements/notice/list');
+  }, []);
+  const [announcements, setAnnouncements] = useState([]);
+
+  useEffect(() => {
+    console.log(announcements);
+  }, [announcements]);
+
   const [showForm, setShowForm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const announcementsPerPage = 5;
@@ -55,69 +41,56 @@ export default function Notice() {
     startIndex,
     startIndex + announcementsPerPage
   );
+  const newTitle = useRef();
+  const newContent = useRef();
 
-  const handleSubmit = (e) => {
+  //공지사항 입력 폼
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!newTitle || !newContent) return;
 
-    const newAnnouncement = {
-      notice_no: announcements.length + 1, // ✅ 기존 필드명과 일치
-      notice_title: newTitle,
-      content: newContent,
-      reg_date: formattedDate,
-    };
-
-    setAnnouncements([...announcements, newAnnouncement]);
-    setNewTitle('');
-    setNewContent('');
+    const formData = new FormData();
+    formData.append('n_title', newTitle.current.value);
+    formData.append('content', newContent.current.value);
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/announcements/notice/insert',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('업로드 성공:', response.data);
+      getList('http://localhost:8080/announcements/notice/list');
+    } catch (error) {
+      console.error('업로드 실패:', error);
+    }
     setShowForm(false);
   };
 
   return (
     <Container>
-      <div className="ms-5 mt-5 pt-2">
-        <div className="d-flex ms-5 mt-5 mb-3 pt-5">
-          <Link to={'/admin/board/Notice'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              공지사항&nbsp;&nbsp;&nbsp;|
-            </span>
-          </Link>
-          <Link to={'/admin/board/Faq'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              &nbsp;&nbsp;&nbsp;FAQ
-            </span>
-          </Link>
-          <div className="btn_group2">
-            <Button
-              variant="dark"
-              onClick={() => setShowForm(!showForm)}
-              className="mb-3"
-            >
-              {showForm ? '작성 취소' : '새 공지 작성'}
-            </Button>
-          </div>
+      <div>
+        <div className="d-flex justify-content-end my-3">
+          <Button
+            variant="dark"
+            onClick={() => setShowForm(!showForm)}
+            className="btn_group4"
+          >
+            {showForm ? '작성 취소' : '새 공지 작성'}
+          </Button>
         </div>
-
         {showForm && (
           <Form onSubmit={handleSubmit} className="mb-4">
-            <Form.Group className="mb-2">
+            <Form.Group className="inputformmb-2">
               <Form.Label>제목</Form.Label>
-              <Form.Control
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                required
-              />
+              <Form.Control type="text" ref={newTitle} required />
             </Form.Group>
             <Form.Group className="mb-2">
               <Form.Label>내용</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                required
-              />
+              <Form.Control as="textarea" rows={3} ref={newContent} required />
             </Form.Group>
             <Button variant="danger" type="submit">
               작성 완료
@@ -128,18 +101,18 @@ export default function Notice() {
         <Container>
           <table className="announcements_table">
             {paginatedAnnouncements.map((notice) => (
-              <tbody key={notice.notice_no}>
+              <tbody key={notice.NOTICE_NO}>
                 <tr>
                   <td className="table_td_title">
                     <Link
-                      to={`/admin/board/Notice/${notice.notice_no}`}
+                      to={`/admin/board/Notice/${notice.NOTICE_NO}`}
                       className="title_link"
                     >
-                      <span className="ps-5">{notice.notice_title}</span>
+                      <span className="ps-5">{notice.NOTICE_TITLE}</span>
                     </Link>
                   </td>
                   <td className="table_td_date">
-                    <span className="pe-5">{notice.reg_date}</span>
+                    <span className="pe-5">{notice.REG_DATE}</span>
                   </td>
                 </tr>
                 <HorizonLine_table />

@@ -55,6 +55,7 @@ import ReviewDetail from './Admin/Board/ReviewDetail';
 import Stats from './Admin/Stats/Stats';
 import KakaoSignup from './login/KaKaoSignup';
 import MembershipWithdrawal from './mypage/MembershipWithdrawal';
+import { FaQ } from 'react-icons/fa6';
 
 function App() {
   return (
