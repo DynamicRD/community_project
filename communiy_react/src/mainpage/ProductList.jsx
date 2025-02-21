@@ -79,8 +79,8 @@ const GroupsList = () => {
                   <div className="card">
                     <img
                       src={`http://localhost:8080/upload/${group.imgUrl1}`}
-                      className="card-img-top img-fluid p-3"
-                      style={{ height: '180px', objectFit: 'cover' }}
+                      className="card-img-top img-fluid"
+                      style={{ objectFit: 'cover' }}
                       alt={group.gtitle}
                     />
                     <div className="card-body text-center">
@@ -99,11 +99,18 @@ const GroupsList = () => {
         )}
 
         {/* 화살표 아이콘 */}
-        <Link to={'/group/regular_list'}>
-          <div className="d-flex justify-content-end">
-            <i className="arrow1 bi bi-arrow-right-circle fs-2"></i>
-          </div>
-        </Link>
+
+        {loading ? (
+          <p>로딩 중...</p>
+        ) : groups.length === 0 ? (
+          <></>
+        ) : (
+          <Link to={'/group/regular_list'}>
+            <div className="d-flex justify-content-end">
+              <i className="arrow1 bi bi-arrow-right-circle fs-2"></i>
+            </div>
+          </Link>
+        )}
       </section>
     </>
   );
