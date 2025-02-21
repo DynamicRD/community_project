@@ -24,7 +24,7 @@
 		resultType="com.project.mypage.model.TransactionLog">
 		SELECT type,amount,reg_date
 		FROM Transaction_log
-		WHERE no = #{no}
+		WHERE no = #{no} order by reg_date desc
 	</select>
 	<update id="insertProfile">
 		UPDATE member
