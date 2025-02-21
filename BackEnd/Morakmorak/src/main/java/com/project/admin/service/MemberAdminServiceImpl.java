@@ -34,12 +34,19 @@ public class MemberAdminServiceImpl implements MemberAdminService {
         int no = mypageMapper.selectNoFromGroup(groupNo);
         String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
         notification.setNo(no);
-        
+        notification.setContent("개설 신청한 "+groupName+" 모임이 승인되었습니다.");
+        mypageMapper.insertNotification(notification);
         return memberAdminMapper.approveGroup(groupNo) > 0;
     }
 
     @Override
     public boolean rejectGroup(int groupNo) {
+    	Notification notification = new Notification();
+        int no = mypageMapper.selectNoFromGroup(groupNo);
+        String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
+        notification.setNo(no);
+        notification.setContent("개설 신청한 "+groupName+" 모임이 거절되었습니다.");
+        mypageMapper.insertNotification(notification);
         return memberAdminMapper.rejectGroup(groupNo) > 0;
     }
 

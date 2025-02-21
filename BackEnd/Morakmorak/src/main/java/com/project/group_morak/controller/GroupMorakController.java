@@ -242,13 +242,6 @@ public class GroupMorakController {
 		try {
 			service.join(map);
 			service.changeMoney(map);
-			System.out.println(map);
-			TransactionLog transactionLog = new TransactionLog();
-//			transactionLog.setAmount(map.get(money));
-//			transactionLog.setNo(member.getNo());
-//			transactionLog.setType("충전");
-//		    System.out.println("거래내역 로그"+transactionLog);
-//			mapper.insertHistory(transactionLog);
 			return ResponseEntity.ok("신청이 완료되었습니다. 모임장의 승인 후 활동이 가능합니다.");
 		} catch (DataIntegrityViolationException e) { // 유니크 제약 조건 위반 예외 처리
 			log.error("Duplicate basket entry", e);
