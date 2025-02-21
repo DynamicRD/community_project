@@ -1,6 +1,7 @@
 package com.project.admin.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.admin.model.CommentAdmin;
@@ -24,26 +27,23 @@ import lombok.RequiredArgsConstructor;
 public class CommentAdminController {
 	private final CommentAdminService commentService;
 
-    @GetMapping
+    @GetMapping("/list")
     public List<CommentAdmin> getComments() {
         return commentService.getComments();
     }
 
-    @PostMapping
-    public ResponseEntity<Void> addComment(@RequestBody CommentAdmin comment) {
-        commentService.addComment(comment);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    @PostMapping("/blind")
+    public void toggleBlind( @RequestParam(name="no") long no, @RequestParam(name="isblacked") String value) {
+      
+        System.out.println("no: " + no);
+        System.out.println("value: " + value);
+
+        if (value.equals("Y")) {
+            commentService.toggleBlindYN(no);
+        } else {
+            commentService.toggleBlind(no);
+        }
+
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-        commentService.deleteComment(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/{id}/blind")
-    public ResponseEntity<Void> toggleBlind(@PathVariable Long id) {
-        commentService.toggleBlind(id);
-        return ResponseEntity.ok().build();
-    }
 }
