@@ -90,18 +90,18 @@
 
 .review_title_page {
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   font-size: 17px;
 }
 
 .review_title_page:focus,
 .review_title_page:active {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   outline: none;
 }
 
 .borderValue {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   font-size: 26px;
   margin-right: 30px;
 }

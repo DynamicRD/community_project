@@ -8,6 +8,12 @@
 	<select id="selectNoFromGroup">
 	select no from group_morak where group_no = #{groupNo}
 	</select>
+	<select id="selectGroupNameFromGroup">
+	select group_title from group_morak where group_no = #{groupNo}
+	</select>
+	<select id="selectNickNameByNo">
+	select nickname from member where no = #{no}
+	</select>
 	<select id="selectTransactionLog"
 		resultType="com.project.mypage.model.TransactionLog">
 		SELECT type,amount,reg_date
