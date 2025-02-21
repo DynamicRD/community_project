@@ -13,16 +13,9 @@ import com.project.mypage.model.Notification;
 @Service
 public class MemberAdminServiceImpl implements MemberAdminService {
 
-
-		@Override
-		public Map<String, Object> getGroupDetail(int groupNo) {
-			return memberAdminMapper.getGroupDetail(groupNo);
-		}
-
-
     @Autowired
     private MemberAdminMapper memberAdminMapper;
-    
+
     @Autowired
     private MypageMapper mypageMapper;
 
@@ -51,16 +44,13 @@ public class MemberAdminServiceImpl implements MemberAdminService {
         int no = mypageMapper.selectNoFromGroup(groupNo);
         String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
         notification.setNo(no);
-        
-        if (isApproved) {
-            notification.setContent("개설 신청한 " + groupName + " 모임이 승인되었습니다.");
-            mypageMapper.insertNotification(notification);
-            return memberAdminMapper.approveGroup(groupNo) > 0;
-        } else {
-            notification.setContent("개설 신청한 " + groupName + " 모임이 거절되었습니다.");
-            mypageMapper.insertNotification(notification);
-            return memberAdminMapper.rejectGroup(groupNo) > 0;
-        }
+
+        String approvalMessage = isApproved ? "승인" : "거절";
+        notification.setContent("개설 신청한 " + groupName + " 모임이 " + approvalMessage + "되었습니다.");
+        mypageMapper.insertNotification(notification);
+
+        return isApproved ? memberAdminMapper.approveGroup(groupNo) > 0 
+                          : memberAdminMapper.rejectGroup(groupNo) > 0;
     }
 
     @Override
@@ -98,4 +88,13 @@ public class MemberAdminServiceImpl implements MemberAdminService {
         return memberAdminMapper.selectPopularGroup();
     }
 
+    @Override
+    public List<Map<String, Object>> selectPopularCategoryInMonth() {
+        return memberAdminMapper.selectPopularCategoryInMonth();
+    }
+
+    @Override
+    public Map<String, Object> getGroupDetail(int groupNo) {
+        return memberAdminMapper.getGroupDetail(groupNo);
+    }
 }
