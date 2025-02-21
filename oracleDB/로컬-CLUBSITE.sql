@@ -178,6 +178,7 @@ create table review(
 
 );
 
+select * from basket;
 
 select * from member;
 SELECT 

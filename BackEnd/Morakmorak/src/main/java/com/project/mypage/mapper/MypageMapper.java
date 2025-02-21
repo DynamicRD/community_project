@@ -44,4 +44,8 @@ public interface MypageMapper {
 	String selectGroupNameFromGroup(int groupNo);
 	
 	String selectNickNameByNo(int no);
+	
+	int selectNoByRno(Long no);
+	
+	String selectReviewTitleByNo(Long no);
 }
