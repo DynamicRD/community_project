@@ -40,6 +40,13 @@ const Stats = () => {
     '40대': 0,
     '50대 이상': 0,
   });
+  const [categoryData, setCategoryData] = useState({
+    culture: 0,
+    food: 0,
+    hobby: 0,
+    travel: 0,
+    edu: 0,
+  });
 
   // 페이지 로드 시 백엔드 API 호출하여 방문자 수 증가 및 조회
   useEffect(() => {
@@ -63,7 +70,7 @@ const Stats = () => {
             acc[curr.AGE_GROUP] = curr.COUNT;
             return acc;
           },
-          { 남자: 0, 여자: 0 }
+          { '10대': 0, '20대': 0, '30대': 0, '40대': 0, '50대 이상': 0 }
         );
 
         setAllAgeData(formattedData);
@@ -85,6 +92,23 @@ const Stats = () => {
         );
 
         setGenderData(formattedData);
+      })
+      .catch((error) => console.error('성별 통계 데이터 로드 실패:', error));
+  }, []);
+  useEffect(() => {
+    fetch('http://localhost:8080/admin/stats/popularCategory')
+      .then((response) => response.json())
+      .then((data) => {
+        // API 응답을 객체 형태로 변환
+        const formattedData = data.reduce(
+          (acc, curr) => {
+            acc[curr.CATEGORY] = curr.CATEGORY_COUNT;
+            return acc;
+          },
+          { culture: 0, food: 0, hobby: 0, travel: 0, edu: 0 }
+        );
+
+        setCategoryData(formattedData);
       })
       .catch((error) => console.error('성별 통계 데이터 로드 실패:', error));
   }, []);
@@ -174,14 +198,18 @@ const Stats = () => {
   // 모임 통계 데이터
   const communityStats = {
     전체: {
-      categories: [50, 40, 30, 20, 10],
+      categories: [
+        categoryData['culture'],
+        categoryData['food'],
+        categoryData['hobby'],
+        categoryData['travel'],
+        categoryData['edu'],
+      ],
       favorites: [60, 45, 35, 75, 55],
-      visitors: [70, 50, 40, 60, 20],
     },
     '최근 한달': {
       categories: [30, 25, 20, 50, 40],
       favorites: [40, 30, 25, 50, 60],
-      visitors: [50, 35, 30, 20, 70],
     },
   };
 
@@ -249,7 +277,7 @@ const Stats = () => {
               <h5 className="text-center">인기 카테고리</h5>
               <Bar
                 data={{
-                  labels: ['A', 'B', 'C', 'D', 'E'],
+                  labels: ['문화/예술', '푸드/드링크', '취미', '여행', '교육'],
                   datasets: [
                     {
                       data: communityStats[selectedCommunityStat].categories,
@@ -268,20 +296,6 @@ const Stats = () => {
                     {
                       data: communityStats[selectedCommunityStat].favorites,
                       backgroundColor: 'rgba(153, 102, 255, 0.6)',
-                    },
-                  ],
-                }}
-              />
-            </Col>
-            <Col md={12}>
-              <h5 className="text-center mt-5">방문자 많은 사이트</h5>
-              <Bar
-                data={{
-                  labels: ['M', 'N', 'O', 'P', 'Q'],
-                  datasets: [
-                    {
-                      data: communityStats[selectedCommunityStat].visitors,
-                      backgroundColor: 'rgba(255, 159, 64, 0.6)',
                     },
                   ],
                 }}

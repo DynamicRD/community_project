@@ -55,5 +55,13 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 	    public List<Map<String, Object>> countAge() {
 	    	return memberAdminMapper.countAge();
 	    }
+	    @Override
+	    public List<Map<String, Object>> selectPopularCategory() {
+	    	return memberAdminMapper.selectPopularCategory();
+	    }
+	    @Override
+	    public List<Map<String, Object>> getCommunityDetail(int groupNo) {
+	        return memberAdminMapper.getAllGroupsDetail(groupNo);
+	    }
 
 }

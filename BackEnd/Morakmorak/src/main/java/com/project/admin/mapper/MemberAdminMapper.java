@@ -23,5 +23,7 @@ public interface MemberAdminMapper {
 	
 	List<Map<String, Object>> countVisitGroup();
 	List<Map<String, Object>> countAge();
+	List<Map<String, Object>> selectPopularCategory();
+	List<Map<String, Object>> getAllGroupsDetail(int groupNo);
 
 }
