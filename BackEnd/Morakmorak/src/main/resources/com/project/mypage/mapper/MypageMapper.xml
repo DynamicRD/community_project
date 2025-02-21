@@ -14,6 +14,12 @@
 	<select id="selectNickNameByNo">
 	select nickname from member where no = #{no}
 	</select>
+	<select id="selectNoByRno">
+	select no from review where group_no = #{no}
+	</select>
+	<select id="selectReviewTitleByNo">
+	select review_title from review where group_no = #{no}
+	</select>
 	<select id="selectTransactionLog"
 		resultType="com.project.mypage.model.TransactionLog">
 		SELECT type,amount,reg_date
@@ -40,6 +46,10 @@
 		SELECT IMG_URL
 		FROM member
 		WHERE no = #{no}
+	</select>
+	<select id="selectPricebyNo">
+		SELECT PRICE FROM
+		GROUP_MORAK WHERE GROUP_NO = #{groupNo}
 	</select>
 	<insert id="insertHistory">
 		insert into Transaction_log values
