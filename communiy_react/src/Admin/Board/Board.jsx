@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import {
   Card,
   Button,
@@ -13,53 +13,68 @@ import '/src/announcements/Announcements_notice.css';
 import HorizonLine_table from '/src/announcements/HorizonLine_table';
 import '../../review/Review.css';
 
+// 후기 데이터
+const initialReviews = [
+  {
+    no: 1,
+    review_no: '1',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
+  },
+  {
+    no: 2,
+    review_no: '2',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
+  },
+  {
+    no: 3,
+    review_no: '3',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
+  },
+  {
+    no: 4,
+    review_no: '4',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
+  },
+  {
+    no: 5,
+    review_no: '5',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
+  },
+  {
+    no: 6,
+    review_no: '6',
+    review_title: '안녕하세요',
+    nickname: '문정배',
+    img_url: '/images/review1.png',
+    star: 5,
+    isblacked: 'N',
+  },
+];
+
+const reviewsPerPage = 6;
 const ReviewSection = () => {
-  const [reviewList, setReviewList] = useState([]); // ✅ 초기값 빈 배열로 설정
+  const [reviewList, setReviewList] = useState(initialReviews);
   const [currentPage, setCurrentPage] = useState(1);
-  const reviewsPerPage = 6;
-
-  // ✅ 후기 목록을 백엔드에서 불러오기 (fetch 사용)
-  useEffect(() => {
-    fetch('http://localhost:8080/admin/reviews/list') // 올바른 API 엔드포인트 사용
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('서버 응답 오류');
-        }
-        return response.json();
-      })
-      .then((data) => setReviewList(Array.isArray(data) ? data : [])) // ✅ 데이터가 배열인지 확인 후 설정
-      .catch((error) => console.error('Error fetching reviews:', error));
-  }, [reviewList]); // ✅ 의존성 배열 추가
-
-  const toggleBlind = (no, value) => {
-    if (!no) {
-      console.error("Error: Invalid 'no' parameter.");
-      return;
-    }
-
-    const form = new FormData();
-    form.append('no', no);
-    form.append('isblacked', value);
-    fetch('http://localhost:8080/admin/reviews/blind', {
-      method: 'POST',
-      body: form,
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error('서버 응답 오류');
-        }
-      })
-      .then(() => {
-        setReviewList((prevReviews) =>
-          prevReviews.map((review) =>
-            review.reviewNo === no
-              ? { ...review, isblacked: review.isblacked === 'Y' ? 'N' : 'Y' }
-              : review
-          )
-        );
-      })
-      .catch((error) => console.error('Error updating blind status:', error));
-  };
 
   const totalPages = Math.ceil(reviewList.length / reviewsPerPage);
   const startIndex = (currentPage - 1) * reviewsPerPage;
@@ -68,102 +83,81 @@ const ReviewSection = () => {
     startIndex + reviewsPerPage
   );
 
+  const handlePageChange = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const toggleBlind = (no) => {
+    setReviewList((prevReviews) =>
+      prevReviews.map((review) =>
+        review.no === no
+          ? { ...review, isblacked: review.isblacked === 'Y' ? 'N' : 'Y' }
+          : review
+      )
+    );
+  };
+
   return (
     <Container>
       <h2 className="mb-4">후기 관리</h2>
-
-      {/* 후기 리스트 */}
       <div className="review_board mt-4">
-        <div
-          className="d-flex flex-wrap justify-content-center gap-3"
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'center',
-            alignItems: 'flex-start',
-            gap: '20px',
-          }}
-        >
+        <div className="d-flex flex-wrap justify-content-start gap-4">
           {paginatedReviews.map((review) => (
             <Card
-              key={review.reviewNo}
+              key={review.no}
               className="p-3 text-center"
-              style={{
-                width: '300px', // 카드 가로 크기 고정
-                minHeight: '400px', // 카드 세로 크기 조정
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                textAlign: 'center',
-                overflow: 'hidden',
-                boxShadow: '0px 4px 6px rgba(0,0,0,0.1)', // 카드 그림자 추가
-                borderRadius: '10px', // 둥근 모서리 적용
-              }}
+              style={{ width: '30%' }}
             >
               {review.isblacked === 'Y' ? (
-                <p style={{ color: 'red', fontWeight: 'bold' }}>
-                  ⚠️ 후기가 블라인드 처리되었습니다.
-                </p>
+                <p>⚠️ 후기가 블라인드 처리되었습니다.</p>
               ) : (
                 <>
                   <p>
-                    <strong>{review.reviewTitle}</strong>
+                    <strong>{review.review_title}</strong>
                   </p>
-                  <Link to={`/admin/board/${review.reviewNo}`}>
+                  <Link to={`/admin/board/${review.no}`}>
                     <img
-                      src={`http://localhost:8080/upload/${review.imgUrl}`}
+                      src={review.img_url}
                       alt="review"
-                      style={{
-                        width: '100%', // 이미지 크기 카드 너비에 맞추기
-                        maxWidth: '250px', // 너무 커지는 것 방지
-                        height: '180px', // 일정한 높이 유지
-                        objectFit: 'cover', // 비율을 유지하면서 크기 조절
-                        borderRadius: '8px',
-                      }}
+                      className="img-fluid"
                     />
                   </Link>
                   <p>작성자: {review.nickname}</p>
                 </>
               )}
-              <div className="mt-2">
-                <Button
-                  variant={review.isblacked === 'Y' ? 'primary' : 'danger'}
-                  onClick={() => toggleBlind(review.no, review.isblacked)}
-                  className="me-2 p-2 ps-5 pe-5"
-                >
-                  {review.isblacked === 'Y' ? '블라인드 해제' : '블라인드 처리'}
-                </Button>
-              </div>
+              <Button
+                variant={review.isblacked === 'Y' ? 'primary' : 'danger'}
+                onClick={() => toggleBlind(review.no)}
+                className="mt-2"
+              >
+                {review.isblacked === 'Y' ? '블라인드 해제' : '블라인드 처리'}
+              </Button>
             </Card>
           ))}
         </div>
       </div>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Pagination className="mt-4 justify-content-center">
-          <Pagination.Prev
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-          />
-          {[...Array(totalPages)].map((_, index) => (
-            <Pagination.Item
-              key={index + 1}
-              active={index + 1 === currentPage}
-              onClick={() => setCurrentPage(index + 1)}
-            >
-              {index + 1}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-            }
-            disabled={currentPage === totalPages}
-          />
-        </Pagination>
-      )}
+      <Pagination className="mt-4 justify-content-center">
+        <Pagination.Prev
+          onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
+          disabled={currentPage === 1}
+        />
+        {[...Array(totalPages)].map((_, index) => (
+          <Pagination.Item
+            key={index + 1}
+            active={index + 1 === currentPage}
+            onClick={() => handlePageChange(index + 1)}
+          >
+            {index + 1}
+          </Pagination.Item>
+        ))}
+        <Pagination.Next
+          onClick={() =>
+            handlePageChange(Math.min(currentPage + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+        />
+      </Pagination>
     </Container>
   );
 };

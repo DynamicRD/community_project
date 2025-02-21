@@ -79,8 +79,8 @@ const GroupsList = () => {
                   <div className="card">
                     <img
                       src={`http://localhost:8080/upload/${group.imgUrl1}`}
-                      className="card-img-top img-fluid"
-                      style={{ objectFit: 'cover' }}
+                      className="card-img-top img-fluid p-3"
+                      style={{ height: '180px', objectFit: 'cover' }}
                       alt={group.gtitle}
                     />
                     <div className="card-body text-center">

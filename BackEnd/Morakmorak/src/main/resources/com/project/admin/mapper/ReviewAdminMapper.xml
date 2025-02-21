@@ -3,17 +3,35 @@
 <mapper namespace="com.project.admin.mapper.ReviewAdminMapper">
 	<!-- 후기 목록 조회 -->
     <select id="getReviews" resultType="com.project.admin.model.ReviewAdmin">
-        SELECT * FROM review r left join member m on r.no = m.no ORDER BY r.no DESC
+        SELECT * FROM review WHERE hidden = FALSE ORDER BY id DESC
     </select>
+
+    <!-- 특정 후기 조회 -->
+    <select id="getReviewById" resultType="com.project.admin.model.ReviewAdmin">
+        SELECT * FROM review WHERE id = #{id}
+    </select>
+
+    <!-- 후기 추가 -->
+    <insert id="addReview" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO review (review_title, nickname, img_url, content, star, isblacked)
+        VALUES (#{review_title}, #{nickname}, #{img_url}, #{content}, #{star}, 'N')
+    </insert>
+
+    <!-- 후기 수정 -->
+    <update id="updateReview">
+        UPDATE review 
+        SET review_title = #{review_title}, content = #{content}, img_url = #{img_url}, rating = #{star} 
+        WHERE id = #{id}
+    </update>
+
+    <!-- 후기 삭제 -->
+    <delete id="deleteReview">
+        DELETE FROM review WHERE no = #{no}
+    </delete>
 
     <!-- 후기 블라인드 처리 -->
     <update id="toggleBlind">
-        UPDATE review SET isblacked = 'Y' WHERE no = #{no}
-    </update>
-    
-    <!-- 후기 블라인드 처리 Y->N -->
-    <update id="toggleBlindYN">
-        UPDATE review SET isblacked = 'N' WHERE no = #{no}
+        UPDATE review SET isblacked = !isblacked WHERE no = #{no}
     </update>
 	
 </mapper>
