@@ -338,25 +338,13 @@ SELECT gender, count(*) as count
 		FROM MEMBER
 		GROUP BY gender;
         
-SELECT
-		    CASE 
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 10 AND 19) THEN '10대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 20 AND 29) THEN '20대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 30 AND 39) THEN '30대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 40 AND 49) THEN '40대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 50 AND 59) THEN '50대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) >= 60) THEN '60대 이상'
-		        ELSE '기타'
-		    END AS age_group,
-		    COUNT(*) AS count
-			FROM member;
             
 SELECT g.group_no, count(*) AS count
 		FROM member_group mg INNER JOIN group_morak g
 		ON mg.member_group_no = g.group_no
 		where mg.status = 'MEMBER' and g.approval= 'Y'
 		GROUP BY g.group_no
-		ORDER BY count DESC
+		ORDER BY count DESC;
         
        SELECT URL, COUNT(DISTINCT IP) AS count
 		FROM VISIT_LOG
@@ -365,3 +353,11 @@ SELECT g.group_no, count(*) AS count
 		ORDER BY visitor_count DESC;
         
         select * from group_morak;
+        
+SELECT gm.group_title, COUNT(b.basket_no) AS basket_count
+FROM group_morak gm
+LEFT JOIN basket b ON gm.group_no = b.group_no
+WHERE b.reg_date >= ADD_MONTHS(SYSDATE, -1)  -- 최근 한 달 데이터
+GROUP BY gm.group_title
+ORDER BY basket_count DESC
+FETCH FIRST 5 ROWS ONLY;

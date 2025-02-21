@@ -1,12 +1,15 @@
 // src/components/Sidebar.jsx
 import { Nav } from 'react-bootstrap';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import './dashboard.css';
 const Sidebar = () => {
   return (
     <div className="bg-light sidebar p-3 vh-100">
-      <h4 className="mb-4">Logo</h4>
+      <Link className="navbar-brand navbar-logo m-4" to="/">
+        모락모樂
+      </Link>
       <Nav className="flex-column">
+        <br></br>
         <Nav.Link as={NavLink} to="/admin/dashboard" className="active">
           대시보드
         </Nav.Link>

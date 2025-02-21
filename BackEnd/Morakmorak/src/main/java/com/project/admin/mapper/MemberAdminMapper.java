@@ -12,6 +12,8 @@ public interface MemberAdminMapper {
 	List<Map<String, Object>> getUsers();
 
 	List<Map<String, Object>> getAllGroups(); // 모든 모임 조회
+	
+	Map<String, Object> getGroupDetail(int groupNogroupNo);
 
 	int approveGroup(@Param("groupNo") int groupNo); // 모임 승인 처리
 
@@ -26,5 +28,8 @@ public interface MemberAdminMapper {
 	List<Map<String, Object>> selectPopularCategory();
 	List<Map<String, Object>> getAllGroupsDetail(int groupNo);
 	List<Map<String, Object>> selectPopularGroup();
+	List<Map<String, Object>> selectPopularCategoryInMonth();
+
+	
 
 }

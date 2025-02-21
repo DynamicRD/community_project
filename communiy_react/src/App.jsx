@@ -148,7 +148,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<UserTable />} />
             <Route path="community" element={<Community />} />
-            <Route path="community/:idx" element={<CommunityDetail />} />
+            <Route path="community/:groupNo" element={<CommunityDetail />} />
             <Route path="complaint" element={<Complaint />} />
             <Route path="board" element={<Board />} />
             <Route path="board/:reviewid" element={<ReviewDetail />} />
