@@ -26,5 +26,6 @@ public interface MemberAdminMapper {
 	List<Map<String, Object>> selectPopularCategory();
 	List<Map<String, Object>> getAllGroupsDetail(int groupNo);
 	List<Map<String, Object>> selectPopularGroup();
+	List<Map<String, Object>> selectPopularCategoryInMonth();
 
 }

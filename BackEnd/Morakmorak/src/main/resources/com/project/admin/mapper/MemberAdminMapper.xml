@@ -107,6 +107,13 @@
 		ORDER BY visitor_count DESC
     ]]>
 	</select>
-	<!-- 찜 많은 5개 모임사이트 -->
-	
+	<!-- 최근 한달 인기 카테고리 -->
+	<select id="selectPopularCategoryInMonth" resultType="java.util.Map">
+	<![CDATA[
+		SELECT category, COUNT(*) AS category_count
+		FROM group_morak
+        WHERE reg_date >= ADD_MONTHS(SYSDATE, -1)
+		GROUP BY category
+	]]>
+	</select>
 </mapper>

@@ -217,10 +217,6 @@ const Stats = () => {
       ],
       favorites: popularGroups.map((group) => group.BASKET_COUNT),
     },
-    '최근 한달': {
-      categories: [30, 25, 20, 50, 40],
-      favorites: [40, 30, 25, 50, 60],
-    },
   };
 
   return (
@@ -273,14 +269,6 @@ const Stats = () => {
             >
               전체
             </Button>
-            <Button
-              variant={
-                selectedCommunityStat === '최근 한달' ? 'primary' : 'secondary'
-              }
-              onClick={() => setSelectedCommunityStat('최근 한달')}
-            >
-              최근 한달
-            </Button>
           </div>
           <Row>
             <Col md={12}>
@@ -317,5 +305,4 @@ const Stats = () => {
     </Container>
   );
 };
-
 export default Stats;

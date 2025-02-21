@@ -26,4 +26,5 @@ public interface MemberAdminService {
 
 	List<Map<String, Object>> selectPopularGroup();
 
+	List<Map<String, Object>> selectPopularCategoryInMonth();
 }
