@@ -119,15 +119,7 @@ create table group_morak(
     member_count number(3),
     primary key(group_no)
 );
-alter table group_morak add member_count number(3) DEFAULT 0; 
-SELECT
-		group_title,start_date,last_date,price,approval as status from group_morak
-		where no =1;
-SELECT COUNT(DISTINCT mg.no)
-		FROM member_group mg
-		JOIN group_morak gm ON mg.group_no = gm.group_no
-		WHERE mg.status IN ('member', 'leader')
-		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
+
 -- 댓글(답변형)
 create table comments(
     comments_no number(6) not null,
@@ -178,18 +170,7 @@ create table review(
 
 );
 
-select * from basket;
 
-select * from member;
-SELECT 
-    gm.group_title,
-    gm.start_date,
-    gm.last_date,
-    gm.price,
-    mg.status
-FROM member_group mg
-JOIN group_morak gm ON mg.group_no = gm.group_no
-WHERE mg.status != 'LEADER' and mg.no = 72 and gm.last_date > current_date;
 -- 사용자
 create table member(
     no number(6) not null,
@@ -215,12 +196,6 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
-SELECT COUNT(*) AS reg_count
-FROM member
-WHERE TO_DATE(reg_date, 'YY/MM/DD') 
-      BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
-
-delete from member where gender='male';
 INSERT INTO member (
     no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
     star_sum, black, reg_date, img_url, self_pr
@@ -231,7 +206,7 @@ INSERT INTO member (
     100000, '12345', 'Seoul', 'Admin Street 1', 
     0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
-select * from member;
+
 
 -- 알림
 create table notification(
@@ -295,9 +270,7 @@ create table visit_log(
     visit_url varchar2(300),
     primary key(v_id)
     );
-select * from visit_log;
-truncate table visit_log;
-commit;
+
 --거래내역 테이블
 create table Transaction_log(
     transaction_no number(6),
@@ -307,57 +280,6 @@ create table Transaction_log(
     reg_date date default sysdate,
     primary key(transaction_no)
 );
-select * from transaction_log;
-    
---관리자
-delete from member where gender='male';
-INSERT INTO member (
-    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
-    star_sum, black, reg_date, img_url, self_pr
-) VALUES (
-    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
-    'none', 'none', 'admin', 'admin', 
-    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), '여자', 
-    100000, '12345', 'Seoul', 'Admin Street 1', 
-    0, 0, SYSDATE, '', '관리자 계정입니다.'
-);
 
-		SELECT COUNT(DISTINCT mg.no)
-		FROM member_group mg
-		JOIN group_morak gm ON mg.group_no = gm.group_no
-		WHERE mg.status = 'MEMBER'
-		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
 
-SELECT COUNT(*)
-		FROM visit_log
-		WHERE visit_date BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
 
-select * from member_group;
-select * from group_morak;
-SELECT gender, count(*) as count
-		FROM MEMBER
-		GROUP BY gender;
-        
-            
-SELECT g.group_no, count(*) AS count
-		FROM member_group mg INNER JOIN group_morak g
-		ON mg.member_group_no = g.group_no
-		where mg.status = 'MEMBER' and g.approval= 'Y'
-		GROUP BY g.group_no
-		ORDER BY count DESC;
-        
-       SELECT URL, COUNT(DISTINCT IP) AS count
-		FROM VISIT_LOG
-		WHERE URL LIKE '/GROUP/DETAIL%'
-		GROUP BY URL
-		ORDER BY visitor_count DESC;
-        
-        select * from group_morak;
-        
-SELECT gm.group_title, COUNT(b.basket_no) AS basket_count
-FROM group_morak gm
-LEFT JOIN basket b ON gm.group_no = b.group_no
-WHERE b.reg_date >= ADD_MONTHS(SYSDATE, -1)  -- 최근 한 달 데이터
-GROUP BY gm.group_title
-ORDER BY basket_count DESC
-FETCH FIRST 5 ROWS ONLY;
