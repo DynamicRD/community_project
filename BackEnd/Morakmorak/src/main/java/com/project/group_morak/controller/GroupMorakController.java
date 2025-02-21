@@ -259,6 +259,12 @@ public class GroupMorakController {
 		}
 	}
 	
+	// 모임 시작일 비교
+	@RequestMapping("/checkStartDate")
+	public String checkStartDate(@RequestParam(value = "group_no") String groupNo) {
+			return service.checkStartDate(groupNo);
+	}
+	
 	// 모임 참가 신청 취소
 	@RequestMapping("/cancelJoin")
 	public ResponseEntity<String> cancelJoin(@RequestParam Map<String, Object> map) {
@@ -361,7 +367,7 @@ public class GroupMorakController {
 	    return false;  // 모임 종료되지 않음
 	}
 
-
+	
 	// 모임장 멤버 승인/거부 처리
 	@RequestMapping("/statusUpdate")
 	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {

@@ -45,4 +45,6 @@ public interface GroupMorakService {
 
 	public void memberCountCancel(Map<String, Object> map);
 
+	public String checkStartDate(String groupNo);
+
 }

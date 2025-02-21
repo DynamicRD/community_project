@@ -117,4 +117,9 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		mapper.memberCountCancel(map);
 	}
 
+	@Override
+	public String checkStartDate(String groupNo) {
+		return mapper.checkStartDate(groupNo);
+	}
+
 }
