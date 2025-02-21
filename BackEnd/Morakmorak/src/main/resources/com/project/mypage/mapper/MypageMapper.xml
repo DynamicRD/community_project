@@ -47,6 +47,10 @@
 		FROM member
 		WHERE no = #{no}
 	</select>
+	<select id="selectPricebyNo">
+		SELECT PRICE FROM
+		GROUP_MORAK WHERE GROUP_NO = #{groupNo}
+	</select>
 	<insert id="insertHistory">
 		insert into Transaction_log values
 		(transaction_seq.nextval,#{no},#{type},#{amount},sysdate)
