@@ -128,11 +128,11 @@ const ReviewSection = () => {
                   <p>작성자: {review.nickname}</p>
                 </>
               )}
-              <div className="mt-2">
+              <div className="div_btn mt-2">
                 <Button
                   variant={review.isblacked === 'Y' ? 'primary' : 'danger'}
-                  onClick={() => toggleBlind(review.no, review.isblacked)}
-                  className="me-2 p-2 ps-5 pe-5"
+                  onClick={() => toggleBlind(review.reviewNo, review.isblacked)}
+                  className="blacked_btn me-2 p-2 ps-5 pe-5"
                 >
                   {review.isblacked === 'Y' ? '블라인드 해제' : '블라인드 처리'}
                 </Button>
@@ -170,64 +170,56 @@ const ReviewSection = () => {
   );
 };
 
-// 댓글 관리 컴포넌트
 const CommentSection = () => {
-  const initialComments = [
-    {
-      no: 1,
-      reviewNo: 1,
-      nickname: '김유신',
-      content: '좋은 후기네요!',
-      reg_date: '2024-02-10',
-      isblacked: 'N',
-    },
-    {
-      no: 2,
-      reviewNo: 2,
-      nickname: '이순신',
-      content: '정말 유익한 정보였습니다.',
-      reg_date: '2024-02-11',
-      isblacked: 'Y',
-    },
-    {
-      no: 3,
-      reviewNo: 3,
-      nickname: '강감찬',
-      content: '다음에도 또 올게요!',
-      reg_date: '2024-02-12',
-      isblacked: 'N',
-    },
-    {
-      no: 4,
-      reviewNo: 4,
-      nickname: '을지문덕',
-      content: '아주 유용한 글입니다.',
-      reg_date: '2024-02-13',
-      isblacked: 'Y',
-    },
-  ];
-
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState([]); // 초기값 빈 배열
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 10;
 
-  // **검색 필터**
+  // 🔹 댓글 목록 불러오기
+  useEffect(() => {
+    fetch(`http://localhost:8080/admin/comments/list`)
+      .then((response) => {
+        if (!response.ok) throw new Error('댓글 데이터를 가져오지 못했습니다.');
+        return response.json();
+      })
+      .then((data) => setComments(Array.isArray(data) ? data : []))
+      .catch((error) => console.error('Error fetching comments:', error));
+  }, [comments]);
+
+  // 🔹 블라인드 상태 토글 API 요청
+  const form = new FormData();
+  const toggleBlindStatus = (no, value) => {
+    form.append('no', no);
+    form.append('isblacked', value);
+    console.log(value);
+    console.log(no);
+    fetch('http://localhost:8080/admin/comments/blind', {
+      method: 'POST',
+      body: form,
+    })
+      // .then((response) => {
+      //   if (!response.ok) throw new Error('블라인드 처리 오류');
+      //   console.log(response);
+      // })
+      .then(() => {
+        // setComments((prevComments) =>
+        //   prevComments.map((comment) =>
+        //     comment.no === no
+        //       ? { ...comment, isblacked: comment.isblacked === 'Y' ? 'N' : 'Y' }
+        //       : comment
+        //   )
+        // );
+      })
+      .catch((error) => console.error('Error updating blind status:', error));
+    console.log(comments);
+  };
+
+  // 🔹 검색 필터 적용
   const filteredComments = comments.filter(
     (comment) =>
       comment.nickname.includes(search) || comment.content.includes(search)
   );
-
-  // **블라인드 상태 토글 함수**
-  const toggleBlindStatus = (no) => {
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
-        comment.no === no
-          ? { ...comment, isblacked: comment.isblacked === 'Y' ? 'N' : 'Y' }
-          : comment
-      )
-    );
-  };
 
   const totalPages = Math.ceil(filteredComments.length / commentsPerPage);
   const startIndex = (currentPage - 1) * commentsPerPage;
@@ -235,11 +227,6 @@ const CommentSection = () => {
     startIndex,
     startIndex + commentsPerPage
   );
-
-  // **댓글 삭제**
-  const deleteComment = (no) => {
-    setComments(comments.filter((comment) => comment.no !== no));
-  };
 
   return (
     <Container className="mt-4">
@@ -263,38 +250,38 @@ const CommentSection = () => {
             <th>내용</th>
             <th>작성일</th>
             <th>상태</th>
-            <th>블라인드처리</th>
+            <th>블라인드</th>
           </tr>
         </thead>
         <tbody>
           {paginatedComments.length > 0 ? (
-            paginatedComments.map((comment) => (
+            paginatedComments.map((comment, idx) => (
               <tr
-                key={comment.no}
+                key={idx}
                 className={comment.isblacked === 'Y' ? 'table-danger' : ''}
               >
                 <td>{comment.no}</td>
                 <td>{comment.reviewNo}</td>
                 <td>{comment.nickname}</td>
                 <td>{comment.content}</td>
-                <td>{comment.reg_date}</td>
+                <td>{comment.regDate}</td>
                 <td>{comment.isblacked === 'Y' ? '블라인드' : '정상'}</td>
                 <td>
                   <Button
                     variant={comment.isblacked === 'Y' ? 'primary' : 'danger'}
                     size="sm"
-                    onClick={() => toggleBlindStatus(comment.no)}
+                    onClick={() =>
+                      toggleBlindStatus(comment.commentsNo, comment.isblacked)
+                    }
                   >
-                    {comment.isblacked === 'Y'
-                      ? '블라인드 해제'
-                      : '블라인드 처리'}
+                    {comment.isblacked === 'Y' ? '해제' : '처리'}
                   </Button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="8" className="text-center">
                 검색 결과가 없습니다.
               </td>
             </tr>

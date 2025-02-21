@@ -18,20 +18,14 @@ public class CommentAdminServiceImpl implements CommentAdminService {
     public List<CommentAdmin> getComments() {
         return commentMapper.getComments();
     }
-
-    @Override
-    public void addComment(CommentAdmin comment) {
-        commentMapper.addComment(comment);
-    }
-
-    @Override
-    public void deleteComment(Long no) {
-        commentMapper.deleteComment(no);
-    }
-
     @Override
     public void toggleBlind(Long no) {
         commentMapper.toggleBlind(no);
     }
+	@Override
+	public void toggleBlindYN(Long no) {
+		commentMapper.toggleBlindYN(no);
+		
+	}
 
 }
