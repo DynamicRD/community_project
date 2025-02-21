@@ -280,10 +280,10 @@ export default function GroupDetailItem({ item }) {
               <th>참가 승인 전, 모임 시작 7일 전까지</th>
               <td>전액 환불</td>
             </tr>
-            <tr>
+            {/* <tr>
               <th>모임 시작 3일 전까지</th>
               <td>참가비의 50% 환불</td>
-            </tr>
+            </tr> */}
             <tr>
               <th>모임 시작 3일 이내</th>
               <td>환불 불가</td>

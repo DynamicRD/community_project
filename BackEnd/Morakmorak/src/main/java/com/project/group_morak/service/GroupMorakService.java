@@ -41,4 +41,8 @@ public interface GroupMorakService {
 
 	public void cancelJoin(Map<String, Object> map);
 
+	public void memberCount(Map<String, Object> map);
+
+	public void memberCountCancel(Map<String, Object> map);
+
 }

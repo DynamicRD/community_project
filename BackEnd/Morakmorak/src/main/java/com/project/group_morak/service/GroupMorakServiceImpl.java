@@ -107,7 +107,14 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		return mapper.getGroupsByCategory3(category);
 	}
 
-	
+	@Override
+	public void memberCount(Map<String, Object> map) {
+		mapper.memberCount(map);
+	}
 
+	@Override
+	public void memberCountCancel(Map<String, Object> map) {
+		mapper.memberCountCancel(map);
+	}
 
 }
