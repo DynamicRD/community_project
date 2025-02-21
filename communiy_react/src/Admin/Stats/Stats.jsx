@@ -28,6 +28,7 @@ ChartJS.register(
 );
 
 const Stats = () => {
+  const [popularGroups, setPopularGroups] = useState([]);
   const [genderData, setGenderData] = useState({ 남자: 0, 여자: 0 });
   const [visited, setVisited] = useState([]); // 백엔드에서 가져온 데이터 저장
   const [activeTab, setActiveTab] = useState('daily');
@@ -47,6 +48,15 @@ const Stats = () => {
     travel: 0,
     edu: 0,
   });
+
+  useEffect(() => {
+    fetch('http://localhost:8080/admin/stats/popularGroup')
+      .then((response) => response.json())
+      .then((data) => {
+        setPopularGroups(data);
+      })
+      .catch((error) => console.error('인기 모임 데이터 로드 실패:', error));
+  }, []);
 
   // 페이지 로드 시 백엔드 API 호출하여 방문자 수 증가 및 조회
   useEffect(() => {
@@ -205,7 +215,7 @@ const Stats = () => {
         categoryData['travel'],
         categoryData['edu'],
       ],
-      favorites: [60, 45, 35, 75, 55],
+      favorites: popularGroups.map((group) => group.BASKET_COUNT),
     },
     '최근 한달': {
       categories: [30, 25, 20, 50, 40],
@@ -291,7 +301,7 @@ const Stats = () => {
               <h5 className="text-center mt-5">찜 많은 모임</h5>
               <Bar
                 data={{
-                  labels: ['V', 'W', 'X', 'Y', 'Z'],
+                  labels: popularGroups.map((group) => group.GROUP_TITLE),
                   datasets: [
                     {
                       data: communityStats[selectedCommunityStat].favorites,
