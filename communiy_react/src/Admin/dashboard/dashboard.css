@@ -5,7 +5,6 @@
 .dashboard {
   width: 100%;
   height: 100%;
-  overflow: hidden;
   margin-left: 0;
   margin: 0;
   padding: 0;
@@ -47,6 +46,7 @@ a {
 .card {
   border-radius: 10px;
 }
+
 .stat-card {
   text-align: center;
   padding: 15px;

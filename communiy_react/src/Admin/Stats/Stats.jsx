@@ -28,6 +28,7 @@ ChartJS.register(
 );
 
 const Stats = () => {
+  const [profitData, setProfitData] = useState([]);
   const [popularGroups, setPopularGroups] = useState([]);
   const [genderData, setGenderData] = useState({ 남자: 0, 여자: 0 });
   const [visited, setVisited] = useState([]); // 백엔드에서 가져온 데이터 저장
@@ -123,6 +124,21 @@ const Stats = () => {
       .catch((error) => console.error('성별 통계 데이터 로드 실패:', error));
   }, []);
 
+  useEffect(() => {
+    fetch('http://localhost:8080/admin/stats/profit')
+      .then((response) => response.json())
+      .then((data) => {
+        const formattedData = getLastFiveDaysLabels().map((label) => {
+          const foundData = data.find(
+            (item) => item.TRANSACTION_DATE === label
+          );
+          return foundData ? foundData.TOTAL_AMOUNT : 0;
+        });
+        setProfitData(formattedData);
+      })
+      .catch((error) => console.error('수익 데이터 로드 실패:', error));
+  }, []);
+
   // useEffect(() => {
   //   fetch('http://localhost:8080/admin/stats/visitAll')
   //     .then((response) => response.json())
@@ -151,21 +167,9 @@ const Stats = () => {
     datasets: [
       {
         label: '일별 수입 (원)',
-        data: [20, 17, 26, 12, 30],
+        data: profitData,
         borderColor: 'blue',
         backgroundColor: 'rgba(0, 0, 255, 0.5)',
-      },
-    ],
-  };
-
-  const visitorData = {
-    labels: getLastFiveDaysLabels(),
-    datasets: [
-      {
-        label: '홈페이지 방문자',
-        data: [1000, 1200, 900, 1500, 1700],
-        borderColor: 'red',
-        backgroundColor: 'rgba(255, 0, 0, 0.5)',
       },
     ],
   };
@@ -217,10 +221,6 @@ const Stats = () => {
       ],
       favorites: popularGroups.map((group) => group.BASKET_COUNT),
     },
-    '최근 한달': {
-      categories: [30, 25, 20, 50, 40],
-      favorites: [40, 30, 25, 50, 60],
-    },
   };
 
   return (
@@ -242,7 +242,6 @@ const Stats = () => {
         <Card className="p-4">
           <h4>일별 통계</h4>
           <Line data={dailyData} className="p-5" />
-          <Line data={visitorData} />
         </Card>
       )}
       {activeTab === 'user' && (
@@ -273,14 +272,6 @@ const Stats = () => {
             >
               전체
             </Button>
-            <Button
-              variant={
-                selectedCommunityStat === '최근 한달' ? 'primary' : 'secondary'
-              }
-              onClick={() => setSelectedCommunityStat('최근 한달')}
-            >
-              최근 한달
-            </Button>
           </div>
           <Row>
             <Col md={12}>
@@ -290,6 +281,7 @@ const Stats = () => {
                   labels: ['문화/예술', '푸드/드링크', '취미', '여행', '교육'],
                   datasets: [
                     {
+                      label: '인기 카테고리',
                       data: communityStats[selectedCommunityStat].categories,
                       backgroundColor: 'rgba(75, 192, 192, 0.6)',
                     },
@@ -304,6 +296,7 @@ const Stats = () => {
                   labels: popularGroups.map((group) => group.GROUP_TITLE),
                   datasets: [
                     {
+                      label: '찜 많은 모임',
                       data: communityStats[selectedCommunityStat].favorites,
                       backgroundColor: 'rgba(153, 102, 255, 0.6)',
                     },
@@ -317,5 +310,4 @@ const Stats = () => {
     </Container>
   );
 };
-
 export default Stats;
