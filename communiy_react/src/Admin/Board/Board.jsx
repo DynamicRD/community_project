@@ -188,28 +188,26 @@ const CommentSection = () => {
   // 🔹 블라인드 상태 토글 API 요청
   const form = new FormData();
   const toggleBlindStatus = (no, value) => {
+    form.append('no', no);
+    form.append('isblacked', value);
+    console.log(value);
+    console.log(no);
     fetch('http://localhost:8080/admin/comments/blind', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json', // ✅ JSON 형식으로 변경
-      },
-      body: JSON.stringify({
-        no: no,
-        isblacked: value,
-      }),
+      body: form,
     })
-      .then((response) => {
-        if (!response.ok) throw new Error('블라인드 처리 오류');
-        return response.json();
-      })
+      // .then((response) => {
+      //   if (!response.ok) throw new Error('블라인드 처리 오류');
+      //   console.log(response);
+      // })
       .then(() => {
-        setComments((prevComments) =>
-          prevComments.map((comment) =>
-            comment.no === no
-              ? { ...comment, isblacked: comment.isblacked === 'Y' ? 'N' : 'Y' }
-              : comment
-          )
-        );
+        // setComments((prevComments) =>
+        //   prevComments.map((comment) =>
+        //     comment.no === no
+        //       ? { ...comment, isblacked: comment.isblacked === 'Y' ? 'N' : 'Y' }
+        //       : comment
+        //   )
+        // );
       })
       .catch((error) => console.error('Error updating blind status:', error));
     console.log(comments);
@@ -270,7 +268,9 @@ const CommentSection = () => {
                   <Button
                     variant={comment.isblacked === 'Y' ? 'primary' : 'danger'}
                     size="sm"
-                    onClick={() => toggleBlindStatus(comment.no)}
+                    onClick={() =>
+                      toggleBlindStatus(comment.no, comment.isblacked)
+                    }
                   >
                     {comment.isblacked === 'Y' ? '해제' : '처리'}
                   </Button>

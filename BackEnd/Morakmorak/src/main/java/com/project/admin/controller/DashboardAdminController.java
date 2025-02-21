@@ -1,5 +1,6 @@
 package com.project.admin.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,39 +14,32 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.admin.model.CommentAdmin;
+import com.project.admin.model.DashboardAdmin;
 import com.project.admin.service.CommentAdminService;
+import com.project.admin.service.DashboardAdminService;
+import com.project.group_morak.model.GroupMorak;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/admin/comments")
+@RequestMapping("/admin/dashboard")
 @RequiredArgsConstructor
-public class CommentAdminController {
-	private final CommentAdminService commentService;
-
-    @GetMapping("/list")
-    public List<CommentAdmin> getComments() {
-        return commentService.getComments();
-    }
-
-    @PostMapping("/blind")
-    public void toggleBlind(@RequestBody Map<String, Object> request) {
-       System.out.println(request);
-       long num = (long)request.get("no");
-       String value = (String)request.get("value");
-        System.out.println("no: " + num);
-        System.out.println("value: " + value);
-
-        if (value.equals("Y")) {
-            commentService.toggleBlindYN(num);
-        } else {
-            commentService.toggleBlind(num);
-        }
-
-    }
-
+public class DashboardAdminController {
+	private final DashboardAdminService service;
+	
+	@GetMapping("/detailselect")
+	public Map<String, DashboardAdmin> getDetailGroups() {
+	    Map<String, DashboardAdmin> result = new HashMap<>();
+	    
+	    result.put("customerCount", service.getCustomerCount());
+	    result.put("profitChange", service.getProfitChange());
+	    result.put("groupMemberChange", service.getGroupMemberChange());
+	    result.put("visitLogChange", service.getVisitLogChange());
+	    
+	    return result;
+	}
+	
 }

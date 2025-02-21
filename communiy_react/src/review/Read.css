@@ -104,6 +104,7 @@
   border: 1px solid #ff674500;
 }
 
+<<<<<<< HEAD
 .blacked_btn {
   width: 270px;
   text-align: center;
@@ -111,6 +112,22 @@
 .div_btn {
   margin: 0 auto;
 }
+=======
+.read_btn {
+  background-color: #ff2d00;
+  border: 1px solid #ff6745;
+  height: 35px;
+  text-align: center;
+  color: white;
+}
+
+.read_btn:hover {
+  color: white;
+  background-color: #ff67458f;
+  border: 1px solid #ff674500;
+}
+
+>>>>>>> 8d95844e72ed75b179c1aa892b28ac75176a8908
 .reply_hr {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }

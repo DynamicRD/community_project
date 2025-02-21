@@ -34,7 +34,7 @@ const getData = async () => {
     const response = await axios.get('http://localhost:8080/member/getdata', {
       withCredentials: true,
     });
-    console.log('서버 응답:', response.data);
+    console.log('서버 응답받음');
     return response.data.member;
   } catch (error) {
     if (error.response?.status === 401) {
@@ -58,7 +58,10 @@ const useAuth = () => {
         const { accessTokenExists, refreshTokenExists } =
           await checkTokenExistence();
         console.log(
-          '토큰 존재여부 확인' + accessTokenExists + refreshTokenExists
+          '액세스토큰 존재여부 : ' +
+            accessTokenExists +
+            ' 리프레시토큰 존재여부 : ' +
+            refreshTokenExists
         );
         if (accessTokenExists) {
           setIsAuthenticated(true);

@@ -15,4 +15,16 @@ public interface MemberAdminMapper {
 
 	int approveGroup(@Param("groupNo") int groupNo); // 모임 승인 처리
 
+	int rejectGroup(@Param("groupNo") int groupNo);
+	
+	List<Map<String, Object>> getProfit();
+	
+	List<Map<String, Object>> genderCount();
+	
+	List<Map<String, Object>> countVisitGroup();
+	List<Map<String, Object>> countAge();
+	List<Map<String, Object>> selectPopularCategory();
+	List<Map<String, Object>> getAllGroupsDetail(int groupNo);
+	List<Map<String, Object>> selectPopularGroup();
+
 }

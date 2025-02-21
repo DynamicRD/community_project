@@ -12,28 +12,24 @@ import { Link, useNavigate } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContext } from '../context/AuthContext'; //
 import axios from 'axios';
+import CheckAccessPermission from '../hooks/checkAccessPermission';
 
 function MyPage() {
-  const [meetings, setMeetings] = useState([]); // 모임 데이터 상태
   const [showMore, setShowMore] = useState(false);
-  const [activeTab, setActiveTab] = useState('ongoing'); // 기본값:
   const [notifications, setNotifications] = useState([]);
   const [unreadCount, setUnreadCount] = useState(0);
+  const [selectedCategory, setSelectedCategory] = useState('member');
+  const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
 
   const { isAuthenticated, userData } = useContext(AuthContext);
-  useEffect(() => {
-    console.log('userData 대기중');
-    if (!userData) return; // userData가 로드될 때까지 기다림
+  CheckAccessPermission(isAuthenticated, userData, navigate);
 
-    if (isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      if (userData?.no.toString() !== pageId) {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-      }
-    }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchGroups(selectedCategory);
+    }, 200);
+    return () => clearTimeout(timer);
   }, [isAuthenticated, userData, navigate]);
 
   // 페이지네이션을 위한 상태 추가
@@ -43,17 +39,42 @@ function MyPage() {
   // 현재 페이지에 맞는 데이터 필터링
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentMeetings = meetings.slice(indexOfFirstItem, indexOfLastItem);
+  const currentMeetings = groups.slice(indexOfFirstItem, indexOfLastItem);
 
   // 총 페이지 수 계산
-  const totalPages = Math.ceil(meetings.length / itemsPerPage);
+  const totalPages = Math.ceil(groups.length / itemsPerPage);
 
   // 페이지 변경 함수
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  // Pagination UI 렌더링
+  useEffect(() => {
+    if (userData?.no) {
+      console.log('fetchGroups 실행:', selectedCategory, userData.no);
+      fetchGroups(selectedCategory);
+    }
+  }, [selectedCategory]);
+
+  const fetchGroups = async (category) => {
+    if (!userData?.no) return; // userData가 없으면 실행하지 않음
+
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/mypage/mineselect?category=${category}&no=${userData.no}`
+      );
+      console.log('받아온 groups 데이터:', response.data);
+      setGroups(response.data); // 상태 업데이트
+    } catch (error) {
+      console.error('데이터를 불러오는 중 오류 발생:', error);
+      setGroups([]); // 에러 발생 시 빈 배열로 설정
+    }
+  };
+
+  // groups 변경 사항을 감지하여 로그 출력
+  useEffect(() => {
+    console.log('모임 데이터 업데이트:', groups);
+  }, [groups]);
 
   // 알림 내용
   useEffect(() => {
@@ -71,6 +92,7 @@ function MyPage() {
     console.log(userData.imgUrl);
   }, [userData]);
 
+  //모임 데이터 받아옴
   useEffect(() => {
     if (!userData) return;
 
@@ -78,15 +100,12 @@ function MyPage() {
       .get(`http://localhost:8080/mypage/group/${userData?.no}`)
       .then((response) => {
         console.log('모임 데이터:', response.data);
-        setMeetings(response.data);
+        setGroups(response.data);
       })
       .catch((error) => {
         console.error('모임 데이터 로드 실패:', error);
       });
   }, [userData]);
-  const endedGroups = meetings?.[0] || []; // 종료된 그룹
-  const heartedGroups = meetings?.[1] || []; // 찜한 그룹
-  const ongoingGroups = meetings?.[2] || []; // 진행 중인 그룹
 
   useEffect(() => {
     if (notifications.length > 0) {
@@ -98,44 +117,33 @@ function MyPage() {
   }, [notifications]);
 
   const renderTable = () => {
-    let meetings = [];
-    switch (activeTab) {
-      case 'ongoing':
-        meetings = ongoingGroups;
-
-        break;
-      case 'completed':
-        meetings = endedGroups;
-
-        break;
-      case 'saved':
-        meetings = heartedGroups;
-
-        break;
-      default:
-        break;
-    }
-
     return (
       <Table bordered className="mt-3">
         <thead>
           <tr className="table-secondary">
             <th>모임명</th>
-            <th>참가일시</th>
-            <th>종료일자</th>
-            <th>직책</th>
+            <th>시작일시</th>
+            <th>종료일시</th>
+            <th>상태</th>
             <th>비용</th>
           </tr>
         </thead>
         <tbody>
-          {meetings == [] ? (
-            meetings.map((meeting, index) => (
+          {groups.length > 0 ? (
+            groups.map((group, index) => (
               <tr key={index}>
-                <td>{meeting.groupName}</td>
-                <td>{meeting.startDate}</td>
-                <td>{meeting.endDate}</td>
-                <td>{meeting.statues}</td>
-                <td>{meeting.amount}</td>
+                <td>
+                  <Link
+                    to={`/group/${group.no}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    {group.groupTitle}
+                  </Link>
+                </td>
+                <td>{group.startDate}</td>
+                <td>{group.lastDate}</td>
+                <td>{group.status}</td>
+                <td>{formatCurrency(group.price)}</td>
               </tr>
             ))
           ) : (
@@ -147,6 +155,7 @@ function MyPage() {
       </Table>
     );
   };
+
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',
@@ -296,9 +305,9 @@ function MyPage() {
                 borderRadius: '5px',
                 color: 'white',
               }}
-              onClick={() => setActiveTab('ongoing')}
+              onClick={() => setSelectedCategory('member')}
             >
-              진행중인 모임
+              멤버인 모임
             </Button>
             <Button
               className="typeClub m-2"
@@ -307,20 +316,20 @@ function MyPage() {
                 borderRadius: '5px',
                 color: 'white',
               }}
-              onClick={() => setActiveTab('completed')}
+              onClick={() => setSelectedCategory('leader')}
+            >
+              모임장인 모임
+            </Button>
+            <Button
+              className="typeClub m-2"
+              variant="light"
+              style={{
+                borderRadius: '5px',
+                color: 'white',
+              }}
+              onClick={() => setSelectedCategory('completed')}
             >
               종료된 모임
-            </Button>
-            <Button
-              className="typeClub m-2"
-              variant="light"
-              style={{
-                borderRadius: '5px',
-                color: 'white',
-              }}
-              onClick={() => setActiveTab('saved')}
-            >
-              찜한 모임
             </Button>
           </div>
 
