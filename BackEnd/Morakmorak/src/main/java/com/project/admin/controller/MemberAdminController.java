@@ -39,6 +39,14 @@ public class MemberAdminController {
     public ResponseEntity<List<Map<String, Object>>> getAllGroups() {
         return ResponseEntity.ok(memberAdminService.getAllGroups());
     }
+    
+    /**
+     * 모임 디테일 조회 
+     */
+    @GetMapping("/community/{groupNo}")
+    public ResponseEntity<Map<String, Object>> getGroupDetail(@PathVariable int groupNo) {
+        return ResponseEntity.ok(memberAdminService.getGroupDetail(groupNo));
+    }
 
     /**
      * 특정 모임 승인 처리

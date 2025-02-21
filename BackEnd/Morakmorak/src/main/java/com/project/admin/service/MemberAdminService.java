@@ -7,6 +7,8 @@ public interface MemberAdminService {
 	List<Map<String, Object>> getUsers();
 
 	List<Map<String, Object>> getAllGroups();
+	
+	Map<String, Object> getGroupDetail(int groupNogroupNo);
 
 	boolean approveGroup(int groupNo);
 
@@ -19,5 +21,6 @@ public interface MemberAdminService {
 	List<Map<String, Object>> countVisitGroup();
 
 	List<Map<String, Object>> countAge();
+
 
 }

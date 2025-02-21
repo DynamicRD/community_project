@@ -18,6 +18,14 @@
 		FROM group_morak WHERE approval = 'N'
 		ORDER BY group_no DESC
 	</select>
+	<!-- 모임 디테일 조회 -->
+	<select id="getGroupDetail" resultType="java.util.Map">
+		SELECT group_no, no,
+		group_title, category, user_max, TO_CHAR(reg_date, 'FMMonth FMDD"일"')
+		AS reg_date, area, type, approval
+		FROM group_morak WHERE approval = 'N' AND group_no = #{groupNo}
+		ORDER BY group_no DESC
+	</select>
 	<!-- 모임 승인 처리 -->
 	<update id="approveGroup">
 		UPDATE group_morak SET approval = 'Y' WHERE group_no

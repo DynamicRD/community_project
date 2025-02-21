@@ -56,4 +56,11 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 	    	return memberAdminMapper.countAge();
 	    }
 
+		@Override
+		public Map<String, Object> getGroupDetail(int groupNo) {
+			return memberAdminMapper.getGroupDetail(groupNo);
+		}
+
+		
+
 }
