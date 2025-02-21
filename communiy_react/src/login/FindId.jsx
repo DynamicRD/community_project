@@ -139,6 +139,7 @@ export default function FindId() {
         try {
           const text = await response.text();
           data = text ? JSON.parse(text) : null;
+          setResponseIdValue(data);
         } catch (jsonError) {
           console.error('JSON 파싱 오류:', jsonError);
           data = null;
