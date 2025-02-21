@@ -1,10 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
 import GroupJoinFormView from './component/GroupJoinFormView';
 import { useNavigate } from 'react-router';
+import { AuthContext } from '../context/AuthContext';
 
 export default function GroupManagement() {
   const navigate = useNavigate();
+  const { isAuthenticated, userData } = useContext(AuthContext); // 로그인 여부와 사용자 정보
+    // 로그인되지 않았다면, 로그인 페이지로 리다이렉트
+    useEffect(() => {
+      if (!isAuthenticated) {
+        alert('로그인 후 이용 가능합니다.');
+        navigate('/login'); // 로그인 페이지로 이동
+      }
+    }, [isAuthenticated, navigate]);
   
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);

@@ -1,4 +1,4 @@
-import { Button, Form, ListGroup, Image } from 'react-bootstrap';
+import { Button, Form, ListGroup, Image, Container } from 'react-bootstrap';
 import '../GroupDetail.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -95,248 +95,265 @@ export default function GroupDetailItem({ item }) {
   }, [item.COMMENT2]); // COMMENT2 내용이 변경될 때마다 실행
 
   return (
-    <div className="group_detail">
-      <div className="information row">
-        <div className="col-6">
+    <Container>
+      <div className="group_detail">
+        <div className="information row">
           <Link to={`/group/${item.TYPE}_list`}>
             <h4>{item.TYPE === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
           </Link>
-          <img
-            className="img-fluid"
-            src={`http://localhost:8080/upload/${item.IMG_URL1}`}
-            alt="모임 이미지"
-            style={{ width: '100%', height: '400px' }}
-          />
-        </div>
-        <div className="information_detail col">
-          &nbsp;
-          <div>
-            <p>
-              <FontAwesomeIcon icon={faList} />
-              &nbsp;{item.CATEGORY === 'culture' && '문화/예술'}
-              {item.CATEGORY === 'food' && '푸드/드링크'}
-              {item.CATEGORY === 'edu' && '교육'}
-              {item.CATEGORY === 'travel' && '여행'}
-              {item.CATEGORY === 'hobby' && '취미'}
-            </p>
-            <span className="group_span" style={{ fontSize: '35px' }}>
-              {item.GROUP_TITLE}
-            </span>
-          </div>
-          <div>
-            <h4>
-              <FontAwesomeIcon icon={faCalendar} />
-              &nbsp; 시작일 : {formatDate(item.START_DATE)}
-            </h4>
-            <h4>
-              <FontAwesomeIcon icon={faCalendar} />
-              &nbsp; 종료일 : {formatDate(item.LAST_DATE)}
-            </h4>
-            <h4>
-              <FontAwesomeIcon icon={faUserGroup} />
-              &nbsp; 모집 인원 {item.MEMBER_COUNT} / {item.USER_MAX}명
-            </h4>
-            <h4>
-              <FontAwesomeIcon icon={faSackDollar} />
-              &nbsp; 참가비 {item.PRICE}원
-            </h4>
-          </div>
-        </div>
-        <hr />
-      </div>
-      <div className="group_leader">
-        <div>
-          <p
-            style={{ fontSize: '33px', marginBottom: '0px', fontWeight: '700' }}
-          >
-            🌟 {item.GROUP_TITLE} 모임장 한마디 🌟
-          </p>
-          <br />
-          {item.COMMENT1}
-        </div>
-        <div className="profile mt-5">
-          <div className="d-flex align-items-center">
+          <div className="col">
             <img
-              src={`http://localhost:8080/upload/${item.PROFILE_IMG}`}
-              alt="모임장 프로필"
-              className="rounded-circle"
+              className="img-fluid"
+              src={`http://localhost:8080/upload/${item.IMG_URL1}`}
+              style={{ height: '342px' }}
+              alt="모임 이미지"
             />
-            <h3 className="p-2">{item.NICKNAME} 모임장</h3>
           </div>
-          <h4>
-            {item.STAR_SUM === 0
-              ? '아직 등록된 평점이 없습니다.'
-              : `평균별점 ${item.STAR_SUM}`}
-          </h4>
+          <div className="information_detail col-8" style={{ height: '342px' }}>
+            <div>
+              <p>
+                <FontAwesomeIcon icon={faList} />
+                &nbsp;{item.CATEGORY === 'culture' && '문화/예술'}
+                {item.CATEGORY === 'food' && '푸드/드링크'}
+                {item.CATEGORY === 'edu' && '교육'}
+                {item.CATEGORY === 'travel' && '여행'}
+                {item.CATEGORY === 'hobby' && '취미'}
+              </p>
+              <span className="group_span" style={{ fontSize: '35px' }}>
+                {item.GROUP_TITLE}
+              </span>
+            </div>
+            <div>
+              <h4>
+                <FontAwesomeIcon icon={faCalendar} />
+                &nbsp; 시작일 : {formatDate(item.START_DATE)}
+              </h4>
+              <h4>
+                <FontAwesomeIcon icon={faCalendar} />
+                &nbsp; 종료일 : {formatDate(item.LAST_DATE)}
+              </h4>
+              <h4>
+                <FontAwesomeIcon icon={faUserGroup} />
+                &nbsp; 모집 인원 {item.MEMBER_COUNT} / {item.USER_MAX}명
+              </h4>
+              <h4>
+                <FontAwesomeIcon icon={faSackDollar} />
+                &nbsp; 참가비 {item.PRICE}원
+              </h4>
+            </div>
+          </div>
+          <hr />
         </div>
-      </div>
+        <div className="group_leader">
+          <div>
+            <p
+              style={{
+                fontSize: '33px',
+                marginBottom: '0px',
+                fontWeight: '700',
+              }}
+            >
+              🌟 {item.GROUP_TITLE} 모임장 한마디 🌟
+            </p>
+            <br />
+            {item.COMMENT1}
+          </div>
+          <div className="profile mt-5">
+            <div className="d-flex align-items-center">
+              <img
+                src={`http://localhost:8080/upload/${item.PROFILE_IMG}`}
+                alt="모임장 프로필"
+                className="rounded-circle"
+              />
+              <h3 className="p-2">{item.NICKNAME} 모임장</h3>
+            </div>
+            <h4>
+              {item.STAR_SUM === 0
+                ? '아직 등록된 평점이 없습니다.'
+                : `평균별점 ${item.STAR_SUM}`}
+            </h4>
+          </div>
+        </div>
 
-      <div className="intro">
-        <hr />
-        <br />
-        <p
-          style={{ fontSize: '37px', marginBottom: '10px', fontWeight: '700' }}
-        >
-          우리 모임은요
-        </p>
-        {item.IMG_URL2 && (
-          <img
-            className="img-fluid centered-image"
-            src={`http://localhost:8080/upload/${item.IMG_URL2}`}
-          />
-        )}
-        {item.IMG_URL3 && (
-          <img
-            className="img-fluid centered-image"
-            src={`http://localhost:8080/upload/${item.IMG_URL3}`}
-          />
-        )}
-        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
-          <Form.Control
-            as="textarea"
-            value={item.COMMENT2}
-            readOnly
-            ref={textareaRef}
-            // onChange={handleTextChange}
-            // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
-            style={{
-              border: 'none',
-              height: 'auto',
-              overflow: 'hidden',
-              resize: 'none', // 사용자가 직접 크기를 조정하지 못하게 설정
-            }}
-          />
-        </Form.Group>
-      </div>
-      {item.MEMBER_COUNT > 0 && (
-        <div className="groupMemberList">
+        <div className="intro">
+          <hr />
+          <br />
           <p
             style={{
-              fontSize: '35px',
+              fontSize: '37px',
               marginBottom: '10px',
               fontWeight: '700',
             }}
           >
-            현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
+            우리 모임은요
           </p>
-          <ListGroup as="ol">
-            {activeMembers.map((member) => {
-              return (
-                <ListGroup.Item
-                  key={member.NO}
-                  as="li"
-                  className="d-flex justify-content-between align-items-center"
-                >
-                  <div className="ms-2 me-auto">
-                    <div>
-                      <Image
-                        src={`http://localhost:8080/upload/${member.IMG_URL}`}
-                        roundedCircle
-                        style={{ height: '40px', width: '40px' }}
-                      />{' '}
-                      &nbsp;<span className="fs-5">{member.NICKNAME}</span>
-                    </div>
-                  </div>
-                  <Button
-                    variant="primary"
-                    onClick={() => profileOpen(member.NO)}
-                  >
-                    프로필 보기
-                  </Button>
-                </ListGroup.Item>
-              );
-            })}
-          </ListGroup>
+          {item.IMG_URL2 && (
+            <img
+              className="img-fluid centered-image"
+              src={`http://localhost:8080/upload/${item.IMG_URL2}`}
+            />
+          )}
+          {item.IMG_URL3 && (
+            <img
+              className="img-fluid centered-image"
+              src={`http://localhost:8080/upload/${item.IMG_URL3}`}
+            />
+          )}
+          <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
+            <Form.Control
+              as="textarea"
+              value={item.COMMENT2}
+              readOnly
+              ref={textareaRef}
+              // onChange={handleTextChange}
+              // onInput={autoResizeTextarea}  // 텍스트가 입력될 때마다 높이 조정
+              style={{
+                border: 'none',
+                height: 'auto',
+                overflow: 'hidden',
+                resize: 'none', // 사용자가 직접 크기를 조정하지 못하게 설정
+              }}
+            />
+          </Form.Group>
         </div>
-      )}
+        {item.MEMBER_COUNT > 0 && (
+          <div className="groupMemberList">
+            <p
+              style={{
+                fontSize: '35px',
+                marginBottom: '10px',
+                fontWeight: '700',
+              }}
+            >
+              현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
+            </p>
+            <ListGroup as="ol">
+              {activeMembers.map((member) => {
+                return (
+                  <ListGroup.Item
+                    key={member.NO}
+                    as="li"
+                    className="d-flex justify-content-between align-items-center"
+                  >
+                    <div className="ms-2 me-auto">
+                      <div>
+                        <Image
+                          src={`http://localhost:8080/upload/${member.IMG_URL}`}
+                          roundedCircle
+                          style={{ height: '40px', width: '40px' }}
+                        />{' '}
+                        &nbsp;<span className="fs-5">{member.NICKNAME}</span>
+                      </div>
+                    </div>
+                    <Button
+                      variant="primary"
+                      onClick={() => profileOpen(member.NO)}
+                    >
+                      프로필 보기
+                    </Button>
+                  </ListGroup.Item>
+                );
+              })}
+            </ListGroup>
+          </div>
+        )}
 
-      <div className="map">
-        <p style={{ fontSize: '37px', fontWeight: '700' }}>
-          <FontAwesomeIcon icon={faLocationDot} />
-          &nbsp;모임장소
-        </p>
-        <h5>{item.ADDR1}</h5>
+        <div className="map">
+          <p style={{ fontSize: '37px', fontWeight: '700' }}>
+            <FontAwesomeIcon icon={faLocationDot} />
+            &nbsp;모임장소
+          </p>
+          <h5>{item.ADDR1}</h5>
 
-        <p className="detail_address">{item.ADDR2}</p>
+          <p className="detail_address">{item.ADDR2}</p>
 
-        <GoogleMap
-          addr1={item.ADDR1}
-          latitude={item.LATITUDE}
-          longitude={item.LONGITUDE}
+          <GoogleMap
+            addr1={item.ADDR1}
+            latitude={item.LATITUDE}
+            longitude={item.LONGITUDE}
+          />
+        </div>
+
+        <div>
+          <p style={{ fontSize: '30px', fontWeight: '700' }}>환불 규정</p>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>취소 시점</th>
+                <th>환불 규정</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th>참가 승인 전, 모임 시작 7일 전까지</th>
+                <td>전액 환불</td>
+              </tr>
+              <tr>
+                <th>모임 시작 7일 이내</th>
+                <td>환불 불가</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          {groups?.length === 0 ? (
+            <></>
+          ) : (
+            <>
+              <p style={{ fontSize: '30px', fontWeight: '700' }}>
+                이런 모임은 어때요?
+              </p>
+              <div className="cards row">
+                {groups.map((group, index) => (
+                  <div
+                    key={index}
+                    className="card col"
+                    style={{ width: '18rem' }}
+                  >
+                    <Link
+                      to={`/group/detail?group_no=${group.groupNo}`}
+                      style={{ textDecoration: 'none', color: 'inherit' }}
+                    >
+                      <img
+                        src={`http://localhost:8080/upload/${group.imgUrl1}`}
+                        className="card-img-top"
+                        alt={group.gtitle}
+                        style={{
+                          height: '250px', // 고정 높이
+                          width: '100%', // 카드의 전체 너비를 꽉 채움
+                          objectFit: 'cover', // 이미지 비율을 유지하며 카드 영역을 꽉 채움
+                        }}
+                      />
+                      <div className="card-body">
+                        <h5
+                          className="card-title"
+                          style={{
+                            whiteSpace: 'nowrap', // 제목을 한 줄로 제한
+                            overflow: 'hidden', // 넘칠 경우 숨김 처리
+                            textOverflow: 'ellipsis', // 넘친 텍스트를 '...'으로 처리
+                            maxWidth: '100%', // 제목 영역의 최대 너비 설정
+                          }}
+                        >
+                          {group.gtitle}
+                        </h5>
+                        <p className="card-text">
+                          {formatDate(group.startDate)} / {group.addr1}
+                        </p>
+                      </div>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
+
+        <MemberProfileView
+          show={profileShow}
+          onHide={() => setProfileShow(false)}
+          member={selectedMember}
         />
       </div>
-
-      <div>
-        <p style={{ fontSize: '30px', fontWeight: '700' }}>환불 규정</p>
-        <table className="table table-bordered">
-          <thead>
-            <tr>
-              <th>취소 시점</th>
-              <th>환불 규정</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <th>참가 승인 전, 모임 시작 7일 전까지</th>
-              <td>전액 환불</td>
-            </tr>
-            {/* <tr>
-              <th>모임 시작 3일 전까지</th>
-              <td>참가비의 50% 환불</td>
-            </tr> */}
-            <tr>
-              <th>모임 시작 3일 이내</th>
-              <td>환불 불가</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div>
-        {groups?.length === 0 ? (
-          <></>
-        ) : (
-          <>
-            <p style={{ fontSize: '30px', fontWeight: '700' }}>
-              이런 모임은 어때요?
-            </p>
-            <div className="cards">
-              {groups.map((group, index) => (
-                <div key={index} className="card" style={{ width: '18rem' }}>
-                  <Link
-                    to={`/group/detail?group_no=${group.groupNo}`}
-                    style={{ textDecoration: 'none', color: 'inherit' }}
-                  >
-                    <img
-                      src={`http://localhost:8080/upload/${group.imgUrl1}`}
-                      className="card-img-top"
-                      alt={group.gtitle}
-                      style={{ height: '180px', objectFit: 'cover' }}
-                    />
-                    <div className="card-body">
-                      <h5 className="card-title">{group.gtitle}</h5>
-                      <p className="card-text">
-                        {formatDate(group.startDate)} / {group.addr1}
-                      </p>
-                      <a
-                        href={`/group/detail?group_no=${group.groupNo}`}
-                        className="btn btn-primary stretched-link"
-                      >
-                        자세히 보기
-                      </a>
-                    </div>
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-
-      <MemberProfileView
-        show={profileShow}
-        onHide={() => setProfileShow(false)}
-        member={selectedMember}
-      />
-    </div>
+    </Container>
   );
 }

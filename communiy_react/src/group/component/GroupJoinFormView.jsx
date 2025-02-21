@@ -23,7 +23,7 @@ export default function GroupJoinFormView({ show, onHide, selectedMember }) {
         align-items-center gap-3"
         >
           <Image
-            src="../images/group_leader_profile.jpeg"
+            src={`http://localhost:8080/upload/${selectedMember.IMG_URL}`}
             roundedCircle
             style={{ height: '100px', width: '100px' }}
           />
