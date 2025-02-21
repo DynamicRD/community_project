@@ -34,8 +34,6 @@ export default function GroupJoinFormView({ show, onHide, selectedMember }) {
               성별 : <span>{selectedMember.GENDER}</span>
               <br />
               생년월일 : <span>{formatDate(selectedMember.BIRTH)}</span>
-              <br />
-              연락처 : <span>{selectedMember.PHONE}</span>
             </span>
           </div>
         </div>
@@ -46,10 +44,11 @@ export default function GroupJoinFormView({ show, onHide, selectedMember }) {
             as="textarea"
             aria-label="With textarea"
             value={
-              selectedMember.SELF_PR === 'undefined' ||
-              selectedMember?.SELF_PR.trim() === ''
-                ? '등록된 자기소개가 없습니다.'
-                : selectedMember.SELF_PR
+              // selectedMember.SELF_PR === 'undefined' ||
+              // selectedMember?.SELF_PR.trim() === ''
+              //   ? '등록된 자기소개가 없습니다.'
+              //   : 
+                selectedMember.SELF_PR
             }
           />
         </InputGroup>

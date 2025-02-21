@@ -96,7 +96,6 @@ export default function GroupManagement() {
           <Table bordered hover className="text-center">
             <thead>
               <tr>
-                <th className="w-25">ID</th>
                 <th className="w-25">닉네임</th>
                 <th className="w-25">신청일</th>
                 <th className="w-25">승인 처리</th>
@@ -110,7 +109,6 @@ export default function GroupManagement() {
                     onClick={() => formOpen(item.NO)} // 클릭 시 정보 열기
                     style={{ cursor: 'pointer' }}
                   >
-                    <td>{item.NO}</td>
                     <td>{item.NICKNAME}</td>
                     <td>{formatDate(item.REG_DATE)}</td>
                     <td>
@@ -145,10 +143,9 @@ export default function GroupManagement() {
           <Table bordered hover className="text-center">
             <thead>
               <tr>
-                <th className="w-25">ID</th>
                 <th className="w-25">닉네임</th>
-                <th className="w-25">연락처</th>
-                <th className="w-25">직책</th>
+                <th className="w-25">성별</th>
+                <th className="w-25">생년월일</th>
               </tr>
             </thead>
             <tbody>
@@ -159,10 +156,9 @@ export default function GroupManagement() {
                     onClick={() => formOpen(member.NO)} // 클릭 시 정보 열기
                     style={{ cursor: 'pointer' }}
                   >
-                    <td>{member.NO}</td>
                     <td>{member.NICKNAME}</td>
-                    <td>{member.PHONE}</td>
-                    <td>{member.STATUS}</td>
+                    <td>{member.GENDER}</td>
+                    <td>{formatDate(member.BIRTH)}</td>
                   </tr>
                 );
               })}
