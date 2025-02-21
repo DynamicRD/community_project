@@ -2,16 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.project.member.mapper.MemberMapper">
-	<insert id="insertMember">
-		 INSERT INTO MEMBER (
-            no, role, id, pw, email, provider, provider_id, phone, name, nickname, birth,
-            gender, money, zip_code, addr1, addr2, star_sum, black, reg_date, img_url, self_pr
-        ) VALUES (
-            MEMBER_SEQ.NEXTVAL, 0, 1, NULL, #{email}, #{provider}, #{providerId}, NULL, NULL, NULL, NULL,
-            NULL, 0, NULL, NULL, NULL, 0, 0, SYSDATE, NULL, NULL
-        )
-	</insert>
-
 	<select id="findByEmail" resultType="com.project.member.model.Member">
 		SELECT * FROM MEMBER WHERE email = #{email}
 	</select>
@@ -116,10 +106,21 @@
 	</select>
 
 	<update id="changeMemberPw">
-		UPDATE MEMBER SET PW = #{encryptedPassword} WHERE ID = #{id} AND PHONE = #{phone}
+		UPDATE MEMBER SET PW = #{encryptedPassword} WHERE ID = #{id} AND PHONE =
+		#{phone}
 	</update>
-    
-    <update id="changeMemberBlack">
-    	UPDATE MEMBER SET BLACK = BLACK + 1 WHERE NO = #{no}
-    </update>
+
+	<update id="changeMemberBlack">
+		UPDATE MEMBER SET BLACK = BLACK + 1 WHERE NO = #{no}
+	</update>
+
+	<update id="updateStar">
+		UPDATE MEMBER
+		SET STAR_SUM = ROUND(((SELECT SUM(STAR) FROM REVIEW R LEFT JOIN
+		GROUP_MORAK G ON R.GROUP_NO = G.GROUP_NO LEFT JOIN MEMBER M ON G.NO =
+		M.NO) / (SELECT COUNT(REVIEW_NO) FROM REVIEW R LEFT JOIN GROUP_MORAK G
+		ON R.GROUP_NO = G.GROUP_NO LEFT JOIN MEMBER M ON G.NO = M.NO)), 2)
+		WHERE NO = (SELECT DISTINCT M.NO FROM REVIEW R LEFT JOIN GROUP_MORAK G
+		ON R.GROUP_NO = G.GROUP_NO LEFT JOIN MEMBER M ON G.NO = M.NO )
+	</update>
 </mapper>
