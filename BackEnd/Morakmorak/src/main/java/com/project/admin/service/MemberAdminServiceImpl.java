@@ -13,87 +13,88 @@ import com.project.mypage.model.Notification;
 @Service
 public class MemberAdminServiceImpl implements MemberAdminService {
 
-	@Autowired
-	private MemberAdminMapper memberAdminMapper;
+    @Autowired
+    private MemberAdminMapper memberAdminMapper;
 
-	@Autowired
-	private MypageMapper mypageMapper;
+    @Autowired
+    private MypageMapper mypageMapper;
 
-	@Override
-	public List<Map<String, Object>> getUsers() {
-		return memberAdminMapper.getUsers();
-	}
+    @Override
+    public List<Map<String, Object>> getUsers() {
+        return memberAdminMapper.getUsers();
+    }
 
-	@Override
-	public List<Map<String, Object>> getAllGroups() {
-		return memberAdminMapper.getAllGroups();
-	}
+    @Override
+    public List<Map<String, Object>> getAllGroups() {
+        return memberAdminMapper.getAllGroups();
+    }
 
-	@Override
-	public boolean approveGroup(int groupNo) {
-		return processGroupApproval(groupNo, true);
-	}
+    @Override
+    public boolean approveGroup(int groupNo) {
+        return processGroupApproval(groupNo, true);
+    }
 
-	@Override
-	public boolean rejectGroup(int groupNo) {
-		return processGroupApproval(groupNo, false);
-	}
+    @Override
+    public boolean rejectGroup(int groupNo) {
+        return processGroupApproval(groupNo, false);
+    }
 
-	private boolean processGroupApproval(int groupNo, boolean isApproved) {
-		Notification notification = new Notification();
-		int no = mypageMapper.selectNoFromGroup(groupNo);
-		String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
-		notification.setNo(no);
+    private boolean processGroupApproval(int groupNo, boolean isApproved) {
+        Notification notification = new Notification();
+        int no = mypageMapper.selectNoFromGroup(groupNo);
+        String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
+        notification.setNo(no);
 
-		if (isApproved) {
-			notification.setContent("개설 신청한 " + groupName + " 모임이 승인되었습니다.");
-			mypageMapper.insertNotification(notification);
-			return memberAdminMapper.approveGroup(groupNo) > 0;
-		} else {
-			notification.setContent("개설 신청한 " + groupName + " 모임이 거절되었습니다.");
-			mypageMapper.insertNotification(notification);
-			return memberAdminMapper.rejectGroup(groupNo) > 0;
-		}
-	}
+        String approvalMessage = isApproved ? "승인" : "거절";
+        notification.setContent("개설 신청한 " + groupName + " 모임이 " + approvalMessage + "되었습니다.");
+        mypageMapper.insertNotification(notification);
 
-	@Override
-	public List<Map<String, Object>> getProfit() {
-		return memberAdminMapper.getProfit();
-	}
+        return isApproved ? memberAdminMapper.approveGroup(groupNo) > 0 
+                          : memberAdminMapper.rejectGroup(groupNo) > 0;
+    }
 
-	@Override
-	public List<Map<String, Object>> genderCount() {
-		return memberAdminMapper.genderCount();
-	}
+    @Override
+    public List<Map<String, Object>> getProfit() {
+        return memberAdminMapper.getProfit();
+    }
 
-	@Override
-	public List<Map<String, Object>> countVisitGroup() {
-		return memberAdminMapper.countVisitGroup();
-	}
+    @Override
+    public List<Map<String, Object>> genderCount() {
+        return memberAdminMapper.genderCount();
+    }
 
-	@Override
-	public List<Map<String, Object>> countAge() {
-		return memberAdminMapper.countAge();
-	}
+    @Override
+    public List<Map<String, Object>> countVisitGroup() {
+        return memberAdminMapper.countVisitGroup();
+    }
 
-	@Override
-	public List<Map<String, Object>> selectPopularCategory() {
-		return memberAdminMapper.selectPopularCategory();
-	}
+    @Override
+    public List<Map<String, Object>> countAge() {
+        return memberAdminMapper.countAge();
+    }
 
-	@Override
-	public List<Map<String, Object>> getCommunityDetail(int groupNo) {
-		return memberAdminMapper.getAllGroupsDetail(groupNo);
-	}
+    @Override
+    public List<Map<String, Object>> selectPopularCategory() {
+        return memberAdminMapper.selectPopularCategory();
+    }
 
-	@Override
-	public List<Map<String, Object>> selectPopularGroup() {
-		return memberAdminMapper.selectPopularGroup();
-	}
+    @Override
+    public List<Map<String, Object>> getCommunityDetail(int groupNo) {
+        return memberAdminMapper.getAllGroupsDetail(groupNo);
+    }
 
-	@Override
-	public List<Map<String, Object>> selectPopularCategoryInMonth() {
-		return memberAdminMapper.selectPopularCategoryInMonth();
-	}
+    @Override
+    public List<Map<String, Object>> selectPopularGroup() {
+        return memberAdminMapper.selectPopularGroup();
+    }
+
+    @Override
+    public List<Map<String, Object>> selectPopularCategoryInMonth() {
+        return memberAdminMapper.selectPopularCategoryInMonth();
+    }
+
+    @Override
+    public Map<String, Object> getGroupDetail(int groupNo) {
+        return memberAdminMapper.getGroupDetail(groupNo);
+    }
 }
-

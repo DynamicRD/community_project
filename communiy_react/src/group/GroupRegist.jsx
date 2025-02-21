@@ -3,9 +3,20 @@ import './GroupRegist.css';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { AuthContext } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function GroupRegist() {
-  const { isAuthenticated, userData } = useContext(AuthContext);
+  const navigate = useNavigate(); // 페이지 이동을 위한 navigate
+  const { isAuthenticated, userData } = useContext(AuthContext);  // 로그인 여부와 사용자 정보
+  // 로그인되지 않았다면, 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!isAuthenticated) {
+      alert('로그인 후 이용 가능합니다.');
+      navigate('/login'); // 로그인 페이지로 이동
+    }
+  }, [isAuthenticated, navigate]);
+  
+  
   const group_title = useRef();
   const type = useRef();
   const category = useRef();
@@ -262,6 +273,8 @@ export default function GroupRegist() {
     }
   };
 
+  
+
   return (
     <Container className="w-75">
       <div className="group_regist">
@@ -272,168 +285,169 @@ export default function GroupRegist() {
             </p>
           </div>
           <div className="group_register_form">
-            <Form>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlInput1"
-              >
-                <Form.Label>모임 타입</Form.Label>
-                <Form.Select
-                  aria-label="Default select example"
-                  className="w-50"
-                  ref={type}
+          <Form>
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlInput1"
                 >
-                  <option value="regular">정기모임</option>
-                  <option value="one">동행,소모임</option>
-                </Form.Select>
-                <Form.Label className="mt-3">모임 카테고리</Form.Label>
-                <Form.Select
-                  aria-label="Default select example"
-                  className="w-50"
-                  ref={category}
+                  <Form.Label>모임 타입</Form.Label>
+                  <Form.Select
+                    aria-label="Default select example"
+                    className="w-50"
+                    ref={type}
+                  >
+                    <option value="regular">정기모임</option>
+                    <option value="one">동행,소모임</option>
+                  </Form.Select>
+                  <Form.Label className="mt-3">모임 카테고리</Form.Label>
+                  <Form.Select
+                    aria-label="Default select example"
+                    className="w-50"
+                    ref={category}
+                  >
+                    <option value="culture">문화/예술</option>
+                    <option value="food">푸드/드링크</option>
+                    <option value="hobby">취미</option>
+                    <option value="travel">여행</option>
+                    <option value="edu">교육</option>
+                  </Form.Select>
+                  <Form.Label className="mt-3">모임명</Form.Label>
+                  <Form.Control type="text" className="w-50" ref={group_title} />
+                  <div className="d-flex flex-row">
+                    <div className="mt-3">
+                      <Form.Label>모임정원</Form.Label>
+                      <Form.Control
+                        type="number"
+                        className="w-50"
+                        ref={user_max}
+                      />
+                    </div>
+                    <div className="mt-3">
+                      <Form.Label>인당 비용</Form.Label>
+                      <Form.Control type="number" className="w-75" ref={price} />
+                    </div>
+                  </div>
+                  <div className="d-flex flex-row mt-3">
+                    <div className="me-5">
+                      <Form.Label>모임 시작일</Form.Label>
+                      <Form.Control
+                        type="datetime-local"
+                        ref={start_date}
+                        onChange={handleStartDateChange}
+                      />
+                    </div>
+                    <div>
+                      <Form.Label>모임 종료일</Form.Label>
+                      <Form.Control
+                        type="datetime-local"
+                        ref={last_date}
+                        onChange={handleLastDateChange}
+                      />
+                    </div>
+                  </div>
+                  {/* 주소 입력 */}
+                  <Form.Group as={Row} className="mt-4 mb-3">
+                    <Form.Label column sm={2}>
+                      모임 주소
+                    </Form.Label>
+                    <Col sm={10}>
+                      <Form.Control
+                        type="text"
+                        ref={inputRef}
+                        placeholder="모임 장소를 검색하세요"
+                        size="50"
+                      />
+                    </Col>
+                  </Form.Group>
+                  {/* 상세주소 입력 */}
+                  <Form.Group as={Row}>
+                    <Form.Label column sm={2}>
+                      상세주소
+                    </Form.Label>
+                    <Col sm={10}>
+                      <Form.Control type="text" ref={addr2} size="30" />
+                    </Col>
+                  </Form.Group>
+                </Form.Group>
+                <Form.Group
+                  className="mb-3"
+                  controlId="exampleForm.ControlTextarea1"
                 >
-                  <option value="culture">문화/예술</option>
-                  <option value="food">푸드/드링크</option>
-                  <option value="hobby">취미</option>
-                  <option value="travel">여행</option>
-                  <option value="edu">교육</option>
-                </Form.Select>
-                <Form.Label className="mt-3">모임명</Form.Label>
-                <Form.Control type="text" className="w-50" ref={group_title} />
-                <div className="d-flex flex-row">
-                  <div className="mt-3">
-                    <Form.Label>모임정원</Form.Label>
-                    <Form.Control
-                      type="number"
-                      className="w-50"
-                      ref={user_max}
+                  <Form.Label className="mt-3">모임장 한마디</Form.Label>
+                  <Form.Control
+                    as="textarea"
+                    rows={3}
+                    value={comment1}
+                    onChange={handleComment1Change}
+                  />
+                  <Form.Label className="mt-3">모임 소개글</Form.Label>
+                  <Form.Control as="textarea" rows={5} ref={comment2} />
+                </Form.Group>
+              </Form>
+
+              <div className="register_body">
+                <div className="d-flex  justify-content-between align-items-end">
+                  <div className="register_button">
+                    <p>모임 대표 이미지 등록</p>
+                    <input
+                      type="file"
+                      className="mb-3"
+                      onChange={handleFileChange1}
                     />
-                  </div>
-                  <div className="mt-3">
-                    <Form.Label>인당 비용</Form.Label>
-                    <Form.Control type="number" className="w-75" ref={price} />
-                  </div>
-                </div>
-                <div className="d-flex flex-row mt-3">
-                  <div className="me-5">
-                    <Form.Label>모임 시작일</Form.Label>
-                    <Form.Control
-                      type="datetime-local"
-                      ref={start_date}
-                      onChange={handleStartDateChange}
+                    <br />
+                    {imgUrl1Preview && (
+                      <img
+                        src={imgUrl1Preview}
+                        alt="미리보기"
+                        style={{ width: '100px', height: '100px' }}
+                      />
+                    )}
+                    <hr />
+                    <p>모임 상세 이미지 등록</p>
+                    <input
+                      type="file"
+                      className="mb-3"
+                      onChange={handleFileChange2}
                     />
+                    {imgUrl2Preview && (
+                      <img
+                        src={imgUrl2Preview}
+                        alt="미리보기"
+                        style={{ width: '100px', height: '100px' }}
+                      />
+                    )}
+                    <input
+                      type="file"
+                      className="mb-3"
+                      onChange={handleFileChange3}
+                    />
+                    {imgUrl3Preview && (
+                      <img
+                        src={imgUrl3Preview}
+                        alt="미리보기"
+                        style={{ width: '100px', height: '100px' }}
+                      />
+                    )}
                   </div>
                   <div>
-                    <Form.Label>모임 종료일</Form.Label>
-                    <Form.Control
-                      type="datetime-local"
-                      ref={last_date}
-                      onChange={handleLastDateChange}
-                    />
+                    <Button
+                      className="register_btn ms-3 justify-content-end"
+                      onClick={handleSubmit}
+                    >
+                      신청하기
+                    </Button>
+                    <Button
+                      className="register_btn ms-3 justify-content-end"
+                      onClick={() => {
+                        history.go(-1);
+                      }}
+                    >
+                      취소하기
+                    </Button>
                   </div>
                 </div>
-                {/* 주소 입력 */}
-                <Form.Group as={Row} className="mt-4 mb-3">
-                  <Form.Label column sm={2}>
-                    모임 주소
-                  </Form.Label>
-                  <Col sm={10}>
-                    <Form.Control
-                      type="text"
-                      ref={inputRef}
-                      placeholder="모임 장소를 검색하세요"
-                      size="50"
-                    />
-                  </Col>
-                </Form.Group>
-                {/* 상세주소 입력 */}
-                <Form.Group as={Row}>
-                  <Form.Label column sm={2}>
-                    상세주소
-                  </Form.Label>
-                  <Col sm={10}>
-                    <Form.Control type="text" ref={addr2} size="30" />
-                  </Col>
-                </Form.Group>
-              </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="exampleForm.ControlTextarea1"
-              >
-                <Form.Label className="mt-3">모임장 한마디</Form.Label>
-                <Form.Control
-                  as="textarea"
-                  rows={3}
-                  value={comment1}
-                  onChange={handleComment1Change}
-                />
-                <Form.Label className="mt-3">모임 소개글</Form.Label>
-                <Form.Control as="textarea" rows={5} ref={comment2} />
-              </Form.Group>
-            </Form>
-
-            <div className="register_body">
-              <div className="d-flex  justify-content-between align-items-end">
-                <div className="register_button">
-                  <p>모임 대표 이미지 등록</p>
-                  <input
-                    type="file"
-                    className="mb-3"
-                    onChange={handleFileChange1}
-                  />
-                  <br />
-                  {imgUrl1Preview && (
-                    <img
-                      src={imgUrl1Preview}
-                      alt="미리보기"
-                      style={{ width: '100px', height: '100px' }}
-                    />
-                  )}
-                  <hr />
-                  <p>모임 상세 이미지 등록</p>
-                  <input
-                    type="file"
-                    className="mb-3"
-                    onChange={handleFileChange2}
-                  />
-                  {imgUrl2Preview && (
-                    <img
-                      src={imgUrl2Preview}
-                      alt="미리보기"
-                      style={{ width: '100px', height: '100px' }}
-                    />
-                  )}
-                  <input
-                    type="file"
-                    className="mb-3"
-                    onChange={handleFileChange3}
-                  />
-                  {imgUrl3Preview && (
-                    <img
-                      src={imgUrl3Preview}
-                      alt="미리보기"
-                      style={{ width: '100px', height: '100px' }}
-                    />
-                  )}
-                </div>
-                <div>
-                  <Button
-                    className="register_btn ms-3 justify-content-end"
-                    onClick={handleSubmit}
-                  >
-                    신청하기
-                  </Button>
-                  <Button
-                    className="register_btn ms-3 justify-content-end"
-                    onClick={() => {
-                      history.go(-1);
-                    }}
-                  >
-                    취소하기
-                  </Button>
-                </div>
               </div>
-            </div>
+
           </div>
         </div>
       </div>

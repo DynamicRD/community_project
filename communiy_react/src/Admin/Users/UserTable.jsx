@@ -25,7 +25,7 @@ const UserTable = () => {
 
   // 검색 기능 (이름, 이메일, 전화번호 포함) - null 체크 적용
   const filteredUsers = usersData.filter((user) =>
-    [user.name, user.email, user.phone].some((field) =>
+    [user.NAME, user.EMAIL, user.PHONE].some((field) =>
       (field ?? '').toLowerCase().includes(search.toLowerCase())
     )
   );
@@ -69,8 +69,8 @@ const UserTable = () => {
         <tbody>
           {paginatedUsers.length > 0 ? (
             paginatedUsers.map((user) => (
-              <tr key={user.id}>
-                <td>{user.id}</td>
+              <tr key={user.NO}>
+                <td>{user.NO}</td>
                 <td>{user.NAME}</td>
                 <td>{user.EMAIL}</td>
                 <td>{user.PHONE}</td>

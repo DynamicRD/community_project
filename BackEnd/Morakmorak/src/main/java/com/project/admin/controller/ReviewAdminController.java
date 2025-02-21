@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.project.admin.model.ReviewAdmin;
@@ -24,38 +25,21 @@ import lombok.RequiredArgsConstructor;
 public class ReviewAdminController {
     private final ReviewAdminService reviewService;
 
-    @GetMapping
+    @GetMapping("/list")
     public List<ReviewAdmin> getReviews() {
         return reviewService.getReviews();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ReviewAdmin> getReview(@PathVariable Long no) {
-        return ResponseEntity.ok(reviewService.getReviewById(no));
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> addReview(@RequestBody ReviewAdmin review) {
-        reviewService.addReview(review);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateReview(@PathVariable Long no, @RequestBody ReviewAdmin review) {
-        review.setNo(no);
-        reviewService.updateReview(review);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReview(@PathVariable Long no) {
-        reviewService.deleteReview(no);
-        return ResponseEntity.ok().build();
-    }
-
-    @PutMapping("/{id}/blind")
-    public ResponseEntity<Void> toggleBlind(@PathVariable Long no) {
-        reviewService.toggleBlind(no);
+    @PostMapping("/blind")
+    public ResponseEntity<Void> toggleBlind(@RequestParam(name="no") long no ,@RequestParam(name="isblacked") String value) {
+        
+        if (value.equals("Y")) {
+        	reviewService.toggleBlindYN(no);
+        } else {
+        	reviewService.toggleBlind(no);
+        }
+        System.out.println(no);
+        System.out.println(value);
         return ResponseEntity.ok().build();
     }
 }

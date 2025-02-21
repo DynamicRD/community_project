@@ -1,8 +1,12 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import './App.css';
+import { Link } from 'react-router';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 
 const HeroSection = () => (
+  
   <div className="hero-section">
     <div className="overlay"></div>
     <div className="hero-content">
@@ -12,9 +16,14 @@ const HeroSection = () => (
         함께 나눌 사람들을 찾아보세요!
       </h1>
       <p className="hero-subtitle">Premium Community Platform</p>
-      <a href="#" className="hero-button">
-        모임 참여 →
+      <Link
+        to={'/group/regist'}
+        style={{ textDecoration: 'none', color: 'inherit' }}
+      >
+      <a href="" className="hero-button">
+        모임 개설 하러가기 →
       </a>
+      </Link>
     </div>
   </div>
 );

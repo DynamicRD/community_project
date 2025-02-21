@@ -135,15 +135,29 @@ export default function FindId() {
           body: form, // formData를 JSON으로 변환하여 전송
         });
 
-        const data = await response.json(); // 서버 응답 받기
-        setResponseIdValue(data);
-        if (response.ok) {
-          alert('인증이 완료 되었습니다');
+        let data;
+        try {
+          const text = await response.text();
+          data = text ? JSON.parse(text) : null;
+        } catch (jsonError) {
+          console.error('JSON 파싱 오류:', jsonError);
+          data = null;
+        }
+
+        if (data) {
+          if (response.ok) {
+            alert('인증이 완료 되었습니다');
+          } else {
+            alert(`아이디 찾기 실패: ${data.message || '알 수 없는 오류'}`);
+          }
         } else {
-          alert(`회원가입 실패: ${data.message || '알 수 없는 오류'}`);
+          alert('아이디가 존재하지 않습니다');
+          navigate('/login');
+          return;
         }
       } catch (error) {
         console.error('회원가입 오류:', error);
+        alert('서버 요청 중 오류가 발생했습니다.');
       }
     } else if (!isNameChecked) {
       alert('아이디를 입력 바랍니다.');
@@ -264,7 +278,6 @@ export default function FindId() {
                                 body: form,
                               }).then((data) => {
                                 // if (formData.phone === data) {
-                                console.log(data);
                                 alert('인증번호가 발송 되었습니다');
                                 handleClick();
                                 // } else {
