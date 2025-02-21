@@ -78,7 +78,7 @@ create sequence notification_seq
 start with 1
 increment by 1;
 -- 모임장바구니
-
+sele
 create table basket(
     basket_no number(6) not null,
     no number(6) not null,
@@ -170,7 +170,7 @@ create table review(
 
 );
 
-
+select * from member;
 -- 사용자
 create table member(
     no number(6) not null,
