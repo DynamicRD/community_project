@@ -15,6 +15,8 @@ public interface MypageMapper {
 
 	String selectProfileImg(Map<String, Object> map) throws Exception;
 
+	
+	
 	void chargeAmount(Member member) throws Exception;
 
 	void insertHistory(TransactionLog transactionLog) throws Exception;

@@ -38,6 +38,6 @@ public class ReviewAdminServiceImpl implements ReviewAdminService {
 	    	notification.setNo(mNo);
 	    	notification.setContent("리뷰 "+title+"가 블랙처리 됐습니다.");
 	    	mypageMapper.insertNotification(notification);
-	        reviewMapper.toggleBlindYN(no);
+	      reviewMapper.toggleBlindYN(no);
 	    }
 }

@@ -286,12 +286,21 @@ export default function FindPwd() {
           body: form,
         });
 
-        if (response.ok) {
-          alert('비밀번호 변경이 완료 되었습니다.');
+        let data;
+        if (data) {
+          if (response.ok) {
+            alert('인증이 완료 되었습니다');
+          } else {
+            alert(`비밀번호 찾기 실패: ${data.message || '알 수 없는 오류'}`);
+          }
+        } else {
+          alert('입력하신 정보가 존재하지 않습니다');
           Navigate('/login');
+          return;
         }
       } catch (error) {
         console.error('회원가입 오류:', error);
+        alert('서버 요청 중 오류가 발생했습니다.');
       }
     } else if (!newPassChecked) {
       alert('새 비밀번호를 입력 바랍니다.');

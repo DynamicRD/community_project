@@ -15,6 +15,7 @@ import com.project.mypage.mapper.MypageMapper;
 import com.project.mypage.model.Notification;
 import com.project.mypage.model.TransactionLog;
 
+
 @Service
 public class GroupMorakServiceImpl implements GroupMorakService {
 	@Autowired
