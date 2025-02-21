@@ -38,4 +38,6 @@ public interface MemberService {
 	void changeMemberPw(Map<String, Object> map);
 	
 	void changeMemberBlack(Member member);
+	
+	void updateStar();
 }

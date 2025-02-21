@@ -50,4 +50,6 @@ public interface MemberMapper {
 	
 	void changeMemberBlack(Member member);
 	
+	void updateStar();
+	
 }
