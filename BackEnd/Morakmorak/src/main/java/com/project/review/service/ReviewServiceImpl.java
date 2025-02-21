@@ -34,9 +34,8 @@ public class ReviewServiceImpl implements ReviewService {
 
 	@Override
 	public void replyInsert(Map<String, Object> map) throws Exception {
-		log.info("Servcie map = " + map);
 		mapper.replyInsert(map);
-		
+
 	}
 
 	@Override
@@ -44,7 +43,6 @@ public class ReviewServiceImpl implements ReviewService {
 		return mapper.replyList(idx);
 	}
 
-	
 	@Override
 	public List<Map<String, Object>> groupList(int idx) throws Exception {
 		return mapper.groupList(idx);
@@ -54,19 +52,20 @@ public class ReviewServiceImpl implements ReviewService {
 	public Map<String, Object> readGroup(int idx) throws Exception {
 		return mapper.readGroup(idx);
 	}
-	
+
 	@Override
 	public void deleteReview(int idx) throws Exception {
-
 		mapper.deleteReview(idx);
 	}
 
 	@Override
 	public void deleteReply(int idx) throws Exception {
-
 		mapper.deleteReply(idx);
-		
 	}
-	
-	
+
+	@Override
+	public void viewCount(int idx) throws Exception {
+		mapper.viewCount(idx);
+	}
+
 }
