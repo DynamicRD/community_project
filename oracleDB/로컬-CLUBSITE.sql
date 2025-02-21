@@ -178,6 +178,7 @@ create table review(
 
 );
 
+select * from basket;
 
 select * from member;
 SELECT 
@@ -274,13 +275,15 @@ CREATE TABLE messages (
 
 
 ----------신고테이블 최종본----------------------
+
 create table report(
     rep_no number(6),
     reporter_no number(6),
     reported_no number(6),
     reason varchar2(255),
     rep_date date,
-    rep_status varchar2(1) default 'N', -- 처리상태 (N => 처리전, Y=> 처리됨, P=>넘어감)
+    rep_content varchar(255),
+    rep_status varchar2(1) default 'N', -- 처리상태 (N => 처리전, W =>경고, P=>넘어감)
     primary key(rep_no)
 );
 

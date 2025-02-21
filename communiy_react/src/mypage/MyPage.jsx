@@ -21,7 +21,8 @@ function MyPage() {
   const [selectedCategory, setSelectedCategory] = useState('member');
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 3; // 한 페이지당 3개 표시
   const { isAuthenticated, userData } = useContext(AuthContext);
   CheckAccessPermission(isAuthenticated, userData, navigate);
 
@@ -31,15 +32,6 @@ function MyPage() {
     }, 200);
     return () => clearTimeout(timer);
   }, [isAuthenticated, userData, navigate]);
-
-  // 페이지네이션을 위한 상태 추가
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // 한 페이지당 3개씩 표시
-
-  // 현재 페이지에 맞는 데이터 필터링
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentMeetings = groups.slice(indexOfFirstItem, indexOfLastItem);
 
   // 총 페이지 수 계산
   const totalPages = Math.ceil(groups.length / itemsPerPage);
@@ -118,20 +110,30 @@ function MyPage() {
 
   const renderTable = () => {
     return (
-      <Table bordered className="mt-3">
-        <thead>
-          <tr className="table-secondary">
-            <th>모임명</th>
-            <th>시작일시</th>
-            <th>종료일시</th>
-            <th>상태</th>
-            <th>비용</th>
+      <Table
+        bordered
+        className="mt-3"
+        style={{ width: '100%', tableLayout: 'fixed' }}
+      >
+        <thead
+          className="table-secondary"
+          style={{ textAlign: 'center', verticalAlign: 'middle' }}
+        >
+          <tr>
+            <th style={{ width: '40%' }}>모임명</th>
+            <th style={{ width: '15%' }}>시작일시</th>
+            <th style={{ width: '15%' }}>종료일시</th>
+            <th style={{ width: '15%' }}>상태</th>
+            <th style={{ width: '15%' }}>비용</th>
           </tr>
         </thead>
         <tbody>
           {groups.length > 0 ? (
             groups.map((group, index) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                style={{ textAlign: 'center', verticalAlign: 'middle' }}
+              >
                 <td>
                   <Link
                     to={`/group/${group.no}`}
@@ -148,7 +150,9 @@ function MyPage() {
             ))
           ) : (
             <tr>
-              <td colSpan={5}>해당 내역이 없습니다.</td>
+              <td colSpan={5} style={{ textAlign: 'center' }}>
+                해당 내역이 없습니다.
+              </td>
             </tr>
           )}
         </tbody>
@@ -336,27 +340,6 @@ function MyPage() {
           {/* 해당 모임 테이블 렌더링 */}
           {renderTable()}
 
-          <Pagination className="d-flex justify-content-center">
-            <Pagination.Prev
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            />
-            {[...Array(totalPages)].map((_, index) => (
-              <Pagination.Item
-                key={index + 1}
-                active={index + 1 === currentPage}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            />
-          </Pagination>
           <div className="text-center">
             {' '}
             <Link to={`/mypage/withdrawal/${userData?.no}`}>

@@ -1,12 +1,21 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import './GroupRegist.css';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
 
 export default function GroupUpdate() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAuthenticated, userData } = useContext(AuthContext); // 로그인 여부와 사용자 정보
+  // 로그인되지 않았다면, 로그인 페이지로 리다이렉트
+  useEffect(() => {
+    if (!isAuthenticated) {
+      alert('로그인 후 이용 가능합니다.');
+      navigate('/login'); // 로그인 페이지로 이동
+    }
+  }, [isAuthenticated, navigate]);
 
   // URL에서 쿼리 파라미터를 파싱
   const queryParams = new URLSearchParams(location.search);
@@ -106,9 +115,15 @@ export default function GroupUpdate() {
       setImg_url1(items.IMG_URL1 || '');
       setImg_url2(items.IMG_URL2 || '');
       setImg_url3(items.IMG_URL3 || '');
-      setImgUrl1Preview(items.IMG_URL1 ? `http://localhost:8080/upload/${items.IMG_URL1}` : null);
-      setImgUrl2Preview(items.IMG_URL2 ? `http://localhost:8080/upload/${items.IMG_URL2}` : null);
-      setImgUrl3Preview(items.IMG_URL3 ? `http://localhost:8080/upload/${items.IMG_URL3}` : null);
+      setImgUrl1Preview(
+        items.IMG_URL1 ? `http://localhost:8080/upload/${items.IMG_URL1}` : null
+      );
+      setImgUrl2Preview(
+        items.IMG_URL2 ? `http://localhost:8080/upload/${items.IMG_URL2}` : null
+      );
+      setImgUrl3Preview(
+        items.IMG_URL3 ? `http://localhost:8080/upload/${items.IMG_URL3}` : null
+      );
     }
   }, [items]);
 
@@ -145,37 +160,37 @@ export default function GroupUpdate() {
     });
   }, []);
 
-   //area 변환
-    const areas = {
-      서울: ['서울'],
-      경기: ['경기', '경기도'],
-      강원: ['강원', '강원도'],
-      경상: ['경상', '경상도'],
-      부산: ['부산', '부산광역시'],
-      전라: ['전라', '전라도'],
-      충청: ['충청', '충청도'],
-      제주: ['제주'],
-    };
-  
-    function extractArea(location) {
-      for (let [key, values] of Object.entries(areas)) {
-        for (let value of values) {
-          if (location.includes(value)) {
-            return key; // 해당 지역이 포함되면 지역 이름 반환
-          }
+  //area 변환
+  const areas = {
+    서울: ['서울'],
+    경기: ['경기', '경기도'],
+    강원: ['강원', '강원도'],
+    경상: ['경상', '경상도'],
+    부산: ['부산', '부산광역시'],
+    전라: ['전라', '전라도'],
+    충청: ['충청', '충청도'],
+    제주: ['제주'],
+  };
+
+  function extractArea(location) {
+    for (let [key, values] of Object.entries(areas)) {
+      for (let value of values) {
+        if (location.includes(value)) {
+          return key; // 해당 지역이 포함되면 지역 이름 반환
         }
       }
-      return null; // 일치하는 지역이 없으면 null 반환
     }
-  
-    // area 상태가 업데이트될 때마다 실행되는 useEffect
-    useEffect(() => {
-      if (formData.location) {
-        const extractedArea = extractArea(formData.location);
-        setArea(extractedArea);  // 지역 업데이트
-        console.log('Extracted area: ', area); // 추출된 지역 확인
-      }
-    }, [formData.location]); // formData.location이 변경될 때마다 실행
+    return null; // 일치하는 지역이 없으면 null 반환
+  }
+
+  // area 상태가 업데이트될 때마다 실행되는 useEffect
+  useEffect(() => {
+    if (formData.location) {
+      const extractedArea = extractArea(formData.location);
+      setArea(extractedArea); // 지역 업데이트
+      console.log('Extracted area: ', area); // 추출된 지역 확인
+    }
+  }, [formData.location]); // formData.location이 변경될 때마다 실행
 
   const handleSubmit = () => {
     if (!group_title.current.value) {
@@ -298,9 +313,7 @@ export default function GroupUpdate() {
         <div className="board">
           <div className="review_title">
             <p style={{ fontSize: '25px' }}>
-              <b className='group_span'>
-                모임 정보 수정
-              </b>
+              <b className="group_span">모임 정보 수정</b>
             </p>
           </div>
           <div className="group_register_form">

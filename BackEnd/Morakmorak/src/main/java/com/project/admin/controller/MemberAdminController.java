@@ -42,8 +42,14 @@ public class MemberAdminController {
     }
     
     /**
-     * 모든 모임 리스트 조회 (상세내용)
+
+     * 모임 디테일 조회 
      */
+    @GetMapping("/community/{groupNo}")
+    public ResponseEntity<Map<String, Object>> getGroupDetail(@PathVariable int groupNo) {
+        return ResponseEntity.ok(memberAdminService.getGroupDetail(groupNo));
+    }
+
     @GetMapping("/communityDetail/{groupNo}")
     public ResponseEntity<?> getCommunityDetail(@PathVariable int groupNo) {
         try {
@@ -56,6 +62,7 @@ public class MemberAdminController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("데이터를 불러오는 중 오류가 발생했습니다.");
         }
+
     }
 
     /**

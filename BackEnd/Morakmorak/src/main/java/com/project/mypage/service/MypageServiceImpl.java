@@ -67,7 +67,6 @@ public class MypageServiceImpl implements MypageService {
 		transactionLog.setAmount(member.getMoney());
 		transactionLog.setNo(member.getNo());
 		transactionLog.setType("충전");
-		System.out.println("거래내역 로그" + transactionLog);
 		mapper.insertHistory(transactionLog);
 	}
 
