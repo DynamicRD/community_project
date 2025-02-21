@@ -12,6 +12,8 @@ import { Link } from 'react-router-dom';
 import '/src/announcements/Announcements_notice.css';
 import HorizonLine_table from '/src/announcements/HorizonLine_table';
 import '../../review/Review.css';
+import Notice from './Notice';
+import Faq from './Faq';
 
 const ReviewSection = () => {
   const [reviewList, setReviewList] = useState([]); // ✅ 초기값 빈 배열로 설정
@@ -384,97 +386,31 @@ const NoticeFaq = () => {
     setNewContent('');
     setShowForm(false);
   };
-
+  const [activeSection, setActiveSection] = useState('notice');
   return (
-    <Container>
-      <div className="ms-5 mt-5">
-        <div className="d-flex ms-5 mt-5 mb-3">
-          <Link to={'/admin/board/Notice'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              공지사항&nbsp;&nbsp;&nbsp;|
-            </span>
-          </Link>
-          <Link to={'/admin/board/Faq'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              &nbsp;&nbsp;&nbsp;FAQ
-            </span>
-          </Link>
-          {/* 글쓰기 버튼 */}
-          <div className="btn_group2">
-            <Button
-              variant="dark"
-              onClick={() => setShowForm(!showForm)}
-              className="mb-3"
-            >
-              {showForm ? '작성 취소' : '새 공지 작성'}
-            </Button>
-          </div>
-        </div>
-
-        {/* 공지사항 목록 */}
-
-        {/* 공지사항 입력 폼 (조건부 렌더링) */}
-        {showForm && (
-          <Form onSubmit={handleSubmit} className="mb-4">
-            <Form.Group className="mb-2">
-              <Form.Label>제목</Form.Label>
-              <Form.Control
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label>내용</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Button variant="danger" type="submit">
-              작성 완료
-            </Button>
-          </Form>
-        )}
-        <Container>
-          <table className="announcements_table">
-            {announcements.map((notice) => (
-              <tbody key={notice.notice_no}>
-                <tr>
-                  <td className="table_td_title">
-                    <Link
-                      to={`/admin/board/Notice/${notice.notice_no}`}
-                      className="title_link"
-                    >
-                      <span className="ps-5">{notice.notice_title}</span>
-                    </Link>
-                  </td>
-                  <td className="table_td_date">
-                    <span className="pe-5">{notice.reg_date}</span>
-                  </td>
-                </tr>
-                <HorizonLine_table />
-              </tbody>
-            ))}
-          </table>
-        </Container>
-
-        {/* 페이지네이션 */}
-        <div className="d-flex justify-content-center align-content-center mt-4">
-          <Pagination size="sm">
-            {[...Array(5)].map((_, i) => (
-              <Pagination.Item key={i + 1} active={i === 0}>
-                {i + 1}
-              </Pagination.Item>
-            ))}
-          </Pagination>
-        </div>
-      </div>
-    </Container>
+    <div>
+      <Link
+        to={'#'}
+        className="title_link"
+        onClick={() => setActiveSection('notice')}
+      >
+        <span className="nav_notice" style={{ fontSize: '33px' }}>
+          공지사항&nbsp;&nbsp;&nbsp;|
+        </span>
+      </Link>
+      <Link
+        to={'#'}
+        className="title_link"
+        onClick={() => setActiveSection('faq')}
+      >
+        <span className="nav_notice" style={{ fontSize: '33px' }}>
+          &nbsp;&nbsp;&nbsp;FAQ
+        </span>
+      </Link>
+      {/* 글쓰기 버튼 */}
+      {activeSection === 'faq' && <Faq />}
+      {activeSection === 'notice' && <Notice />}
+    </div>
   );
 };
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import '/src/announcements/Announcements_faq.css';
 import {
   Container,
@@ -8,6 +8,7 @@ import {
   Form,
 } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 
 export default function Faq() {
   const today = new Date();
@@ -16,12 +17,30 @@ export default function Faq() {
   }월 ${today.getDate()}일`;
 
   const [faqData, setFaqData] = useState([]);
+  function getList(url) {
+    fetch(url)
+      .then((response) => {
+        return response.json();
+      })
+      .then((data) => {
+        setFaqData(data);
+      });
+  }
 
-  const [newTitle, setNewTitle] = useState('');
-  const [newContent, setNewContent] = useState('');
+  //페이지 시작 시 getList 호출
+  useEffect(() => {
+    getList('http://localhost:8080/announcements/faq/list');
+  }, []);
+
+  useEffect(() => {
+    console.log(faqData);
+  }, [faqData]);
+
+  const newTitle = useRef();
+  const newContent = useRef();
   const [showForm, setShowForm] = useState(false);
 
-  const handleAddFaq = (e) => {
+  const handleAddFaq = async (e) => {
     e.preventDefault();
     if (!newTitle || !newContent) return;
 
@@ -31,10 +50,25 @@ export default function Faq() {
       content: newContent,
       reg_date: formattedDate,
     };
-
+    const formData = new FormData();
+    formData.append('n_title', newTitle.current.value);
+    formData.append('content', newContent.current.value);
+    try {
+      const response = await axios.post(
+        'http://localhost:8080/announcements/faq/insert',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+      console.log('업로드 성공:', response.data);
+      getList('http://localhost:8080/announcements/faq/list');
+    } catch (error) {
+      console.error('업로드 실패:', error);
+    }
     setFaqData((prevFaqData) => [...prevFaqData, newFaq]);
-    setNewTitle('');
-    setNewContent('');
     setShowForm(false);
   };
 
@@ -45,16 +79,16 @@ export default function Faq() {
   const itemsPerPage = 5;
 
   const handleEdit = (faq) => {
-    setEditingId(faq.faq_no);
-    setEditedTitle(faq.faq_title);
-    setEditedContent(faq.content);
+    setEditingId(faq.FAQ_NO);
+    setEditedTitle(faq.FAQ_TITIE);
+    setEditedContent(faq.CONTENT);
   };
 
   const handleSave = () => {
     setFaqData(
       faqData.map((faq) =>
-        faq.faq_no === editingId
-          ? { ...faq, faq_title: editedTitle, content: editedContent }
+        faq.FAQ_NO === editingId
+          ? { ...faq, FAQ_TITLE: editedTitle, CONTENT: editedContent }
           : faq
       )
     );
@@ -63,7 +97,7 @@ export default function Faq() {
 
   const handleDelete = (no) => {
     if (window.confirm('정말 삭제하시겠습니까?')) {
-      setFaqData(faqData.filter((faq) => faq.faq_no !== no));
+      setFaqData(faqData.filter((faq) => faq.FAQ_NO !== no));
     }
   };
 
@@ -72,22 +106,8 @@ export default function Faq() {
   const paginatedFaqData = faqData.slice(startIndex, startIndex + itemsPerPage);
 
   return (
-    <Container className="faq_container d-flex justify-content-center">
-      <div className="mt-5 ms-5 pt-5">
-        {/* 공지사항 | FAQ 네비게이션 */}
-        <div className="d-flex mt-5 ms-5">
-          <Link to={'/admin/board/Notice'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              공지사항&nbsp;&nbsp;&nbsp;|
-            </span>
-          </Link>
-          <Link to={'/admin/board/Faq'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              &nbsp;&nbsp;&nbsp;FAQ
-            </span>
-          </Link>
-        </div>
-
+    <Container>
+      <div>
         {/* FAQ 글쓰기 버튼 (FAQ가 없어도 항상 보이도록 변경) */}
         <div className="d-flex justify-content-end my-3">
           <Button
@@ -106,8 +126,7 @@ export default function Faq() {
               <Form.Label>질문</Form.Label>
               <Form.Control
                 type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
+                ref={newTitle}
                 required
                 style={{ width: '1100px', height: '50px' }}
               />
@@ -117,8 +136,7 @@ export default function Faq() {
               <Form.Control
                 as="textarea"
                 rows={5}
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
+                ref={newContent}
                 required
                 style={{ width: '1100px', height: '50px' }}
               />
@@ -135,12 +153,12 @@ export default function Faq() {
             <Accordion defaultActiveKey="0">
               {paginatedFaqData.map((faq) => (
                 <Accordion.Item
-                  eventKey={faq.faq_no}
-                  key={faq.faq_no}
+                  eventKey={faq.FAQ_NO}
+                  key={faq.FAQ_NO}
                   className="mb-3"
                 >
                   <Accordion.Header>
-                    {editingId === faq.faq_no ? (
+                    {editingId === faq.FAQ_NO ? (
                       <Form.Control
                         type="text"
                         value={editedTitle}
@@ -152,12 +170,12 @@ export default function Faq() {
                         className="faq_accordion_title"
                         style={{ width: '1100px', height: '50px' }}
                       >
-                        {faq.faq_title}
+                        {faq.FAQ_TITLE}
                       </span>
                     )}
                   </Accordion.Header>
                   <Accordion.Body>
-                    {editingId === faq.faq_no ? (
+                    {editingId === faq.FAQ_NO ? (
                       <>
                         <Form.Control
                           as="textarea"
@@ -189,7 +207,7 @@ export default function Faq() {
                           className="faq_accordion_body"
                           style={{ width: '1100px', height: '50px' }}
                         >
-                          {faq.content}
+                          {faq.CONTENT}
                         </span>
                         <div className="d-flex justify-content-end mt-2">
                           <Button
@@ -201,7 +219,7 @@ export default function Faq() {
                           </Button>
                           <Button
                             variant="danger"
-                            onClick={() => handleDelete(faq.faq_no)}
+                            onClick={() => handleDelete(faq.FAQ_NO)}
                           >
                             삭제
                           </Button>
