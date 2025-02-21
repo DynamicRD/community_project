@@ -174,18 +174,6 @@ const Stats = () => {
     ],
   };
 
-  const visitorData = {
-    labels: getLastFiveDaysLabels(),
-    datasets: [
-      {
-        label: '홈페이지 방문자',
-        data: [1000, 1200, 900, 1500, 1700],
-        borderColor: 'red',
-        backgroundColor: 'rgba(255, 0, 0, 0.5)',
-      },
-    ],
-  };
-
   // 사용자 통계 (Pie Chart)
   const userData = {
     labels: ['남성', '여성'],
@@ -254,7 +242,6 @@ const Stats = () => {
         <Card className="p-4">
           <h4>일별 통계</h4>
           <Line data={dailyData} className="p-5" />
-          <Line data={visitorData} />
         </Card>
       )}
       {activeTab === 'user' && (
@@ -294,6 +281,7 @@ const Stats = () => {
                   labels: ['문화/예술', '푸드/드링크', '취미', '여행', '교육'],
                   datasets: [
                     {
+                      label: '인기 카테고리',
                       data: communityStats[selectedCommunityStat].categories,
                       backgroundColor: 'rgba(75, 192, 192, 0.6)',
                     },
@@ -308,6 +296,7 @@ const Stats = () => {
                   labels: popularGroups.map((group) => group.GROUP_TITLE),
                   datasets: [
                     {
+                      label: '찜 많은 모임',
                       data: communityStats[selectedCommunityStat].favorites,
                       backgroundColor: 'rgba(153, 102, 255, 0.6)',
                     },
