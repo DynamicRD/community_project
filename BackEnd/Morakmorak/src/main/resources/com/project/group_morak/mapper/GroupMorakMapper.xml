@@ -50,6 +50,8 @@
 		AND approval='Y' AND last_date > current_date
 	]]>
 	</select>
+	
+	
 
 	<select id="read">
 		SELECT
@@ -94,6 +96,14 @@
 		VALUES(member_group_seq.nextval, #{no}, #{group_no}, 'WAITING', #{pr})
 	</insert>
 	
+	<select id="checkStartDate" resultType="String">
+	<![CDATA[
+		SELECT start_date
+		FROM GROUP_MORAK
+		WHERE GROUP_NO = #{groupNo}
+	]]>
+	</select>
+	
 	<delete id="cancelJoin">
 		DELETE FROM MEMBER_GROUP
 		WHERE NO = #{no} AND GROUP_NO = #{group_no}
@@ -107,12 +117,6 @@
 	<update id="refundMoney">
 		UPDATE MEMBER SET MONEY = MONEY + (SELECT PRICE FROM
 		GROUP_MORAK WHERE GROUP_NO = #{group_no})	
-		WHERE NO = #{no}
-	</update>
-	
-	<update id="refundHalfMoney">
-		UPDATE MEMBER SET MONEY = MONEY + (SELECT PRICE FROM
-		GROUP_MORAK WHERE GROUP_NO = #{group_no})/2	
 		WHERE NO = #{no}
 	</update>
 
@@ -149,12 +153,12 @@
 		UPDATE GROUP_MORAK SET MEMBER_COUNT = MEMBER_COUNT + 1
 		WHERE GROUP_NO = #{group_no}
 	</update>
+	
 	<update id="memberCountCancel">
 		UPDATE GROUP_MORAK SET MEMBER_COUNT = MEMBER_COUNT - 1
 		WHERE GROUP_NO = #{group_no}
 	</update>
 	 
-
 	<insert id="memberReport">
 		INSERT INTO REPORT(rep_no, reporter_no, reported_no,
 		reason)
