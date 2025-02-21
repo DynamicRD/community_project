@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mypage.mapper.MypageMapper">
-
+	<insert id="insertNotification">
+	 insert into Notification (notification_no,no,content) values 
+	 (notification_seq.nextval,#{no},#{content})
+	</insert>
+	<select id="selectNoFromGroup">
+	select no from group_morak where group_no = #{groupNo}
+	</select>
 	<select id="selectTransactionLog"
 		resultType="com.project.mypage.model.TransactionLog">
 		SELECT type,amount,reg_date
@@ -95,9 +101,27 @@
 		WHERE mg.status != 'LEADER' and mg.no = #{no} and gm.last_date >
 		current_date
 	</select>
-	<select id="getMineLeaderGroup" resultType="com.project.mypage.model.GroupMember">
+	<select id="getMineEndGroup"
+		resultType="com.project.mypage.model.GroupMember">
 		SELECT
-		group_title,start_date,last_date,price,approval as status from group_morak
-		where no = #{no}
+		gm.group_title,
+		gm.start_date,
+		gm.last_date,
+		gm.price,
+		mg.status
+		FROM member_group mg
+		JOIN group_morak gm ON mg.group_no = gm.group_no
+		WHERE (mg.status = 'LEADER' OR mg.status = 'MEMBER')
+		AND mg.no = #{no}
+		AND current_date > gm.last_date
+	</select>
+
+	<select id="getMineLeaderGroup"
+		resultType="com.project.mypage.model.GroupMember">
+		SELECT
+		group_title,start_date,last_date,price,approval as status from
+		group_morak
+		where no = #{no} and last_date >
+		current_date
 	</select>
 </mapper>

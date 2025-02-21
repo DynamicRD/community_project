@@ -163,6 +163,7 @@ public class MypageController {
 		@RequestMapping("/mineselect")
 		public List<GroupMember> getMineGroups(@RequestParam(defaultValue = "all") String category,@RequestParam(defaultValue = "1") int no) {
 			System.out.println("마이페이지 그룹 호출됨");
+			System.out.println(service.getMineGroup(category,no));
 			return service.getMineGroup(category,no);
 		}
 }

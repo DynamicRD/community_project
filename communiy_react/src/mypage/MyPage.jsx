@@ -12,6 +12,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContext } from '../context/AuthContext'; //
 import axios from 'axios';
+import CheckAccessPermission from '../hooks/checkAccessPermission';
 
 function MyPage() {
   const [showMore, setShowMore] = useState(false);
@@ -20,21 +21,15 @@ function MyPage() {
   const [selectedCategory, setSelectedCategory] = useState('member');
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
 
   const { isAuthenticated, userData } = useContext(AuthContext);
-  useEffect(() => {
-    console.log('userData 대기중');
-    if (!userData) return; // userData가 로드될 때까지 기다림
+  CheckAccessPermission(isAuthenticated, userData, navigate);
 
-    if (isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      if (userData?.no.toString() !== pageId) {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-      }
-    }
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchGroups(selectedCategory);
+    }, 200);
+    return () => clearTimeout(timer);
   }, [isAuthenticated, userData, navigate]);
 
   // 페이지네이션을 위한 상태 추가
@@ -56,25 +51,24 @@ function MyPage() {
 
   useEffect(() => {
     if (userData?.no) {
+      console.log('fetchGroups 실행:', selectedCategory, userData.no);
       fetchGroups(selectedCategory);
     }
-  }, [selectedCategory, userData]); // userData가 변경될 때 실행되도록 수정
+  }, [selectedCategory]);
 
   const fetchGroups = async (category) => {
     if (!userData?.no) return; // userData가 없으면 실행하지 않음
 
-    setLoading(true);
     try {
       const response = await axios.get(
         `http://localhost:8080/mypage/mineselect?category=${category}&no=${userData.no}`
       );
-      setGroups(response.data);
-      console.log(groups);
+      console.log('받아온 groups 데이터:', response.data);
+      setGroups(response.data); // 상태 업데이트
     } catch (error) {
       console.error('데이터를 불러오는 중 오류 발생:', error);
       setGroups([]); // 에러 발생 시 빈 배열로 설정
     }
-    setLoading(false);
   };
 
   // groups 변경 사항을 감지하여 로그 출력
@@ -135,14 +129,21 @@ function MyPage() {
           </tr>
         </thead>
         <tbody>
-          {groups == [] ? (
-            groups.map((groups, index) => (
+          {groups.length > 0 ? (
+            groups.map((group, index) => (
               <tr key={index}>
-                <td>{groups.groupName}</td>
-                <td>{groups.startDate}</td>
-                <td>{groups.endDate}</td>
-                <td>{groups.status}</td>
-                <td>{groups.amount}</td>
+                <td>
+                  <Link
+                    to={`/group/${group.no}`}
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                  >
+                    {group.groupTitle}
+                  </Link>
+                </td>
+                <td>{group.startDate}</td>
+                <td>{group.lastDate}</td>
+                <td>{group.status}</td>
+                <td>{formatCurrency(group.price)}</td>
               </tr>
             ))
           ) : (
@@ -154,6 +155,7 @@ function MyPage() {
       </Table>
     );
   };
+
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('ko-KR', {
       style: 'currency',

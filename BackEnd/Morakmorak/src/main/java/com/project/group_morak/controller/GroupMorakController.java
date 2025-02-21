@@ -7,10 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -133,7 +135,6 @@ public class GroupMorakController {
 				item.put("last_date", lastDateKST.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")));
 			}
 		}
-
 		return data;
 	}
 
@@ -257,6 +258,37 @@ public class GroupMorakController {
 			return ResponseEntity.status(500).body("신청에 실패했습니다.");
 		}
 	}
+	
+	// 모임 시작일 비교
+	@RequestMapping("/checkStartDate")
+	public String checkStartDate(@RequestParam(value = "group_no") String groupNo) {
+			return service.checkStartDate(groupNo);
+	}
+	
+	// 모임 참가 신청 취소
+	@RequestMapping("/cancelJoin")
+	public ResponseEntity<String> cancelJoin(@RequestParam Map<String, Object> map) {
+		try {
+			service.cancelJoin(map);
+			service.refundMoney(map);
+			System.out.println(map);
+			if (map.get("status") != null && map.get("status").equals("MEMBER")) {
+			    service.memberCountCancel(map);
+			}
+			log.info("status="+map.get("status"));
+//			TransactionLog transactionLog = new TransactionLog();
+//			transactionLog.setAmount(map.get(money));
+//			transactionLog.setNo(member.getNo());
+//			transactionLog.setType("환불");
+//		    System.out.println("거래내역 로그"+transactionLog);
+//			mapper.insertHistory(transactionLog);
+			return ResponseEntity.ok("신청이 취소되었습니다. 포인트가 환불되었습니다.");
+		} catch (Exception e) {
+			log.error("Error calceling ", e);
+			return ResponseEntity.status(500).body("처리에 실패했습니다.");
+		}
+	}
+	
 
 	// 모임 찜목록에 저장
 	@RequestMapping("/basket")
@@ -288,21 +320,63 @@ public class GroupMorakController {
 	}
 
 	// 최대 모임원 필터
-	@RequestMapping("/countGroupMember")
-	public Map<String, Object> countGroupMember(@RequestParam(value = "group_no") String groupNo) {
+	@RequestMapping("/applicable")
+	public Map<String, Object> applicable(@RequestParam(value = "group_no") String groupNo) {
 	    Map<String, Object> map = service.countGroupMember(groupNo);
-
+	    Map<String, Object> map2 = service.read(groupNo);
+	    map.put("START_DATE", map2.get("START_DATE"));
+	    
 	    return map;
 	}
+	
+	// 모임 모집 종료 여부
+	@RequestMapping("/isClosed")
+	public boolean isClosed(@RequestParam(value = "group_no") String groupNo) {
+	    Map<String, Object> map = service.read(groupNo);
+	    
+	    // BigDecimal을 int로 변환
+	    BigDecimal memberCountBigDecimal = (BigDecimal) map.get("MEMBER_COUNT");
+	    BigDecimal userMaxBigDecimal = (BigDecimal) map.get("USER_MAX");
 
+	    int memberCount = memberCountBigDecimal.intValue();  // BigDecimal을 int로 변환
+	    int userMax = userMaxBigDecimal.intValue();  // BigDecimal을 int로 변환
+	    
+	    // START_DATE를 java.sql.Date로 변환
+	    Object startDateObj = map.get("START_DATE");
+	    LocalDate startDate = null;
+	    
+	    if (startDateObj instanceof java.sql.Date) {
+	        startDate = ((java.sql.Date) startDateObj).toLocalDate();  // java.sql.Date에서 LocalDate로 변환
+	    } else if (startDateObj instanceof java.sql.Timestamp) {
+	        startDate = ((java.sql.Timestamp) startDateObj).toLocalDateTime().toLocalDate();  // java.sql.Timestamp에서 LocalDate로 변환
+	    }
 
+	    if (startDate == null) {
+	        // 적절한 처리가 필요할 수 있음 (예: 예외 처리)
+	        throw new IllegalStateException("START_DATE is invalid");
+	    }
 
+	    // 현재 날짜를 LocalDate로 가져오기
+	    LocalDate today = LocalDate.now();
+
+	    // 모임이 종료된 경우 (회원 수가 최대값을 초과하거나 시작일이 오늘이거나 오늘 이전)
+	    if (memberCount >= userMax || !startDate.isAfter(today)) {
+	        return true;  // 모임 종료
+	    }
+
+	    return false;  // 모임 종료되지 않음
+	}
+
+	
+	// 모임장 멤버 승인/거부 처리
 	@RequestMapping("/statusUpdate")
 	public ResponseEntity<String> memberStatusUpdate(@RequestParam Map<String, Object> map) {
 		try {
 			service.memberStatusUpdate(map);
 			if ("REJECT".equals(map.get("status"))) {
 				service.refundMoney(map);
+			}else {
+				service.memberCount(map);
 			}
 			return ResponseEntity.ok("처리가 완료되었습니다.");
 		} catch (Exception e) {

@@ -110,16 +110,61 @@ public class MypageServiceImpl implements MypageService {
 
 	@Override
 	public List<GroupMember> getMineGroup(String category, int no) {
-		if (category.equals("member")) {
-			List<GroupMember> list = mapper.getMineGroup(no);
-			return list.stream().map(member -> new GroupMember(member.getStatus())).collect(Collectors.toList());
-		} else if (category.equals("leader")) {
-			List<GroupMember> list = mapper.getMineLeaderGroup(no);
-			return list.stream().map(member -> new GroupMember(member.getStatus())).collect(Collectors.toList());
-		} else {
+	    List<GroupMember> list;
 
-		}
-		return null;
+	    if (category.equals("member")) {
+	        list = mapper.getMineGroup(no);
+	        return list.stream()
+	                   .map(member -> {
+	                       member.setStatus(convertStatus(member.getStatus())); // 변환 적용
+	                       return member;
+	                   })
+	                   .collect(Collectors.toList());
+	    } else if (category.equals("leader")) {
+	        list = mapper.getMineLeaderGroup(no);
+	        return list.stream()
+	                   .map(member -> {
+	                       member.setStatus(convertStatus(member.getStatus())); // 변환 적용
+	                       return member;
+	                   })
+	                   .collect(Collectors.toList());
+	    } else {
+	        list = mapper.getMineEndGroup(no);
+	        return list.stream()
+	                   .map(member -> {
+	                       member.setStatus(convertEndStatus(member.getStatus())); // 변환 적용
+	                       return member;
+	                   })
+	                   .collect(Collectors.toList());
+	    }
+	}
+
+	private String convertStatus(String status) {
+	    switch (status) {
+	        case "WAITING":
+	            return "신청대기중";
+	        case "REJECT":
+	            return "거절됨";
+	        case "MEMBER":
+	            return "진행중";
+	        case "N":
+	            return "승인대기중";
+	        case "Y":
+	            return "승인됨";
+	        default:
+	            return status; // 예상치 못한 값은 그대로 유지
+	    }
+	}
+
+	private String convertEndStatus(String endStatus) {
+	    switch (endStatus) {
+	        case "LEADER":
+	            return "모임장";
+	        case "MEMBER":
+	            return "멤버";
+	        default:
+	            return endStatus; // 예상치 못한 값은 그대로 유지
+	    }
 	}
 
 }

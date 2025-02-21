@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.project.admin.mapper.ComplaintMapper">
+	<select id="complaintList" resultType="java.util.Map">
+		SELECT REP_NO, REPORTER_NO,
+		(SELECT DISTINCT NICKNAME FROM REPORT LEFT JOIN MEMBER ON REPORTER_NO =
+		MEMBER.NO WHERE REPORT.REPORTER_NO = MEMBER.NO) AS REPORTER,
+		REPORTED_NO,
+		(SELECT DISTINCT NICKNAME FROM REPORT LEFT JOIN MEMBER ON REPORTED_NO =
+		NO) AS REPORTED,
+		REASON, TO_CHAR(REP_DATE, 'YYYY-MM-DD') AS REP_DATE, REP_STATUS
+		FROM REPORT
+		LEFT JOIN MEMBER
+		ON REPORTER_NO = MEMBER.NO
+		ORDER BY REP_NO DESC
+	</select>
+
+	<update id="complaintStatus">
+		UPDATE REPORT
+		SET REP_STATUS = #{type, jdbcType=VARCHAR}
+		WHERE REP_NO = #{idx}
+	</update>
+
+</mapper>

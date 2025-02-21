@@ -2,30 +2,13 @@ import React, { useState, useEffect, useContext } from 'react';
 import { Button, Container, Table } from 'react-bootstrap';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import CheckAccessPermission from '../hooks/checkAccessPermission';
 
 function MyAmountHistory() {
   const { isAuthenticated, userData } = useContext(AuthContext);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (userData && isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-
-      if (userData?.no.toString() !== pageId) {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-      }
-    }
-  }, [isAuthenticated, userData, navigate]);
-  useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
-      alert('접근 권한이 없습니다.');
-      navigate('/');
-    }
-  }, [userData]);
+  CheckAccessPermission(isAuthenticated, userData, navigate);
   const [error, setError] = useState(null);
   const [coinList, setCoinList] = useState([]);
   const { userId } = useParams();

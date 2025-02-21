@@ -80,7 +80,7 @@ export default function Read() {
 
             <div className="review_writer ms-2">
               <span>{reviewDetail.NICKNAME}</span>
-              <span> 조회수 : {count}</span>
+              <span> 조회수 : {reviewDetail.VIEWS}</span>
             </div>
           </div>
           <HorizonLine />
@@ -189,7 +189,7 @@ export default function Read() {
 
                 <Button
                   variant="danger"
-                  className="register_btn ms-3"
+                  className="read_btn ms-2 mt-2"
                   onClick={() => {
                     const form = new FormData();
                     form.append('content', content.current.value);

@@ -48,4 +48,8 @@ public interface MemberMapper {
 	
 	void changeMemberPw(Map<String, Object> map);
 	
+	void changeMemberBlack(Member member);
+	
+	void updateStar();
+	
 }

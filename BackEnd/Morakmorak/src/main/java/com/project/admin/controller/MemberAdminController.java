@@ -64,6 +64,7 @@ public class MemberAdminController {
     @PostMapping("/community/approve/{groupNo}")
     public ResponseEntity<String> approveGroup(@PathVariable int groupNo) {
         boolean success = memberAdminService.approveGroup(groupNo);
+       
         return success ? ResponseEntity.ok("모임 승인 완료") : ResponseEntity.badRequest().body("승인 실패");
     }
     

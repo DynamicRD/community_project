@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.project.member.service.MemberService;
 import com.project.review.service.ReviewService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +35,9 @@ public class ReviewController {
 
 	@Autowired
 	private ReviewService service;
+	
+	@Autowired
+	private MemberService memberService;
 
 	// 이전 BLOB방식 혹시몰라서 남겨둠
 //	@PostMapping(value = "/insert")
@@ -71,8 +75,8 @@ public class ReviewController {
 //	}
 
 	@PostMapping(value = "/insert")
-	public ResponseEntity<String>  insertReview2(@RequestParam Map<String, Object> map, @RequestParam("image") MultipartFile file)
-			throws Exception {
+	public ResponseEntity<String> insertReview2(@RequestParam Map<String, Object> map,
+			@RequestParam("image") MultipartFile file) throws Exception {
 		if (file.isEmpty()) {
 			ResponseEntity.status(HttpStatus.BAD_REQUEST).body("파일을 선택해 주세요.");
 		}
@@ -80,8 +84,8 @@ public class ReviewController {
 		// 저장할 파일 이름 지정 (현재 시간 + 원본 확장자)
 		String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
 		String fileName = System.currentTimeMillis() + "_" + originalFileName;
-		
-		String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString()+"/";
+
+		String uploadPath = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString() + "/";
 
 		// 업로드 폴더가 없으면 생성
 		File directory = new File(uploadPath);
@@ -90,21 +94,22 @@ public class ReviewController {
 		}
 
 		// 이미지 저장 경로
-		Path path = Paths.get(uploadPath+fileName);
-	    try {
-	        Files.copy(file.getInputStream(), path);
-	    } catch (IOException e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
-	    }
+		Path path = Paths.get(uploadPath + fileName);
+		try {
+			Files.copy(file.getInputStream(), path);
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 업로드 중 오류가 발생했습니다.");
+		}
 
 		// 클라이언트가 접근할 수 있는 경로 반환
 		String imageUrl = fileName;
 		log.info("value = " + path);
 		log.info("value = " + fileName);
 		map.put("fileName", imageUrl);
-		
+
 		service.insertReview(map);
-		
+		memberService.updateStar();
+
 		return ResponseEntity.ok("파일 업로드 성공: " + imageUrl);
 	}
 
@@ -137,6 +142,7 @@ public class ReviewController {
 
 	@GetMapping(value = "/read/{idx}")
 	public Map<String, Object> readReview2(@PathVariable(name = "idx") int idx) throws Exception {
+		service.viewCount(idx);
 		Map<String, Object> listMap = service.readReview(idx);
 		return listMap;
 	}
@@ -175,7 +181,7 @@ public class ReviewController {
 		List<Map<String, Object>> listMap = service.groupList(idx);
 		log.info("value = " + idx);
 		log.info("value = " + listMap);
-		return service.groupList(idx);
+		return listMap;
 	}
 
 	@GetMapping(value = "/Regist/{idx}")

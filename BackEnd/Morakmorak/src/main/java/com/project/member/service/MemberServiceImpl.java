@@ -296,4 +296,15 @@ public class MemberServiceImpl implements MemberService {
 		}
 	}
 
+	@Override
+	public void changeMemberBlack(Member member) {
+		mapper.changeMemberBlack(member);
+	}
+
+	@Override
+	public void updateStar() {
+		mapper.updateStar();
+		
+	}
+
 }

@@ -21,7 +21,6 @@ export default function GroupDetailItem({ item }) {
   const [activeMembers, setActiveMembers] = useState([]);
   const [userRole, setUserRole] = useState();
   useEffect(() => {
-
     fetch(`http://localhost:8080/group/memberList?group_no=${item.GROUP_NO}`)
       .then((res) => res.json())
       .then((data) => {
@@ -47,7 +46,6 @@ export default function GroupDetailItem({ item }) {
         setGroups([]);
       }
     };
-
     if (item.CATEGORY) {
       fetchGroups();
     }
@@ -99,7 +97,7 @@ export default function GroupDetailItem({ item }) {
   return (
     <div className="group_detail">
       <div className="information row">
-        <div className="col">
+        <div className="col-6">
           <Link to={`/group/${item.TYPE}_list`}>
             <h4>{item.TYPE === 'regular' ? `정기모임>` : '동행ㆍ소모임>'}</h4>
           </Link>
@@ -153,6 +151,7 @@ export default function GroupDetailItem({ item }) {
           >
             🌟 {item.GROUP_TITLE} 모임장 한마디 🌟
           </p>
+          <br />
           {item.COMMENT1}
         </div>
         <div className="profile mt-5">
@@ -218,9 +217,7 @@ export default function GroupDetailItem({ item }) {
               fontWeight: '700',
             }}
           >
-
             현재 참여중인 멤버({item.MEMBER_COUNT}/{item.USER_MAX})
-
           </p>
           <ListGroup as="ol">
             {activeMembers.map((member) => {
@@ -280,13 +277,13 @@ export default function GroupDetailItem({ item }) {
           </thead>
           <tbody>
             <tr>
-              <th>모임 시작 7일 전까지</th>
+              <th>참가 승인 전, 모임 시작 7일 전까지</th>
               <td>전액 환불</td>
             </tr>
-            <tr>
+            {/* <tr>
               <th>모임 시작 3일 전까지</th>
               <td>참가비의 50% 환불</td>
-            </tr>
+            </tr> */}
             <tr>
               <th>모임 시작 3일 이내</th>
               <td>환불 불가</td>

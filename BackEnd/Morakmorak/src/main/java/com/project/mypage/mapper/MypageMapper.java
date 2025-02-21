@@ -31,5 +31,13 @@ public interface MypageMapper {
 	
 	List<GroupMember> getMineGroup(int no);
 	
+	List<GroupMember> getMineEndGroup(int no);
+	
 	List<GroupMember> getMineLeaderGroup(int no);
+	
+	void insertNotification(Notification notification);
+	
+	int selectNoFromGroup(int groupNo);
+	
+	String selectGroupNameFromGroup(int groupNo);
 }

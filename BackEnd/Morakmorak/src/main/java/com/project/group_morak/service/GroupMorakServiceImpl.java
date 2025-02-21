@@ -46,6 +46,11 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 	public void join(Map<String, Object> map) {
 		mapper.join(map);
 	}
+	
+	@Override
+	public void cancelJoin(Map<String, Object> map) {
+		mapper.cancelJoin(map);
+	}
 
 	public void changeMoney(Map<String, Object> map) {
 		mapper.changeMoney(map);
@@ -102,5 +107,19 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 		return mapper.getGroupsByCategory3(category);
 	}
 
+	@Override
+	public void memberCount(Map<String, Object> map) {
+		mapper.memberCount(map);
+	}
+
+	@Override
+	public void memberCountCancel(Map<String, Object> map) {
+		mapper.memberCountCancel(map);
+	}
+
+	@Override
+	public String checkStartDate(String groupNo) {
+		return mapper.checkStartDate(groupNo);
+	}
 
 }

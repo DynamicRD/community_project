@@ -116,10 +116,18 @@ create table group_morak(
     img_url2 varchar2(100),               --이미지2
     img_url3 varchar2(100),               --이미지3
     type varchar2(20),                   --정기모임,소모임 구분
+    member_count number(3),
     primary key(group_no)
 );
-
-
+alter table group_morak add member_count number(3) DEFAULT 0; 
+SELECT
+		group_title,start_date,last_date,price,approval as status from group_morak
+		where no =1;
+SELECT COUNT(DISTINCT mg.no)
+		FROM member_group mg
+		JOIN group_morak gm ON mg.group_no = gm.group_no
+		WHERE mg.status IN ('member', 'leader')
+		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
 -- 댓글(답변형)
 create table comments(
     comments_no number(6) not null,
@@ -179,8 +187,8 @@ SELECT
     gm.price,
     mg.status
 FROM member_group mg
-JOIN group_morak gm ON mg.group_no = 72
-WHERE mg.status != 'LEADER';
+JOIN group_morak gm ON mg.group_no = gm.group_no
+WHERE mg.status != 'LEADER' and mg.no = 72 and gm.last_date > current_date;
 -- 사용자
 create table member(
     no number(6) not null,
@@ -206,6 +214,11 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
+SELECT COUNT(*) AS reg_count
+FROM member
+WHERE TO_DATE(reg_date, 'YY/MM/DD') 
+      BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
+
 delete from member where gender='male';
 INSERT INTO member (
     no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
@@ -217,7 +230,7 @@ INSERT INTO member (
     100000, '12345', 'Seoul', 'Admin Street 1', 
     0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
-
+select * from member;
 
 -- 알림
 create table notification(
@@ -279,8 +292,9 @@ create table visit_log(
     visit_url varchar2(300),
     primary key(v_id)
     );
-
-
+select * from visit_log;
+truncate table visit_log;
+commit;
 --거래내역 테이블
 create table Transaction_log(
     transaction_no number(6),
@@ -290,7 +304,7 @@ create table Transaction_log(
     reg_date date default sysdate,
     primary key(transaction_no)
 );
-
+select * from transaction_log;
     
 --관리자
 delete from member where gender='male';
@@ -305,15 +319,18 @@ INSERT INTO member (
     0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
 
+		SELECT COUNT(DISTINCT mg.no)
+		FROM member_group mg
+		JOIN group_morak gm ON mg.group_no = gm.group_no
+		WHERE mg.status = 'MEMBER'
+		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
 
+SELECT COUNT(*)
+		FROM visit_log
+		WHERE visit_date BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
 
-select * from charge; 
-SELECT TO_CHAR(reg_date, 'YYYY-MM-DD') AS transaction_date, -- 날짜 형식 변환
-       SUM(amount) AS total_amount
-FROM Transaction_log
-GROUP BY TO_CHAR(reg_date, 'YYYY-MM-DD')
-ORDER BY transaction_date;
-
+select * from member_group;
+select * from group_morak;
 SELECT gender, count(*) as count
 		FROM MEMBER
 		GROUP BY gender;

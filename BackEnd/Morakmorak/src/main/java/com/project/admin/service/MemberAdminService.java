@@ -24,4 +24,5 @@ public interface MemberAdminService {
 	
 	List<Map<String, Object>> getCommunityDetail(int groupNo);
 
+
 }

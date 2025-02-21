@@ -45,8 +45,7 @@ function GroupDetail() {
 
   if (loading) {
     return <div>loading</div>;
-  } else {
-    
+  }
 
   return (
     <Container>
@@ -58,7 +57,6 @@ function GroupDetail() {
       <GroupDetailButton group_no={group_no} />
     </Container>
   );
-}
 }
 
 export default GroupDetail;
