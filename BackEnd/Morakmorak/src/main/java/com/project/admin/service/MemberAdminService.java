@@ -24,5 +24,6 @@ public interface MemberAdminService {
 	
 	List<Map<String, Object>> getCommunityDetail(int groupNo);
 
+	List<Map<String, Object>> selectPopularGroup();
 
 }

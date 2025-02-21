@@ -113,6 +113,10 @@ public class MemberAdminController {
     /**
      * 전체 찜많은 모임
      */
+    @GetMapping("/stats/popularGroup")
+    public ResponseEntity<List<Map<String, Object>>> selectPopularGroup() {
+        return ResponseEntity.ok(memberAdminService.selectPopularGroup());
+    }
     
     /**
      * 전체 방문자 많은 사이트

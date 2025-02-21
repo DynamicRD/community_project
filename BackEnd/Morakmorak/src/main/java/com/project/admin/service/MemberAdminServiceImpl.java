@@ -15,6 +15,7 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 
     @Autowired
     private MemberAdminMapper memberAdminMapper;
+    
     @Autowired
     private MypageMapper mypageMapper;
 
@@ -30,24 +31,29 @@ public class MemberAdminServiceImpl implements MemberAdminService {
 
     @Override
     public boolean approveGroup(int groupNo) {
-        Notification notification = new Notification();
-        int no = mypageMapper.selectNoFromGroup(groupNo);
-        String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
-        notification.setNo(no);
-        notification.setContent("개설 신청한 "+groupName+" 모임이 승인되었습니다.");
-        mypageMapper.insertNotification(notification);
-        return memberAdminMapper.approveGroup(groupNo) > 0;
+        return processGroupApproval(groupNo, true);
     }
 
     @Override
     public boolean rejectGroup(int groupNo) {
-    	Notification notification = new Notification();
+        return processGroupApproval(groupNo, false);
+    }
+
+    private boolean processGroupApproval(int groupNo, boolean isApproved) {
+        Notification notification = new Notification();
         int no = mypageMapper.selectNoFromGroup(groupNo);
         String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
         notification.setNo(no);
-        notification.setContent("개설 신청한 "+groupName+" 모임이 거절되었습니다.");
-        mypageMapper.insertNotification(notification);
-        return memberAdminMapper.rejectGroup(groupNo) > 0;
+        
+        if (isApproved) {
+            notification.setContent("개설 신청한 " + groupName + " 모임이 승인되었습니다.");
+            mypageMapper.insertNotification(notification);
+            return memberAdminMapper.approveGroup(groupNo) > 0;
+        } else {
+            notification.setContent("개설 신청한 " + groupName + " 모임이 거절되었습니다.");
+            mypageMapper.insertNotification(notification);
+            return memberAdminMapper.rejectGroup(groupNo) > 0;
+        }
     }
 
     @Override
@@ -78,5 +84,10 @@ public class MemberAdminServiceImpl implements MemberAdminService {
     @Override
     public List<Map<String, Object>> getCommunityDetail(int groupNo) {
         return memberAdminMapper.getAllGroupsDetail(groupNo);
+    }
+
+    @Override
+    public List<Map<String, Object>> selectPopularGroup() {
+        return memberAdminMapper.selectPopularGroup();
     }
 }
