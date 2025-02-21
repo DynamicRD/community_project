@@ -4,6 +4,7 @@ import { nanoid } from 'nanoid'; // nanoid를 사용하여 주문 ID 생성
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Container } from 'react-bootstrap';
 import { AuthContext } from '../../context/AuthContext';
+import CheckAccessPermission from '../../hooks/checkAccessPermission';
 
 export default function Checkout() {
   const location = useLocation();
@@ -13,24 +14,7 @@ export default function Checkout() {
   const [activeTab, setActiveTab] = useState('ongoing'); // 기본값:
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (userData && isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      console.log(userData.selfPr);
-      if (userData?.no.toString() !== pageId) {
-        alert(`접근 권한이 없습니다.`);
-        navigate('/');
-      }
-    }
-  }, [isAuthenticated, userData, navigate]);
-  useEffect(() => {
-    console.log(userData);
-    if (userData == null) {
-      alert(`접근 권한이 없습니다.`);
-      navigate('/');
-    }
-  }, [userData]);
+  CheckAccessPermission(isAuthenticated, userData, navigate);
   const paymentWidgetRef = useRef(null); // PaymentWidgetInstance를 참조
   const paymentMethodsWidgetRef = useRef(null); // 결제 방법 위젯을 참조
 

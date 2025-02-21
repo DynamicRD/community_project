@@ -59,7 +59,6 @@ public class MemberController {
 
 	private SecretConfig secretConfig = new SecretConfig();
 
-	
 	@GetMapping("/kakao")
 	public ResponseEntity<String> kakaoLogin(@RequestParam("code") String code,
 			@RequestParam(value = "rememberMe", defaultValue = "false") boolean rememberMe,
@@ -480,8 +479,8 @@ public class MemberController {
 			String id = claims.get("id", String.class);
 			String email = claims.get("email", String.class);
 			String name = claims.get("name", String.class);
-			String picture = claims.get("picture",String.class);
-			
+			String picture = claims.get("picture", String.class);
+
 			Map<String, String> userInfo = new HashMap<>();
 			userInfo.put("id", id);
 			userInfo.put("email", email);
@@ -500,37 +499,35 @@ public class MemberController {
 		member.setPw(memberRegist.getPass());
 		member.setNo(memberRegist.getNo());
 		boolean passCheck = service.passCheckNo(member);
-		if(passCheck || memberRegist.getPass().equals("")) {
+		if (passCheck || memberRegist.getPass().equals("")) {
 			try {
 				// 회원탈퇴
 				try {
-		            // 파일 경로 설정
+					// 파일 경로 설정
 					String uploadDir = Paths.get("src/main/resources/static/upload").toAbsolutePath().toString() + "/";
-		            Path filePath = Paths.get(uploadDir+memberRegist.getPicture());
-		            File file = filePath.toFile();
-		            // 파일 존재 여부 확인 후 삭제
-		            if (file.exists()) {
-		                Files.delete(filePath);
-		                System.out.println("파일 삭제 성공: "  );
-		            } else {
-		            	System.out.println("파일을 찾을 수 없음: " );
-		            }
-		        } catch (Exception e) {
-		        	System.out.println("파일 삭제 중 오류 발생: " + e.getMessage());
-		        }
+					Path filePath = Paths.get(uploadDir + memberRegist.getPicture());
+					File file = filePath.toFile();
+					// 파일 존재 여부 확인 후 삭제
+					if (file.exists()) {
+						Files.delete(filePath);
+						System.out.println("파일 삭제 성공: ");
+					} else {
+						System.out.println("파일을 찾을 수 없음: ");
+					}
+				} catch (Exception e) {
+					System.out.println("파일 삭제 중 오류 발생: " + e.getMessage());
+				}
 				service.deleteMember(member);
 				return ResponseEntity.ok().body(Collections.singletonMap("message", "회원탈퇴 성공"));
 			} catch (Exception e) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 						.body(Collections.singletonMap("message", "회원탈퇴 실패: " + e.getMessage()));
 			}
-		}else {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-					.body(Collections.singletonMap("message", "비밀번호 불일치"));
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Collections.singletonMap("message", "비밀번호 불일치"));
 		}
-		
-	}
 
+	}
 
 	// --------------------------------------------------api메소드가 아닌 컨트롤러용 메소드
 	// 액세스 토큰 재발급
@@ -620,14 +617,12 @@ public class MemberController {
 		return response.getBody();
 	}
 
-
 	@PostMapping("/checkId")
 	public Map<String, Object> findMemberId(@RequestParam Map<String, Object> map) {
 		Map<String, Object> value = service.findMemberId(map);
 		log.info("value = " + value);
 		return service.findMemberId(map);
 	}
-
 
 	@PostMapping("/checkPw")
 	public Map<String, Object> findMemberPw(@RequestParam Map<String, Object> map) {

@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.project.mypage.mapper.MypageMapper">
-
+	<insert id="insertNotification">
+	 insert into Notification (notification_no,no,content) values 
+	 (notification_seq.nextval,#{no},#{content})
+	</insert>
+	<select id="selectNoFromGroup">
+	select no from group_morak where group_no = #{groupNo}
+	</select>
+	<select id="selectGroupNameFromGroup">
+	select group_title from group_morak where group_no = #{groupNo}
+	</select>
+	<select id="selectNickNameByNo">
+	select nickname from member where no = #{no}
+	</select>
 	<select id="selectTransactionLog"
 		resultType="com.project.mypage.model.TransactionLog">
 		SELECT type,amount,reg_date

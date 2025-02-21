@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,6 +40,23 @@ public class MemberAdminController {
     public ResponseEntity<List<Map<String, Object>>> getAllGroups() {
         return ResponseEntity.ok(memberAdminService.getAllGroups());
     }
+    
+    /**
+     * 모든 모임 리스트 조회 (상세내용)
+     */
+    @GetMapping("/communityDetail/{groupNo}")
+    public ResponseEntity<?> getCommunityDetail(@PathVariable int groupNo) {
+        try {
+            List<Map<String, Object>> communityDetails = memberAdminService.getCommunityDetail(groupNo);
+            if (communityDetails == null || communityDetails.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 모임을 찾을 수 없습니다.");
+            }
+            return ResponseEntity.ok(communityDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("데이터를 불러오는 중 오류가 발생했습니다.");
+        }
+    }
 
     /**
      * 특정 모임 승인 처리
@@ -46,6 +64,7 @@ public class MemberAdminController {
     @PostMapping("/community/approve/{groupNo}")
     public ResponseEntity<String> approveGroup(@PathVariable int groupNo) {
         boolean success = memberAdminService.approveGroup(groupNo);
+       
         return success ? ResponseEntity.ok("모임 승인 완료") : ResponseEntity.badRequest().body("승인 실패");
     }
     
@@ -86,10 +105,18 @@ public class MemberAdminController {
     /**
      * 전체 인기 카테고리
      */
+    @GetMapping("/stats/popularCategory")
+    public ResponseEntity<List<Map<String, Object>>> selectPopularCategory() {
+        return ResponseEntity.ok(memberAdminService.selectPopularCategory());
+    }
     
     /**
      * 전체 찜많은 모임
      */
+    @GetMapping("/stats/popularGroup")
+    public ResponseEntity<List<Map<String, Object>>> selectPopularGroup() {
+        return ResponseEntity.ok(memberAdminService.selectPopularGroup());
+    }
     
     /**
      * 전체 방문자 많은 사이트

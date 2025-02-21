@@ -39,16 +39,19 @@
 	</insert>
 
 	<select id="list">
+	<![CDATA[
 		SELECT group_no, group_title, category, user_max,
 		price, area,
 		comment2, type, reg_date,
 		start_date,
-		<!-- TO_CHAR(start_date, 'FMMonth FMDD"일"') AS start_date, -->
 		img_url1
 		FROM GROUP_MORAK
 		WHERE type=#{type}
-		AND approval='Y'
+		AND approval='Y' AND last_date > current_date
+	]]>
 	</select>
+	
+	
 
 	<select id="read">
 		SELECT
@@ -92,6 +95,19 @@
 		INSERT INTO MEMBER_GROUP
 		VALUES(member_group_seq.nextval, #{no}, #{group_no}, 'WAITING', #{pr})
 	</insert>
+	
+	<select id="checkStartDate" resultType="String">
+	<![CDATA[
+		SELECT start_date
+		FROM GROUP_MORAK
+		WHERE GROUP_NO = #{groupNo}
+	]]>
+	</select>
+	
+	<delete id="cancelJoin">
+		DELETE FROM MEMBER_GROUP
+		WHERE NO = #{no} AND GROUP_NO = #{group_no}
+	</delete>
 
 	<update id="changeMoney">
 		UPDATE MEMBER SET MONEY = MONEY - #{price} WHERE NO =
@@ -100,15 +116,16 @@
 
 	<update id="refundMoney">
 		UPDATE MEMBER SET MONEY = MONEY + (SELECT PRICE FROM
-		GROUP_MORAK WHERE GROUP_NO = #{group_no})
+		GROUP_MORAK WHERE GROUP_NO = #{group_no})	
 		WHERE NO = #{no}
 	</update>
 
 	<insert id="insertBasket">
 		INSERT INTO BASKET
 		SELECT basket_seq.nextval, #{no},
-		#{group_no}, G.PRICE, SYSDATE, G.START_DATE, G.LAST_DATE, 'BASKET'
-		FROM GROUP_MORAK G
+		#{group_no}, G.PRICE, SYSDATE, G.START_DATE, G.LAST_DATE
+		FROM
+		GROUP_MORAK G
 		WHERE G.GROUP_NO = #{group_no}
 	</insert>
 
@@ -126,14 +143,22 @@
 		WHERE GROUP_NO = #{group_no} AND M.NO=#{no}
 	</select>
 
-	<select id="memberStatusUpdate">
-
+	<update id="memberStatusUpdate">
 		UPDATE MEMBER_GROUP SET STATUS = #{status,
 		jdbcType=VARCHAR}
-
 		WHERE NO = #{no} AND GROUP_NO = #{group_no}
-	</select>
-
+	</update>
+	
+	<update id="memberCount">
+		UPDATE GROUP_MORAK SET MEMBER_COUNT = MEMBER_COUNT + 1
+		WHERE GROUP_NO = #{group_no}
+	</update>
+	
+	<update id="memberCountCancel">
+		UPDATE GROUP_MORAK SET MEMBER_COUNT = MEMBER_COUNT - 1
+		WHERE GROUP_NO = #{group_no}
+	</update>
+	 
 	<insert id="memberReport">
 		INSERT INTO REPORT(rep_no, reporter_no, reported_no,
 		reason)
@@ -154,7 +179,8 @@
 		#{category}
 		AND gm.start_date > CURRENT_DATE
 		AND gm.approval = 'Y'
-		ORDER BY m.star_sum DESC
+		ORDER
+		BY m.star_sum DESC
 		FETCH FIRST 6 ROWS ONLY
 	</select>
 	<select id="getGroupsByCategoryAll"
@@ -167,10 +193,12 @@
 		gm.area AS addr1
 		FROM group_morak gm
 		JOIN member m ON gm.no = m.no
-		WHERE gm.start_date > CURRENT_DATE
+		WHERE gm.start_date >
+		CURRENT_DATE
 		AND gm.approval = 'Y'
 		ORDER BY m.star_sum DESC
-		FETCH FIRST 6 ROWS ONLY
+		FETCH FIRST 6
+		ROWS ONLY
 	</select>
 	<select id="getGroupsByCategory3"
 		resultType="com.project.group_morak.model.GroupMorak">
@@ -182,10 +210,12 @@
 		gm.area AS addr1
 		FROM group_morak gm
 		JOIN member m ON gm.no = m.no
-		WHERE gm.category = #{category}
+		WHERE gm.category =
+		#{category}
 		AND gm.start_date > CURRENT_DATE
 		AND gm.approval = 'Y'
-		ORDER BY m.star_sum DESC
+		ORDER
+		BY m.star_sum DESC
 		FETCH FIRST 3 ROWS ONLY
 	</select>
 	<select id="getGroupsByCategoryAll3"
@@ -198,19 +228,25 @@
 		gm.area AS addr1
 		FROM group_morak gm
 		JOIN member m ON gm.no = m.no
-		WHERE gm.start_date > CURRENT_DATE
+		WHERE gm.start_date >
+		CURRENT_DATE
 		AND gm.approval = 'Y'
 		ORDER BY m.star_sum DESC
-		FETCH FIRST 3 ROWS ONLY
+		FETCH FIRST 3
+		ROWS ONLY
 	</select>
 	<select id="countGroupMember">
 		SELECT
-		COUNT(*) - 1 AS MEMBER_COUNT,
+		COUNT(CASE WHEN M.STATUS = 'MEMBER' THEN 1 END)
+		AS MEMBER_COUNT,
 		G.USER_MAX
 		FROM
 		MEMBER_GROUP M
-		INNER JOIN GROUP_MORAK G ON M.GROUP_NO = G.GROUP_NO
-		WHERE M.GROUP_NO = #{groupNo}
-		GROUP BY USER_MAX
+		INNER JOIN GROUP_MORAK G
+		ON M.GROUP_NO = G.GROUP_NO
+		WHERE
+		M.GROUP_NO = #{group_no}
+		GROUP BY
+		G.USER_MAX
 	</select>
 </mapper>

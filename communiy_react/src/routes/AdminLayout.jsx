@@ -11,18 +11,14 @@ const AdminLayout = () => {
   const { isAuthenticated, userData } = useContext(AuthContext);
 
   useEffect(() => {
-    console.log('userData 대기중');
-    if (isAuthenticated === false) {
-      alert('접근 권한이 없습니다.');
-      navigate('/');
-    } else {
-      if (!userData) return; // userData가 로드될 때까지 기다림
-
-      if (userData?.role !== 0) {
+    const timer = setTimeout(() => {
+      //비회원이거나 관리자가 아님
+      if (isAuthenticated === false || userData?.role !== 0) {
         alert('접근 권한이 없습니다.');
         navigate('/');
       }
-    }
+    }, 25); // 0.1초(100ms) 딜레이 후 실행
+    return () => clearTimeout(timer);
   }, [isAuthenticated, userData, navigate]);
 
   return (

@@ -18,6 +18,14 @@
 		FROM group_morak WHERE approval = 'N'
 		ORDER BY group_no DESC
 	</select>
+	<!-- 모든 모임 조회(상세) -->
+	<select id="getAllGroupsDetail" resultType="java.util.Map">
+		SELECT group_no,
+		group_title, category, user_max, TO_CHAR(reg_date, 'FMMonth FMDD"일"')
+		AS reg_date, area, type
+		FROM group_morak WHERE approval = 'N'
+		WHERE GROUP_NO=#{groupNo}
+	</select>
 	<!-- 모임 승인 처리 -->
 	<update id="approveGroup">
 		UPDATE group_morak SET approval = 'Y' WHERE group_no
@@ -71,18 +79,22 @@
 	</select>
 	<!-- 인기 카테고리 -->
 	<select id="selectPopularCategory" resultType="java.util.Map">
-	
+	<![CDATA[
+		SELECT category, COUNT(*) AS category_count
+		FROM group_morak
+		GROUP BY category
+	]]>
 	</select>
 	<!-- 인기 모임 -->
-	<!-- 모임에서 approval이 Y인 모임 중에서 모임사용자에서 찜 목록이 많은 순으로 정렬 -->
+	<!-- 찜 목록이 많은 모임 순으로 정렬(상위 5개) -->
 	<select id="selectPopularGroup" resultType="java.util.Map">
     <![CDATA[
-    	SELECT g.group_no, count(*) AS count
-		FROM member_group mg INNER JOIN group_morak g
-		ON mg.member_group_no = g.group_no
-		where mg.status = 'MEMBER' and g.approval= 'Y'
-		GROUP BY g.group_no
-		ORDER BY count DESC
+    	SELECT gm.group_title, COUNT(b.basket_no) AS basket_count
+		FROM group_morak gm
+		LEFT JOIN basket b ON gm.group_no = b.group_no
+		GROUP BY gm.group_title
+		ORDER BY basket_count DESC
+		FETCH FIRST 5 ROWS ONLY
     ]]>
 	</select>
 	<!-- 모임사이트별 방문자수 -->
@@ -95,4 +107,6 @@
 		ORDER BY visitor_count DESC
     ]]>
 	</select>
+	<!-- 찜 많은 5개 모임사이트 -->
+	
 </mapper>

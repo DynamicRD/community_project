@@ -19,28 +19,11 @@ public class ReviewAdminServiceImpl implements ReviewAdminService {
 	    }
 
 	    @Override
-	    public ReviewAdmin getReviewById(Long id) {
-	        return reviewMapper.getReviewById(id);
+	    public void toggleBlind(Long no) {
+	        reviewMapper.toggleBlind(no);
 	    }
-
 	    @Override
-	    public void addReview(ReviewAdmin review) {
-	        reviewMapper.addReview(review);
+	    public void toggleBlindYN(Long no) {
+	        reviewMapper.toggleBlindYN(no);
 	    }
-
-	    @Override
-	    public void updateReview(ReviewAdmin review) {
-	        reviewMapper.updateReview(review);
-	    }
-
-	    @Override
-	    public void deleteReview(Long id) {
-	        reviewMapper.deleteReview(id);
-	    }
-
-	    @Override
-	    public void toggleBlind(Long id) {
-	        reviewMapper.toggleBlind(id);
-	    }
-
 }

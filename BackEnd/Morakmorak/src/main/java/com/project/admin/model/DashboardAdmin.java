@@ -4,7 +4,8 @@ import lombok.Data;
 
 @Data
 public class DashboardAdmin {
-	private String monthBeforeData;
-	private String currentData;
-	
+	private double monthBeforeData;
+	private double CurrentData;
+	private double change;
+	private String status;
 }
