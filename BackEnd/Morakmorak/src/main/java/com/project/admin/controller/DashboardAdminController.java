@@ -1,6 +1,8 @@
 package com.project.admin.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,8 +31,15 @@ public class DashboardAdminController {
 	private final DashboardAdminService service;
 	
 	@GetMapping("/detailselect")
-	public DashboardAdmin getDetailGroups() {
-		return service.getCustomerCount();
+	public Map<String, DashboardAdmin> getDetailGroups() {
+	    Map<String, DashboardAdmin> result = new HashMap<>();
+	    
+	    result.put("customerCount", service.getCustomerCount());
+	    result.put("profitChange", service.getProfitChange());
+	    result.put("groupMemberChange", service.getGroupMemberChange());
+	    result.put("visitLogChange", service.getVisitLogChange());
+	    
+	    return result;
 	}
 	
 }

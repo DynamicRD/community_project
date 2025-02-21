@@ -15,38 +15,41 @@
 		AND LAST_DAY(ADD_MONTHS(SYSDATE, -1))
 	</select>
 	<select id="getCurrentProfit" resultType="double">
-		SELECT SUM(amount)
+		SELECT NVL(SUM(amount), 0)
 		FROM Transaction_log
-		WHERE reg_date BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE
+		WHERE TO_DATE(reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE
 	</select>
 	<select id="getMonthProfit" resultType="double">
-		SELECT SUM(amount)
+		SELECT NVL(SUM(amount), 0)
 		FROM Transaction_log
-		WHERE reg_date BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM')
+		WHERE TO_DATE(reg_date, 'YY/MM/DD') BETWEEN TRUNC(ADD_MONTHS(SYSDATE,
+		-1), 'MM')
 		AND LAST_DAY(ADD_MONTHS(SYSDATE, -1))
 	</select>
 	<select id="getCurrentGroupMember" resultType="double">
-		SELECT COUNT(DISTINCT mg.no)
+		SELECT COUNT(*)
 		FROM member_group mg
 		JOIN group_morak gm ON mg.group_no = gm.group_no
-		WHERE mg.status IN ('member', 'leader')
-		AND gm.last_date BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE
+		WHERE mg.status IN ('LEADER', 'MEMBER')
+		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND
+		SYSDATE
 	</select>
 	<select id="getMonthGroupMember" resultType="double">
-		SELECT COUNT(DISTINCT mg.no)
+		SELECT COUNT(*)
 		FROM member_group mg
 		JOIN group_morak gm ON mg.group_no = gm.group_no
-		WHERE mg.status IN ('member', 'leader')
-		AND gm.last_date  BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM')
+		WHERE mg.status IN ('LEADER', 'MEMBER')
+		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(ADD_MONTHS(SYSDATE,
+		-1), 'MM')
 		AND LAST_DAY(ADD_MONTHS(SYSDATE, -1))
 	</select>
 	<select id="getCurrentVisitLog" resultType="double">
-		SELECT COUNT
+		SELECT COUNT(*)
 		FROM visit_log
 		WHERE visit_date BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE
 	</select>
 	<select id="getMonthVisitLog" resultType="double">
-		SELECT COUNT
+		SELECT COUNT(*)
 		FROM visit_log
 		WHERE visit_date BETWEEN TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM')
 		AND LAST_DAY(ADD_MONTHS(SYSDATE, -1))

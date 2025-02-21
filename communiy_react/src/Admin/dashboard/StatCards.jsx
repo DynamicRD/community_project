@@ -27,42 +27,72 @@ const StatCards = () => {
       .get('http://localhost:8080/admin/dashboard/detailselect')
       .then((response) => {
         const data = response.data; // API 응답 데이터
-
+        console.log(data);
         // API 데이터 매핑 (응답 구조에 맞게 수정 필요)
         const updatedStats = [
           {
             title: '고객',
-            value: `${data.currentData}명`,
+            value: `${data.customerCount.currentData}명`,
             info:
-              data.change === 0
+              data.customerCount.change === 0
                 ? '변동없음'
-                : data.status === 'decrease'
-                ? `${data.change}% 감소`
-                : `${data.change}% 증가`,
+                : data.customerCount.status === 'decrease'
+                ? `${data.customerCount.change}% 감소`
+                : `${data.customerCount.change}% 증가`,
             color:
-              data.change === 0
+              data.customerCount.change === 0
                 ? 'warning' // 변동없음: 노란색
-                : data.status === 'decrease'
+                : data.customerCount.status === 'decrease'
                 ? 'danger' // 감소: 빨간색
                 : 'success', // 증가: 초록색
           },
           {
             title: '수익',
-            value: `${data.currentData}원`,
-            info: data.change,
-            color: data.status == 'decrease' ? 'danger' : 'success',
+            value: `${data.profitChange.currentData}원`,
+            info:
+              data.profitChange.change === 0
+                ? '변동없음'
+                : data.profitChange.status === 'decrease'
+                ? `${data.profitChange.change}% 감소`
+                : `${data.profitChange.change}% 증가`,
+            color:
+              data.profitChange.change === 0
+                ? 'warning'
+                : data.profitChange.status === 'decrease'
+                ? 'danger'
+                : 'success',
           },
           {
             title: '모임회원수',
-            value: `${data.currentData}명`,
-            info: data.change,
-            color: data.status == 'decrease' ? 'danger' : 'success',
+            value: `${data.groupMemberChange.currentData}명`,
+            info:
+              data.groupMemberChange.change === 0
+                ? '변동없음'
+                : data.groupMemberChange.status === 'decrease'
+                ? `${data.groupMemberChange.change}% 감소`
+                : `${data.groupMemberChange.change}% 증가`,
+            color:
+              data.groupMemberChange.change === 0
+                ? 'warning'
+                : data.groupMemberChange.status === 'decrease'
+                ? 'danger'
+                : 'success',
           },
           {
             title: '방문객',
-            value: `${data.currentData}명`,
-            info: data.change,
-            color: data.status == 'decrease' ? 'danger' : 'success',
+            value: `${data.visitLogChange.currentData}명`,
+            info:
+              data.visitLogChange.change === 0
+                ? '변동없음'
+                : data.visitLogChange.status === 'decrease'
+                ? `${data.visitLogChange.change}% 감소`
+                : `${data.visitLogChange.change}% 증가`,
+            color:
+              data.visitLogChange.change === 0
+                ? 'warning'
+                : data.visitLogChange.status === 'decrease'
+                ? 'danger'
+                : 'success',
           },
         ];
 
