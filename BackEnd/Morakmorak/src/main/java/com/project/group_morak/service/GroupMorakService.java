@@ -36,5 +36,15 @@ public interface GroupMorakService {
 	public Map<String, Object> countGroupMember(String groupNo);
 
 	public List<GroupMorak> getGroupsByCategory(String category);
+	
+	public List<GroupMorak> getGroupsByCategory3(String category);
+
+	public void cancelJoin(Map<String, Object> map);
+
+	public void memberCount(Map<String, Object> map);
+
+	public void memberCountCancel(Map<String, Object> map);
+
+	public String checkStartDate(String groupNo);
 
 }

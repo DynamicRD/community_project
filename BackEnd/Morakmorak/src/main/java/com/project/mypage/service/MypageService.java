@@ -24,4 +24,6 @@ public interface MypageService {
 	List<Notification> selectNotification(int no) ;
 	
 	void readNotification(int no);
+	
+	List<GroupMember> getMineGroup(String category, int no);
 }
