@@ -37,7 +37,7 @@ const Complaint = () => {
       .finally(() => {
         setLoading(true);
       });
-  }, []);
+  }, [reports]);
 
   // 검색 변경 시 currentPage를 1로 초기화
   useEffect(() => {
@@ -80,6 +80,7 @@ const Complaint = () => {
     const formData = new FormData();
     formData.append('number', Number(number));
     formData.append('reported_no', Number(reported_no));
+    formData.append('report_content', warningMessageRef.current.value);
     switch (value) {
       case 'W':
         try {
@@ -253,7 +254,7 @@ const Complaint = () => {
               <Form.Control
                 as="textarea"
                 rows={3}
-                placeholder="처리 결과 메시지를 입력하세요"
+                placeholder={selectedReport.REP_CONTENT}
                 onChange={(e) => setActionMessage(e.target.value)}
                 ref={warningMessageRef}
               />
@@ -315,7 +316,7 @@ const Complaint = () => {
               <Form.Control
                 as="textarea"
                 rows={3}
-                value={warningMessage}
+                value={selectedDetail.REP_CONTENT}
                 readOnly
               />
             </Modal.Body>

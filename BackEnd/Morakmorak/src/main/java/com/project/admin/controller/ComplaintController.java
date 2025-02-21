@@ -36,10 +36,11 @@ public class ComplaintController {
 
 	@PostMapping(value = "/status")
 	public void complaintStatusWarning(@RequestParam("number") int number, @RequestParam("type") String type,
-			@RequestParam("reported_no") int reportedNo) throws Exception {
+			@RequestParam("reported_no") int reportedNo, @RequestParam("report_content") String report_content) throws Exception {
 		Map<String, Object> map = new HashMap<>();
 		map.put("idx", number);
 		map.put("type", type);
+		map.put("reportContent", report_content);
 		Complaintservice.complaintStatus(map);
 
 		// 멤버
