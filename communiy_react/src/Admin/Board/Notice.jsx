@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Container, Nav, Form, Button, Pagination } from 'react-bootstrap';
 import '/src/announcements/Announcements_notice.css';
 import HorizonLine_table from '/src/announcements/HorizonLine_table';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import axios from 'axios';
 
 export default function Notice() {
@@ -105,7 +105,7 @@ export default function Notice() {
                 <tr>
                   <td className="table_td_title">
                     <Link
-                      to={`/admin/board/Notice/${notice.NOTICE_NO}`}
+                      to={`http://localhost:5173/announcements/notice/read/${notice.NOTICE_NO}`}
                       className="title_link"
                     >
                       <span className="ps-5">{notice.NOTICE_TITLE}</span>
