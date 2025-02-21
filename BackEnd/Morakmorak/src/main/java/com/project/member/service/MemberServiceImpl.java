@@ -11,15 +11,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 import java.io.*;
 import java.nio.file.*;
-import com.project.common.config.JwtUtil;
 import com.project.common.config.SecretConfig;
 import com.project.member.mapper.MemberMapper;
 import com.project.member.model.Member;
@@ -299,6 +294,12 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public void changeMemberBlack(Member member) {
 		mapper.changeMemberBlack(member);
+	}
+
+	@Override
+	public void updateStar() {
+		mapper.updateStar();
+		
 	}
 
 }

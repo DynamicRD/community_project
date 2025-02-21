@@ -11,12 +11,18 @@ import org.springframework.stereotype.Service;
 
 import com.project.group_morak.mapper.GroupMorakMapper;
 import com.project.group_morak.model.GroupMorak;
+import com.project.mypage.mapper.MypageMapper;
+import com.project.mypage.model.Notification;
+import com.project.mypage.model.TransactionLog;
+
 
 @Service
 public class GroupMorakServiceImpl implements GroupMorakService {
 	@Autowired
 	private GroupMorakMapper mapper;
-
+	@Autowired
+	private MypageMapper mypageMapper;
+	
 	@Override
 	public void insert(Map<String, Object> map) throws Exception {
 		mapper.insert(map);
@@ -44,6 +50,15 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 
 	@Override
 	public void join(Map<String, Object> map) {
+		Notification notification = new Notification();
+        int no = Integer.parseInt((String)(map.get("no")));
+        int groupNo = Integer.parseInt((String)(map.get("group_no")));
+        String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
+        String nickname = mypageMapper.selectNickNameByNo(no);
+        int myNo = mypageMapper.selectNoFromGroup(groupNo);
+        notification.setNo(myNo);
+        notification.setContent(nickname+"님이 "+groupName+"모임에 신청했습니다");
+        mypageMapper.insertNotification(notification);
 		mapper.join(map);
 	}
 	
@@ -54,11 +69,30 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 
 	public void changeMoney(Map<String, Object> map) {
 		mapper.changeMoney(map);
+		TransactionLog transactionLog = new TransactionLog();
+		transactionLog.setAmount(-Integer.parseInt((String)map.get("price")));
+		transactionLog.setNo(Integer.parseInt((String)map.get("no")));
+		transactionLog.setType("모임 가입");
+		try {
+			mypageMapper.insertHistory(transactionLog);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
 	@Override
 	public void refundMoney(Map<String, Object> map) {
 		mapper.refundMoney(map);
+		TransactionLog transactionLog = new TransactionLog();
+		int price = mypageMapper.selectPricebyNo(Integer.parseInt((String)map.get("group_no")));
+		transactionLog.setAmount(price);
+		transactionLog.setNo(Integer.parseInt((String)map.get("no")));
+		transactionLog.setType("모임 환불");
+		try {
+			mypageMapper.insertHistory(transactionLog);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -78,6 +112,19 @@ public class GroupMorakServiceImpl implements GroupMorakService {
 
 	@Override
 	public void memberStatusUpdate(Map<String, Object> map) {
+		Notification notification = new Notification();
+        int no =  Integer.parseInt((String)map.get("no"));
+        int groupNo =  Integer.parseInt((String)map.get("group_no"));
+        String groupName = mypageMapper.selectGroupNameFromGroup(groupNo);
+        String status = (String) map.get("status");
+        if(status.equals("MEMBER")) {
+        	status = "수락";
+        }else if(status.equals("REJECT")) {
+        	status = "거절";
+        }
+        notification.setNo(no);
+        notification.setContent("가입 신청한 "+groupName+" 모임에서 "+status+"되었습니다.");
+        mypageMapper.insertNotification(notification);
 		mapper.memberStatusUpdate(map);
 	}
 

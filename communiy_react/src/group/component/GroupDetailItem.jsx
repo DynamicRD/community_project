@@ -309,6 +309,7 @@ export default function GroupDetailItem({ item }) {
                     key={index}
                     className="card col"
                     style={{ width: '18rem' }}
+
                   >
                     <Link
                       to={`/group/detail?group_no=${group.groupNo}`}

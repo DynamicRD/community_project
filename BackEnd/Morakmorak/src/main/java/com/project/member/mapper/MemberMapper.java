@@ -27,9 +27,7 @@ public interface MemberMapper {
 	String passCompare(Member member);
 	
 	String passCompareNo(Member member);
-
-	void insertMember(Member member);
-
+	
 	Member findByEmail(String email);
 	
 	int phoneDuplicateCheck(Member member);
@@ -49,5 +47,7 @@ public interface MemberMapper {
 	void changeMemberPw(Map<String, Object> map);
 	
 	void changeMemberBlack(Member member);
+	
+	void updateStar();
 	
 }

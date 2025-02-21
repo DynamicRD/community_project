@@ -12,6 +12,7 @@ import { Link, useNavigate } from 'react-router-dom'; // Link 임포트
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { AuthContext } from '../context/AuthContext'; //
 import axios from 'axios';
+import CheckAccessPermission from '../hooks/checkAccessPermission';
 
 function MyPage() {
   const [showMore, setShowMore] = useState(false);
@@ -20,30 +21,17 @@ function MyPage() {
   const [selectedCategory, setSelectedCategory] = useState('member');
   const [groups, setGroups] = useState([]);
   const navigate = useNavigate();
-
-  const { isAuthenticated, userData } = useContext(AuthContext);
-  useEffect(() => {
-    console.log('userData 대기중');
-    if (!userData) return; // userData가 로드될 때까지 기다림
-
-    if (isAuthenticated !== false) {
-      const pathSegments = window.location.pathname.split('/');
-      const pageId = pathSegments[pathSegments.length - 1];
-      if (userData?.no.toString() !== pageId) {
-        alert('접근 권한이 없습니다.');
-        navigate('/');
-      }
-    }
-  }, [isAuthenticated, userData, navigate]);
-
-  // 페이지네이션을 위한 상태 추가
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // 한 페이지당 3개씩 표시
+  const itemsPerPage = 3; // 한 페이지당 3개 표시
+  const { isAuthenticated, userData } = useContext(AuthContext);
+  CheckAccessPermission(isAuthenticated, userData, navigate);
 
-  // 현재 페이지에 맞는 데이터 필터링
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentMeetings = groups.slice(indexOfFirstItem, indexOfLastItem);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchGroups(selectedCategory);
+    }, 200);
+    return () => clearTimeout(timer);
+  }, [isAuthenticated, userData, navigate]);
 
   // 총 페이지 수 계산
   const totalPages = Math.ceil(groups.length / itemsPerPage);
@@ -58,9 +46,7 @@ function MyPage() {
       console.log('fetchGroups 실행:', selectedCategory, userData.no);
       fetchGroups(selectedCategory);
     }
-  }, [selectedCategory, userData]); // userData가 변경될 때 실행되도록 유지
-  // userData가 변경될 때 실행되도록 수정
-  // userData가 변경될 때 실행되도록 수정
+  }, [selectedCategory]);
 
   const fetchGroups = async (category) => {
     if (!userData?.no) return; // userData가 없으면 실행하지 않음
@@ -124,14 +110,18 @@ function MyPage() {
 
   const renderTable = () => {
     return (
-      <Table bordered className="mt-3">
+      <Table
+        bordered
+        className="mt-3"
+        style={{ width: '100%', tableLayout: 'fixed' }}
+      >
         <thead>
           <tr className="table-secondary">
-            <th>모임명</th>
-            <th>시작일시</th>
-            <th>종료일시</th>
-            <th>상태</th>
-            <th>비용</th>
+            <th style={{ width: '40%' }}>모임명</th>
+            <th style={{ width: '15%' }}>시작일시</th>
+            <th style={{ width: '15%' }}>종료일시</th>
+            <th style={{ width: '15%' }}>상태</th>
+            <th style={{ width: '15%' }}>비용</th>
           </tr>
         </thead>
         <tbody>
@@ -342,27 +332,6 @@ function MyPage() {
           {/* 해당 모임 테이블 렌더링 */}
           {renderTable()}
 
-          <Pagination className="d-flex justify-content-center">
-            <Pagination.Prev
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-            />
-            {[...Array(totalPages)].map((_, index) => (
-              <Pagination.Item
-                key={index + 1}
-                active={index + 1 === currentPage}
-                onClick={() => handlePageChange(index + 1)}
-              >
-                {index + 1}
-              </Pagination.Item>
-            ))}
-            <Pagination.Next
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-            />
-          </Pagination>
           <div className="text-center">
             {' '}
             <Link to={`/mypage/withdrawal/${userData?.no}`}>

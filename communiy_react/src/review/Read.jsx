@@ -80,7 +80,7 @@ export default function Read() {
 
             <div className="review_writer ms-2">
               <span>{reviewDetail.NICKNAME}</span>
-              <span> 조회수 : {count}</span>
+              <span> 조회수 : {reviewDetail.VIEWS}</span>
             </div>
           </div>
           <HorizonLine />

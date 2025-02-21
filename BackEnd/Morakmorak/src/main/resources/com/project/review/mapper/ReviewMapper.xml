@@ -50,6 +50,10 @@
 		WHERE C.REVIEW_NO = #{idx}
 		ORDER BY C.COMMENTS_NO
 	</select>
+	
+	<update id="viewCount">
+		UPDATE REVIEW SET VIEWS = (VIEWS + 1) WHERE REVIEW_NO = #{idx}
+	</update>
 
 	<select id="groupList" resultType="java.util.Map">
         <![CDATA[
@@ -63,8 +67,9 @@
             WHERE STATUS = 'MEMBER' AND MG.NO = #{idx}
             ORDER BY MEMBER_GROUP_NO DESC
         ]]>
-        <!--  -->
+      
     </select>
+
 
 	<select id="readGroup" resultType="java.util.Map">
 		SELECT GROUP_NO, NO, GROUP_TITLE,TO_CHAR(START_DATE, 'yyyy-MM-dd
