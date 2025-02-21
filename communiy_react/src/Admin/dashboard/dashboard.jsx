@@ -16,7 +16,6 @@ const Dashboard = () => {
             <Breadcrumb.Item active>Overview</Breadcrumb.Item>
           </Breadcrumb>
           <h2>대시보드</h2>
-
           <StatCards />
           <Row>
             <Col xl={8}>
