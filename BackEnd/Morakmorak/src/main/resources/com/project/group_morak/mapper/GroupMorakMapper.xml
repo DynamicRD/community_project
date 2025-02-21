@@ -39,15 +39,16 @@
 	</insert>
 
 	<select id="list">
+	<![CDATA[
 		SELECT group_no, group_title, category, user_max,
 		price, area,
 		comment2, type, reg_date,
 		start_date,
-		<!-- TO_CHAR(start_date, 'FMMonth FMDD"일"') AS start_date, -->
 		img_url1
 		FROM GROUP_MORAK
 		WHERE type=#{type}
-		AND approval='Y'
+		AND approval='Y' AND last_date > current_date
+	]]>
 	</select>
 
 	<select id="read">
@@ -108,6 +109,12 @@
 		GROUP_MORAK WHERE GROUP_NO = #{group_no})	
 		WHERE NO = #{no}
 	</update>
+	
+	<update id="refundHalfMoney">
+		UPDATE MEMBER SET MONEY = MONEY + (SELECT PRICE FROM
+		GROUP_MORAK WHERE GROUP_NO = #{group_no})/2	
+		WHERE NO = #{no}
+	</update>
 
 	<insert id="insertBasket">
 		INSERT INTO BASKET
@@ -132,13 +139,21 @@
 		WHERE GROUP_NO = #{group_no} AND M.NO=#{no}
 	</select>
 
-	<select id="memberStatusUpdate">
-
+	<update id="memberStatusUpdate">
 		UPDATE MEMBER_GROUP SET STATUS = #{status,
 		jdbcType=VARCHAR}
-
 		WHERE NO = #{no} AND GROUP_NO = #{group_no}
-	</select>
+	</update>
+	
+	<update id="memberCount">
+		UPDATE GROUP_MORAK SET MEMBER_COUNT = MEMBER_COUNT + 1
+		WHERE GROUP_NO = #{group_no}
+	</update>
+	<update id="memberCountCancel">
+		UPDATE GROUP_MORAK SET MEMBER_COUNT = MEMBER_COUNT - 1
+		WHERE GROUP_NO = #{group_no}
+	</update>
+	 
 
 	<insert id="memberReport">
 		INSERT INTO REPORT(rep_no, reporter_no, reported_no,

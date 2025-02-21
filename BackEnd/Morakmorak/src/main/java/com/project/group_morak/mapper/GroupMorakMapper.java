@@ -48,5 +48,11 @@ public interface GroupMorakMapper {
 	public List<GroupMorak> getGroupsByCategoryAll3();
 
 	public void cancelJoin(Map<String, Object> map);
+	
+	public void refundHalfMoney(Map<String, Object> map);
+
+	public void memberCount(Map<String, Object> map);
+	
+	public void memberCountCancel(Map<String, Object> map);
 
 }
