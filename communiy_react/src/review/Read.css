@@ -104,6 +104,13 @@
   border: 1px solid #ff674500;
 }
 
+.blacked_btn {
+  width: 270px;
+  text-align: center;
+}
+.div_btn {
+  margin: 0 auto;
+}
 .reply_hr {
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
