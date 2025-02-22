@@ -39,11 +39,13 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="d-flex">
-        <Container className="main-content">
-          <Breadcrumb>
+        <Container className="main-content p-4">
+          {/* <Breadcrumb>
             <Breadcrumb.Item href="#">Home</Breadcrumb.Item>
             <Breadcrumb.Item active>Overview</Breadcrumb.Item>
-          </Breadcrumb>
+          </Breadcrumb> */}
+          <br />
+          <br />
           <h2>대시보드</h2>
           <StatCards />
           <Card className="mt-5 card-scroll h-75">

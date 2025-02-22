@@ -174,7 +174,8 @@ public class MemberServiceImpl implements MemberService {
 		member.setZipCode(memberDTO.getAddcode());
 		member.setAddr1(memberDTO.getAddress01());
 		member.setAddr2(memberDTO.getAddress02());
-		if (memberDTO.getProvider().equals("google")) {
+		if (memberDTO.getProvider().equals("google") ||memberDTO.getProvider().equals("kakao")) {
+			System.out.println(member);
 			member.setProvider(memberDTO.getProvider());
 			mapper.updateInfoSns(member);
 		} else {

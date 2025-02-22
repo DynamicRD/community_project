@@ -155,7 +155,7 @@ create table group_morak(
     img_url2 varchar2(100),               --이미지2
     img_url3 varchar2(100),               --이미지3
     type varchar2(20),                   --정기모임,소모임 구분
-    member_count number(3),
+    member_count number(3) default 1,
     primary key(group_no)
 );
 
@@ -210,6 +210,8 @@ create table review(
 );
 
 select * from member;
+update member set gender = '남자' where no = 61;
+commit;
 -- 사용자
 create table member(
     no number(6) not null,
@@ -319,6 +321,7 @@ create table Transaction_log(
     reg_date date default sysdate,
     primary key(transaction_no)
 );
+select * from group_morak;
 
 
 

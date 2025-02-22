@@ -15,7 +15,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtUtil {
 
 	private static SecretConfig secretConfig = new SecretConfig();
-	private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 30; // 30분
+	private static final long ACCESS_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60; // 60분
 	private static final long REFRESH_TOKEN_REMEBER_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
 	private static final long REFRESH_TOKEN_EXPIRATION_TIME = 1000 * 60 * 60 * 24 * 7; // 7일
 
