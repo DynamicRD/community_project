@@ -17,7 +17,7 @@ const AdminLayout = () => {
         alert('접근 권한이 없습니다.');
         navigate('/');
       }
-    }, 25); // 0.1초(100ms) 딜레이 후 실행
+    }, 100); // 0.1초(100ms) 딜레이 후 실행
     return () => clearTimeout(timer);
   }, [isAuthenticated, userData, navigate]);
 
