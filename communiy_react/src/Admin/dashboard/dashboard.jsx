@@ -56,6 +56,7 @@ const Dashboard = () => {
                   labels: ['문화/예술', '푸드/드링크', '취미', '여행', '교육'],
                   datasets: [
                     {
+                      label: '최근 한달 인기 카테고리',
                       data: [
                         categoryData['culture'],
                         categoryData['food'],
