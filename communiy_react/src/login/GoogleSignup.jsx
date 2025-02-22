@@ -232,7 +232,7 @@ export default function GoogleSignup() {
     console.log(isNicknameAvailable);
 
     //isValid &&
-    if (isNicknameAvailable) {
+    if (isValid && isNicknameAvailable) {
       try {
         //구글 전용으로 저장해야함
         const response = await fetch('http://localhost:8080/member/register', {

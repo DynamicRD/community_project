@@ -77,8 +77,47 @@ increment by 1;
 create sequence notification_seq
 start with 1
 increment by 1;
+
 -- 모임장바구니
-sele
+ALTER TABLE basket 
+ADD CONSTRAINT fk_basket_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_basket_group FOREIGN KEY (group_no) REFERENCES group_morak(group_no) ON DELETE CASCADE;
+
+-- 모임
+ALTER TABLE group_morak 
+ADD CONSTRAINT fk_group_morak_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE;
+
+-- 댓글
+ALTER TABLE comments 
+ADD CONSTRAINT fk_comments_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_comments_review FOREIGN KEY (review_no) REFERENCES review(review_no) ON DELETE CASCADE;
+
+-- 멤버-그룹 조인 테이블
+ALTER TABLE member_group 
+ADD CONSTRAINT fk_member_group_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_member_group_group FOREIGN KEY (group_no) REFERENCES group_morak(group_no) ON DELETE CASCADE;
+
+-- 리뷰게시판
+ALTER TABLE review 
+ADD CONSTRAINT fk_review_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_review_group FOREIGN KEY (group_no) REFERENCES group_morak(group_no) ON DELETE CASCADE;
+
+-- 알림
+ALTER TABLE notification 
+ADD CONSTRAINT fk_notification_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE;
+
+-- 채팅 내역
+ALTER TABLE messages 
+ADD CONSTRAINT fk_messages_member FOREIGN KEY (sender) REFERENCES member(nickname) ON DELETE CASCADE;
+-- 방문 기록 (외래 키 필요 없음)
+
+-- 거래 내역 테이블
+ALTER TABLE transaction_log 
+ADD CONSTRAINT fk_transaction_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE;
+
+
+
+-- 모임장바구니
 create table basket(
     basket_no number(6) not null,
     no number(6) not null,
