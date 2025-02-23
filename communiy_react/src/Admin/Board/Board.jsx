@@ -116,8 +116,8 @@ const ReviewSection = () => {
                       alt="review"
                       style={{
                         width: '100%', // 이미지 크기 카드 너비에 맞추기
-                        maxWidth: '250px', // 너무 커지는 것 방지
-                        height: '180px', // 일정한 높이 유지
+                        maxWidth: '300px', // 너무 커지는 것 방지
+                        height: '300px', // 일정한 높이 유지
                         objectFit: 'cover', // 비율을 유지하면서 크기 조절
                         borderRadius: '8px',
                       }}
@@ -126,11 +126,11 @@ const ReviewSection = () => {
                   <p>작성자: {review.nickname}</p>
                 </>
               )}
-              <div className="div_btn mt-2">
+              <div className="div_btn">
                 <Button
                   variant={review.isblacked === 'Y' ? 'primary' : 'danger'}
                   onClick={() => toggleBlind(review.reviewNo, review.isblacked)}
-                  className="blacked_btn me-2 p-2 ps-5 pe-5"
+                  className="blacked_btn me-1 p-2 ps-5 pe-5"
                 >
                   {review.isblacked === 'Y' ? '블라인드 해제' : '블라인드 처리'}
                 </Button>

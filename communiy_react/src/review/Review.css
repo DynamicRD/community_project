@@ -1,6 +1,7 @@
 .review_board {
   display: flex;
   justify-content: center;
+  margin: 0 auto;
 }
 
 .review_board_list {
@@ -104,4 +105,13 @@
   border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   font-size: 26px;
   margin-right: 30px;
+}
+
+.blacked_btn {
+  width: 275px;
+}
+.div_btn {
+  display: block;
+  text-align: center;
+  margin: 0 auto;
 }
