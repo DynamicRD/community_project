@@ -49,8 +49,8 @@ public class MemberAdminController {
     public ResponseEntity<Map<String, Object>> getGroupDetail(@PathVariable int groupNo) {
         return ResponseEntity.ok(memberAdminService.getGroupDetail(groupNo));
     }
-     * 모든 모임 리스트 조회 (상세내용)
-     */
+//     * 모든 모임 리스트 조회 (상세내용)
+//     */
     @GetMapping("/communityDetail/{groupNo}")
     public ResponseEntity<?> getCommunityDetail(@PathVariable int groupNo) {
         try {

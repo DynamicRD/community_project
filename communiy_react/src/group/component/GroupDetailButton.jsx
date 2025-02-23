@@ -17,20 +17,6 @@ export default function GroupDetailButton({ group_no }) {
   const navigate = useNavigate();
   const [isClosed, setIsClosed] = useState(false);
   useEffect(() => {
-    // fetch(`http://localhost:8080/group/applicable?group_no=${group_no}`)
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setApplicable(
-    //       !(
-    //         data.MEMBER_COUNT >= data.USER_MAX ||
-    //         new Date(data.START_DATE) <= new Date()
-    //       )
-    //     );
-    //     SetStart_Date(data.START_DATE);
-    //   })
-    //   .catch((error) =>
-    //     console.error('Error fetching countGroupMember:', error)
-    //   );
     // 모집 종료 여부
     const checkIfClosed = async () => {
       try {
@@ -46,9 +32,6 @@ export default function GroupDetailButton({ group_no }) {
 
     checkIfClosed(); // 함수 호출
 
-    
-
-    checkIfClosed(); // 함수 호출
 
     //모임 권한 받아오기
     if (userData !== null) {

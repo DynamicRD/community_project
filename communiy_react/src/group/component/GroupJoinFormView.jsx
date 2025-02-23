@@ -59,10 +59,11 @@ export default function GroupJoinFormView({ show, onHide, selectedMember }) {
             as="textarea"
             aria-label="With textarea"
             value={
-              selectedMember?.PR === 'undefined' ||
-              selectedMember?.PR.trim() === ''
-                ? '등록된 글이 없습니다.'
-                : selectedMember.PR
+              // selectedMember?.PR === 'undefined' ||
+              // selectedMember?.PR.trim() === ''
+              //   ? '등록된 글이 없습니다.'
+              //   : 
+                selectedMember.PR
             }
           />
         </InputGroup>
