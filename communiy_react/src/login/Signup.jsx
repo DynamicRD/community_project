@@ -193,7 +193,7 @@ export default function Signup() {
 
   // 패턴 조건 설정
   const patterns = {
-    id: /^[a-z0-9_]{4,10}$/,
+    id: /^[a-z0-9_]{4,20}$/,
     nickname: /^[a-zA-Z0-9가-힣]{2,10}$/,
     pass: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/,
     repass: (value) => value === formData.pass,

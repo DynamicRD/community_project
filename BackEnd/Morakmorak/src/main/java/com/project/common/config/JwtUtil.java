@@ -31,7 +31,6 @@ public class JwtUtil {
 	public static String createRefreshToken(Member member, boolean rememberMe) {
 		return Jwts.builder().setSubject("refreshToken").claim("no", member.getNo()).claim("id", member.getId())
 				.claim("provider", member.getProvider()).setIssuedAt(new Date())
-				// 로그인체크에따라 리프레시토큰 수명
 				.setExpiration(new Date(System.currentTimeMillis()
 						+ ((rememberMe) ? (REFRESH_TOKEN_REMEBER_EXPIRATION_TIME) : (REFRESH_TOKEN_EXPIRATION_TIME))))
 				.signWith(SignatureAlgorithm.HS256, secretConfig.getJwtSecretKey()).compact();
