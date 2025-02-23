@@ -204,7 +204,7 @@ create table review(
     group_no number(6) not null,
     review_title varchar2(50),
     img_url varchar2(50),
-    content varchar2(255),
+    content varchar2(1000),
     views number(6),                     --조회수
     comments number(4),                  --댓글수
     star number(1) default 0,            --별점
@@ -240,7 +240,7 @@ create table member(
     black number(6) default 0,           --신고횟수
     reg_date date default sysdate,        --가입일
     img_url varchar2(255) default '',                 --사진
-    self_pr varchar2(255) default '',               --자기소개
+    self_pr varchar2(1000) default '',               --자기소개
     primary key(no)
 );
 INSERT INTO member (
@@ -270,7 +270,7 @@ create table notification(
 create table notice(
     notice_no number(6) not null,
    notice_title varchar2(50),
-    content varchar2(255),
+    content varchar2(1000),
     reg_date date default sysdate,
     primary key(notice_no)
 );
@@ -280,7 +280,7 @@ create table faq(
     faq_no number(6) not null,
     faq_title varchar2(50),
     reg_date date default sysdate,
-    content varchar2(255),
+    content varchar2(1000),
     primary key(faq_no)
 );
 
@@ -303,12 +303,15 @@ create table report(
     reporter_no number(6),
     reported_no number(6),
     reason varchar2(255),
-    rep_date date,
+    rep_date date default sysdate,
     rep_content varchar(255),
     rep_status varchar2(1) default 'N', -- 처리상태 (N => 처리전, W =>경고, P=>넘어감)
     primary key(rep_no)
 );
-
+select * from report;
+delete from report where reporter_no = 61;
+commit;
+update report set reason = '시간약속을 늘 준수하지 않습니다.',rep_date = sysdate;
 -- 방문기록
 create table visit_log(
     v_id number(6),
