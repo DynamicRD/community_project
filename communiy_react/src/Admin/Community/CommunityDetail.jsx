@@ -44,7 +44,7 @@ const CommunityDetail = () => {
             <Card className="p-2">모임등록일: {communityData.REG_DATE}</Card>
           </Col>
           <Col sm={4}>
-            <Card className="p-2">모임장 아이디: {communityData.NO}</Card>
+<Card className="p-2">모임장 아이디: {communityData.NO}</Card>
           </Col>
           <Col sm={4}>
             <Card className="p-2">장소: {communityData.AREA}</Card>
