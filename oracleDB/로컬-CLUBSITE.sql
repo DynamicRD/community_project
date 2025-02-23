@@ -158,7 +158,8 @@ create table group_morak(
     member_count number(3) default 1,
     primary key(group_no)
 );
-
+update group_morak set member_count = 1 where no = 62;
+commit;
 -- 댓글(답변형)
 create table comments(
     comments_no number(6) not null,
