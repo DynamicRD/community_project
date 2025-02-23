@@ -425,6 +425,7 @@ export default function MyInfoChange() {
       isPhoneChecked &&
       isPhoneDuplicateChecked
     ) {
+      console.log(formData);
       try {
         const response = await fetch(
           'http://localhost:8080/member/infochange',

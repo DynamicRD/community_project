@@ -89,14 +89,15 @@ function Navbar() {
                   </>
                 ) : (
                   <>
-                    <Link
-                      to={`/mypage/${userData?.no}`} // ✅ 백틱을 사용하여 동적 값 적용
+                    <a
+                      href={`/mypage/${userData?.no}`} // ✅ 동적 값 적용
                       className="ms-3"
                       data-bs-toggle="tooltip"
                       title="마이페이지"
                     >
                       <i className="bi bi-person middle-icon"></i>
-                    </Link>
+                    </a>
+
                     <Link
                       to="/favorites"
                       className="ms-3"

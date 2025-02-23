@@ -26,20 +26,20 @@ public class AnnouncementsController {
 	
 	@Autowired
 	private FaqService faqService;
-	
+
 	@GetMapping("/notice/list")
 	public List<Map<String, Object>> noticeList() throws Exception {
 		log.info("NoticeList");
 		List<Map<String, Object>> Map = NoticeService.listNotice();
 		return Map;
 	}
-	
+
 	@PostMapping("/notice/insert")
 	public void noticeInsert(@RequestParam Map<String, Object> map) throws Exception {
 		log.info("valueNotice = " + map);
 		NoticeService.insertNotice(map);
 	}
-	
+
 	@GetMapping("/notice/read/{idx}")
 	public Map<String, Object> noticeRead(@PathVariable(name = "idx") int idx) throws Exception{
 		log.info("value = " + idx);

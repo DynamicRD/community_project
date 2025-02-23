@@ -8,12 +8,12 @@
 
     <!-- 후기 블라인드 처리 -->
     <update id="toggleBlind">
-        UPDATE review SET isblacked = 'Y' WHERE no = #{no}
+        UPDATE review SET isblacked = 'Y' WHERE review_no = #{no}
     </update>
     
     <!-- 후기 블라인드 처리 Y->N -->
     <update id="toggleBlindYN">
-        UPDATE review SET isblacked = 'N' WHERE no = #{no}
+        UPDATE review SET isblacked = 'N' WHERE review_no = #{no}
     </update>
 	
 </mapper>

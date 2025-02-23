@@ -32,7 +32,7 @@
 		JOIN group_morak gm ON mg.group_no = gm.group_no
 		WHERE mg.status IN ('LEADER', 'MEMBER')
 		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND
-		SYSDATE
+		SYSDATE AND gm.approval = 'Y'
 	</select>
 	<select id="getMonthGroupMember" resultType="double">
 		SELECT COUNT(*)
@@ -41,7 +41,7 @@
 		WHERE mg.status IN ('LEADER', 'MEMBER')
 		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(ADD_MONTHS(SYSDATE,
 		-1), 'MM')
-		AND LAST_DAY(ADD_MONTHS(SYSDATE, -1))
+		AND LAST_DAY(ADD_MONTHS(SYSDATE, -1)) AND gm.approval = 'Y'
 	</select>
 	<select id="getCurrentVisitLog" resultType="double">
 		SELECT COUNT(*)

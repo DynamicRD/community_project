@@ -12,6 +12,8 @@ import { Link } from 'react-router-dom';
 import '/src/announcements/Announcements_notice.css';
 import HorizonLine_table from '/src/announcements/HorizonLine_table';
 import '../../review/Review.css';
+import Notice from './Notice';
+import Faq from './Faq';
 
 const ReviewSection = () => {
   const [reviewList, setReviewList] = useState([]); // ✅ 초기값 빈 배열로 설정
@@ -126,11 +128,11 @@ const ReviewSection = () => {
                   <p>작성자: {review.nickname}</p>
                 </>
               )}
-              <div className="mt-2">
+              <div className="div_btn mt-2">
                 <Button
                   variant={review.isblacked === 'Y' ? 'primary' : 'danger'}
-                  onClick={() => toggleBlind(review.no, review.isblacked)}
-                  className="me-2 p-2 ps-5 pe-5"
+                  onClick={() => toggleBlind(review.reviewNo, review.isblacked)}
+                  className="blacked_btn me-2 p-2 ps-5 pe-5"
                 >
                   {review.isblacked === 'Y' ? '블라인드 해제' : '블라인드 처리'}
                 </Button>
@@ -168,64 +170,56 @@ const ReviewSection = () => {
   );
 };
 
-// 댓글 관리 컴포넌트
 const CommentSection = () => {
-  const initialComments = [
-    {
-      no: 1,
-      reviewNo: 1,
-      nickname: '김유신',
-      content: '좋은 후기네요!',
-      reg_date: '2024-02-10',
-      isblacked: 'N',
-    },
-    {
-      no: 2,
-      reviewNo: 2,
-      nickname: '이순신',
-      content: '정말 유익한 정보였습니다.',
-      reg_date: '2024-02-11',
-      isblacked: 'Y',
-    },
-    {
-      no: 3,
-      reviewNo: 3,
-      nickname: '강감찬',
-      content: '다음에도 또 올게요!',
-      reg_date: '2024-02-12',
-      isblacked: 'N',
-    },
-    {
-      no: 4,
-      reviewNo: 4,
-      nickname: '을지문덕',
-      content: '아주 유용한 글입니다.',
-      reg_date: '2024-02-13',
-      isblacked: 'Y',
-    },
-  ];
-
-  const [comments, setComments] = useState(initialComments);
+  const [comments, setComments] = useState([]); // 초기값 빈 배열
   const [search, setSearch] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const commentsPerPage = 10;
 
-  // **검색 필터**
+  // 🔹 댓글 목록 불러오기
+  useEffect(() => {
+    fetch(`http://localhost:8080/admin/comments/list`)
+      .then((response) => {
+        if (!response.ok) throw new Error('댓글 데이터를 가져오지 못했습니다.');
+        return response.json();
+      })
+      .then((data) => setComments(Array.isArray(data) ? data : []))
+      .catch((error) => console.error('Error fetching comments:', error));
+  }, [comments]);
+
+  // 🔹 블라인드 상태 토글 API 요청
+  const form = new FormData();
+  const toggleBlindStatus = (no, value) => {
+    form.append('no', no);
+    form.append('isblacked', value);
+    console.log(value);
+    console.log(no);
+    fetch('http://localhost:8080/admin/comments/blind', {
+      method: 'POST',
+      body: form,
+    })
+      // .then((response) => {
+      //   if (!response.ok) throw new Error('블라인드 처리 오류');
+      //   console.log(response);
+      // })
+      .then(() => {
+        // setComments((prevComments) =>
+        //   prevComments.map((comment) =>
+        //     comment.no === no
+        //       ? { ...comment, isblacked: comment.isblacked === 'Y' ? 'N' : 'Y' }
+        //       : comment
+        //   )
+        // );
+      })
+      .catch((error) => console.error('Error updating blind status:', error));
+    console.log(comments);
+  };
+
+  // 🔹 검색 필터 적용
   const filteredComments = comments.filter(
     (comment) =>
       comment.nickname.includes(search) || comment.content.includes(search)
   );
-
-  // **블라인드 상태 토글 함수**
-  const toggleBlindStatus = (no) => {
-    setComments((prevComments) =>
-      prevComments.map((comment) =>
-        comment.no === no
-          ? { ...comment, isblacked: comment.isblacked === 'Y' ? 'N' : 'Y' }
-          : comment
-      )
-    );
-  };
 
   const totalPages = Math.ceil(filteredComments.length / commentsPerPage);
   const startIndex = (currentPage - 1) * commentsPerPage;
@@ -233,11 +227,6 @@ const CommentSection = () => {
     startIndex,
     startIndex + commentsPerPage
   );
-
-  // **댓글 삭제**
-  const deleteComment = (no) => {
-    setComments(comments.filter((comment) => comment.no !== no));
-  };
 
   return (
     <Container className="mt-4">
@@ -261,38 +250,38 @@ const CommentSection = () => {
             <th>내용</th>
             <th>작성일</th>
             <th>상태</th>
-            <th>블라인드처리</th>
+            <th>블라인드</th>
           </tr>
         </thead>
         <tbody>
           {paginatedComments.length > 0 ? (
-            paginatedComments.map((comment) => (
+            paginatedComments.map((comment, idx) => (
               <tr
-                key={comment.no}
+                key={idx}
                 className={comment.isblacked === 'Y' ? 'table-danger' : ''}
               >
                 <td>{comment.no}</td>
                 <td>{comment.reviewNo}</td>
                 <td>{comment.nickname}</td>
                 <td>{comment.content}</td>
-                <td>{comment.reg_date}</td>
+                <td>{comment.regDate}</td>
                 <td>{comment.isblacked === 'Y' ? '블라인드' : '정상'}</td>
                 <td>
                   <Button
                     variant={comment.isblacked === 'Y' ? 'primary' : 'danger'}
                     size="sm"
-                    onClick={() => toggleBlindStatus(comment.no)}
+                    onClick={() =>
+                      toggleBlindStatus(comment.commentsNo, comment.isblacked)
+                    }
                   >
-                    {comment.isblacked === 'Y'
-                      ? '블라인드 해제'
-                      : '블라인드 처리'}
+                    {comment.isblacked === 'Y' ? '해제' : '처리'}
                   </Button>
                 </td>
               </tr>
             ))
           ) : (
             <tr>
-              <td colSpan="7" className="text-center">
+              <td colSpan="8" className="text-center">
                 검색 결과가 없습니다.
               </td>
             </tr>
@@ -384,97 +373,31 @@ const NoticeFaq = () => {
     setNewContent('');
     setShowForm(false);
   };
-
+  const [activeSection, setActiveSection] = useState('notice');
   return (
-    <Container>
-      <div className="ms-5 mt-5">
-        <div className="d-flex ms-5 mt-5 mb-3">
-          <Link to={'/admin/board/Notice'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              공지사항&nbsp;&nbsp;&nbsp;|
-            </span>
-          </Link>
-          <Link to={'/admin/board/Faq'} className="title_link">
-            <span className="nav_notice" style={{ fontSize: '33px' }}>
-              &nbsp;&nbsp;&nbsp;FAQ
-            </span>
-          </Link>
-          {/* 글쓰기 버튼 */}
-          <div className="btn_group2">
-            <Button
-              variant="dark"
-              onClick={() => setShowForm(!showForm)}
-              className="mb-3"
-            >
-              {showForm ? '작성 취소' : '새 공지 작성'}
-            </Button>
-          </div>
-        </div>
-
-        {/* 공지사항 목록 */}
-
-        {/* 공지사항 입력 폼 (조건부 렌더링) */}
-        {showForm && (
-          <Form onSubmit={handleSubmit} className="mb-4">
-            <Form.Group className="mb-2">
-              <Form.Label>제목</Form.Label>
-              <Form.Control
-                type="text"
-                value={newTitle}
-                onChange={(e) => setNewTitle(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Form.Group className="mb-2">
-              <Form.Label>내용</Form.Label>
-              <Form.Control
-                as="textarea"
-                rows={3}
-                value={newContent}
-                onChange={(e) => setNewContent(e.target.value)}
-                required
-              />
-            </Form.Group>
-            <Button variant="danger" type="submit">
-              작성 완료
-            </Button>
-          </Form>
-        )}
-        <Container>
-          <table className="announcements_table">
-            {announcements.map((notice) => (
-              <tbody key={notice.notice_no}>
-                <tr>
-                  <td className="table_td_title">
-                    <Link
-                      to={`/admin/board/Notice/${notice.notice_no}`}
-                      className="title_link"
-                    >
-                      <span className="ps-5">{notice.notice_title}</span>
-                    </Link>
-                  </td>
-                  <td className="table_td_date">
-                    <span className="pe-5">{notice.reg_date}</span>
-                  </td>
-                </tr>
-                <HorizonLine_table />
-              </tbody>
-            ))}
-          </table>
-        </Container>
-
-        {/* 페이지네이션 */}
-        <div className="d-flex justify-content-center align-content-center mt-4">
-          <Pagination size="sm">
-            {[...Array(5)].map((_, i) => (
-              <Pagination.Item key={i + 1} active={i === 0}>
-                {i + 1}
-              </Pagination.Item>
-            ))}
-          </Pagination>
-        </div>
-      </div>
-    </Container>
+    <div>
+      <Link
+        to={'#'}
+        className="title_link"
+        onClick={() => setActiveSection('notice')}
+      >
+        <span className="nav_notice" style={{ fontSize: '33px' }}>
+          공지사항&nbsp;&nbsp;&nbsp;|
+        </span>
+      </Link>
+      <Link
+        to={'#'}
+        className="title_link"
+        onClick={() => setActiveSection('faq')}
+      >
+        <span className="nav_notice" style={{ fontSize: '33px' }}>
+          &nbsp;&nbsp;&nbsp;FAQ
+        </span>
+      </Link>
+      {/* 글쓰기 버튼 */}
+      {activeSection === 'faq' && <Faq />}
+      {activeSection === 'notice' && <Notice />}
+    </div>
   );
 };
 

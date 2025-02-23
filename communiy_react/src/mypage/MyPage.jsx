@@ -115,8 +115,11 @@ function MyPage() {
         className="mt-3"
         style={{ width: '100%', tableLayout: 'fixed' }}
       >
-        <thead>
-          <tr className="table-secondary">
+        <thead
+          className="table-secondary"
+          style={{ textAlign: 'center', verticalAlign: 'middle' }}
+        >
+          <tr>
             <th style={{ width: '40%' }}>모임명</th>
             <th style={{ width: '15%' }}>시작일시</th>
             <th style={{ width: '15%' }}>종료일시</th>
@@ -127,7 +130,10 @@ function MyPage() {
         <tbody>
           {groups.length > 0 ? (
             groups.map((group, index) => (
-              <tr key={index}>
+              <tr
+                key={index}
+                style={{ textAlign: 'center', verticalAlign: 'middle' }}
+              >
                 <td>
                   <Link
                     to={`/group/${group.no}`}
@@ -144,7 +150,9 @@ function MyPage() {
             ))
           ) : (
             <tr>
-              <td colSpan={5}>해당 내역이 없습니다.</td>
+              <td colSpan={5} style={{ textAlign: 'center' }}>
+                해당 내역이 없습니다.
+              </td>
             </tr>
           )}
         </tbody>

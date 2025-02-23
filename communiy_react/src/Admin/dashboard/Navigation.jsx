@@ -9,13 +9,13 @@ const Navigation = ({ children }) => {
   return (
     <div className="navigation w-100">
       <Navbar bg="light" className="p-3">
-        <Form.Control
+        {/* <Form.Control
           type="text"
           placeholder="Search"
           className="w-25 me-auto"
-        />
+        /> */}
         <Dropdown>
-          <Dropdown.Toggle variant="secondary">Hello, John Doe</Dropdown.Toggle>
+          {/* <Dropdown.Toggle variant="secondary"></Dropdown.Toggle> */}
           <Dropdown.Menu>
             <Dropdown.Item href="#">Sign out</Dropdown.Item>
           </Dropdown.Menu>

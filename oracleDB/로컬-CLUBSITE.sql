@@ -77,8 +77,47 @@ increment by 1;
 create sequence notification_seq
 start with 1
 increment by 1;
--- 모임장바구니
 
+-- 모임장바구니
+ALTER TABLE basket 
+ADD CONSTRAINT fk_basket_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_basket_group FOREIGN KEY (group_no) REFERENCES group_morak(group_no) ON DELETE CASCADE;
+
+-- 모임
+ALTER TABLE group_morak 
+ADD CONSTRAINT fk_group_morak_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE;
+
+-- 댓글
+ALTER TABLE comments 
+ADD CONSTRAINT fk_comments_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_comments_review FOREIGN KEY (review_no) REFERENCES review(review_no) ON DELETE CASCADE;
+
+-- 멤버-그룹 조인 테이블
+ALTER TABLE member_group 
+ADD CONSTRAINT fk_member_group_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_member_group_group FOREIGN KEY (group_no) REFERENCES group_morak(group_no) ON DELETE CASCADE;
+
+-- 리뷰게시판
+ALTER TABLE review 
+ADD CONSTRAINT fk_review_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE,
+ADD CONSTRAINT fk_review_group FOREIGN KEY (group_no) REFERENCES group_morak(group_no) ON DELETE CASCADE;
+
+-- 알림
+ALTER TABLE notification 
+ADD CONSTRAINT fk_notification_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE;
+
+-- 채팅 내역
+ALTER TABLE messages 
+ADD CONSTRAINT fk_messages_member FOREIGN KEY (sender) REFERENCES member(nickname) ON DELETE CASCADE;
+-- 방문 기록 (외래 키 필요 없음)
+
+-- 거래 내역 테이블
+ALTER TABLE transaction_log 
+ADD CONSTRAINT fk_transaction_member FOREIGN KEY (no) REFERENCES member(no) ON DELETE CASCADE;
+
+
+
+-- 모임장바구니
 create table basket(
     basket_no number(6) not null,
     no number(6) not null,
@@ -116,18 +155,11 @@ create table group_morak(
     img_url2 varchar2(100),               --이미지2
     img_url3 varchar2(100),               --이미지3
     type varchar2(20),                   --정기모임,소모임 구분
-    member_count number(3),
+    member_count number(3) default 1,
     primary key(group_no)
 );
-alter table group_morak add member_count number(3) DEFAULT 0; 
-SELECT
-		group_title,start_date,last_date,price,approval as status from group_morak
-		where no =1;
-SELECT COUNT(DISTINCT mg.no)
-		FROM member_group mg
-		JOIN group_morak gm ON mg.group_no = gm.group_no
-		WHERE mg.status IN ('member', 'leader')
-		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
+update group_morak set member_count = 1 where no = 62;
+commit;
 -- 댓글(답변형)
 create table comments(
     comments_no number(6) not null,
@@ -178,18 +210,9 @@ create table review(
 
 );
 
-select * from basket;
-
 select * from member;
-SELECT 
-    gm.group_title,
-    gm.start_date,
-    gm.last_date,
-    gm.price,
-    mg.status
-FROM member_group mg
-JOIN group_morak gm ON mg.group_no = gm.group_no
-WHERE mg.status != 'LEADER' and mg.no = 72 and gm.last_date > current_date;
+update member set gender = '남자' where no = 61;
+commit;
 -- 사용자
 create table member(
     no number(6) not null,
@@ -215,12 +238,6 @@ create table member(
     self_pr varchar2(255) default '',               --자기소개
     primary key(no)
 );
-SELECT COUNT(*) AS reg_count
-FROM member
-WHERE TO_DATE(reg_date, 'YY/MM/DD') 
-      BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
-
-delete from member where gender='male';
 INSERT INTO member (
     no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
     star_sum, black, reg_date, img_url, self_pr
@@ -231,7 +248,7 @@ INSERT INTO member (
     100000, '12345', 'Seoul', 'Admin Street 1', 
     0, 0, SYSDATE, '', '관리자 계정입니다.'
 );
-select * from member;
+
 
 -- 알림
 create table notification(
@@ -295,9 +312,7 @@ create table visit_log(
     visit_url varchar2(300),
     primary key(v_id)
     );
-select * from visit_log;
-truncate table visit_log;
-commit;
+
 --거래내역 테이블
 create table Transaction_log(
     transaction_no number(6),
@@ -307,61 +322,7 @@ create table Transaction_log(
     reg_date date default sysdate,
     primary key(transaction_no)
 );
-select * from transaction_log;
-    
---관리자
-delete from member where gender='male';
-INSERT INTO member (
-    no, role, id, pw, provider, provider_id, name, nickname, email, phone, birth, gender, money, zip_code, addr1, addr2, 
-    star_sum, black, reg_date, img_url, self_pr
-) VALUES (
-    0, 0, 'admin', '$2a$10$EwQe.UC5u9rocXERoF472eV2h6lsJ62l51FLq11kh58dKf82WbvXm', 
-    'none', 'none', 'admin', 'admin', 
-    'admin@example.com', '010-0000-0000', TO_DATE('1980-01-01', 'YYYY-MM-DD'), '여자', 
-    100000, '12345', 'Seoul', 'Admin Street 1', 
-    0, 0, SYSDATE, '', '관리자 계정입니다.'
-);
-
-		SELECT COUNT(DISTINCT mg.no)
-		FROM member_group mg
-		JOIN group_morak gm ON mg.group_no = gm.group_no
-		WHERE mg.status = 'MEMBER'
-		AND TO_DATE(gm.reg_date, 'YY/MM/DD') BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
-
-SELECT COUNT(*)
-		FROM visit_log
-		WHERE visit_date BETWEEN TRUNC(SYSDATE, 'MM') AND SYSDATE;
-
-select * from member_group;
 select * from group_morak;
-SELECT gender, count(*) as count
-		FROM MEMBER
-		GROUP BY gender;
-        
-SELECT
-		    CASE 
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 10 AND 19) THEN '10대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 20 AND 29) THEN '20대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 30 AND 39) THEN '30대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 40 AND 49) THEN '40대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) BETWEEN 50 AND 59) THEN '50대'
-		        WHEN (FLOOR(MONTHS_BETWEEN(SYSDATE, birth) / 12) >= 60) THEN '60대 이상'
-		        ELSE '기타'
-		    END AS age_group,
-		    COUNT(*) AS count
-			FROM member;
-            
-SELECT g.group_no, count(*) AS count
-		FROM member_group mg INNER JOIN group_morak g
-		ON mg.member_group_no = g.group_no
-		where mg.status = 'MEMBER' and g.approval= 'Y'
-		GROUP BY g.group_no
-		ORDER BY count DESC
-        
-       SELECT URL, COUNT(DISTINCT IP) AS count
-		FROM VISIT_LOG
-		WHERE URL LIKE '/GROUP/DETAIL%'
-		GROUP BY URL
-		ORDER BY visitor_count DESC;
-        
-        select * from group_morak;
+
+
+

@@ -49,6 +49,7 @@ public class MemberAdminController {
     public ResponseEntity<Map<String, Object>> getGroupDetail(@PathVariable int groupNo) {
         return ResponseEntity.ok(memberAdminService.getGroupDetail(groupNo));
     }
+
 //     * 모든 모임 리스트 조회 (상세내용)
 //     */
     @GetMapping("/communityDetail/{groupNo}")
@@ -137,13 +138,10 @@ public class MemberAdminController {
     /**
      * 최근 한달 인기 카테고리
      */
-    
-    /**
-     * 최근 한달 찜많은 모임
-     */
-    
-    /**
-     * 최근 한달 방문자 많은 사이트
-     */
+    @GetMapping("/stats/popularCategoryInMonth")
+    public ResponseEntity<List<Map<String, Object>>> selectPopularCategoryInMonth() {
+        return ResponseEntity.ok(memberAdminService.selectPopularCategoryInMonth());
+    }
+
 }
  	
