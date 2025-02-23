@@ -81,6 +81,7 @@ const ReviewSection = () => {
             flexWrap: 'wrap',
             justifyContent: 'center',
             alignItems: 'flex-start',
+            margin: '0 auto',
             gap: '20px',
           }}
         >
@@ -97,6 +98,7 @@ const ReviewSection = () => {
                 alignItems: 'center',
                 textAlign: 'center',
                 overflow: 'hidden',
+                margin: '0 auto',
                 boxShadow: '0px 4px 6px rgba(0,0,0,0.1)', // 카드 그림자 추가
                 borderRadius: '10px', // 둥근 모서리 적용
               }}
@@ -130,7 +132,7 @@ const ReviewSection = () => {
                 <Button
                   variant={review.isblacked === 'Y' ? 'primary' : 'danger'}
                   onClick={() => toggleBlind(review.reviewNo, review.isblacked)}
-                  className="blacked_btn me-1 p-2 ps-5 pe-5"
+                  className="blacked_btn p-2 ps-5 pe-5"
                 >
                   {review.isblacked === 'Y' ? '블라인드 해제' : '블라인드 처리'}
                 </Button>

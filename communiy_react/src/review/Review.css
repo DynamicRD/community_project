@@ -108,9 +108,12 @@
 }
 
 .blacked_btn {
-  width: 275px;
+  width: 270px;
+  display: block;
+  margin: 0 auto;
 }
 .div_btn {
+  width: 270px;
   display: block;
   text-align: center;
   margin: 0 auto;
