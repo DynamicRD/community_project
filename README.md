@@ -14,11 +14,12 @@
    - [관리자 요구사항](#관리자-요구사항)  
    - [사용자 요구사항](#사용자-요구사항)  
 5. [데이터 모델링](#데이터-모델링)  
-6. [프로그램 구조](#프로그램-구조)  
-7. [보안](#보안)  
-8. [관리자 UI 및 기능](#관리자-ui-및-기능)  
-9. [사용자 UI 및 기능](#사용자-ui-및-기능)  
-10.[설치 및 실행 가이드](#설치-및-실행-가이드)  
+6. [프로그램 구조](#프로그램-구조)
+7. [실행결과](#실행결과)
+8. [보안](#보안)  
+9. [관리자 UI 및 기능](#관리자-ui-및-기능)  
+10. [사용자 UI 및 기능](#사용자-ui-및-기능)  
+11.[설치 및 실행 가이드](#설치-및-실행-가이드)  
 
 
 <br/>
@@ -171,7 +172,29 @@
 
 <br/>
 
+## 실행결과
 
+### 스크린샷
+
+![Image](https://github.com/user-attachments/assets/0a487cac-c2c5-4625-a700-b47a9e9e815c)
+
+![Image](https://github.com/user-attachments/assets/a4818b47-041c-4157-b7db-0a48f1aecad2)
+
+![Image](https://github.com/user-attachments/assets/3ab42b6e-a1ce-4df3-ad4f-7a3caaee462d)
+
+![Image](https://github.com/user-attachments/assets/189e4d67-d671-494b-8166-95ca05ca1a6b)
+
+![Image](https://github.com/user-attachments/assets/abde8a92-e542-4863-beda-8b583deedf5c)
+
+![Image](https://github.com/user-attachments/assets/f5d67a4e-96f0-4c14-b71b-f841e03aeb35)
+
+<br/>
+
+### 영상
+
+[https://www.youtube.com/watch?v=wpe9hy-ymzk](https://www.youtube.com/watch?v=wpe9hy-ymzk)
+
+<br/>
 
 ## 보안
 
